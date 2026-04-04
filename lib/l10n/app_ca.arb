@@ -1,0 +1,19 @@
+{
+  "@@locale": "ca",
+  "appTitle": "Noctàmbuls",
+  "@appTitle": {
+    "description": "El títol principal de l'aplicació"
+  },
+  "settingsTitle": "Configuració",
+  "languageLabel": "Idioma",
+  "systemLabel": "Sistema",
+  "catalanLabel": "Català",
+  "spanishLabel": "Castellà",
+  "themeLightLabel": "Clar",
+  "themeDarkLabel": "Fosc",
+  "themeSystemLabel": "Sistema",
+  "homeLabel": "Inici",
+  "guideLabel": "Guia",
+  "exploreLabel": "Explora",
+  "profileLabel": "Perfil"
+}

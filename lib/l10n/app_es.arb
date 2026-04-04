@@ -1,0 +1,16 @@
+{
+  "@@locale": "es",
+  "appTitle": "Noctámbulos",
+  "settingsTitle": "Configuración",
+  "languageLabel": "Idioma",
+  "systemLabel": "Sistema",
+  "catalanLabel": "Catalan",
+  "spanishLabel": "Castellano",
+  "themeLightLabel": "Claro",
+  "themeDarkLabel": "Oscuro",
+  "themeSystemLabel": "Sistema",
+  "homeLabel": "Inicio",
+  "guideLabel": "Guía",
+  "exploreLabel": "Explora",
+  "profileLabel": "Perfil"
+}
