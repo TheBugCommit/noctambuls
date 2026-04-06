@@ -1,12 +1,10 @@
 import 'package:drift/drift.dart';
-import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
-import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
-import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
+import 'package:noctambuls/core/database/converters.dart';
 
 mixin OfflineFirstMixin on Table {
   TextColumn get id => text()();
 
-  IntColumn get syncStatus => intEnum<SyncStatus>()();
+  IntColumn get syncStatus => integer().map(const SyncStatusConverter())();
 
   DateTimeColumn get createdAt => dateTime()();
 
@@ -19,7 +17,7 @@ mixin OfflineFirstMixin on Table {
 class SessionsTable extends Table with OfflineFirstMixin {
   TextColumn get annotatorId => text()();
 
-  IntColumn get sessionType => intEnum<SessionType>()();
+  IntColumn get sessionType => integer().map(const SessionTypeConverter())();
 
   DateTimeColumn get startTime => dateTime().nullable()();
 
@@ -57,7 +55,8 @@ class ObservationsTable extends Table with OfflineFirstMixin {
 
   RealColumn get longitude => real().nullable()();
 
-  IntColumn get validationStatus => intEnum<ValidationStatus>()();
+  IntColumn get validationStatus =>
+      integer().map(const ValidationStatusConverter())();
 
   @override
   Set<Column> get primaryKey => {id};
