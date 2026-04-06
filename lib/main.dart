@@ -21,8 +21,7 @@ void main() async {
         BlocProvider(create: (_) => di.sl<ThemeCubit>()),
         BlocProvider(create: (_) => di.sl<LanguageCubit>()),
         BlocProvider(
-          create: (_) =>
-              di.sl<SessionLifecycleBloc>()..add(WatchSession()),
+          create: (_) => di.sl<SessionLifecycleBloc>()..add(WatchSession()),
         ),
       ],
       child: const NoctambulsApp(),

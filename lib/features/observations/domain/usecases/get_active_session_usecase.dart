@@ -1,3 +1,4 @@
+import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
 
@@ -6,5 +7,5 @@ class GetActiveSessionUseCase {
 
   final ObservationRepository repository;
 
-  Future<ObservationSession?> call() => repository.getActiveSession();
+  Future<Result<ObservationSession?>> call() => repository.getActiveSession();
 }

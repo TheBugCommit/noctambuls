@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/settings/domain/entities/app_theme.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_system_theme_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_theme_usecase.dart';
@@ -11,6 +12,7 @@ class ThemeCubit extends Cubit<ThemeState> {
     required this.saveThemeUseCase,
     required this.getSystemThemeUseCase,
   }) : super(ThemeState(appTheme: getThemeUseCase()));
+
   final GetThemeUseCase getThemeUseCase;
   final SaveThemeUseCase saveThemeUseCase;
   final GetSystemThemeUseCase getSystemThemeUseCase;
@@ -35,6 +37,10 @@ class ThemeCubit extends Cubit<ThemeState> {
 
   Future<void> setTheme(AppTheme theme) async {
     emit(ThemeState(appTheme: theme));
-    await saveThemeUseCase(theme);
+    final result = await saveThemeUseCase(theme);
+    result.when(
+      success: (_) {},
+      failure: AppLogger.failure,
+    );
   }
 }

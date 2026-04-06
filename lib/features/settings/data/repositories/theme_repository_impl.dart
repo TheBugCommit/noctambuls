@@ -1,3 +1,5 @@
+import 'package:noctambuls/core/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/features/settings/data/datasources/theme_local_datasource.dart';
 import 'package:noctambuls/features/settings/data/datasources/theme_system_datasource.dart';
 import 'package:noctambuls/features/settings/domain/entities/app_theme.dart';
@@ -8,13 +10,13 @@ class ThemeRepositoryImpl implements ThemeRepository {
     required this.localDataSource,
     required this.systemDataSource,
   });
+
   final ThemeLocalDataSource localDataSource;
   final ThemeSystemDataSource systemDataSource;
 
   @override
   AppTheme getTheme() {
     final themeString = localDataSource.getCachedTheme();
-
     return AppTheme.values.firstWhere(
       (theme) => theme.name == themeString,
       orElse: () => AppTheme.system,
@@ -28,7 +30,12 @@ class ThemeRepositoryImpl implements ThemeRepository {
   }
 
   @override
-  Future<void> saveTheme(AppTheme theme) async {
-    await localDataSource.cacheTheme(theme.name);
+  Future<Result<Unit>> saveTheme(AppTheme theme) async {
+    try {
+      await localDataSource.cacheTheme(theme.name);
+      return const Ok(Unit.instance);
+    } on Exception catch (e, st) {
+      return Err(const CacheFailure().withDebug(e, st));
+    }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:noctambuls/core/theme/app_fonts.dart';
+import 'package:noctambuls/core/constants/app_fonts.dart';
 
 TextTheme createTextTheme(BuildContext context) {
   final baseTextTheme = Theme.of(context).textTheme;

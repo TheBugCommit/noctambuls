@@ -1,16 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/core/error/failure.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-
-enum SessionLifecycleErrorType {
-  sessionAlreadyExists,
-  unknown,
-}
 
 sealed class SessionLifecycleState extends Equatable {
   const SessionLifecycleState();
 }
 
-/// No existent active session
+/// No active session exists.
 final class SessionLifecycleIdle extends SessionLifecycleState {
   const SessionLifecycleIdle();
 
@@ -18,7 +14,7 @@ final class SessionLifecycleIdle extends SessionLifecycleState {
   List<Object?> get props => [];
 }
 
-/// Transition event for create, update or delete events
+/// Transition state for create, update or delete operations.
 final class SessionLifecycleLoading extends SessionLifecycleState {
   const SessionLifecycleLoading();
 
@@ -32,7 +28,7 @@ sealed class ActiveSessionLifecycleState extends SessionLifecycleState {
   final ObservationSession session;
 }
 
-/// Active session isObserving
+/// Active session in observation phase.
 final class SessionObserving extends ActiveSessionLifecycleState {
   const SessionObserving({required super.session});
 
@@ -40,7 +36,7 @@ final class SessionObserving extends ActiveSessionLifecycleState {
   List<Object?> get props => [session];
 }
 
-/// Active session isReviewing
+/// Active session in review phase.
 final class SessionReviewing extends ActiveSessionLifecycleState {
   const SessionReviewing({required super.session});
 
@@ -48,7 +44,7 @@ final class SessionReviewing extends ActiveSessionLifecycleState {
   List<Object?> get props => [session];
 }
 
-/// Active session isFinished (Locked)
+/// Active session finished (locked).
 final class SessionFinished extends ActiveSessionLifecycleState {
   const SessionFinished({required super.session});
 
@@ -56,12 +52,12 @@ final class SessionFinished extends ActiveSessionLifecycleState {
   List<Object?> get props => [session];
 }
 
-/// Session state error
+/// Session operation failure state.
 final class SessionLifecycleError extends SessionLifecycleState {
-  const SessionLifecycleError({required this.errorType});
+  const SessionLifecycleError({required this.failure});
 
-  final SessionLifecycleErrorType errorType;
+  final Failure failure;
 
   @override
-  List<Object?> get props => [errorType];
+  List<Object?> get props => [failure];
 }

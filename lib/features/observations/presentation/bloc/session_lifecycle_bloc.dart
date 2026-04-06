@@ -1,15 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/domain/exceptions/active_session_already_exists_exception.dart';
-import 'package:uuid/uuid.dart';
 import 'package:noctambuls/features/observations/domain/usecases/create_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
+import 'package:uuid/uuid.dart';
 
 class SessionLifecycleBloc
     extends Bloc<SessionLifecycleEvent, SessionLifecycleState> {
@@ -50,6 +50,9 @@ class SessionLifecycleBloc
     await _sessionSubscription?.cancel();
     _sessionSubscription = watchActiveSessionUseCase().listen(
       (session) => add(SessionStreamUpdated(session)),
+      onError: (Object error, StackTrace stackTrace) {
+        addError(error, stackTrace);
+      },
     );
   }
 
@@ -74,31 +77,25 @@ class SessionLifecycleBloc
     }
 
     emit(const SessionLifecycleLoading());
-    try {
-      const uuid = Uuid();
-      final now = DateTime.now();
-      final session = ObservationSession(
-        id: uuid.v4(),
-        annotatorId: event.annotatorId,
-        sessionType: event.sessionType,
-        startTime: now,
-        createdAt: now,
-        updatedAt: now,
-      );
-      await createSessionUseCase(session);
-    } on ActiveSessionAlreadyExistsException {
-      emit(
-        const SessionLifecycleError(
-          errorType: SessionLifecycleErrorType.sessionAlreadyExists,
-        ),
-      );
-    } on Object catch (_) {
-      emit(
-        const SessionLifecycleError(
-          errorType: SessionLifecycleErrorType.unknown,
-        ),
-      );
-    }
+    const uuid = Uuid();
+    final now = DateTime.now();
+    final session = ObservationSession(
+      id: uuid.v4(),
+      annotatorId: event.annotatorId,
+      sessionType: event.sessionType,
+      startTime: now,
+      createdAt: now,
+      updatedAt: now,
+    );
+
+    final result = await createSessionUseCase(session);
+    result.when(
+      success: (_) {},
+      failure: (failure) {
+        AppLogger.failure(failure);
+        emit(SessionLifecycleError(failure: failure));
+      },
+    );
   }
 
   Future<void> _onUpdateSessionProperties(
@@ -108,22 +105,21 @@ class SessionLifecycleBloc
     if (state is! ActiveSessionLifecycleState) return;
     final current = (state as ActiveSessionLifecycleState).session;
 
-    try {
-      final updated = current.copyWith(
-        weatherNotes: event.weatherNotes ?? current.weatherNotes,
-        latitude: event.latitude ?? current.latitude,
-        longitude: event.longitude ?? current.longitude,
-        updatedAt: DateTime.now(),
-      );
+    final updated = current.copyWith(
+      weatherNotes: event.weatherNotes ?? current.weatherNotes,
+      latitude: event.latitude ?? current.latitude,
+      longitude: event.longitude ?? current.longitude,
+      updatedAt: DateTime.now(),
+    );
 
-      await updateSessionUseCase(updated);
-    } on Object catch (_) {
-      emit(
-        const SessionLifecycleError(
-          errorType: SessionLifecycleErrorType.unknown,
-        ),
-      );
-    }
+    final result = await updateSessionUseCase(updated);
+    result.when(
+      success: (_) {},
+      failure: (failure) {
+        AppLogger.failure(failure);
+        emit(SessionLifecycleError(failure: failure));
+      },
+    );
   }
 
   Future<void> _onStopObservationPhase(
@@ -133,20 +129,17 @@ class SessionLifecycleBloc
     if (state is! SessionObserving) return;
     final current = (state as SessionObserving).session;
 
-    try {
-      final now = DateTime.now();
-      final updated = current.copyWith(
-        endTime: now,
-        updatedAt: now,
-      );
-      await updateSessionUseCase(updated);
-    } on Object catch (_) {
-      emit(
-        const SessionLifecycleError(
-          errorType: SessionLifecycleErrorType.unknown,
-        ),
-      );
-    }
+    final now = DateTime.now();
+    final updated = current.copyWith(endTime: now, updatedAt: now);
+
+    final result = await updateSessionUseCase(updated);
+    result.when(
+      success: (_) {},
+      failure: (failure) {
+        AppLogger.failure(failure);
+        emit(SessionLifecycleError(failure: failure));
+      },
+    );
   }
 
   Future<void> _onResumeObservationPhase(
@@ -156,19 +149,16 @@ class SessionLifecycleBloc
     if (state is! SessionReviewing) return;
     final current = (state as SessionReviewing).session;
 
-    try {
-      final updated = current.copyWith(
-        endTime: null,
-        updatedAt: DateTime.now(),
-      );
-      await updateSessionUseCase(updated);
-    } on Object catch (_) {
-      emit(
-        const SessionLifecycleError(
-          errorType: SessionLifecycleErrorType.unknown,
-        ),
-      );
-    }
+    final updated = current.copyWith(endTime: null, updatedAt: DateTime.now());
+
+    final result = await updateSessionUseCase(updated);
+    result.when(
+      success: (_) {},
+      failure: (failure) {
+        AppLogger.failure(failure);
+        emit(SessionLifecycleError(failure: failure));
+      },
+    );
   }
 
   Future<void> _onFinishAndLockSession(
@@ -178,19 +168,16 @@ class SessionLifecycleBloc
     if (state is! SessionReviewing) return;
     final current = (state as SessionReviewing).session;
 
-    try {
-      final updated = current.copyWith(
-        isLocked: true,
-        updatedAt: DateTime.now(),
-      );
-      await updateSessionUseCase(updated);
-    } on Object catch (_) {
-      emit(
-        const SessionLifecycleError(
-          errorType: SessionLifecycleErrorType.unknown,
-        ),
-      );
-    }
+    final updated = current.copyWith(isLocked: true, updatedAt: DateTime.now());
+
+    final result = await updateSessionUseCase(updated);
+    result.when(
+      success: (_) {},
+      failure: (failure) {
+        AppLogger.failure(failure);
+        emit(SessionLifecycleError(failure: failure));
+      },
+    );
   }
 
   Future<void> _onDeleteActiveSession(
@@ -201,15 +188,14 @@ class SessionLifecycleBloc
     final current = (state as ActiveSessionLifecycleState).session;
 
     emit(const SessionLifecycleLoading());
-    try {
-      await deleteSessionUseCase(current.id);
-    } on Object catch (_) {
-      emit(
-        const SessionLifecycleError(
-          errorType: SessionLifecycleErrorType.unknown,
-        ),
-      );
-    }
+    final result = await deleteSessionUseCase(current.id);
+    result.when(
+      success: (_) {},
+      failure: (failure) {
+        AppLogger.failure(failure);
+        emit(SessionLifecycleError(failure: failure));
+      },
+    );
   }
 
   void _onDismissError(

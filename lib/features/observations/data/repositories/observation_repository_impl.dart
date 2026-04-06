@@ -1,3 +1,5 @@
+import 'package:noctambuls/core/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/features/observations/data/datasources/observation_local_datasource.dart';
 import 'package:noctambuls/features/observations/data/models/observation_record_model.dart';
 import 'package:noctambuls/features/observations/data/models/observation_session_model.dart';
@@ -11,28 +13,47 @@ class ObservationRepositoryImpl implements ObservationRepository {
   final ObservationLocalDataSource localDataSource;
 
   @override
-  Future<void> createSession(ObservationSession session) async {
-    await localDataSource.createSession(
-      ObservationSessionModel.fromEntity(session),
-    );
+  Future<Result<Unit>> createSession(ObservationSession session) async {
+    try {
+      await localDataSource.createSession(
+        ObservationSessionModel.fromEntity(session),
+      );
+      return const Ok(Unit.instance);
+    } on Exception catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
   }
 
   @override
-  Future<void> updateSession(ObservationSession session) async {
-    await localDataSource.updateSession(
-      ObservationSessionModel.fromEntity(session),
-    );
+  Future<Result<Unit>> updateSession(ObservationSession session) async {
+    try {
+      await localDataSource.updateSession(
+        ObservationSessionModel.fromEntity(session),
+      );
+      return const Ok(Unit.instance);
+    } on Exception catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
   }
 
   @override
-  Future<void> deleteSession(String id) async {
-    await localDataSource.deleteSession(id);
+  Future<Result<Unit>> deleteSession(String id) async {
+    try {
+      await localDataSource.deleteSession(id);
+      return const Ok(Unit.instance);
+    } on Exception catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
   }
 
   @override
-  Future<ObservationSession?> getSessionById(String id) async {
-    final model = await localDataSource.getSessionById(id);
-    return model?.toDomain();
+  Future<Result<ObservationSession?>> getSessionById(String id) async {
+    try {
+      final model = await localDataSource.getSessionById(id);
+      return Ok(model?.toDomain());
+    } on Exception catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
   }
 
   @override
@@ -43,9 +64,13 @@ class ObservationRepositoryImpl implements ObservationRepository {
   }
 
   @override
-  Future<ObservationSession?> getActiveSession() async {
-    final model = await localDataSource.getActiveSession();
-    return model?.toDomain();
+  Future<Result<ObservationSession?>> getActiveSession() async {
+    try {
+      final model = await localDataSource.getActiveSession();
+      return Ok(model?.toDomain());
+    } on Exception catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
   }
 
   @override
@@ -56,22 +81,37 @@ class ObservationRepositoryImpl implements ObservationRepository {
   }
 
   @override
-  Future<void> addObservation(ObservationRecord observation) async {
-    await localDataSource.addObservation(
-      ObservationRecordModel.fromEntity(observation),
-    );
+  Future<Result<Unit>> addObservation(ObservationRecord observation) async {
+    try {
+      await localDataSource.addObservation(
+        ObservationRecordModel.fromEntity(observation),
+      );
+      return const Ok(Unit.instance);
+    } on Exception catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
   }
 
   @override
-  Future<void> updateObservation(ObservationRecord observation) async {
-    await localDataSource.updateObservation(
-      ObservationRecordModel.fromEntity(observation),
-    );
+  Future<Result<Unit>> updateObservation(ObservationRecord observation) async {
+    try {
+      await localDataSource.updateObservation(
+        ObservationRecordModel.fromEntity(observation),
+      );
+      return const Ok(Unit.instance);
+    } on Exception catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
   }
 
   @override
-  Future<void> deleteObservation(String id) async {
-    await localDataSource.deleteObservation(id);
+  Future<Result<Unit>> deleteObservation(String id) async {
+    try {
+      await localDataSource.deleteObservation(id);
+      return const Ok(Unit.instance);
+    } on Exception catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
   }
 
   @override

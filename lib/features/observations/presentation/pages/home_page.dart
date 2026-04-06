@@ -8,6 +8,7 @@ import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/widgets/taxus_app_bar.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
+import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
@@ -39,10 +40,10 @@ class HomePage extends StatelessWidget {
         switch (state) {
           case SessionLifecycleError():
             final l10n = AppLocalizations.of(context)!;
-            final message = switch (state.errorType) {
-              SessionLifecycleErrorType.sessionAlreadyExists =>
+            final message = switch (state.failure) {
+              ActiveSessionAlreadyExistsFailure() =>
                 l10n.errorSessionAlreadyExists,
-              SessionLifecycleErrorType.unknown => l10n.errorUnknown,
+              _ => l10n.errorUnknown,
             };
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(message)),

@@ -1,3 +1,4 @@
+import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
 
 class DeleteObservationUseCase {
@@ -5,7 +6,6 @@ class DeleteObservationUseCase {
 
   final ObservationRepository repository;
 
-  Future<void> call(String observationId) async {
-    await repository.deleteObservation(observationId);
-  }
+  Future<Result<Unit>> call(String observationId) =>
+      repository.deleteObservation(observationId);
 }

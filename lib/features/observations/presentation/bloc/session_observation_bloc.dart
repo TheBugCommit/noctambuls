@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_observation_usecase.dart';
@@ -36,6 +37,9 @@ class SessionObservationBloc
     await _observationsSubscription?.cancel();
     _observationsSubscription = watchObservationsUseCase(sessionId).listen(
       (obs) => add(ObservationsStreamUpdated(obs)),
+      onError: (Object error, StackTrace stackTrace) {
+        addError(error, stackTrace);
+      },
     );
   }
 
@@ -50,22 +54,28 @@ class SessionObservationBloc
     AddRecord event,
     Emitter<SessionObservationState> emit,
   ) async {
-    try {
-      await addObservationUseCase(event.record);
-    } on Object catch (_) {
-      emit(const ObservationsError());
-    }
+    final result = await addObservationUseCase(event.record);
+    result.when(
+      success: (_) {},
+      failure: (failure) {
+        AppLogger.failure(failure);
+        emit(ObservationsError(failure: failure));
+      },
+    );
   }
 
   Future<void> _onDeleteRecord(
     DeleteRecord event,
     Emitter<SessionObservationState> emit,
   ) async {
-    try {
-      await deleteObservationUseCase(event.recordId);
-    } on Object catch (_) {
-      emit(const ObservationsError());
-    }
+    final result = await deleteObservationUseCase(event.recordId);
+    result.when(
+      success: (_) {},
+      failure: (failure) {
+        AppLogger.failure(failure);
+        emit(ObservationsError(failure: failure));
+      },
+    );
   }
 
   @override

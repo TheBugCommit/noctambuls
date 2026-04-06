@@ -44,7 +44,6 @@ dependencies:
   get_it: ^9.2.1
   flutter_svg: ^2.2.4
   vector_graphics: ^1.1.21
-  logger: ^2.7.0
   drift: ^2.32.1
   path: ^1.9.1
   path_provider: ^2.1.5

@@ -1,11 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/core/error/failure.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 
 sealed class SessionObservationState extends Equatable {
   const SessionObservationState();
 }
 
-/// State before receiving stream observations
+/// Initial state before receiving stream data.
 final class ObservationsInitial extends SessionObservationState {
   const ObservationsInitial();
 
@@ -13,7 +14,7 @@ final class ObservationsInitial extends SessionObservationState {
   List<Object?> get props => [];
 }
 
-/// State before observations are loaded
+/// Observations loaded from stream.
 final class ObservationsLoaded extends SessionObservationState {
   const ObservationsLoaded(this.observations);
 
@@ -23,10 +24,12 @@ final class ObservationsLoaded extends SessionObservationState {
   List<Object?> get props => [observations];
 }
 
-/// Observation operation error state
+/// Observation operation failure state.
 final class ObservationsError extends SessionObservationState {
-  const ObservationsError();
+  const ObservationsError({required this.failure});
+
+  final Failure failure;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [failure];
 }
