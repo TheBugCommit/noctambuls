@@ -1,0 +1,43 @@
+name: Flutter Unit & Widget Tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    name: Run Tests & Coverage
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+      contents: read
+
+    steps:
+      - name: ⬇️ Checkout del codi
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configurar Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: 📦 Instal·lar dependències
+        run: flutter pub get
+
+      - name: 🏗️ Generar codi (build_runner)
+        run: dart run build_runner build --delete-conflicting-outputs
+
+      - name: 🧪 Executar tests i generar coverage
+        run: flutter test --coverage
+
+      - name: 🧹 Netejar codi generat del lcov
+        run: |
+          sudo apt-get install lcov -y
+          lcov --remove coverage/lcov.info \
+            'lib/**/*.g.dart' \
+            'lib/**/app_localizations*.dart' \
+            -o coverage/lcov.info
