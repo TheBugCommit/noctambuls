@@ -17,7 +17,7 @@ class ObservationRecord extends Equatable {
     this.latitude,
     this.longitude,
     this.validationStatus = ValidationStatus.pending,
-    this.syncStatus = SyncStatus.pending,
+    this.syncStatus = SyncStatus.draft,
     this.isDeleted = false,
   });
 
@@ -36,6 +36,41 @@ class ObservationRecord extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDeleted;
+
+  static const Object _absent = Object();
+
+  ObservationRecord copyWith({
+    required DateTime updatedAt,
+    Object? notes = _absent,
+    Object? latitude = _absent,
+    Object? longitude = _absent,
+    int? quantity,
+    ValidationStatus? validationStatus,
+    SyncStatus? syncStatus,
+    bool? isDeleted,
+  }) {
+    return ObservationRecord(
+      id: id,
+      sessionId: sessionId,
+      speciesId: speciesId,
+      contactType: contactType,
+      quantity: quantity ?? this.quantity,
+      startTime: startTime,
+      endTime: endTime,
+      notes: identical(notes, _absent) ? this.notes : notes as String?,
+      latitude: identical(latitude, _absent)
+          ? this.latitude
+          : latitude as double?,
+      longitude: identical(longitude, _absent)
+          ? this.longitude
+          : longitude as double?,
+      validationStatus: validationStatus ?? this.validationStatus,
+      syncStatus: syncStatus ?? this.syncStatus,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      isDeleted: isDeleted ?? this.isDeleted,
+    );
+  }
 
   @override
   List<Object?> get props => [

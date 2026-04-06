@@ -15,7 +15,7 @@ class ObservationSession extends Equatable {
     this.latitude,
     this.longitude,
     this.isLocked = false,
-    this.syncStatus = SyncStatus.pending,
+    this.syncStatus = SyncStatus.draft,
     this.isDeleted = false,
   });
 
@@ -39,27 +39,39 @@ class ObservationSession extends Equatable {
 
   bool get isFinished => isLocked && !isDeleted;
 
+  static const Object _absent = Object();
+
   ObservationSession copyWith({
-    DateTime? endTime,
-    String? weatherNotes,
+    required DateTime updatedAt,
+    Object? endTime = _absent,
+    Object? weatherNotes = _absent,
+    Object? latitude = _absent,
+    Object? longitude = _absent,
     bool? isLocked,
     SyncStatus? syncStatus,
     bool? isDeleted,
-    DateTime? updatedAt,
   }) {
     return ObservationSession(
       id: id,
       annotatorId: annotatorId,
       sessionType: sessionType,
       startTime: startTime,
-      endTime: endTime ?? this.endTime,
-      weatherNotes: weatherNotes ?? this.weatherNotes,
-      latitude: latitude,
-      longitude: longitude,
+      endTime: identical(endTime, _absent)
+          ? this.endTime
+          : endTime as DateTime?,
+      weatherNotes: identical(weatherNotes, _absent)
+          ? this.weatherNotes
+          : weatherNotes as String?,
+      latitude: identical(latitude, _absent)
+          ? this.latitude
+          : latitude as double?,
+      longitude: identical(longitude, _absent)
+          ? this.longitude
+          : longitude as double?,
       isLocked: isLocked ?? this.isLocked,
       syncStatus: syncStatus ?? this.syncStatus,
       createdAt: createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
+      updatedAt: updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,
     );
   }
