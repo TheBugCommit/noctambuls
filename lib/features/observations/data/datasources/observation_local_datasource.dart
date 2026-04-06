@@ -36,12 +36,12 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
 
   @override
   Future<void> createSession(ObservationSessionModel session) async {
-    await db.into(db.sessionsTable).insert(_createSessionCompanion(session));
+    await db.into(db.sessionsTable).insert(_sessionCompanion(session));
   }
 
   @override
   Future<void> updateSession(ObservationSessionModel session) async {
-    await db.update(db.sessionsTable).replace(_createSessionCompanion(session));
+    await db.update(db.sessionsTable).replace(_sessionCompanion(session));
   }
 
   @override
@@ -61,7 +61,7 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
     final query = db.select(db.sessionsTable)
       ..where((tbl) => tbl.id.equals(id));
     final result = await query.getSingleOrNull();
-    return result != null ? ObservationSessionModel.toModel(result) : null;
+    return result != null ? ObservationSessionModel.fromData(result) : null;
   }
 
   @override
@@ -71,7 +71,7 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
 
     return query.watch().map(
-      (rows) => rows.map(ObservationSessionModel.toModel).toList(),
+      (rows) => rows.map(ObservationSessionModel.fromData).toList(),
     );
   }
 
@@ -82,7 +82,7 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       ..limit(1);
 
     final result = await query.getSingleOrNull();
-    return result != null ? ObservationSessionModel.toModel(result) : null;
+    return result != null ? ObservationSessionModel.fromData(result) : null;
   }
 
   @override
@@ -92,7 +92,7 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       ..limit(1);
 
     return query.watchSingleOrNull().map(
-      (row) => row != null ? ObservationSessionModel.toModel(row) : null,
+      (row) => row != null ? ObservationSessionModel.fromData(row) : null,
     );
   }
 
@@ -100,14 +100,14 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
   Future<void> addObservation(ObservationRecordModel observation) async {
     await db
         .into(db.observationsTable)
-        .insert(_createObservationCompanion(observation));
+        .insert(_observationCompanion(observation));
   }
 
   @override
   Future<void> updateObservation(ObservationRecordModel observation) async {
     await db
         .update(db.observationsTable)
-        .replace(_createObservationCompanion(observation));
+        .replace(_observationCompanion(observation));
   }
 
   @override
@@ -127,33 +127,29 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       ..orderBy([(t) => OrderingTerm.desc(t.startTime)]);
 
     return query.watch().map(
-      (rows) => rows.map(ObservationRecordModel.toModel).toList(),
+      (rows) => rows.map(ObservationRecordModel.fromData).toList(),
     );
   }
 
-  SessionsTableCompanion _createSessionCompanion(
-    ObservationSessionModel session,
-  ) {
+  SessionsTableCompanion _sessionCompanion(ObservationSessionModel s) {
     return SessionsTableCompanion.insert(
-      id: session.id,
-      annotatorId: session.annotatorId,
-      sessionType: session.sessionType,
-      startTime: Value(session.startTime),
-      endTime: Value(session.endTime),
-      weatherNotes: Value(session.weatherNotes),
-      latitude: Value(session.latitude),
-      longitude: Value(session.longitude),
-      isLocked: session.isLocked,
-      syncStatus: session.syncStatus,
-      createdAt: session.createdAt,
-      updatedAt: session.updatedAt,
-      isDeleted: session.isDeleted,
+      id: s.id,
+      annotatorId: s.annotatorId,
+      sessionType: s.sessionType,
+      startTime: Value(s.startTime),
+      endTime: Value(s.endTime),
+      weatherNotes: Value(s.weatherNotes),
+      latitude: Value(s.latitude),
+      longitude: Value(s.longitude),
+      isLocked: s.isLocked,
+      syncStatus: s.syncStatus,
+      createdAt: s.createdAt,
+      updatedAt: s.updatedAt,
+      isDeleted: s.isDeleted,
     );
   }
 
-  ObservationsTableCompanion _createObservationCompanion(
-    ObservationRecordModel obs,
-  ) {
+  ObservationsTableCompanion _observationCompanion(ObservationRecordModel obs) {
     return ObservationsTableCompanion.insert(
       id: obs.id,
       sessionId: obs.sessionId,

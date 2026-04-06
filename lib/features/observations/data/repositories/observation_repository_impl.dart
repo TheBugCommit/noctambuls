@@ -12,49 +12,61 @@ class ObservationRepositoryImpl implements ObservationRepository {
 
   @override
   Future<void> createSession(ObservationSession session) async {
-    final sessionModel = ObservationSessionModel.fromEntity(session);
-    await localDataSource.createSession(sessionModel);
+    await localDataSource.createSession(
+      ObservationSessionModel.fromEntity(session),
+    );
   }
 
   @override
   Future<void> updateSession(ObservationSession session) async {
-    final sessionModel = ObservationSessionModel.fromEntity(session);
-    await localDataSource.updateSession(sessionModel);
+    await localDataSource.updateSession(
+      ObservationSessionModel.fromEntity(session),
+    );
   }
 
   @override
   Future<void> deleteSession(String id) async {
-    await localDataSource.deleteObservation(id);
+    await localDataSource.deleteSession(id);
   }
 
   @override
   Future<ObservationSession?> getSessionById(String id) async {
-    return localDataSource.getSessionById(id);
+    final model = await localDataSource.getSessionById(id);
+    return model?.toDomain();
   }
 
   @override
   Stream<List<ObservationSession>> watchAllSessions() {
-    return localDataSource.watchAllSessions();
+    return localDataSource.watchAllSessions().map(
+      (models) => models.map((m) => m.toDomain()).toList(),
+    );
   }
 
   @override
-  Future<ObservationSession?> getActiveSession() =>
-      localDataSource.getActiveSession();
+  Future<ObservationSession?> getActiveSession() async {
+    final model = await localDataSource.getActiveSession();
+    return model?.toDomain();
+  }
 
   @override
-  Stream<ObservationSession?> watchActiveSession() =>
-      localDataSource.watchActiveSession();
+  Stream<ObservationSession?> watchActiveSession() {
+    return localDataSource.watchActiveSession().map(
+      (model) => model?.toDomain(),
+    );
+  }
 
   @override
   Future<void> addObservation(ObservationRecord observation) async {
-    final observationModel = ObservationRecordModel.fromEntity(observation);
-    await localDataSource.addObservation(observationModel);
+    await localDataSource.addObservation(
+      ObservationRecordModel.fromEntity(observation),
+    );
   }
 
   @override
   Future<void> updateObservation(ObservationRecord observation) async {
-    final observationModel = ObservationRecordModel.fromEntity(observation);
-    await localDataSource.updateObservation(observationModel);
+    await localDataSource.updateObservation(
+      ObservationRecordModel.fromEntity(observation),
+    );
   }
 
   @override
@@ -66,6 +78,8 @@ class ObservationRepositoryImpl implements ObservationRepository {
   Stream<List<ObservationRecord>> watchObservationsForSession(
     String sessionId,
   ) {
-    return localDataSource.watchObservationsForSession(sessionId);
+    return localDataSource
+        .watchObservationsForSession(sessionId)
+        .map((models) => models.map((m) => m.toDomain()).toList());
   }
 }

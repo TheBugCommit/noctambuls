@@ -1,23 +1,25 @@
 import 'package:noctambuls/core/database/app_database.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
+import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
+import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
 
-class ObservationRecordModel extends ObservationRecord {
+class ObservationRecordModel {
   const ObservationRecordModel({
-    required super.id,
-    required super.sessionId,
-    required super.speciesId,
-    required super.contactType,
-    required super.quantity,
-    required super.startTime,
-    required super.endTime,
-    required super.createdAt,
-    required super.updatedAt,
-    super.notes,
-    super.latitude,
-    super.longitude,
-    super.validationStatus,
-    super.syncStatus,
-    super.isDeleted,
+    required this.id,
+    required this.sessionId,
+    required this.speciesId,
+    required this.contactType,
+    required this.quantity,
+    required this.startTime,
+    required this.endTime,
+    required this.createdAt,
+    required this.updatedAt,
+    this.notes,
+    this.latitude,
+    this.longitude,
+    this.validationStatus = ValidationStatus.pending,
+    this.syncStatus = SyncStatus.draft,
+    this.isDeleted = false,
   });
 
   factory ObservationRecordModel.fromEntity(ObservationRecord entity) {
@@ -40,7 +42,7 @@ class ObservationRecordModel extends ObservationRecord {
     );
   }
 
-  factory ObservationRecordModel.toModel(ObservationEntityData data) {
+  factory ObservationRecordModel.fromData(ObservationEntityData data) {
     return ObservationRecordModel(
       id: data.id,
       sessionId: data.sessionId,
@@ -57,6 +59,42 @@ class ObservationRecordModel extends ObservationRecord {
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       isDeleted: data.isDeleted,
+    );
+  }
+
+  final String id;
+  final String sessionId;
+  final String speciesId;
+  final String contactType;
+  final int quantity;
+  final DateTime startTime;
+  final DateTime endTime;
+  final String? notes;
+  final double? latitude;
+  final double? longitude;
+  final ValidationStatus validationStatus;
+  final SyncStatus syncStatus;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isDeleted;
+
+  ObservationRecord toDomain() {
+    return ObservationRecord(
+      id: id,
+      sessionId: sessionId,
+      speciesId: speciesId,
+      contactType: contactType,
+      quantity: quantity,
+      startTime: startTime,
+      endTime: endTime,
+      notes: notes,
+      latitude: latitude,
+      longitude: longitude,
+      validationStatus: validationStatus,
+      syncStatus: syncStatus,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      isDeleted: isDeleted,
     );
   }
 }
