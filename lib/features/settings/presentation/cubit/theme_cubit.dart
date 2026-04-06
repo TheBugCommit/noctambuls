@@ -30,7 +30,11 @@ class ThemeCubit extends Cubit<ThemeState> {
           : AppTheme.light;
     }
 
-    emit(ThemeState(appTheme: newTheme));
-    await saveThemeUseCase(newTheme);
+    await setTheme(newTheme);
+  }
+
+  Future<void> setTheme(AppTheme theme) async {
+    emit(ThemeState(appTheme: theme));
+    await saveThemeUseCase(theme);
   }
 }
