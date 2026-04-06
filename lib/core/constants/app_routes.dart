@@ -9,4 +9,6 @@ class AppRoutes {
 
   // Secondary Routes
   static const String settings = '/settings';
+  static const String observing = '/observing';
+  static const String review = '/review';
 }

@@ -12,7 +12,8 @@ import 'package:noctambuls/features/observations/domain/usecases/update_session_
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_all_sessions_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/active_session_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 
 void initObservationsFeature() {
   sl
@@ -38,15 +39,19 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => DeleteObservationUseCase(sl()))
     // BLoC
     ..registerFactory(
-      () => ActiveSessionBloc(
+      () => SessionLifecycleBloc(
         watchActiveSessionUseCase: sl(),
-        getActiveSessionUseCase: sl(),
-        watchObservationsUseCase: sl(),
         createSessionUseCase: sl(),
         updateSessionUseCase: sl(),
+        deleteSessionUseCase: sl(),
+      ),
+    )
+    ..registerFactoryParam<SessionObservationBloc, String, void>(
+      (sessionId, _) => SessionObservationBloc(
+        sessionId: sessionId,
+        watchObservationsUseCase: sl(),
         addObservationUseCase: sl(),
         deleteObservationUseCase: sl(),
-        deleteSessionUseCase: sl(),
       ),
     );
 }

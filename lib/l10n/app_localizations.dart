@@ -175,6 +175,144 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Perfil'**
   String get profileLabel;
+
+  /// No description provided for @censusLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cens'**
+  String get censusLabel;
+
+  /// No description provided for @stationLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Estació de Seguiment'**
+  String get stationLabel;
+
+  /// No description provided for @incidentalLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observació Incidental'**
+  String get incidentalLabel;
+
+  /// No description provided for @homeTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Inici'**
+  String get homeTitle;
+
+  /// No description provided for @errorSessionAlreadyExists.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ja hi ha una sessió activa. Finalitza-la o cancel·la-la primer.'**
+  String get errorSessionAlreadyExists;
+
+  /// No description provided for @errorUnknown.
+  ///
+  /// In ca, this message translates to:
+  /// **'S\'ha produït un error desconegut.'**
+  String get errorUnknown;
+
+  /// No description provided for @activeSessionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sessió en curs'**
+  String get activeSessionTitle;
+
+  /// No description provided for @startedAt.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observant des de {time}'**
+  String startedAt(String time);
+
+  /// No description provided for @observationsRegistered.
+  ///
+  /// In ca, this message translates to:
+  /// **'{count} observacions registrades'**
+  String observationsRegistered(int count);
+
+  /// No description provided for @stopAndReview.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aturar i Revisar'**
+  String get stopAndReview;
+
+  /// No description provided for @cancelSession.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel·lar Sessió'**
+  String get cancelSession;
+
+  /// No description provided for @cancelSessionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel·lar sessió?'**
+  String get cancelSessionTitle;
+
+  /// No description provided for @cancelSessionBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Es perdrà tota la informació i no es podrà recuperar.'**
+  String get cancelSessionBody;
+
+  /// No description provided for @back.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tornar'**
+  String get back;
+
+  /// No description provided for @delete.
+  ///
+  /// In ca, this message translates to:
+  /// **'Eliminar'**
+  String get delete;
+
+  /// No description provided for @stopSessionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aturar la sessió?'**
+  String get stopSessionTitle;
+
+  /// No description provided for @stopSessionBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Les observacions ja registrades es conservaran.'**
+  String get stopSessionBody;
+
+  /// No description provided for @stopSessionConfirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aturar'**
+  String get stopSessionConfirm;
+
+  /// No description provided for @reviewTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Revisió'**
+  String get reviewTitle;
+
+  /// No description provided for @sessionInReview.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sessió en revisió'**
+  String get sessionInReview;
+
+  /// No description provided for @continueReview.
+  ///
+  /// In ca, this message translates to:
+  /// **'Continuar la revisió'**
+  String get continueReview;
+
+  /// No description provided for @continueObserving.
+  ///
+  /// In ca, this message translates to:
+  /// **'Continuar observant'**
+  String get continueObserving;
+
+  /// No description provided for @observingTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observant'**
+  String get observingTitle;
 }
 
 class _AppLocalizationsDelegate

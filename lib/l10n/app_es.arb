@@ -1,16 +1,58 @@
 {
-  "@@locale": "es",
-  "appTitle": "Noctámbulos",
-  "settingsTitle": "Configuración",
-  "languageLabel": "Idioma",
-  "systemLabel": "Sistema",
-  "catalanLabel": "Catalan",
-  "spanishLabel": "Castellano",
-  "themeLightLabel": "Claro",
-  "themeDarkLabel": "Oscuro",
-  "themeSystemLabel": "Sistema",
-  "homeLabel": "Inicio",
-  "guideLabel": "Guía",
-  "exploreLabel": "Explora",
-  "profileLabel": "Perfil"
+    "@@locale": "es",
+    "appTitle": "Noctámbulos",
+    "settingsTitle": "Configuración",
+    "languageLabel": "Idioma",
+    "systemLabel": "Sistema",
+    "catalanLabel": "Catalan",
+    "spanishLabel": "Castellano",
+    "themeLightLabel": "Claro",
+    "themeDarkLabel": "Oscuro",
+    "themeSystemLabel": "Sistema",
+    "homeLabel": "Inicio",
+    "guideLabel": "Guía",
+    "exploreLabel": "Explora",
+    "profileLabel": "Perfil",
+    "censusLabel": "Censo",
+    "stationLabel": "Estación de Seguimiento",
+    "incidentalLabel": "Observación Incidental",
+    "homeTitle": "Inicio",
+
+    "errorSessionAlreadyExists": "Ya hay una sesión activa. Finalízala o cancélala primero.",
+      "errorUnknown": "Se ha producido un error desconocido.",
+      "activeSessionTitle": "Sesión en curso",
+
+      "startedAt": "Observando desde {time}",
+      "@startedAt": {
+        "placeholders": {
+          "time": {
+            "type": "String"
+          }
+        }
+      },
+
+      "observationsRegistered": "{count} observaciones registradas",
+      "@observationsRegistered": {
+        "placeholders": {
+          "count": {
+            "type": "int"
+          }
+        }
+      },
+
+      "stopAndReview": "Detener y Revisar",
+      "cancelSession": "Cancelar Sesión",
+      "cancelSessionTitle": "¿Cancelar sesión?",
+      "cancelSessionBody": "Se perderá toda la información y no se podrá recuperar.",
+      "back": "Volver",
+      "delete": "Eliminar",
+
+      "stopSessionTitle": "¿Detener la sesión?",
+      "stopSessionBody": "Las observaciones ya registradas se conservarán.",
+      "stopSessionConfirm": "Detener",
+      "reviewTitle": "Revisión",
+      "sessionInReview": "Sesión en revisión",
+      "continueReview": "Continuar la revisión",
+      "continueObserving": "Continuar observando",
+      "observingTitle": "Observando"
 }

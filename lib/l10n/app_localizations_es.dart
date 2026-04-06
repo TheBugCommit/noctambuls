@@ -46,4 +46,80 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get profileLabel => 'Perfil';
+
+  @override
+  String get censusLabel => 'Censo';
+
+  @override
+  String get stationLabel => 'Estación de Seguimiento';
+
+  @override
+  String get incidentalLabel => 'Observación Incidental';
+
+  @override
+  String get homeTitle => 'Inicio';
+
+  @override
+  String get errorSessionAlreadyExists =>
+      'Ya hay una sesión activa. Finalízala o cancélala primero.';
+
+  @override
+  String get errorUnknown => 'Se ha producido un error desconocido.';
+
+  @override
+  String get activeSessionTitle => 'Sesión en curso';
+
+  @override
+  String startedAt(String time) {
+    return 'Observando desde $time';
+  }
+
+  @override
+  String observationsRegistered(int count) {
+    return '$count observaciones registradas';
+  }
+
+  @override
+  String get stopAndReview => 'Detener y Revisar';
+
+  @override
+  String get cancelSession => 'Cancelar Sesión';
+
+  @override
+  String get cancelSessionTitle => '¿Cancelar sesión?';
+
+  @override
+  String get cancelSessionBody =>
+      'Se perderá toda la información y no se podrá recuperar.';
+
+  @override
+  String get back => 'Volver';
+
+  @override
+  String get delete => 'Eliminar';
+
+  @override
+  String get stopSessionTitle => '¿Detener la sesión?';
+
+  @override
+  String get stopSessionBody =>
+      'Las observaciones ya registradas se conservarán.';
+
+  @override
+  String get stopSessionConfirm => 'Detener';
+
+  @override
+  String get reviewTitle => 'Revisión';
+
+  @override
+  String get sessionInReview => 'Sesión en revisión';
+
+  @override
+  String get continueReview => 'Continuar la revisión';
+
+  @override
+  String get continueObserving => 'Continuar observando';
+
+  @override
+  String get observingTitle => 'Observando';
 }

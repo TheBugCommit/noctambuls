@@ -1,19 +1,61 @@
 {
-  "@@locale": "ca",
-  "appTitle": "Noctàmbuls",
-  "@appTitle": {
+    "@@locale": "ca",
+    "appTitle": "Noctàmbuls",
+    "@appTitle": {
     "description": "El títol principal de l'aplicació"
-  },
-  "settingsTitle": "Configuració",
-  "languageLabel": "Idioma",
-  "systemLabel": "Sistema",
-  "catalanLabel": "Català",
-  "spanishLabel": "Castellà",
-  "themeLightLabel": "Clar",
-  "themeDarkLabel": "Fosc",
-  "themeSystemLabel": "Sistema",
-  "homeLabel": "Inici",
-  "guideLabel": "Guia",
-  "exploreLabel": "Explora",
-  "profileLabel": "Perfil"
+    },
+    "settingsTitle": "Configuració",
+    "languageLabel": "Idioma",
+    "systemLabel": "Sistema",
+    "catalanLabel": "Català",
+    "spanishLabel": "Castellà",
+    "themeLightLabel": "Clar",
+    "themeDarkLabel": "Fosc",
+    "themeSystemLabel": "Sistema",
+    "homeLabel": "Inici",
+    "guideLabel": "Guia",
+    "exploreLabel": "Explora",
+    "profileLabel": "Perfil",
+    "censusLabel": "Cens",
+    "stationLabel": "Estació de Seguiment",
+    "incidentalLabel": "Observació Incidental",
+    "homeTitle": "Inici",
+
+    "errorSessionAlreadyExists": "Ja hi ha una sessió activa. Finalitza-la o cancel·la-la primer.",
+      "errorUnknown": "S'ha produït un error desconegut.",
+      "activeSessionTitle": "Sessió en curs",
+
+      "startedAt": "Observant des de {time}",
+      "@startedAt": {
+        "placeholders": {
+          "time": {
+            "type": "String"
+          }
+        }
+      },
+
+      "observationsRegistered": "{count} observacions registrades",
+      "@observationsRegistered": {
+        "placeholders": {
+          "count": {
+            "type": "int"
+          }
+        }
+      },
+
+      "stopAndReview": "Aturar i Revisar",
+      "cancelSession": "Cancel·lar Sessió",
+      "cancelSessionTitle": "Cancel·lar sessió?",
+      "cancelSessionBody": "Es perdrà tota la informació i no es podrà recuperar.",
+      "back": "Tornar",
+      "delete": "Eliminar",
+
+      "stopSessionTitle": "Aturar la sessió?",
+      "stopSessionBody": "Les observacions ja registrades es conservaran.",
+      "stopSessionConfirm": "Aturar",
+      "reviewTitle": "Revisió",
+      "sessionInReview": "Sessió en revisió",
+      "continueReview": "Continuar la revisió",
+      "continueObserving": "Continuar observant",
+      "observingTitle": "Observant"
 }

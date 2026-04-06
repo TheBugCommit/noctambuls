@@ -12,42 +12,54 @@ class MainNavigationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return Scaffold(
       body: navigationShell,
-
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) {
-          navigationShell.goBranch(
-            index,
-            initialLocation: index == navigationShell.currentIndex,
-          );
-        },
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
-            label: l10n.homeLabel,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.auto_stories_outlined),
-            selectedIcon: const Icon(Icons.auto_stories),
-            label: l10n.guideLabel,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.location_on_outlined),
-            selectedIcon: const Icon(Icons.location_on),
-            label: l10n.exploreLabel,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_outline),
-            selectedIcon: const Icon(Icons.person),
-            label: l10n.profileLabel,
-          ),
-        ],
+      bottomNavigationBar: _DefaultNavigationBar(
+        navigationShell: navigationShell,
       ),
+    );
+  }
+}
+
+class _DefaultNavigationBar extends StatelessWidget {
+  const _DefaultNavigationBar({required this.navigationShell});
+
+  final StatefulNavigationShell navigationShell;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return NavigationBar(
+      selectedIndex: navigationShell.currentIndex,
+      onDestinationSelected: (index) {
+        navigationShell.goBranch(
+          index,
+          initialLocation: index == navigationShell.currentIndex,
+        );
+      },
+      destinations: [
+        NavigationDestination(
+          icon: const Icon(Icons.home_outlined),
+          selectedIcon: const Icon(Icons.home),
+          label: l10n.homeLabel,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.auto_stories_outlined),
+          selectedIcon: const Icon(Icons.auto_stories),
+          label: l10n.guideLabel,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.location_on_outlined),
+          selectedIcon: const Icon(Icons.location_on),
+          label: l10n.exploreLabel,
+        ),
+        NavigationDestination(
+          icon: const Icon(Icons.person_outline),
+          selectedIcon: const Icon(Icons.person),
+          label: l10n.profileLabel,
+        ),
+      ],
     );
   }
 }
