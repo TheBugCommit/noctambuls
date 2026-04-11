@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 
-enum AppButtonStyle { primary, secondary, tertiary, destructive, ghost }
+enum AppButtonStyle {
+  primary,
+  secondary,
+  tertiary,
+  destructive,
+  destructiveTonal,
+  ghost,
+  outline,
+}
 
 enum AppButtonSize { sm, md, lg, xl }
 
@@ -28,6 +36,7 @@ class AppButton extends StatelessWidget {
     label: label,
     icon: icon,
     size: size,
+    style: AppButtonStyle.primary,
   );
 
   factory AppButton.secondary({
@@ -39,8 +48,21 @@ class AppButton extends StatelessWidget {
     onPressed: onPressed,
     label: label,
     icon: icon,
-    style: AppButtonStyle.secondary,
     size: size,
+    style: AppButtonStyle.secondary,
+  );
+
+  factory AppButton.outline({
+    required VoidCallback? onPressed,
+    String? label,
+    IconData? icon,
+    AppButtonSize size = AppButtonSize.md,
+  }) => AppButton(
+    onPressed: onPressed,
+    label: label,
+    icon: icon,
+    size: size,
+    style: AppButtonStyle.outline,
   );
 
   factory AppButton.destructive({
@@ -52,8 +74,21 @@ class AppButton extends StatelessWidget {
     onPressed: onPressed,
     label: label,
     icon: icon,
-    style: AppButtonStyle.destructive,
     size: size,
+    style: AppButtonStyle.destructive,
+  );
+
+  factory AppButton.destructiveSoft({
+    required VoidCallback? onPressed,
+    String? label,
+    IconData? icon,
+    AppButtonSize size = AppButtonSize.md,
+  }) => AppButton(
+    onPressed: onPressed,
+    label: label,
+    icon: icon,
+    size: size,
+    style: AppButtonStyle.destructiveTonal,
   );
 
   final VoidCallback? onPressed;
@@ -66,23 +101,6 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
-
-    final (bgColor, fgColor) = switch (style) {
-      AppButtonStyle.primary => (colorScheme.primary, colorScheme.onPrimary),
-      AppButtonStyle.secondary => (
-        colorScheme.secondaryContainer,
-        colorScheme.onSecondaryContainer,
-      ),
-      AppButtonStyle.tertiary => (
-        colorScheme.tertiaryContainer,
-        colorScheme.onTertiaryContainer,
-      ),
-      AppButtonStyle.destructive => (
-        colorScheme.errorContainer,
-        colorScheme.onErrorContainer,
-      ),
-      AppButtonStyle.ghost => (Colors.transparent, colorScheme.primary),
-    };
 
     final (padding, textStyle, iconSize, exactHeight) = switch (size) {
       AppButtonSize.sm => (
@@ -111,48 +129,109 @@ class AppButton extends StatelessWidget {
       ),
     };
 
-    final baseStyle = ButtonStyle(
-      backgroundColor: WidgetStateProperty.all(bgColor),
-      foregroundColor: WidgetStateProperty.all(fgColor),
-      textStyle: WidgetStateProperty.all(textStyle),
-      padding: WidgetStateProperty.all(padding),
-      minimumSize: WidgetStateProperty.all(Size(0, exactHeight)),
-      shape: WidgetStateProperty.all(
-        RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-        ),
-      ),
-      elevation: WidgetStateProperty.all(0),
+    final shape = RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
     );
+
+    Widget buildNativeButton(Widget childWidget, {bool isIconOnly = false}) {
+      final currentPadding = isIconOnly ? EdgeInsets.zero : padding;
+
+      switch (style) {
+        case AppButtonStyle.primary:
+        case AppButtonStyle.secondary:
+        case AppButtonStyle.tertiary:
+        case AppButtonStyle.destructive:
+        case AppButtonStyle.destructiveTonal:
+          final (bgColor, fgColor) = switch (style) {
+            AppButtonStyle.primary => (
+              colorScheme.primary,
+              colorScheme.onPrimary,
+            ),
+            AppButtonStyle.secondary => (
+              colorScheme.secondaryContainer,
+              colorScheme.onSecondaryContainer,
+            ),
+            AppButtonStyle.tertiary => (
+              colorScheme.tertiaryContainer,
+              colorScheme.onTertiaryContainer,
+            ),
+            AppButtonStyle.destructive => (
+              colorScheme.error,
+              colorScheme.onError,
+            ),
+            AppButtonStyle.destructiveTonal => (
+              colorScheme.errorContainer,
+              colorScheme.onErrorContainer,
+            ),
+            _ => (colorScheme.primary, colorScheme.onPrimary),
+          };
+
+          return FilledButton(
+            onPressed: onPressed,
+            style: FilledButton.styleFrom(
+              backgroundColor: bgColor,
+              foregroundColor: fgColor,
+              padding: currentPadding,
+              textStyle: textStyle,
+              minimumSize: Size(0, exactHeight),
+              shape: shape,
+              elevation: 0,
+            ),
+            child: childWidget,
+          );
+
+        case AppButtonStyle.outline:
+          return OutlinedButton(
+            onPressed: onPressed,
+            style: OutlinedButton.styleFrom(
+              foregroundColor: colorScheme.primary,
+              side: BorderSide(
+                color: onPressed != null
+                    ? colorScheme.outline
+                    : colorScheme.onSurface.withValues(alpha: 0.12),
+              ),
+              padding: currentPadding,
+              textStyle: textStyle,
+              minimumSize: Size(0, exactHeight),
+              shape: shape,
+            ),
+            child: childWidget,
+          );
+
+        case AppButtonStyle.ghost:
+          return TextButton(
+            onPressed: onPressed,
+            style: TextButton.styleFrom(
+              foregroundColor: colorScheme.primary,
+              padding: currentPadding,
+              textStyle: textStyle,
+              minimumSize: Size(0, exactHeight),
+              shape: shape,
+            ),
+            child: childWidget,
+          );
+      }
+    }
 
     if (label == null && icon != null) {
       return SizedBox.square(
         dimension: exactHeight,
-        child: IconButton(
-          onPressed: onPressed,
-          style: baseStyle.copyWith(
-            padding: WidgetStateProperty.all(EdgeInsets.zero),
-          ),
-          icon: Icon(icon, size: iconSize),
-        ),
+        child: buildNativeButton(Icon(icon, size: iconSize), isIconOnly: true),
       );
     }
 
-    final child = Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (icon != null) ...[
-          Icon(icon, size: iconSize),
-          const SizedBox(width: AppDimensions.sm),
+    return buildNativeButton(
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: iconSize),
+            const SizedBox(width: AppDimensions.sm),
+          ],
+          Text(label!),
         ],
-        Text(label!),
-      ],
+      ),
     );
-
-    if (style == AppButtonStyle.ghost) {
-      return TextButton(onPressed: onPressed, style: baseStyle, child: child);
-    }
-    return FilledButton(onPressed: onPressed, style: baseStyle, child: child);
   }
 }

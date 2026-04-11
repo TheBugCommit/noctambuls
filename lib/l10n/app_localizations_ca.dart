@@ -102,6 +102,19 @@ class AppLocalizationsCa extends AppLocalizations {
   String get delete => 'Eliminar';
 
   @override
+  String get cancel => 'Cancel·la';
+
+  @override
+  String get confirmDelete => 'Sí, elimina';
+
+  @override
+  String get confirmDeleteSessionMessage =>
+      'Es perdran totes les observacions d\'aquesta sessió. Aquesta acció no es pot desfer.';
+
+  @override
+  String get confirmDeleteSessionTitle => 'Vols eliminar la sessió?';
+
+  @override
   String get stopSessionTitle => 'Aturar la sessió?';
 
   @override

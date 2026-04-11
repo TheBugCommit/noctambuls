@@ -8,9 +8,11 @@ import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/widgets/app_button.dart';
 import 'package:noctambuls/core/widgets/app_button_fab.dart';
+import 'package:noctambuls/core/widgets/app_sheet.dart';
 import 'package:noctambuls/core/widgets/bottom_nav_bar.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
@@ -19,7 +21,6 @@ import 'package:noctambuls/features/observations/presentation/cubit/stopwatch_cu
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/empty_observations.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/observation_tile.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/stopwatch_display.dart';
-import 'package:noctambuls/features/observations/presentation/shared_widgets/delete_session_dialog.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/popup_menu_observing.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -63,13 +64,21 @@ class _ObservingContent extends StatelessWidget {
 
   final ObservationSession session;
 
-  void _confirmDelete(BuildContext context) {
-    unawaited(
-      showDialog<void>(
-        context: context,
-        builder: (_) => const DeleteSessionDialog(),
-      ),
+  Future<void> _confirmDelete(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+    final isConfirmed = await AppSheet.showConfirm(
+      context: context,
+      title: l10n.confirmDeleteSessionTitle,
+      message: l10n.confirmDeleteSessionMessage,
+      confirmText: l10n.confirmDelete,
+      cancelText: l10n.cancel,
+      isDestructive: true,
     );
+    if (!context.mounted) return;
+
+    if (isConfirmed == true) {
+      context.read<SessionLifecycleBloc>().add(DeleteActiveSession());
+    }
   }
 
   void _goToReview(BuildContext context) {
@@ -105,7 +114,7 @@ class _ObservingContent extends StatelessWidget {
         bottomNavigationBar: BottomNavBar(
           child: Row(
             children: [
-              AppButton.destructive(
+              AppButton.destructiveSoft(
                 icon: Icons.delete_outline,
                 onPressed: () => _confirmDelete(context),
               ),

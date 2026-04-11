@@ -50,6 +50,10 @@
       "deleteSessionBody": "Es perdrà tota la informació i no es podrà recuperar.",
       "back": "Tornar",
       "delete": "Eliminar",
+      "cancel": "Cancel·la",
+      "confirmDelete": "Sí, elimina",
+      "confirmDeleteSessionMessage": "Es perdran totes les observacions d'aquesta sessió. Aquesta acció no es pot desfer.",
+      "confirmDeleteSessionTitle": "Vols eliminar la sessió?",
 
       "stopSessionTitle": "Aturar la sessió?",
       "stopSessionBody": "Les observacions ja registrades es conservaran.",

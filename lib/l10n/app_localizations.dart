@@ -272,6 +272,30 @@ abstract class AppLocalizations {
   /// **'Eliminar'**
   String get delete;
 
+  /// No description provided for @cancel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel·la'**
+  String get cancel;
+
+  /// No description provided for @confirmDelete.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sí, elimina'**
+  String get confirmDelete;
+
+  /// No description provided for @confirmDeleteSessionMessage.
+  ///
+  /// In ca, this message translates to:
+  /// **'Es perdran totes les observacions d\'aquesta sessió. Aquesta acció no es pot desfer.'**
+  String get confirmDeleteSessionMessage;
+
+  /// No description provided for @confirmDeleteSessionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Vols eliminar la sessió?'**
+  String get confirmDeleteSessionTitle;
+
   /// No description provided for @stopSessionTitle.
   ///
   /// In ca, this message translates to:

@@ -103,6 +103,19 @@ class AppLocalizationsEs extends AppLocalizations {
   String get delete => 'Eliminar';
 
   @override
+  String get cancel => 'Cancela';
+
+  @override
+  String get confirmDelete => 'Sí, elimina';
+
+  @override
+  String get confirmDeleteSessionMessage =>
+      'Se perderán todas las observaciones de esta sesión. Esta acción es irreversible.';
+
+  @override
+  String get confirmDeleteSessionTitle => 'Quieres eliminar la session?';
+
+  @override
   String get stopSessionTitle => '¿Detener la sesión?';
 
   @override

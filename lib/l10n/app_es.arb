@@ -47,6 +47,10 @@
       "deleteSessionBody": "Se perderá toda la información y no se podrá recuperar.",
       "back": "Volver",
       "delete": "Eliminar",
+      "cancel": "Cancela",
+      "confirmDelete": "Sí, elimina",
+      "confirmDeleteSessionMessage": "Se perderán todas las observaciones de esta sesión. Esta acción es irreversible.",
+      "confirmDeleteSessionTitle": "Quieres eliminar la session?",
 
       "stopSessionTitle": "¿Detener la sesión?",
       "stopSessionBody": "Las observaciones ya registradas se conservarán.",
