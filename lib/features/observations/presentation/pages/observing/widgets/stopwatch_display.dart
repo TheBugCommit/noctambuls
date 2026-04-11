@@ -14,17 +14,14 @@ class StopwatchDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final elapsed = context.select((StopwatchCubit cubit) => cubit.state);
     final theme = Theme.of(context);
-    
-    return BlocBuilder<StopwatchCubit, Duration>(
-      builder: (context, elapsed) {
-        return Text(
-          _format(elapsed),
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        );
-      },
+    return Text(
+      _format(elapsed),
+      style: theme.textTheme.labelMedium?.copyWith(
+        color: theme.colorScheme.onSurfaceVariant,
+        fontFeatures: const [FontFeature.tabularFigures()],
+      ),
     );
   }
 }

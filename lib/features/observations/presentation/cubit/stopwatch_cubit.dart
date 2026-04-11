@@ -14,30 +14,34 @@ class StopwatchCubit extends Cubit<Duration> with WidgetsBindingObserver {
 
   Duration _elapsed() {
     final diff = DateTime.now().difference(startTime);
-    return diff.isNegative ? Duration.zero : diff;
+    if (diff.isNegative) return Duration.zero;
+
+    return Duration(seconds: diff.inSeconds);
   }
 
   void _startTimer() {
     _timer?.cancel();
     emit(_elapsed());
+
     _timer = Timer.periodic(
       const Duration(seconds: 1),
-      (_) => emit(_elapsed()),
+      (timer) {
+        final newDuration = _elapsed();
+        if (state != newDuration) {
+          emit(newDuration);
+        }
+      },
     );
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    switch (state) {
-      case AppLifecycleState.paused:
-      case AppLifecycleState.inactive:
-      case AppLifecycleState.hidden:
-        _timer?.cancel();
-        _timer = null;
-      case AppLifecycleState.resumed:
-        _startTimer();
-      case AppLifecycleState.detached:
-        break;
+    if (state == AppLifecycleState.resumed) {
+      _startTimer();
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.hidden) {
+      _timer?.cancel();
+      _timer = null;
     }
   }
 
