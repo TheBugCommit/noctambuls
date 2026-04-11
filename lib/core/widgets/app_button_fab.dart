@@ -12,7 +12,6 @@ class AppButtonFab extends StatelessWidget {
     this.label,
     this.style = AppButtonFabStyle.primary,
     this.size = AppButtonFabSize.md,
-    super.key,
   });
 
   factory AppButtonFab.small({
@@ -34,7 +33,6 @@ class AppButtonFab extends StatelessWidget {
     onPressed: onPressed,
     icon: icon,
     style: style,
-    size: AppButtonFabSize.md,
   );
 
   factory AppButtonFab.large({
@@ -58,7 +56,6 @@ class AppButtonFab extends StatelessWidget {
     icon: icon,
     label: label,
     style: style,
-    size: AppButtonFabSize.md,
   );
 
   final VoidCallback? onPressed;

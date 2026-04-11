@@ -27,7 +27,6 @@ class AppButton extends StatelessWidget {
     onPressed: onPressed,
     label: label,
     icon: icon,
-    style: AppButtonStyle.primary,
     size: size,
   );
 
