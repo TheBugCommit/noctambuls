@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/widgets/app_button.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -54,16 +55,13 @@ class ActiveSessionCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: AppDimensions.sm),
-            Row(
-              children: [
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: onResume,
-                    icon: const Icon(Icons.arrow_forward),
-                    label: Text(l10n.continueObserving),
-                  ),
-                ),
-              ],
+            SizedBox(
+              width: double.infinity,
+              child: AppButton.primary(
+                onPressed: onResume,
+                icon: Icons.arrow_forward,
+                label: l10n.continueObserving,
+              ),
             ),
           ],
         ),

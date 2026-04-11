@@ -80,16 +80,20 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get stopAndReview => 'Detener y Revisar';
+  String get noObservationsRegistered =>
+      'No hay ninguna observacion registrada';
 
   @override
-  String get cancelSession => 'Cancelar Sesión';
+  String get stopAndReview => 'Detener';
 
   @override
-  String get cancelSessionTitle => '¿Cancelar sesión?';
+  String get deleteSession => 'Cancelar Sesión';
 
   @override
-  String get cancelSessionBody =>
+  String get deleteSessionTitle => '¿Cancelar sesión?';
+
+  @override
+  String get deleteSessionBody =>
       'Se perderá toda la información y no se podrá recuperar.';
 
   @override

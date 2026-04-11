@@ -230,29 +230,35 @@ abstract class AppLocalizations {
   /// **'{count} observacions registrades'**
   String observationsRegistered(int count);
 
+  /// No description provided for @noObservationsRegistered.
+  ///
+  /// In ca, this message translates to:
+  /// **'No hi ha cap observació registrada'**
+  String get noObservationsRegistered;
+
   /// No description provided for @stopAndReview.
   ///
   /// In ca, this message translates to:
-  /// **'Aturar i Revisar'**
+  /// **'Aturar'**
   String get stopAndReview;
 
-  /// No description provided for @cancelSession.
+  /// No description provided for @deleteSession.
   ///
   /// In ca, this message translates to:
   /// **'Cancel·lar Sessió'**
-  String get cancelSession;
+  String get deleteSession;
 
-  /// No description provided for @cancelSessionTitle.
+  /// No description provided for @deleteSessionTitle.
   ///
   /// In ca, this message translates to:
   /// **'Cancel·lar sessió?'**
-  String get cancelSessionTitle;
+  String get deleteSessionTitle;
 
-  /// No description provided for @cancelSessionBody.
+  /// No description provided for @deleteSessionBody.
   ///
   /// In ca, this message translates to:
   /// **'Es perdrà tota la informació i no es podrà recuperar.'**
-  String get cancelSessionBody;
+  String get deleteSessionBody;
 
   /// No description provided for @back.
   ///

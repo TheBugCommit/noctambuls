@@ -80,16 +80,19 @@ class AppLocalizationsCa extends AppLocalizations {
   }
 
   @override
-  String get stopAndReview => 'Aturar i Revisar';
+  String get noObservationsRegistered => 'No hi ha cap observació registrada';
 
   @override
-  String get cancelSession => 'Cancel·lar Sessió';
+  String get stopAndReview => 'Aturar';
 
   @override
-  String get cancelSessionTitle => 'Cancel·lar sessió?';
+  String get deleteSession => 'Cancel·lar Sessió';
 
   @override
-  String get cancelSessionBody =>
+  String get deleteSessionTitle => 'Cancel·lar sessió?';
+
+  @override
+  String get deleteSessionBody =>
       'Es perdrà tota la informació i no es podrà recuperar.';
 
   @override

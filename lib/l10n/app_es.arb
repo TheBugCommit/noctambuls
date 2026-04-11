@@ -39,11 +39,12 @@
           }
         }
       },
+      "noObservationsRegistered": "No hay ninguna observacion registrada",
 
-      "stopAndReview": "Detener y Revisar",
-      "cancelSession": "Cancelar Sesión",
-      "cancelSessionTitle": "¿Cancelar sesión?",
-      "cancelSessionBody": "Se perderá toda la información y no se podrá recuperar.",
+      "stopAndReview": "Detener",
+      "deleteSession": "Cancelar Sesión",
+      "deleteSessionTitle": "¿Cancelar sesión?",
+      "deleteSessionBody": "Se perderá toda la información y no se podrá recuperar.",
       "back": "Volver",
       "delete": "Eliminar",
 

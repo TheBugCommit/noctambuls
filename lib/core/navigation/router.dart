@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/navigation/main_navigation_screen.dart';
-import 'package:noctambuls/features/observations/presentation/pages/home_page.dart';
-import 'package:noctambuls/features/observations/presentation/pages/observing_page.dart';
-import 'package:noctambuls/features/observations/presentation/pages/review_page.dart';
+import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observing/observing_page.dart';
+import 'package:noctambuls/features/observations/presentation/pages/review/review_page.dart';
 import 'package:noctambuls/features/settings/presentation/pages/settings_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();

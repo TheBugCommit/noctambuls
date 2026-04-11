@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
+import 'package:noctambuls/core/widgets/app_button.dart';
 import 'package:noctambuls/core/widgets/taxus_app_bar.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
@@ -12,9 +13,9 @@ import 'package:noctambuls/features/observations/domain/failures/session_failure
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
-import 'package:noctambuls/features/observations/presentation/widgets/active_session_card.dart';
-import 'package:noctambuls/features/observations/presentation/widgets/home_header.dart';
-import 'package:noctambuls/features/observations/presentation/widgets/session_type_selector.dart';
+import 'package:noctambuls/features/observations/presentation/pages/home/widgets/active_session_card.dart';
+import 'package:noctambuls/features/observations/presentation/pages/home/widgets/home_header.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/session_type_selector.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class HomePage extends StatelessWidget {
@@ -159,18 +160,18 @@ class _ReviewingScaffold extends StatelessWidget {
           children: [
             Icon(
               Icons.fact_check_outlined,
-              size: 64,
+              size: AppDimensions.xxl * 1.5,
               color: colorScheme.primary,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: AppDimensions.lg),
             Text(
               l10n.sessionInReview,
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 32),
-            FilledButton(
+            const SizedBox(height: AppDimensions.xl),
+            AppButton.primary(
               onPressed: () => unawaited(context.push(AppRoutes.review)),
-              child: Text(l10n.continueReview),
+              label: l10n.continueReview,
             ),
           ],
         ),
