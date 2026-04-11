@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_assets.dart';
+import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:vector_graphics/vector_graphics.dart';
@@ -22,11 +23,14 @@ class TaxusAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SvgPicture(AssetBytesLoader(AppAssets.taxusIcon), height: 36),
-          const SizedBox(width: 6),
+          const SvgPicture(
+            AssetBytesLoader(AppAssets.taxusIcon),
+            height: AppDimensions.xl,
+          ),
+          const SizedBox(width: AppDimensions.sm),
           SvgPicture(
             const AssetBytesLoader(AppAssets.taxusText),
-            height: 36,
+            height: AppDimensions.xl,
             colorFilter: ColorFilter.mode(
               colorScheme.onSurface,
               BlendMode.srcIn,
@@ -49,7 +53,7 @@ class TaxusAppBar extends StatelessWidget implements PreferredSizeWidget {
             await context.push(AppRoutes.settings);
           },
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppDimensions.sm),
       ],
     );
   }

@@ -93,7 +93,7 @@ class _ObservingContent extends StatelessWidget {
           content: Text(l10n.cancelSessionBody),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(ctx),
+              onPressed: () => ctx.pop(),
               child: Text(l10n.back),
             ),
             FilledButton(
@@ -102,7 +102,7 @@ class _ObservingContent extends StatelessWidget {
                 foregroundColor: colorScheme.onError,
               ),
               onPressed: () {
-                Navigator.pop(ctx);
+                ctx.pop();
                 context.read<SessionLifecycleBloc>().add(DeleteActiveSession());
               },
               child: Text(l10n.delete),
