@@ -1,0 +1,29 @@
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:noctambuls/features/auth/data/datasources/auth_provider_datasource.dart';
+import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
+import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
+
+class GoogleAuthDataSourceImpl
+    implements AuthProviderDataSource<GoogleAuthCredentials> {
+  const GoogleAuthDataSourceImpl({
+    required this.googleSignIn,
+  });
+
+  final GoogleSignIn googleSignIn;
+
+  @override
+  AuthProviderType get authProviderType => AuthProviderType.google;
+
+  @override
+  Future<String?> authenticate(GoogleAuthCredentials credentials) async {
+    final account = await googleSignIn.signIn();
+
+    if (account == null) return null;
+
+    final auth = await account.authentication;
+    return auth.idToken;
+  }
+
+  @override
+  Future<void> signOut() async {}
+}
