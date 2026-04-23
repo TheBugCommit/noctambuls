@@ -67,7 +67,7 @@ void initAuthFeature() {
     ..registerLazySingleton(() => GetStoredAuthUseCase(sl()))
     ..registerLazySingleton(() => SignInUseCase(sl()))
     ..registerLazySingleton(() => SignOutUseCase(sl()))
-    ..registerFactory(
+    ..registerLazySingleton<AuthBloc>(
       () => AuthBloc(
         getStoredAuthUseCase: sl(),
         signInUseCase: sl(),

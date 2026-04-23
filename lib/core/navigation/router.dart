@@ -17,16 +17,18 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: AppRoutes.home,
+  initialLocation: AppRoutes.login,
   refreshListenable: GoRouterRefreshStream(authBloc.stream),
   redirect: (context, state) {
     final authState = authBloc.state;
     final isOnLogin = state.matchedLocation == AppRoutes.login;
 
-    if (authState is AuthInitial) return null;
-
+    if (authState is AuthInitial) {
+      return null;
+    }
     if (authState is Unauthenticated || authState is AuthError) {
-      return isOnLogin ? null : AppRoutes.login;
+      if (isOnLogin) return null;
+      return AppRoutes.login;
     }
 
     if (authState is Authenticated && isOnLogin) {
