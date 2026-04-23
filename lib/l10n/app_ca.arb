@@ -62,5 +62,11 @@
       "sessionInReview": "Sessió en revisió",
       "continueReview": "Continuar la revisió",
       "continueObserving": "Continuar observant",
-      "observingTitle": "Observant"
+      "observingTitle": "Observant",
+
+      "loginTitle": "Benvingut/da",
+      "loginSubtitle": "Inicia sessió per continuar",
+      "signInWithGoogle": "Inicia sessió amb Google",
+      "signInError": "No s'ha pogut iniciar sessió. Torna-ho a intentar.",
+      "signOutLabel": "Tanca la sessió"
 }

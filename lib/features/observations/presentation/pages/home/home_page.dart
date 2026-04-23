@@ -7,6 +7,8 @@ import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/widgets/app_button.dart';
 import 'package:noctambuls/core/widgets/taxus_app_bar.dart';
+import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
@@ -64,9 +66,15 @@ class HomePage extends StatelessWidget {
         return switch (state) {
           SessionLifecycleIdle() || SessionLifecycleError() => _IdleScaffold(
             onTypeSelected: (type) =>
-                // TODO(auth): Substituir 'user-1' pel valor de l'autenticació.
                 context.read<SessionLifecycleBloc>().add(
-                  StartNewSession(sessionType: type, annotatorId: 'user-1'),
+                  StartNewSession(
+                    sessionType: type,
+                    annotatorId:
+                        (context.read<AuthBloc>().state as Authenticated?)
+                            ?.user
+                            .id ??
+                        'unknown',
+                  ),
                 ),
           ),
           SessionLifecycleLoading() => const _LoadingScaffold(),

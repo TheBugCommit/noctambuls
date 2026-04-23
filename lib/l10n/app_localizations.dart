@@ -343,6 +343,36 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Observant'**
   String get observingTitle;
+
+  /// No description provided for @loginTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Benvingut/da'**
+  String get loginTitle;
+
+  /// No description provided for @loginSubtitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Inicia sessió per continuar'**
+  String get loginSubtitle;
+
+  /// No description provided for @signInWithGoogle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Inicia sessió amb Google'**
+  String get signInWithGoogle;
+
+  /// No description provided for @signInError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut iniciar sessió. Torna-ho a intentar.'**
+  String get signInError;
+
+  /// No description provided for @signOutLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tanca la sessió'**
+  String get signOutLabel;
 }
 
 class _AppLocalizationsDelegate

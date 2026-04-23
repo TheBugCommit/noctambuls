@@ -139,4 +139,19 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get observingTitle => 'Observando';
+
+  @override
+  String get loginTitle => 'Bienvenido/a';
+
+  @override
+  String get loginSubtitle => 'Inicia sesión para continuar';
+
+  @override
+  String get signInWithGoogle => 'Iniciar sesión con Google';
+
+  @override
+  String get signInError => 'No se pudo iniciar sesión. Inténtalo de nuevo.';
+
+  @override
+  String get signOutLabel => 'Cerrar sesión';
 }
