@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:noctambuls/core/navigation/router.dart';
+import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/theme/theme.dart';
 import 'package:noctambuls/core/theme/util.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
@@ -19,6 +20,8 @@ class NoctambulsApp extends StatelessWidget {
 
     final themeState = context.watch<ThemeCubit>().state;
     final langState = context.watch<LanguageCubit>().state;
+
+    final router = sl<GoRouter>();
 
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
