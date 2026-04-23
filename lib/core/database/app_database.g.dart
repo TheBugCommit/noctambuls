@@ -335,9 +335,9 @@ class $SessionsTableTable extends SessionsTable
   }
 
   static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
-      const EnumIndexConverter<SyncStatus>(SyncStatus.values);
+      const SyncStatusConverter();
   static JsonTypeConverter2<SessionType, int, int> $convertersessionType =
-      const EnumIndexConverter<SessionType>(SessionType.values);
+      const SessionTypeConverter();
 }
 
 class SessionEntityData extends DataClass
@@ -1173,11 +1173,9 @@ class $ObservationsTableTable extends ObservationsTable
   }
 
   static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
-      const EnumIndexConverter<SyncStatus>(SyncStatus.values);
+      const SyncStatusConverter();
   static JsonTypeConverter2<ValidationStatus, int, int>
-  $convertervalidationStatus = const EnumIndexConverter<ValidationStatus>(
-    ValidationStatus.values,
-  );
+  $convertervalidationStatus = const ValidationStatusConverter();
 }
 
 class ObservationEntityData extends DataClass

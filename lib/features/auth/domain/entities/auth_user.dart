@@ -4,13 +4,15 @@ class AuthUser extends Equatable {
   const AuthUser({
     required this.id,
     required this.email,
-    required this.jwt,
+    required this.tokenExpiry,
   });
 
   final String id;
   final String email;
-  final String jwt;
+  final DateTime tokenExpiry;
+
+  bool get isTokenExpired => DateTime.now().isAfter(tokenExpiry);
 
   @override
-  List<Object?> get props => [id, email, jwt];
+  List<Object?> get props => [id, email, tokenExpiry];
 }

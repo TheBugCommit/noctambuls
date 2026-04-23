@@ -107,3 +107,19 @@ final class UnsupportedProviderFailure extends AuthFailure {
     stackTrace: stackTrace,
   );
 }
+
+final class NetworkFailure extends AuthFailure {
+  const NetworkFailure({
+    super.debugMessage = 'No network connection',
+    super.statusCode = 0,
+    super.stackTrace,
+  });
+
+  @override
+  NetworkFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      NetworkFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}

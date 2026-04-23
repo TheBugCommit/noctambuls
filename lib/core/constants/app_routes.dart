@@ -7,6 +7,9 @@ class AppRoutes {
   static const String explore = '/explore';
   static const String profile = '/profile';
 
+  // Auth Routes
+  static const String login = '/login';
+
   // Secondary Routes
   static const String settings = '/settings';
   static const String observing = '/observing';
