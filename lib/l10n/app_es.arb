@@ -71,5 +71,6 @@
               "type": "String"
             }
         }
-    }
+    },
+    "cantOpenLink": "No se ha podido abrir el enlace"
 }

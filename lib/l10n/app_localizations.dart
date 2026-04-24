@@ -367,6 +367,12 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Fotografia de {bird}'**
   String semanticLabelBirdImage(String bird);
+
+  /// No description provided for @cantOpenLink.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut obrir l\'enllaç'**
+  String get cantOpenLink;
 }
 
 class _AppLocalizationsDelegate

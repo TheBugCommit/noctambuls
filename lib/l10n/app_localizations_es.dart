@@ -153,4 +153,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String semanticLabelBirdImage(String bird) {
     return 'Fotografía de $bird';
   }
+
+  @override
+  String get cantOpenLink => 'No se ha podido abrir el enlace';
 }
