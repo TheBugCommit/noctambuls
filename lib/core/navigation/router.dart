@@ -7,7 +7,7 @@ import 'package:noctambuls/core/navigation/main_navigation_screen.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
-import 'package:noctambuls/features/auth/presentation/pages/login/login_page.dart';
+import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/observing_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/review_page.dart';
@@ -42,7 +42,7 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
     GoRoute(
       path: AppRoutes.login,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const LoginPage(),
+      builder: (context, state) => const SignInPage(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {
