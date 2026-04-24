@@ -139,4 +139,18 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get observingTitle => 'Observando';
+
+  @override
+  String get noBirdsFound => 'No se han encontrado aves';
+
+  @override
+  String get listen => 'Escuchar';
+
+  @override
+  String get moreInfo => 'Más info';
+
+  @override
+  String semanticLabelBirdImage(String bird) {
+    return 'Fotografía de $bird';
+  }
 }

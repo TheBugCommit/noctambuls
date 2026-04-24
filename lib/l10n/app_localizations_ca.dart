@@ -138,4 +138,18 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get observingTitle => 'Observant';
+
+  @override
+  String get noBirdsFound => 'No s\'han trobat ocells';
+
+  @override
+  String get listen => 'Escoltar';
+
+  @override
+  String get moreInfo => 'Més info';
+
+  @override
+  String semanticLabelBirdImage(String bird) {
+    return 'Fotografia de $bird';
+  }
 }

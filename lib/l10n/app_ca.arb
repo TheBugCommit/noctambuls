@@ -22,45 +22,57 @@
     "homeTitle": "Inici",
 
     "errorSessionAlreadyExists": "Ja hi ha una sessió activa. Finalitza-la o cancel·la-la primer.",
-      "errorUnknown": "S'ha produït un error desconegut.",
-      "activeSessionTitle": "Sessió en curs",
+    "errorUnknown": "S'ha produït un error desconegut.",
+    "activeSessionTitle": "Sessió en curs",
 
-      "startedAt": "Observant des de {time}",
-      "@startedAt": {
+    "startedAt": "Observant des de {time}",
+    "@startedAt": {
         "placeholders": {
-          "time": {
-            "type": "String"
-          }
+            "time": {
+                "type": "String"
+            }
         }
-      },
+    },
 
-      "observationsRegistered": "{count} observacions registrades",
-      "@observationsRegistered": {
+    "observationsRegistered": "{count} observacions registrades",
+    "@observationsRegistered": {
         "placeholders": {
-          "count": {
-            "type": "int"
-          }
+            "count": {
+                "type": "int"
+            }
         }
-      },
-      "noObservationsRegistered": "No hi ha cap observació registrada",
+    },
+    "noObservationsRegistered": "No hi ha cap observació registrada",
 
-      "stopAndReview": "Aturar",
-      "deleteSession": "Cancel·lar Sessió",
-      "deleteSessionTitle": "Cancel·lar sessió?",
-      "deleteSessionBody": "Es perdrà tota la informació i no es podrà recuperar.",
-      "back": "Tornar",
-      "delete": "Eliminar",
-      "cancel": "Cancel·la",
-      "confirmDelete": "Sí, elimina",
-      "confirmDeleteSessionMessage": "Es perdran totes les observacions d'aquesta sessió. Aquesta acció no es pot desfer.",
-      "confirmDeleteSessionTitle": "Vols eliminar la sessió?",
+    "stopAndReview": "Aturar",
+    "deleteSession": "Cancel·lar Sessió",
+    "deleteSessionTitle": "Cancel·lar sessió?",
+    "deleteSessionBody": "Es perdrà tota la informació i no es podrà recuperar.",
+    "back": "Tornar",
+    "delete": "Eliminar",
+    "cancel": "Cancel·la",
+    "confirmDelete": "Sí, elimina",
+    "confirmDeleteSessionMessage": "Es perdran totes les observacions d'aquesta sessió. Aquesta acció no es pot desfer.",
+    "confirmDeleteSessionTitle": "Vols eliminar la sessió?",
 
-      "stopSessionTitle": "Aturar la sessió?",
-      "stopSessionBody": "Les observacions ja registrades es conservaran.",
-      "stopSessionConfirm": "Aturar",
-      "reviewTitle": "Revisió",
-      "sessionInReview": "Sessió en revisió",
-      "continueReview": "Continuar la revisió",
-      "continueObserving": "Continuar observant",
-      "observingTitle": "Observant"
+    "stopSessionTitle": "Aturar la sessió?",
+    "stopSessionBody": "Les observacions ja registrades es conservaran.",
+    "stopSessionConfirm": "Aturar",
+    "reviewTitle": "Revisió",
+    "sessionInReview": "Sessió en revisió",
+    "continueReview": "Continuar la revisió",
+    "continueObserving": "Continuar observant",
+    "observingTitle": "Observant",
+
+    "noBirdsFound": "No s'han trobat ocells",
+    "listen": "Escoltar",
+    "moreInfo": "Més info",
+    "semanticLabelBirdImage": "Fotografia de {bird}",
+    "@semanticLabelBirdImage": {
+        "placeholders": {
+            "bird": {
+                "type": "String"
+            }
+        }
+    }
 }

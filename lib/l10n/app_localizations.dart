@@ -343,6 +343,30 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Observant'**
   String get observingTitle;
+
+  /// No description provided for @noBirdsFound.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'han trobat ocells'**
+  String get noBirdsFound;
+
+  /// No description provided for @listen.
+  ///
+  /// In ca, this message translates to:
+  /// **'Escoltar'**
+  String get listen;
+
+  /// No description provided for @moreInfo.
+  ///
+  /// In ca, this message translates to:
+  /// **'Més info'**
+  String get moreInfo;
+
+  /// No description provided for @semanticLabelBirdImage.
+  ///
+  /// In ca, this message translates to:
+  /// **'Fotografia de {bird}'**
+  String semanticLabelBirdImage(String bird);
 }
 
 class _AppLocalizationsDelegate
