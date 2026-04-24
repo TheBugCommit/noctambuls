@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
+import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
 import 'package:noctambuls/features/auth/domain/usecases/get_stored_auth_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_in_usecase.dart';
@@ -14,7 +15,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signOutUseCase,
   }) : super(const AuthInitial()) {
     on<CheckStoredAuth>(_onCheckStoredAuth);
-    on<SignInRequested>(_onSignIn);
+    on<SignInWithGoogleRequested>(
+      (event, emit) => _handleSignIn(const GoogleAuthCredentials(), emit),
+    );
     on<SignOutRequested>(_onSignOut);
   }
 
@@ -45,12 +48,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<void> _onSignIn(
-    SignInRequested event,
+  Future<void> _handleSignIn(
+    AuthCredentials credentials,
     Emitter<AuthState> emit,
   ) async {
     emit(const AuthLoading());
-    final result = await signInUseCase(event.credentials);
+    final result = await signInUseCase(credentials);
     result.when(
       success: (user) => emit(Authenticated(user: user)),
       failure: (failure) {
