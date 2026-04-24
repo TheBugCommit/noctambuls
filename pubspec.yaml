@@ -74,6 +74,8 @@ flutter:
   assets:
     - assets/images/taxus_text.svg.vec
     - assets/images/taxus_icon.svg.vec
+    - assets/images/birds/
+    - assets/audios/
 
   fonts:
     - family: Roboto
