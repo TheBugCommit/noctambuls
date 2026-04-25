@@ -32,17 +32,21 @@ class BirdCard extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.all(AppDimensions.lg),
-            child: BirdCardContent(
-              commonName: bird.commonName,
-              scientificName: bird.scientificName,
-              description: bird.description,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              spacing: AppDimensions.md,
+              children: [
+                BirdCardContent(
+                  commonName: bird.commonName,
+                  scientificName: bird.scientificName,
+                  description: bird.description,
+                ),
+                BirdCardActions(
+                  infoUrl: bird.infoUrl,
+                  audioPath: bird.audioPath,
+                ),
+              ],
             ),
-          ),
-
-          // 3. Botons d'acció
-          BirdCardActions(
-            infoUrl: bird.infoUrl,
-            audioPath: bird.audioPath,
           ),
         ],
       ),
@@ -135,7 +139,6 @@ class BirdCardContent extends StatelessWidget {
   }
 }
 
-//TODO: Revisar perque fallen algunes URL
 class BirdCardActions extends StatelessWidget {
   const BirdCardActions({
     required this.infoUrl,
@@ -161,28 +164,22 @@ class BirdCardActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: AppDimensions.lg,
-        vertical: AppDimensions.md,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          AppButton.outline(
-            onPressed: () {
-              // TODO: Integració player
-            },
-            icon: Icons.volume_up_outlined,
-            label: l10n.listen,
-          ),
-          AppButton.primary(
-            onPressed: infoUrl.isEmpty ? null : () => _openBirdUrl(context),
-            icon: Icons.link,
-            label: l10n.moreInfo,
-          ),
-        ],
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        AppButton.outline(
+          onPressed: () {
+            // TODO: Integració player
+          },
+          icon: Icons.volume_up_outlined,
+          label: l10n.listen,
+        ),
+        AppButton.primary(
+          onPressed: infoUrl.isEmpty ? null : () => _openBirdUrl(context),
+          icon: Icons.link,
+          label: l10n.moreInfo,
+        ),
+      ],
     );
   }
 }
