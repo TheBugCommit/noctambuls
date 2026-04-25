@@ -25,5 +25,7 @@ class GoogleAuthDataSourceImpl
   }
 
   @override
-  Future<void> signOut() async {}
+  Future<void> signOut() async {
+    await googleSignIn.signOut();
+  }
 }

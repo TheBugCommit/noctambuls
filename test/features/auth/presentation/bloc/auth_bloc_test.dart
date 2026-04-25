@@ -1,6 +1,7 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart'
     show GoogleAuthCredentials;
@@ -19,10 +20,13 @@ class MockSignInUseCase extends Mock implements SignInUseCase {}
 
 class MockSignOutUseCase extends Mock implements SignOutUseCase {}
 
+class MockUserDatabaseManager extends Mock implements UserDatabaseManager {}
+
 void main() {
   late MockGetStoredAuthUseCase mockGetStoredAuth;
   late MockSignInUseCase mockSignIn;
   late MockSignOutUseCase mockSignOut;
+  late MockUserDatabaseManager mockDbManager;
 
   final tAuthUser = AuthUser(
     id: 'user-123',
@@ -38,12 +42,17 @@ void main() {
     mockGetStoredAuth = MockGetStoredAuthUseCase();
     mockSignIn = MockSignInUseCase();
     mockSignOut = MockSignOutUseCase();
+    mockDbManager = MockUserDatabaseManager();
+
+    when(() => mockDbManager.initDatabase(any())).thenAnswer((_) async {});
+    when(() => mockDbManager.closeDatabase()).thenAnswer((_) async {});
   });
 
   AuthBloc buildBloc() => AuthBloc(
     getStoredAuthUseCase: mockGetStoredAuth,
     signInUseCase: mockSignIn,
     signOutUseCase: mockSignOut,
+    dbManager: mockDbManager,
   );
 
   test("l'estat inicial hauria de ser AuthInitial", () {

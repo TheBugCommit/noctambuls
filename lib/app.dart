@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/theme/theme.dart';
 import 'package:noctambuls/core/theme/util.dart';
+import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
@@ -23,31 +27,38 @@ class NoctambulsApp extends StatelessWidget {
 
     final router = sl<GoRouter>();
 
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is Authenticated) {
+          context.read<SessionLifecycleBloc>().add(WatchSession());
+        }
+      },
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
 
-      themeMode: themeState.appTheme.toFlutterThemeMode,
-      theme: myTheme.light(),
-      darkTheme: myTheme.dark(),
-      themeAnimationDuration: const Duration(milliseconds: 400),
+        themeMode: themeState.appTheme.toFlutterThemeMode,
+        theme: myTheme.light(),
+        darkTheme: myTheme.dark(),
+        themeAnimationDuration: const Duration(milliseconds: 400),
 
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      locale: langState.appLanguage.toFlutterLocale,
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+        locale: langState.appLanguage.toFlutterLocale,
 
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
 
-      localeResolutionCallback: (deviceLocale, supportedLocales) {
-        if (deviceLocale != null) {
-          for (final supported in supportedLocales) {
-            if (supported.languageCode == deviceLocale.languageCode) {
-              return deviceLocale;
+        localeResolutionCallback: (deviceLocale, supportedLocales) {
+          if (deviceLocale != null) {
+            for (final supported in supportedLocales) {
+              if (supported.languageCode == deviceLocale.languageCode) {
+                return deviceLocale;
+              }
             }
           }
-        }
-        return supportedLocales.first;
-      },
+          return supportedLocales.first;
+        },
+      ),
     );
   }
 }

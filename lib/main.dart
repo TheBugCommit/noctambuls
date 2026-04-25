@@ -6,7 +6,6 @@ import 'package:noctambuls/core/utils/app_bloc_observer.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
 
@@ -26,7 +25,7 @@ void main() async {
         BlocProvider(create: (_) => di.sl<ThemeCubit>()),
         BlocProvider(create: (_) => di.sl<LanguageCubit>()),
         BlocProvider(
-          create: (_) => di.sl<SessionLifecycleBloc>()..add(WatchSession()),
+          create: (_) => di.sl<SessionLifecycleBloc>(),
         ),
       ],
       child: const NoctambulsApp(),

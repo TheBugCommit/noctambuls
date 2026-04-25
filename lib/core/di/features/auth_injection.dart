@@ -72,6 +72,7 @@ void initAuthFeature() {
         getStoredAuthUseCase: sl(),
         signInUseCase: sl(),
         signOutUseCase: sl(),
+        dbManager: sl(),
       ),
     )
     ..registerLazySingleton<GoRouter>(

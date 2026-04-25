@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
@@ -13,6 +14,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.getStoredAuthUseCase,
     required this.signInUseCase,
     required this.signOutUseCase,
+    required this.dbManager,
   }) : super(const AuthInitial()) {
     on<CheckStoredAuth>(_onCheckStoredAuth);
     on<SignInWithGoogleRequested>(
@@ -24,15 +26,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final GetStoredAuthUseCase getStoredAuthUseCase;
   final SignInUseCase signInUseCase;
   final SignOutUseCase signOutUseCase;
+  final UserDatabaseManager dbManager;
 
   Future<void> _onCheckStoredAuth(
     CheckStoredAuth event,
     Emitter<AuthState> emit,
   ) async {
     final result = await getStoredAuthUseCase();
-    result.when(
-      success: (user) {
+    await result.when(
+      success: (user) async {
         if (user != null) {
+          await dbManager.initDatabase(user.id);
           emit(Authenticated(user: user));
         } else {
           emit(const Unauthenticated());
@@ -54,8 +58,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async {
     emit(const AuthLoading());
     final result = await signInUseCase(credentials);
-    result.when(
-      success: (user) => emit(Authenticated(user: user)),
+    await result.when(
+      success: (user) async {
+        await dbManager.initDatabase(user.id);
+        emit(Authenticated(user: user));
+      },
       failure: (failure) {
         if (failure is SignInCancelledFailure) {
           emit(const Unauthenticated());
@@ -72,8 +79,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     Emitter<AuthState> emit,
   ) async {
     final result = await signOutUseCase();
-    result.when(
-      success: (_) => emit(const Unauthenticated()),
+    await result.when(
+      success: (_) async {
+        await dbManager.closeDatabase();
+        emit(const Unauthenticated());
+      },
       failure: (failure) {
         AppLogger.failure(failure);
         emit(const Unauthenticated());

@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:noctambuls/core/database/app_database.dart';
+import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/features/observations/data/models/observation_record_model.dart';
 import 'package:noctambuls/features/observations/data/models/observation_session_model.dart';
 
@@ -30,9 +31,11 @@ abstract class ObservationLocalDataSource {
 }
 
 class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
-  ObservationLocalDataSourceImpl({required this.db});
+  ObservationLocalDataSourceImpl({required this.dbManager});
 
-  final AppDatabase db;
+  final UserDatabaseManager dbManager;
+
+  AppDatabase get db => dbManager.database;
 
   @override
   Future<void> createSession(ObservationSessionModel session) async {
