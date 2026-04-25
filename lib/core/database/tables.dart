@@ -61,3 +61,35 @@ class ObservationsTable extends Table with OfflineFirstMixin {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+@DataClassName('BirdEntityData')
+class BirdsTable extends Table {
+  TextColumn get id => text()();
+
+  TextColumn get scientificName => text()();
+
+  TextColumn get imagePath => text()();
+
+  TextColumn get audioPath => text()();
+
+  TextColumn get infoUrl => text().nullable()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('BirdNameEntityData')
+class BirdNamesTable extends Table {
+  TextColumn get id => text()();
+
+  TextColumn get birdId => text().references(BirdsTable, #id)();
+
+  TextColumn get languageCode => text()();
+
+  TextColumn get commonName => text()();
+
+  TextColumn get description => text()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

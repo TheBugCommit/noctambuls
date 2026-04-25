@@ -343,6 +343,48 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Observant'**
   String get observingTitle;
+
+  /// No description provided for @noBirdsFound.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'han trobat ocells'**
+  String get noBirdsFound;
+
+  /// No description provided for @listen.
+  ///
+  /// In ca, this message translates to:
+  /// **'Escoltar'**
+  String get listen;
+
+  /// No description provided for @moreInfo.
+  ///
+  /// In ca, this message translates to:
+  /// **'Més info'**
+  String get moreInfo;
+
+  /// No description provided for @semanticLabelBirdImage.
+  ///
+  /// In ca, this message translates to:
+  /// **'Fotografia de {bird}'**
+  String semanticLabelBirdImage(String bird);
+
+  /// No description provided for @cantOpenLink.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut obrir l\'enllaç'**
+  String get cantOpenLink;
+
+  /// No description provided for @cantPlayAudio.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut reproduir l\'àudio'**
+  String get cantPlayAudio;
+
+  /// No description provided for @stopPlayingAudio.
+  ///
+  /// In ca, this message translates to:
+  /// **'Atura'**
+  String get stopPlayingAudio;
 }
 
 class _AppLocalizationsDelegate

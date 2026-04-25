@@ -19,45 +19,60 @@
     "homeTitle": "Inicio",
 
     "errorSessionAlreadyExists": "Ya hay una sesión activa. Finalízala o cancélala primero.",
-      "errorUnknown": "Se ha producido un error desconocido.",
-      "activeSessionTitle": "Sesión en curso",
+    "errorUnknown": "Se ha producido un error desconocido.",
+    "activeSessionTitle": "Sesión en curso",
 
-      "startedAt": "Observando desde {time}",
-      "@startedAt": {
+    "startedAt": "Observando desde {time}",
+    "@startedAt": {
         "placeholders": {
-          "time": {
-            "type": "String"
-          }
+            "time": {
+                "type": "String"
+            }
         }
-      },
+    },
 
-      "observationsRegistered": "{count} observaciones registradas",
-      "@observationsRegistered": {
+    "observationsRegistered": "{count} observaciones registradas",
+    "@observationsRegistered": {
         "placeholders": {
-          "count": {
-            "type": "int"
-          }
+            "count": {
+                "type": "int"
+            }
         }
-      },
-      "noObservationsRegistered": "No hay ninguna observacion registrada",
+    },
+    "noObservationsRegistered": "No hay ninguna observacion registrada",
 
-      "stopAndReview": "Detener",
-      "deleteSession": "Cancelar Sesión",
-      "deleteSessionTitle": "¿Cancelar sesión?",
-      "deleteSessionBody": "Se perderá toda la información y no se podrá recuperar.",
-      "back": "Volver",
-      "delete": "Eliminar",
-      "cancel": "Cancela",
-      "confirmDelete": "Sí, elimina",
-      "confirmDeleteSessionMessage": "Se perderán todas las observaciones de esta sesión. Esta acción es irreversible.",
-      "confirmDeleteSessionTitle": "Quieres eliminar la session?",
+    "stopAndReview": "Detener",
+    "deleteSession": "Cancelar Sesión",
+    "deleteSessionTitle": "¿Cancelar sesión?",
+    "deleteSessionBody": "Se perderá toda la información y no se podrá recuperar.",
+    "back": "Volver",
+    "delete": "Eliminar",
+    "cancel": "Cancela",
+    "confirmDelete": "Sí, elimina",
+    "confirmDeleteSessionMessage": "Se perderán todas las observaciones de esta sesión. Esta acción es irreversible.",
+    "confirmDeleteSessionTitle": "Quieres eliminar la session?",
 
-      "stopSessionTitle": "¿Detener la sesión?",
-      "stopSessionBody": "Las observaciones ya registradas se conservarán.",
-      "stopSessionConfirm": "Detener",
-      "reviewTitle": "Revisión",
-      "sessionInReview": "Sesión en revisión",
-      "continueReview": "Continuar la revisión",
-      "continueObserving": "Continuar observando",
-      "observingTitle": "Observando"
+    "stopSessionTitle": "¿Detener la sesión?",
+    "stopSessionBody": "Las observaciones ya registradas se conservarán.",
+    "stopSessionConfirm": "Detener",
+    "reviewTitle": "Revisión",
+    "sessionInReview": "Sesión en revisión",
+    "continueReview": "Continuar la revisión",
+    "continueObserving": "Continuar observando",
+    "observingTitle": "Observando",
+
+    "noBirdsFound": "No se han encontrado aves",
+    "listen": "Escuchar",
+    "moreInfo": "Más info",
+    "semanticLabelBirdImage": "Fotografía de {bird}",
+    "@semanticLabelBirdImage": {
+        "placeholders": {
+            "bird": {
+              "type": "String"
+            }
+        }
+    },
+    "cantOpenLink": "No se ha podido abrir el enlace",
+    "cantPlayAudio": "No se ha podido reproducir el audio",
+    "stopPlayingAudio": "Detener"
 }

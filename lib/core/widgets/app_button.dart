@@ -18,11 +18,12 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.label,
     this.icon,
+    this.customIcon,
     this.style = AppButtonStyle.primary,
     this.size = AppButtonSize.md,
     super.key,
   }) : assert(
-         label != null || icon != null,
+         label != null || icon != null || customIcon != null,
          'Either label or icon must be provided',
        );
 
@@ -30,11 +31,13 @@ class AppButton extends StatelessWidget {
     required VoidCallback? onPressed,
     String? label,
     IconData? icon,
+    Widget? customIcon,
     AppButtonSize size = AppButtonSize.md,
   }) => AppButton(
     onPressed: onPressed,
     label: label,
     icon: icon,
+    customIcon: customIcon,
     size: size,
     style: AppButtonStyle.primary,
   );
@@ -43,11 +46,13 @@ class AppButton extends StatelessWidget {
     required VoidCallback? onPressed,
     String? label,
     IconData? icon,
+    Widget? customIcon,
     AppButtonSize size = AppButtonSize.md,
   }) => AppButton(
     onPressed: onPressed,
     label: label,
     icon: icon,
+    customIcon: customIcon,
     size: size,
     style: AppButtonStyle.secondary,
   );
@@ -56,11 +61,13 @@ class AppButton extends StatelessWidget {
     required VoidCallback? onPressed,
     String? label,
     IconData? icon,
+    Widget? customIcon,
     AppButtonSize size = AppButtonSize.md,
   }) => AppButton(
     onPressed: onPressed,
     label: label,
     icon: icon,
+    customIcon: customIcon,
     size: size,
     style: AppButtonStyle.outline,
   );
@@ -69,11 +76,13 @@ class AppButton extends StatelessWidget {
     required VoidCallback? onPressed,
     String? label,
     IconData? icon,
+    Widget? customIcon,
     AppButtonSize size = AppButtonSize.md,
   }) => AppButton(
     onPressed: onPressed,
     label: label,
     icon: icon,
+    customIcon: customIcon,
     size: size,
     style: AppButtonStyle.destructive,
   );
@@ -82,11 +91,13 @@ class AppButton extends StatelessWidget {
     required VoidCallback? onPressed,
     String? label,
     IconData? icon,
+    Widget? customIcon,
     AppButtonSize size = AppButtonSize.md,
   }) => AppButton(
     onPressed: onPressed,
     label: label,
     icon: icon,
+    customIcon: customIcon,
     size: size,
     style: AppButtonStyle.destructiveTonal,
   );
@@ -94,6 +105,7 @@ class AppButton extends StatelessWidget {
   final VoidCallback? onPressed;
   final String? label;
   final IconData? icon;
+  final Widget? customIcon;
   final AppButtonStyle style;
   final AppButtonSize size;
 
@@ -213,10 +225,16 @@ class AppButton extends StatelessWidget {
       }
     }
 
-    if (label == null && icon != null) {
+    final activeIconWidget =
+        customIcon ?? (icon != null ? Icon(icon, size: iconSize) : null);
+
+    if (label == null && activeIconWidget != null) {
       return SizedBox.square(
         dimension: exactHeight,
-        child: buildNativeButton(Icon(icon, size: iconSize), isIconOnly: true),
+        child: buildNativeButton(
+          activeIconWidget,
+          isIconOnly: true,
+        ),
       );
     }
 
@@ -225,8 +243,8 @@ class AppButton extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          if (icon != null) ...[
-            Icon(icon, size: iconSize),
+          if (activeIconWidget != null) ...[
+            activeIconWidget,
             const SizedBox(width: AppDimensions.sm),
           ],
           Text(label!),

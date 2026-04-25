@@ -48,6 +48,8 @@ dependencies:
   path: ^1.9.1
   path_provider: ^2.1.5
   uuid: ^4.5.3
+  flutter_soloud: ^4.0.3
+  url_launcher: ^6.3.2
 
 dev_dependencies:
   flutter_test:
@@ -74,6 +76,8 @@ flutter:
   assets:
     - assets/images/taxus_text.svg.vec
     - assets/images/taxus_icon.svg.vec
+    - assets/images/birds/
+    - assets/audios/
 
   fonts:
     - family: Roboto
