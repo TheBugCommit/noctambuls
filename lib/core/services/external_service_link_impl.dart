@@ -6,8 +6,6 @@ import 'package:url_launcher/url_launcher_string.dart';
 class ExternalLinkServiceImpl implements ExternalLinkService {
   @override
   Future<bool> openUrl(String url) async {
-    AppLogger.failure(const UnknownFailure());
-
     try {
       if (await canLaunchUrlString(url)) {
         return await launchUrlString(
@@ -15,9 +13,7 @@ class ExternalLinkServiceImpl implements ExternalLinkService {
           mode: LaunchMode.externalApplication,
         );
       }
-      AppLogger.warning(
-        'canLaunchUrlString ha retornat false per la URL: $url',
-      );
+      AppLogger.warning("Can't launch url: $url");
       return false;
     } on Exception catch (e, st) {
       AppLogger.failure(const UnknownFailure().withDebug(e, st));
