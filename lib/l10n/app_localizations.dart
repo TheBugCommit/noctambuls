@@ -373,6 +373,18 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'No s\'ha pogut obrir l\'enllaç'**
   String get cantOpenLink;
+
+  /// No description provided for @cantPlayAudio.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut reproduir l\'àudio'**
+  String get cantPlayAudio;
+
+  /// No description provided for @stopPlayingAudio.
+  ///
+  /// In ca, this message translates to:
+  /// **'Atura'**
+  String get stopPlayingAudio;
 }
 
 class _AppLocalizationsDelegate

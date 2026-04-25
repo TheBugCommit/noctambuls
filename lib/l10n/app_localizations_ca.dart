@@ -155,4 +155,10 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get cantOpenLink => 'No s\'ha pogut obrir l\'enllaç';
+
+  @override
+  String get cantPlayAudio => 'No s\'ha pogut reproduir l\'àudio';
+
+  @override
+  String get stopPlayingAudio => 'Atura';
 }

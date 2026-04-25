@@ -47,10 +47,10 @@ class SoLoudAudioService implements AudioService {
   }
 
   @override
-  Future<void> togglePlay(String assetPath) async {
+  Future<bool> togglePlay(String assetPath) async {
     if (_currentlyPlaying.value == assetPath) {
       await stop();
-      return;
+      return false;
     }
 
     if (!_isInitialized) await init();
@@ -69,7 +69,7 @@ class SoLoudAudioService implements AudioService {
         _loadedSources[assetPath] = source;
       }
 
-      if (_currentlyPlaying.value != assetPath) return;
+      if (_currentlyPlaying.value != assetPath) return false;
 
       _currentHandle = SoLoud.instance.play(source);
 
@@ -79,12 +79,16 @@ class SoLoudAudioService implements AudioService {
           _currentlyPlaying.value = null;
         }
       });
+
+      return true;
     } on Exception catch (e, st) {
       AppLogger.failure(const AudioFailure().withDebug(e, st));
 
       if (_currentlyPlaying.value == assetPath) {
         _currentlyPlaying.value = null;
       }
+
+      return false;
     }
   }
 
@@ -108,7 +112,7 @@ class SoLoudAudioService implements AudioService {
     SoLoud.instance.deinit();
 
     _loadedSources.clear();
-    _currentlyPlaying.dispose();
+    _currentlyPlaying.value = null;
     _isInitialized = false;
   }
 }

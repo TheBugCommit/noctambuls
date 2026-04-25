@@ -19,8 +19,8 @@ class BirdSeeder {
             BirdsTableCompanion.insert(
               id: _ducId,
               scientificName: 'Bubo bubo',
-              imagePath: 'assets/images/birds/duc.jpg',
-              audioPath: 'assets/audios/Duc (Bubo bubo).m4a',
+              imagePath: 'assets/images/birds/duc.webp',
+              audioPath: 'assets/audios/bubo_bubo.ogg',
               infoUrl: const Value(
                 'https://ca.wikipedia.org/wiki/Duc_eurasi%C3%A0tic',
               ),
@@ -28,9 +28,8 @@ class BirdSeeder {
             BirdsTableCompanion.insert(
               id: _enganyapastorsId,
               scientificName: 'Caprimulgus europaeus',
-              imagePath: 'assets/images/birds/enganyapastors.jpg',
-              audioPath:
-                  'assets/audios/Enganyapastors (Caprimulgus europaeus).m4a',
+              imagePath: 'assets/images/birds/enganyapastors.webp',
+              audioPath: 'assets/audios/caprimulgus_europaeus.ogg',
               infoUrl: const Value(
                 'https://ca.wikipedia.org/wiki/Enganyapastors_europeu',
               ),
@@ -38,8 +37,8 @@ class BirdSeeder {
             BirdsTableCompanion.insert(
               id: _gamarusId,
               scientificName: 'Strix aluco',
-              imagePath: 'assets/images/birds/gamarus.jpg',
-              audioPath: 'assets/audios/Gamarús (Strix aluco).m4a',
+              imagePath: 'assets/images/birds/gamarus.webp',
+              audioPath: 'assets/audios/strix_aluco.ogg',
               infoUrl: const Value(
                 'https://ca.wikipedia.org/wiki/Gamar%C3%BAs_eurasi%C3%A0tic',
               ),
@@ -47,8 +46,8 @@ class BirdSeeder {
             BirdsTableCompanion.insert(
               id: _mussolBanyutId,
               scientificName: 'Asio otus',
-              imagePath: 'assets/images/birds/mussol_banyut.jpg',
-              audioPath: 'assets/audios/Mussol Banyut (Asio otus).m4a',
+              imagePath: 'assets/images/birds/mussol_banyut.webp',
+              audioPath: 'assets/audios/asio_otus.ogg',
               infoUrl: const Value(
                 'https://ca.wikipedia.org/wiki/Mussol_banyut',
               ),
@@ -56,8 +55,8 @@ class BirdSeeder {
             BirdsTableCompanion.insert(
               id: _mussolComuId,
               scientificName: 'Athene noctua',
-              imagePath: 'assets/images/birds/mussol_comu.jpg',
-              audioPath: 'assets/audios/Mussol comú (Athene noctua).m4a',
+              imagePath: 'assets/images/birds/mussol_comu.webp',
+              audioPath: 'assets/audios/athene_noctua.ogg',
               infoUrl: const Value(
                 'https://ca.wikipedia.org/wiki/Mussol_com%C3%BA',
               ),
@@ -65,8 +64,8 @@ class BirdSeeder {
             BirdsTableCompanion.insert(
               id: _olibaId,
               scientificName: 'Tyto alba',
-              imagePath: 'assets/images/birds/oliba.jpg',
-              audioPath: 'assets/audios/Òliba (Tyto alba).m4a',
+              imagePath: 'assets/images/birds/oliba.webp',
+              audioPath: 'assets/audios/tyto_alba.ogg',
               infoUrl: const Value(
                 'https://ca.wikipedia.org/wiki/%C3%92liba_comuna',
               ),
@@ -74,15 +73,15 @@ class BirdSeeder {
             BirdsTableCompanion.insert(
               id: _sibocId,
               scientificName: 'Caprimulgus ruficollis',
-              imagePath: 'assets/images/birds/siboc.jpg',
-              audioPath: 'assets/audios/Siboc (Caprimulgus ruficollis).m4a',
+              imagePath: 'assets/images/birds/siboc.webp',
+              audioPath: 'assets/audios/caprimulgus_ruficollis.ogg',
               infoUrl: const Value('https://ca.wikipedia.org/wiki/Siboc'),
             ),
             BirdsTableCompanion.insert(
               id: _xotId,
               scientificName: 'Otus scops',
-              imagePath: 'assets/images/birds/xot.jpg',
-              audioPath: 'assets/audios/Xot (Otus scops).m4a',
+              imagePath: 'assets/images/birds/xot.webp',
+              audioPath: 'assets/audios/otus_scops.ogg',
               infoUrl: const Value(
                 'https://ca.wikipedia.org/wiki/Xot_eurasi%C3%A0tic',
               ),

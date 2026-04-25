@@ -4,6 +4,7 @@ import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/services/external_service_link.dart';
 import 'package:noctambuls/core/widgets/app_button.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
+import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_audio_button.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class BirdCard extends StatelessWidget {
@@ -167,12 +168,10 @@ class BirdCardActions extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        AppButton.outline(
-          onPressed: () {
-            // TODO: Integració player
-          },
-          icon: Icons.volume_up_outlined,
-          label: l10n.listen,
+        BirdAudioButton(
+          audioPath: audioPath,
+          labelPlay: l10n.listen,
+          labelStop: l10n.stopPlayingAudio,
         ),
         AppButton.primary(
           onPressed: infoUrl.isEmpty ? null : () => _openBirdUrl(context),

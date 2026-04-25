@@ -5,7 +5,7 @@ abstract class AudioService {
 
   Future<void> preload(List<String> assetPaths);
 
-  Future<void> togglePlay(String assetPath);
+  Future<bool> togglePlay(String assetPath);
 
   Future<void> stop();
 

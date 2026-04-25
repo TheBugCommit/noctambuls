@@ -14,5 +14,7 @@ void initGuideFeature() {
       () => BirdsRepositoryImpl(localDataSource: sl()),
     )
     ..registerLazySingleton(() => GetBirdsUseCase(sl()))
-    ..registerFactory(() => GuideBloc(getBirdsUseCase: sl()));
+    ..registerFactory(
+      () => GuideBloc(getBirdsUseCase: sl(), audioService: sl()),
+    );
 }
