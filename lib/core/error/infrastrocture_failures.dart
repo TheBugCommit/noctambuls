@@ -58,3 +58,37 @@ final class CacheFailure extends Failure {
         stackTrace: stackTrace,
       );
 }
+
+// Wraps audio player errors
+final class AudioFailure extends Failure {
+  const AudioFailure({
+    super.debugMessage = 'Audio operation failed',
+    super.statusCode = 503,
+    super.stackTrace,
+  });
+
+  @override
+  AudioFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      AudioFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}
+
+// Wraps url launcher errors
+final class UrlLauncherFailure extends Failure {
+  const UrlLauncherFailure({
+    super.debugMessage = 'Audio operation failed',
+    super.statusCode = 503,
+    super.stackTrace,
+  });
+
+  @override
+  UrlLauncherFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      UrlLauncherFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}

@@ -16,7 +16,7 @@ class ExternalLinkServiceImpl implements ExternalLinkService {
       AppLogger.warning("Can't launch url: $url");
       return false;
     } on Exception catch (e, st) {
-      AppLogger.failure(const UnknownFailure().withDebug(e, st));
+      AppLogger.failure(const UrlLauncherFailure().withDebug(e, st));
       return false;
     }
   }
