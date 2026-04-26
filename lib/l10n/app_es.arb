@@ -74,5 +74,19 @@
     },
     "cantOpenLink": "No se ha podido abrir el enlace",
     "cantPlayAudio": "No se ha podido reproducir el audio",
-    "stopPlayingAudio": "Detener"
+    "stopPlayingAudio": "Detener",
+    "stopSessionTitle": "¿Detener la sesión?",
+    "stopSessionBody": "Las observaciones ya registradas se conservarán.",
+    "stopSessionConfirm": "Detener",
+    "reviewTitle": "Revisión",
+    "sessionInReview": "Sesión en revisión",
+    "continueReview": "Continuar la revisión",
+    "continueObserving": "Continuar observando",
+    "observingTitle": "Observando",
+
+    "loginTitle": "Bienvenido/a",
+    "loginSubtitle": "Inicia sesión para continuar",
+    "signInWithGoogle": "Iniciar sesión con Google",
+    "signInError": "No se pudo iniciar sesión. Inténtalo de nuevo.",
+    "signOutLabel": "Cerrar sesión"
 }

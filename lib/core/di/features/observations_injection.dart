@@ -1,3 +1,4 @@
+import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/features/observations/data/datasources/observation_local_datasource.dart';
 import 'package:noctambuls/features/observations/data/repositories/observation_repository_impl.dart';
@@ -19,7 +20,8 @@ void initObservationsFeature() {
   sl
     // DataSources
     ..registerLazySingleton<ObservationLocalDataSource>(
-      () => ObservationLocalDataSourceImpl(db: sl()),
+      () =>
+          ObservationLocalDataSourceImpl(dbManager: sl<UserDatabaseManager>()),
     )
     // Repositories
     ..registerLazySingleton<ObservationRepository>(

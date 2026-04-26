@@ -77,5 +77,19 @@
     },
     "cantOpenLink": "No s'ha pogut obrir l'enllaç",
     "cantPlayAudio": "No s'ha pogut reproduir l'àudio",
-    "stopPlayingAudio": "Atura"
+    "stopPlayingAudio": "Atura",
+    "stopSessionTitle": "Aturar la sessió?",
+    "stopSessionBody": "Les observacions ja registrades es conservaran.",
+    "stopSessionConfirm": "Aturar",
+    "reviewTitle": "Revisió",
+    "sessionInReview": "Sessió en revisió",
+    "continueReview": "Continuar la revisió",
+    "continueObserving": "Continuar observant",
+    "observingTitle": "Observant",
+
+    "loginTitle": "Benvingut/da",
+    "loginSubtitle": "Inicia sessió per continuar",
+    "signInWithGoogle": "Inicia sessió amb Google",
+    "signInError": "No s'ha pogut iniciar sessió. Torna-ho a intentar.",
+    "signOutLabel": "Tanca la sessió"
 }

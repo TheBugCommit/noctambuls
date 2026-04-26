@@ -8,13 +8,11 @@ import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
 void initGuideFeature() {
   sl
     ..registerLazySingleton<BirdsLocalDataSource>(
-      () => BirdsLocalDataSourceDriftImpl(db: sl()),
-    )
-    ..registerLazySingleton<BirdsRepository>(
-      () => BirdsRepositoryImpl(localDataSource: sl()),
-    )
-    ..registerLazySingleton(() => GetBirdsUseCase(sl()))
+          () => BirdsLocalDataSourceDriftImpl(udb: sl()),
+    )..registerLazySingleton<BirdsRepository>(
+        () => BirdsRepositoryImpl(localDataSource: sl()),
+  )..registerLazySingleton(() => GetBirdsUseCase(sl()))
     ..registerFactory(
-      () => GuideBloc(getBirdsUseCase: sl(), audioService: sl()),
+          () => GuideBloc(getBirdsUseCase: sl(), audioService: sl()),
     );
 }

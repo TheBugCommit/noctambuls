@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 import 'package:noctambuls/core/database/app_database.dart';
+import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/features/guide/data/models/bird_model.dart';
 
 abstract class BirdsLocalDataSource {
@@ -7,28 +8,31 @@ abstract class BirdsLocalDataSource {
 }
 
 class BirdsLocalDataSourceDriftImpl implements BirdsLocalDataSource {
-  const BirdsLocalDataSourceDriftImpl({required this.db});
+  const BirdsLocalDataSourceDriftImpl({required this.udb});
 
-  final AppDatabase db;
+  final UserDatabaseManager udb;
 
   @override
   Future<List<BirdModel>> getBirds(String languageCode) async {
-    final query = db.select(db.birdsTable).join([
+    final query = udb.database.select(udb.database.birdsTable).join([
       innerJoin(
-        db.birdNamesTable,
-        db.birdNamesTable.birdId.equalsExp(db.birdsTable.id),
+        udb.database.birdNamesTable,
+        udb.database.birdNamesTable.birdId.equalsExp(
+            udb.database.birdsTable.id),
       ),
-    ])..where(db.birdNamesTable.languageCode.equals(languageCode));
+    ])
+      ..where(udb.database.birdNamesTable.languageCode.equals(languageCode));
 
     final rows = await query.get();
 
     return rows
         .map(
-          (row) => BirdModel.fromDrift(
-            row.readTable(db.birdsTable),
-            row.readTable(db.birdNamesTable),
+          (row) =>
+          BirdModel.fromDrift(
+            row.readTable(udb.database.birdsTable),
+            row.readTable(udb.database.birdNamesTable),
           ),
-        )
+    )
         .toList();
   }
 }

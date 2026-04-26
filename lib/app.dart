@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:noctambuls/core/navigation/router.dart';
+import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/theme/theme.dart';
 import 'package:noctambuls/core/theme/util.dart';
+import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
@@ -20,31 +25,40 @@ class NoctambulsApp extends StatelessWidget {
     final themeState = context.watch<ThemeCubit>().state;
     final langState = context.watch<LanguageCubit>().state;
 
-    return MaterialApp.router(
-      debugShowCheckedModeBanner: false,
-      routerConfig: router,
+    final router = sl<GoRouter>();
 
-      themeMode: themeState.appTheme.toFlutterThemeMode,
-      theme: myTheme.light(),
-      darkTheme: myTheme.dark(),
-      themeAnimationDuration: const Duration(milliseconds: 400),
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is Authenticated) {
+          context.read<SessionLifecycleBloc>().add(WatchSession());
+        }
+      },
+      child: MaterialApp.router(
+        debugShowCheckedModeBanner: false,
+        routerConfig: router,
 
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      locale: langState.appLanguage.toFlutterLocale,
+        themeMode: themeState.appTheme.toFlutterThemeMode,
+        theme: myTheme.light(),
+        darkTheme: myTheme.dark(),
+        themeAnimationDuration: const Duration(milliseconds: 400),
 
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+        locale: langState.appLanguage.toFlutterLocale,
 
-      localeResolutionCallback: (deviceLocale, supportedLocales) {
-        if (deviceLocale != null) {
-          for (final supported in supportedLocales) {
-            if (supported.languageCode == deviceLocale.languageCode) {
-              return deviceLocale;
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+
+        localeResolutionCallback: (deviceLocale, supportedLocales) {
+          if (deviceLocale != null) {
+            for (final supported in supportedLocales) {
+              if (supported.languageCode == deviceLocale.languageCode) {
+                return deviceLocale;
+              }
             }
           }
-        }
-        return supportedLocales.first;
-      },
+          return supportedLocales.first;
+        },
+      ),
     );
   }
 }

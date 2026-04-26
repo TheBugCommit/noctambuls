@@ -161,4 +161,20 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get stopPlayingAudio => 'Atura';
+
+  @override
+  String get loginTitle => 'Benvingut/da';
+
+  @override
+  String get loginSubtitle => 'Inicia sessió per continuar';
+
+  @override
+  String get signInWithGoogle => 'Inicia sessió amb Google';
+
+  @override
+  String get signInError =>
+      'No s\'ha pogut iniciar sessió. Torna-ho a intentar.';
+
+  @override
+  String get signOutLabel => 'Tanca la sessió';
 }
