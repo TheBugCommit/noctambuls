@@ -117,8 +117,7 @@ class AuthRepositoryImpl implements AuthRepository {
     } on DioException catch (e, st) {
       // No response means network error — go offline if possible
       if (e.response == null) {
-        if (expiredUser != null) return Ok(expiredUser);
-        return const Ok(null);
+        return Ok(expiredUser);
       }
       // Server responded with an auth error — refresh token is invalid
       AppLogger.failure(const InvalidTokenFailure().withDebug(e, st));
