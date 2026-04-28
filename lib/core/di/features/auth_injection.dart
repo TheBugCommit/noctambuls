@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
@@ -58,6 +60,7 @@ void initAuthFeature() {
         providers: {
           GoogleAuthCredentials: GoogleAuthDataSourceImpl(
             googleSignIn: GoogleSignIn(
+              clientId: Platform.isIOS ? EnvConfig.iosClientId : null,
               serverClientId: EnvConfig.googleWebClientId,
             ),
           ),

@@ -8,4 +8,6 @@ class EnvConfig {
   static const String googleWebClientId = String.fromEnvironment(
     'google_web_client_id',
   );
+
+  static const String iosClientId = String.fromEnvironment('ios_client_id');
 }
