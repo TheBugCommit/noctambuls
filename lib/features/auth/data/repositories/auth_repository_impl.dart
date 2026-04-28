@@ -6,6 +6,7 @@ import 'package:noctambuls/features/auth/data/datasources/auth_provider_datasour
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
 import 'package:noctambuls/features/auth/data/models/auth_user_model.dart';
+import 'package:noctambuls/features/auth/data/network/token_refresh_manager.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
@@ -15,11 +16,13 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.tokenLocalDataSource,
+    required this.refreshManager,
     required Map<Type, AuthProviderDataSource> providers,
   }) : _providers = providers;
 
   final AuthRemoteDataSource remoteDataSource;
   final TokenLocalDataSource tokenLocalDataSource;
+  final TokenRefreshManager refreshManager;
   final Map<Type, AuthProviderDataSource> _providers;
 
   @override
@@ -57,26 +60,46 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Result<AuthUser>> getStoredAuth() async {
+    AuthUserModel? expiredUser;
+
     try {
       final accessToken = await tokenLocalDataSource.getAccessToken();
 
-      if (accessToken == null) {
-        return _refreshWithFallback(expiredUser: null);
+      if (accessToken != null) {
+        try {
+          expiredUser = AuthUserModel.fromJwt(accessToken);
+          if (!expiredUser.isTokenExpired) {
+            return Ok(expiredUser);
+          }
+        } on FormatException catch (e, st) {
+          AppLogger.failure(const InvalidTokenFailure().withDebug(e, st));
+        }
       }
 
-      AuthUserModel user;
-      try {
-        user = AuthUserModel.fromJwt(accessToken);
-      } on FormatException catch (e, st) {
-        AppLogger.failure(const InvalidTokenFailure().withDebug(e, st));
-        return _refreshWithFallback(expiredUser: null);
+      final newToken = await refreshManager.refreshToken();
+
+      if (newToken != null) {
+        return Ok(AuthUserModel.fromJwt(newToken));
+      } else {
+        return const Err(InvalidTokenFailure());
+      }
+    } on DioException catch (e, st) {
+      if (e.response == null) {
+        if (expiredUser != null) {
+          return Ok(expiredUser);
+        }
+        return const Err(NetworkFailure());
       }
 
-      if (!user.isTokenExpired) {
-        return Ok(user);
+      if (e.response?.statusCode != null && e.response!.statusCode! >= 500) {
+        return Err(
+          BackendAuthFailure(
+            statusCode: e.response!.statusCode,
+          ).withDebug(e, st),
+        );
       }
 
-      return _refreshWithFallback(expiredUser: user);
+      return const Err(RefreshTokenFailure());
     } catch (e, st) {
       return Err(const TokenStorageFailure().withDebug(e, st));
     }
