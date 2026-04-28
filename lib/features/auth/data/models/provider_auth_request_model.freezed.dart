@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'google_auth_request_model.dart';
+part of 'provider_auth_request_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -13,22 +13,22 @@ part of 'google_auth_request_model.dart';
 T _$identity<T>(T value) => value;
 
 /// @nodoc
-mixin _$GoogleAuthRequestModel {
+mixin _$ProviderAuthRequestModel {
 
 @JsonKey(name: 'id_token') String get idToken;
-/// Create a copy of GoogleAuthRequestModel
+/// Create a copy of ProviderAuthRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$GoogleAuthRequestModelCopyWith<GoogleAuthRequestModel> get copyWith => _$GoogleAuthRequestModelCopyWithImpl<GoogleAuthRequestModel>(this as GoogleAuthRequestModel, _$identity);
+$ProviderAuthRequestModelCopyWith<ProviderAuthRequestModel> get copyWith => _$ProviderAuthRequestModelCopyWithImpl<ProviderAuthRequestModel>(this as ProviderAuthRequestModel, _$identity);
 
-  /// Serializes this GoogleAuthRequestModel to a JSON map.
+  /// Serializes this ProviderAuthRequestModel to a JSON map.
   Map<String, dynamic> toJson();
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is GoogleAuthRequestModel&&(identical(other.idToken, idToken) || other.idToken == idToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProviderAuthRequestModel&&(identical(other.idToken, idToken) || other.idToken == idToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -37,15 +37,15 @@ int get hashCode => Object.hash(runtimeType,idToken);
 
 @override
 String toString() {
-  return 'GoogleAuthRequestModel(idToken: $idToken)';
+  return 'ProviderAuthRequestModel(idToken: $idToken)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class $GoogleAuthRequestModelCopyWith<$Res>  {
-  factory $GoogleAuthRequestModelCopyWith(GoogleAuthRequestModel value, $Res Function(GoogleAuthRequestModel) _then) = _$GoogleAuthRequestModelCopyWithImpl;
+abstract mixin class $ProviderAuthRequestModelCopyWith<$Res>  {
+  factory $ProviderAuthRequestModelCopyWith(ProviderAuthRequestModel value, $Res Function(ProviderAuthRequestModel) _then) = _$ProviderAuthRequestModelCopyWithImpl;
 @useResult
 $Res call({
 @JsonKey(name: 'id_token') String idToken
@@ -56,14 +56,14 @@ $Res call({
 
 }
 /// @nodoc
-class _$GoogleAuthRequestModelCopyWithImpl<$Res>
-    implements $GoogleAuthRequestModelCopyWith<$Res> {
-  _$GoogleAuthRequestModelCopyWithImpl(this._self, this._then);
+class _$ProviderAuthRequestModelCopyWithImpl<$Res>
+    implements $ProviderAuthRequestModelCopyWith<$Res> {
+  _$ProviderAuthRequestModelCopyWithImpl(this._self, this._then);
 
-  final GoogleAuthRequestModel _self;
-  final $Res Function(GoogleAuthRequestModel) _then;
+  final ProviderAuthRequestModel _self;
+  final $Res Function(ProviderAuthRequestModel) _then;
 
-/// Create a copy of GoogleAuthRequestModel
+/// Create a copy of ProviderAuthRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') @override $Res call({Object? idToken = null,}) {
   return _then(_self.copyWith(
@@ -75,8 +75,8 @@ as String,
 }
 
 
-/// Adds pattern-matching-related methods to [GoogleAuthRequestModel].
-extension GoogleAuthRequestModelPatterns on GoogleAuthRequestModel {
+/// Adds pattern-matching-related methods to [ProviderAuthRequestModel].
+extension ProviderAuthRequestModelPatterns on ProviderAuthRequestModel {
 /// A variant of `map` that fallback to returning `orElse`.
 ///
 /// It is equivalent to doing:
@@ -89,10 +89,10 @@ extension GoogleAuthRequestModelPatterns on GoogleAuthRequestModel {
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _GoogleAuthRequestModel value)?  $default,{required TResult orElse(),}){
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ProviderAuthRequestModel value)?  $default,{required TResult orElse(),}){
 final _that = this;
 switch (_that) {
-case _GoogleAuthRequestModel() when $default != null:
+case _ProviderAuthRequestModel() when $default != null:
 return $default(_that);case _:
   return orElse();
 
@@ -111,10 +111,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _GoogleAuthRequestModel value)  $default,){
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ProviderAuthRequestModel value)  $default,){
 final _that = this;
 switch (_that) {
-case _GoogleAuthRequestModel():
+case _ProviderAuthRequestModel():
 return $default(_that);case _:
   throw StateError('Unexpected subclass');
 
@@ -132,10 +132,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _GoogleAuthRequestModel value)?  $default,){
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ProviderAuthRequestModel value)?  $default,){
 final _that = this;
 switch (_that) {
-case _GoogleAuthRequestModel() when $default != null:
+case _ProviderAuthRequestModel() when $default != null:
 return $default(_that);case _:
   return null;
 
@@ -155,7 +155,7 @@ return $default(_that);case _:
 
 @optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_token')  String idToken)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
-case _GoogleAuthRequestModel() when $default != null:
+case _ProviderAuthRequestModel() when $default != null:
 return $default(_that.idToken);case _:
   return orElse();
 
@@ -176,7 +176,7 @@ return $default(_that.idToken);case _:
 
 @optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: 'id_token')  String idToken)  $default,) {final _that = this;
 switch (_that) {
-case _GoogleAuthRequestModel():
+case _ProviderAuthRequestModel():
 return $default(_that.idToken);case _:
   throw StateError('Unexpected subclass');
 
@@ -196,7 +196,7 @@ return $default(_that.idToken);case _:
 
 @optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: 'id_token')  String idToken)?  $default,) {final _that = this;
 switch (_that) {
-case _GoogleAuthRequestModel() when $default != null:
+case _ProviderAuthRequestModel() when $default != null:
 return $default(_that.idToken);case _:
   return null;
 
@@ -208,26 +208,26 @@ return $default(_that.idToken);case _:
 /// @nodoc
 @JsonSerializable()
 
-class _GoogleAuthRequestModel implements GoogleAuthRequestModel {
-  const _GoogleAuthRequestModel({@JsonKey(name: 'id_token') required this.idToken});
-  factory _GoogleAuthRequestModel.fromJson(Map<String, dynamic> json) => _$GoogleAuthRequestModelFromJson(json);
+class _ProviderAuthRequestModel implements ProviderAuthRequestModel {
+  const _ProviderAuthRequestModel({@JsonKey(name: 'id_token') required this.idToken});
+  factory _ProviderAuthRequestModel.fromJson(Map<String, dynamic> json) => _$ProviderAuthRequestModelFromJson(json);
 
 @override@JsonKey(name: 'id_token') final  String idToken;
 
-/// Create a copy of GoogleAuthRequestModel
+/// Create a copy of ProviderAuthRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$GoogleAuthRequestModelCopyWith<_GoogleAuthRequestModel> get copyWith => __$GoogleAuthRequestModelCopyWithImpl<_GoogleAuthRequestModel>(this, _$identity);
+_$ProviderAuthRequestModelCopyWith<_ProviderAuthRequestModel> get copyWith => __$ProviderAuthRequestModelCopyWithImpl<_ProviderAuthRequestModel>(this, _$identity);
 
 @override
 Map<String, dynamic> toJson() {
-  return _$GoogleAuthRequestModelToJson(this, );
+  return _$ProviderAuthRequestModelToJson(this, );
 }
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GoogleAuthRequestModel&&(identical(other.idToken, idToken) || other.idToken == idToken));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ProviderAuthRequestModel&&(identical(other.idToken, idToken) || other.idToken == idToken));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -236,15 +236,15 @@ int get hashCode => Object.hash(runtimeType,idToken);
 
 @override
 String toString() {
-  return 'GoogleAuthRequestModel(idToken: $idToken)';
+  return 'ProviderAuthRequestModel(idToken: $idToken)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$GoogleAuthRequestModelCopyWith<$Res> implements $GoogleAuthRequestModelCopyWith<$Res> {
-  factory _$GoogleAuthRequestModelCopyWith(_GoogleAuthRequestModel value, $Res Function(_GoogleAuthRequestModel) _then) = __$GoogleAuthRequestModelCopyWithImpl;
+abstract mixin class _$ProviderAuthRequestModelCopyWith<$Res> implements $ProviderAuthRequestModelCopyWith<$Res> {
+  factory _$ProviderAuthRequestModelCopyWith(_ProviderAuthRequestModel value, $Res Function(_ProviderAuthRequestModel) _then) = __$ProviderAuthRequestModelCopyWithImpl;
 @override @useResult
 $Res call({
 @JsonKey(name: 'id_token') String idToken
@@ -255,17 +255,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$GoogleAuthRequestModelCopyWithImpl<$Res>
-    implements _$GoogleAuthRequestModelCopyWith<$Res> {
-  __$GoogleAuthRequestModelCopyWithImpl(this._self, this._then);
+class __$ProviderAuthRequestModelCopyWithImpl<$Res>
+    implements _$ProviderAuthRequestModelCopyWith<$Res> {
+  __$ProviderAuthRequestModelCopyWithImpl(this._self, this._then);
 
-  final _GoogleAuthRequestModel _self;
-  final $Res Function(_GoogleAuthRequestModel) _then;
+  final _ProviderAuthRequestModel _self;
+  final $Res Function(_ProviderAuthRequestModel) _then;
 
-/// Create a copy of GoogleAuthRequestModel
+/// Create a copy of ProviderAuthRequestModel
 /// with the given fields replaced by the non-null parameter values.
 @override @pragma('vm:prefer-inline') $Res call({Object? idToken = null,}) {
-  return _then(_GoogleAuthRequestModel(
+  return _then(_ProviderAuthRequestModel(
 idToken: null == idToken ? _self.idToken : idToken // ignore: cast_nullable_to_non_nullable
 as String,
   ));

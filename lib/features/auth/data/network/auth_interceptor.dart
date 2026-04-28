@@ -1,23 +1,25 @@
 import 'package:dio/dio.dart';
-import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
+import 'package:noctambuls/core/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
 import 'package:noctambuls/features/auth/data/models/auth_user_model.dart';
+import 'package:noctambuls/features/auth/data/network/token_refresh_manager.dart';
 
 class AuthInterceptor extends Interceptor {
   AuthInterceptor({
     required TokenLocalDataSource tokenLocalDataSource,
-    required AuthRemoteDataSource authRemoteDataSource,
-  })  : _tokenLocalDataSource = tokenLocalDataSource,
-        _authRemoteDataSource = authRemoteDataSource;
+    required TokenRefreshManager refreshManager,
+  }) : _tokenLocalDataSource = tokenLocalDataSource,
+       _refreshManager = refreshManager;
 
   final TokenLocalDataSource _tokenLocalDataSource;
-  final AuthRemoteDataSource _authRemoteDataSource;
+  final TokenRefreshManager _refreshManager;
 
   // Assigned after construction to break the circular dependency with apiDio.
   late Dio dio;
 
   static const _retryKey = 'auth_interceptor_retry';
-  static const _proactiveRefreshThreshold = Duration(minutes: 2);
+  static const _proactiveRefreshThreshold = Duration(minutes: 5);
 
   @override
   Future<void> onRequest(
@@ -31,14 +33,15 @@ class AuthInterceptor extends Interceptor {
         final user = AuthUserModel.fromJwt(accessToken);
         final timeUntilExpiry = user.tokenExpiry.difference(DateTime.now());
         if (timeUntilExpiry < _proactiveRefreshThreshold) {
-          await _tryRefresh();
-          accessToken = await _tokenLocalDataSource.getAccessToken();
+          final newToken = await _refreshManager.refreshToken();
+          if (newToken != null) accessToken = newToken;
         }
       } on FormatException {
-        // Malformed token — attempt refresh anyway
-        await _tryRefresh();
-        accessToken = await _tokenLocalDataSource.getAccessToken();
-      }
+        final newToken = await _refreshManager.refreshToken();
+        if (newToken != null) accessToken = newToken;
+      } catch (e, st) {
+        AppLogger.failure(const NetworkFailure().withDebug(e, st));
+      } // Ignore Network errors
     }
 
     if (accessToken != null) {
@@ -54,32 +57,21 @@ class AuthInterceptor extends Interceptor {
     ErrorInterceptorHandler handler,
   ) async {
     if (err.response?.statusCode == 401 && !_isRetry(err.requestOptions)) {
-      final refreshed = await _tryRefresh();
-      if (refreshed) {
-        handler.resolve(await _retry(err.requestOptions));
-        return;
+      try {
+        final newToken = await _refreshManager.refreshToken();
+        if (newToken != null) {
+          handler.resolve(await _retry(err.requestOptions));
+          return;
+        }
+      } catch (e, st) {
+        AppLogger.failure(const NetworkFailure().withDebug(e, st));
       }
     }
+
     handler.next(err);
   }
 
-  bool _isRetry(RequestOptions options) =>
-      options.extra[_retryKey] == true;
-
-  Future<bool> _tryRefresh() async {
-    final refreshToken = await _tokenLocalDataSource.getRefreshToken();
-    if (refreshToken == null) return false;
-    try {
-      final response = await _authRemoteDataSource.refreshTokens(refreshToken);
-      await _tokenLocalDataSource.saveTokenPair(
-        response.accessToken,
-        response.refreshToken,
-      );
-      return true;
-    } on Exception {
-      return false;
-    }
-  }
+  bool _isRetry(RequestOptions options) => options.extra[_retryKey] == true;
 
   Future<Response<dynamic>> _retry(RequestOptions options) async {
     final newToken = await _tokenLocalDataSource.getAccessToken();

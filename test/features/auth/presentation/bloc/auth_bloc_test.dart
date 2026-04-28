@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/core/database/user_database_manager.dart';
+import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart'
     show GoogleAuthCredentials;
@@ -63,11 +64,13 @@ void main() {
     blocTest<AuthBloc, AuthState>(
       "hauria d'emetre Unauthenticated si no hi ha sessió guardada",
       build: () {
-        when(() => mockGetStoredAuth()).thenAnswer((_) async => const Ok(null));
+        when(
+          () => mockGetStoredAuth(),
+        ).thenAnswer((_) async => const Err(UnknownFailure()));
         return buildBloc();
       },
       act: (bloc) => bloc.add(const CheckStoredAuth()),
-      expect: () => [const Unauthenticated()],
+      expect: () => [const AuthLoading(), const Unauthenticated()],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -77,7 +80,7 @@ void main() {
         return buildBloc();
       },
       act: (bloc) => bloc.add(const CheckStoredAuth()),
-      expect: () => [Authenticated(user: tAuthUser)],
+      expect: () => [const AuthLoading(), Authenticated(user: tAuthUser)],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -89,7 +92,7 @@ void main() {
         return buildBloc();
       },
       act: (bloc) => bloc.add(const CheckStoredAuth()),
-      expect: () => [const Unauthenticated()],
+      expect: () => [const AuthLoading(), const Unauthenticated()],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -101,7 +104,7 @@ void main() {
         return buildBloc();
       },
       act: (bloc) => bloc.add(const CheckStoredAuth()),
-      expect: () => [const Unauthenticated()],
+      expect: () => [const AuthLoading(), const Unauthenticated()],
     );
   });
 
@@ -175,7 +178,7 @@ void main() {
         return buildBloc();
       },
       act: (bloc) => bloc.add(const SignOutRequested()),
-      expect: () => [const Unauthenticated()],
+      expect: () => [const AuthLoading(), const Unauthenticated()],
     );
 
     blocTest<AuthBloc, AuthState>(
@@ -187,7 +190,7 @@ void main() {
         return buildBloc();
       },
       act: (bloc) => bloc.add(const SignOutRequested()),
-      expect: () => [const Unauthenticated()],
+      expect: () => [const AuthLoading(), const Unauthenticated()],
     );
   });
 }

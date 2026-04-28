@@ -32,21 +32,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     CheckStoredAuth event,
     Emitter<AuthState> emit,
   ) async {
+    emit(const AuthLoading());
     final result = await getStoredAuthUseCase();
     await result.when(
       success: (user) async {
-        if (user != null) {
-          await dbManager.initDatabase(user.id);
-          emit(Authenticated(user: user));
-        } else {
-          emit(const Unauthenticated());
-        }
+        await dbManager.initDatabase(user.id);
+        emit(Authenticated(user: user));
       },
       failure: (failure) {
-        // Expired/invalid token is a silent failure — just show login
-        if (failure is! InvalidTokenFailure) {
-          AppLogger.failure(failure);
-        }
+        AppLogger.failure(failure);
         emit(const Unauthenticated());
       },
     );
@@ -78,6 +72,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     SignOutRequested event,
     Emitter<AuthState> emit,
   ) async {
+    emit(const AuthLoading());
     final result = await signOutUseCase();
     await result.when(
       success: (_) async {

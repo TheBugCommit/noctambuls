@@ -7,8 +7,5 @@ abstract class AuthRepository {
 
   Future<Result<Unit>> signOut();
 
-  /// Returns [Ok(null)] when no token is stored.
-  /// Returns [Ok(AuthUser)] when a valid token exists.
-  /// Returns [Err] when the stored token is expired or malformed.
-  Future<Result<AuthUser?>> getStoredAuth();
+  Future<Result<AuthUser>> getStoredAuth();
 }
