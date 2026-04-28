@@ -8,6 +8,7 @@ import 'package:noctambuls/features/auth/data/datasources/token_local_datasource
 import 'package:noctambuls/features/auth/data/models/auth_response_model.dart';
 import 'package:noctambuls/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
+import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
 
@@ -100,7 +101,9 @@ void main() {
       when(
         () => mockGoogleProvider.authenticate(any()),
       ).thenAnswer((_) async => tIdToken);
-      when(() => mockRemote.signInWithGoogle(tIdToken)).thenAnswer(
+      when(
+        () => mockRemote.signInWithProvider(AuthProviderType.google, tIdToken),
+      ).thenAnswer(
         (_) async => AuthResponseModel(
           accessToken: tValidJwt,
           refreshToken: tRefreshToken,
@@ -130,7 +133,7 @@ void main() {
           () => mockGoogleProvider.authenticate(any()),
         ).thenAnswer((_) async => tIdToken);
         when(
-          () => mockRemote.signInWithGoogle(any()),
+          () => mockRemote.signInWithProvider(AuthProviderType.google, any()),
         ).thenThrow(Exception('network error'));
 
         final result = await buildRepo().signIn(const GoogleAuthCredentials());
@@ -149,7 +152,9 @@ void main() {
         when(
           () => mockGoogleProvider.authenticate(any()),
         ).thenAnswer((_) async => tIdToken);
-        when(() => mockRemote.signInWithGoogle(any())).thenAnswer(
+        when(
+          () => mockRemote.signInWithProvider(AuthProviderType.google, any()),
+        ).thenAnswer(
           (_) async => AuthResponseModel(
             accessToken: tValidJwt,
             refreshToken: tRefreshToken,

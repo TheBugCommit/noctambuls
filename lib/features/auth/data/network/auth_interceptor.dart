@@ -7,8 +7,8 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor({
     required TokenLocalDataSource tokenLocalDataSource,
     required AuthRemoteDataSource authRemoteDataSource,
-  })  : _tokenLocalDataSource = tokenLocalDataSource,
-        _authRemoteDataSource = authRemoteDataSource;
+  }) : _tokenLocalDataSource = tokenLocalDataSource,
+       _authRemoteDataSource = authRemoteDataSource;
 
   final TokenLocalDataSource _tokenLocalDataSource;
   final AuthRemoteDataSource _authRemoteDataSource;
@@ -63,8 +63,7 @@ class AuthInterceptor extends Interceptor {
     handler.next(err);
   }
 
-  bool _isRetry(RequestOptions options) =>
-      options.extra[_retryKey] == true;
+  bool _isRetry(RequestOptions options) => options.extra[_retryKey] == true;
 
   Future<bool> _tryRefresh() async {
     final refreshToken = await _tokenLocalDataSource.getRefreshToken();
@@ -76,7 +75,14 @@ class AuthInterceptor extends Interceptor {
         response.refreshToken,
       );
       return true;
-    } on Exception {
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 401) {
+        await _tokenLocalDataSource.deleteAllTokens();
+        return false;
+      }
+
+      return false;
+    } catch (e) {
       return false;
     }
   }

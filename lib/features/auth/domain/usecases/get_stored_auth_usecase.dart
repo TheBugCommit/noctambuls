@@ -7,5 +7,5 @@ class GetStoredAuthUseCase {
 
   final AuthRepository repository;
 
-  Future<Result<AuthUser?>> call() => repository.getStoredAuth();
+  Future<Result<AuthUser>> call() => repository.getStoredAuth();
 }
