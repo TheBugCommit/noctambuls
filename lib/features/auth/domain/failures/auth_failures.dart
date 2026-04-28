@@ -45,9 +45,9 @@ final class SignInFailure extends AuthFailure {
 final class BackendAuthFailure extends AuthFailure {
   const BackendAuthFailure({
     super.debugMessage = 'Backend authentication failed',
-    super.statusCode = 401,
+    int? statusCode,
     super.stackTrace,
-  });
+  }) : super(statusCode: statusCode ?? 400);
 
   @override
   BackendAuthFailure withDebug(Object error, [StackTrace? stackTrace]) =>
@@ -108,16 +108,16 @@ final class UnsupportedProviderFailure extends AuthFailure {
   );
 }
 
-final class NetworkFailure extends AuthFailure {
-  const NetworkFailure({
-    super.debugMessage = 'No network connection',
-    super.statusCode = 0,
+final class RefreshTokenFailure extends AuthFailure {
+  const RefreshTokenFailure({
+    super.debugMessage = 'Error refreshing token',
+    super.statusCode = 401,
     super.stackTrace,
   });
 
   @override
-  NetworkFailure withDebug(Object error, [StackTrace? stackTrace]) =>
-      NetworkFailure(
+  RefreshTokenFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      RefreshTokenFailure(
         debugMessage: error.toString(),
         statusCode: statusCode,
         stackTrace: stackTrace,

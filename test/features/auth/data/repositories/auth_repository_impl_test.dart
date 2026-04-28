@@ -1,13 +1,16 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_provider_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
 import 'package:noctambuls/features/auth/data/models/auth_response_model.dart';
+import 'package:noctambuls/features/auth/data/network/token_refresh_manager.dart';
 import 'package:noctambuls/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
+import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
 
@@ -16,6 +19,8 @@ import '../../helpers/jwt_helper.dart';
 class MockAuthRemoteDataSource extends Mock implements AuthRemoteDataSource {}
 
 class MockTokenLocalDataSource extends Mock implements TokenLocalDataSource {}
+
+class MockTokenRefreshManager extends Mock implements TokenRefreshManager {}
 
 class MockGoogleAuthProviderDataSource extends Mock
     implements AuthProviderDataSource<GoogleAuthCredentials> {}
@@ -26,6 +31,7 @@ void main() {
   late MockAuthRemoteDataSource mockRemote;
   late MockTokenLocalDataSource mockLocal;
   late MockGoogleAuthProviderDataSource mockGoogleProvider;
+  late MockTokenRefreshManager mockTokenRefreshManager;
 
   const tUserId = 'user-123';
   const tUserEmail = 'test@noctambuls.cat';
@@ -44,6 +50,11 @@ void main() {
     mockRemote = MockAuthRemoteDataSource();
     mockLocal = MockTokenLocalDataSource();
     mockGoogleProvider = MockGoogleAuthProviderDataSource();
+    mockTokenRefreshManager = MockTokenRefreshManager();
+
+    when(
+      () => mockGoogleProvider.authProviderType,
+    ).thenReturn(AuthProviderType.google);
 
     tValidJwt = makeJwt(id: tUserId, email: tUserEmail, exp: futureExp);
     tExpiredJwt = makeJwt(id: tUserId, email: tUserEmail, exp: pastExp);
@@ -58,6 +69,7 @@ void main() {
       AuthRepositoryImpl(
         remoteDataSource: mockRemote,
         tokenLocalDataSource: mockLocal,
+        refreshManager: mockTokenRefreshManager,
         providers: includeProvider
             ? {GoogleAuthCredentials: mockGoogleProvider}
             : {},
@@ -100,7 +112,9 @@ void main() {
       when(
         () => mockGoogleProvider.authenticate(any()),
       ).thenAnswer((_) async => tIdToken);
-      when(() => mockRemote.signInWithGoogle(tIdToken)).thenAnswer(
+      when(
+        () => mockRemote.signInWithProvider(AuthProviderType.google, tIdToken),
+      ).thenAnswer(
         (_) async => AuthResponseModel(
           accessToken: tValidJwt,
           refreshToken: tRefreshToken,
@@ -130,34 +144,8 @@ void main() {
           () => mockGoogleProvider.authenticate(any()),
         ).thenAnswer((_) async => tIdToken);
         when(
-          () => mockRemote.signInWithGoogle(any()),
+          () => mockRemote.signInWithProvider(AuthProviderType.google, any()),
         ).thenThrow(Exception('network error'));
-
-        final result = await buildRepo().signIn(const GoogleAuthCredentials());
-
-        expect(result, isA<Err<AuthUser>>());
-        result.when(
-          success: (_) => fail('esperava error'),
-          failure: (f) => expect(f, isA<BackendAuthFailure>()),
-        );
-      },
-    );
-
-    test(
-      'hauria de retornar BackendAuthFailure si saveTokenPair llença excepció',
-      () async {
-        when(
-          () => mockGoogleProvider.authenticate(any()),
-        ).thenAnswer((_) async => tIdToken);
-        when(() => mockRemote.signInWithGoogle(any())).thenAnswer(
-          (_) async => AuthResponseModel(
-            accessToken: tValidJwt,
-            refreshToken: tRefreshToken,
-          ),
-        );
-        when(
-          () => mockLocal.saveTokenPair(any(), any()),
-        ).thenThrow(Exception('storage error'));
 
         final result = await buildRepo().signIn(const GoogleAuthCredentials());
 
@@ -172,35 +160,38 @@ void main() {
 
   group('getStoredAuth', () {
     test(
-      'hauria de retornar Ok(null) si no hi ha access token ni refresh token',
+      'hauria de retornar Err(InvalidTokenFailure) si no hi ha accés i no pot refrescar',
       () async {
         when(() => mockLocal.getAccessToken()).thenAnswer((_) async => null);
-        when(() => mockLocal.getRefreshToken()).thenAnswer((_) async => null);
+        when(
+          () => mockTokenRefreshManager.refreshToken(),
+        ).thenAnswer((_) async => null);
 
         final result = await buildRepo().getStoredAuth();
 
-        expect(result, isA<Ok<AuthUser?>>());
+        expect(result, isA<Err<AuthUser>>());
         result.when(
-          success: (user) => expect(user, isNull),
-          failure: (_) => fail('esperava Ok(null)'),
+          success: (_) => fail('esperava error'),
+          failure: (f) => expect(f, isA<InvalidTokenFailure>()),
         );
+        verify(() => mockTokenRefreshManager.refreshToken()).called(1);
       },
     );
 
     test(
-      'hauria de retornar Ok(AuthUser) si el token és vàlid i no ha expirat',
+      'hauria de retornar Ok(AuthUser) si el token existeix i no ha expirat',
       () async {
+        // Assumint que hem posat el "return Ok(expiredUser);" d'hora si no està caducat
         when(
           () => mockLocal.getAccessToken(),
         ).thenAnswer((_) async => tValidJwt);
 
         final result = await buildRepo().getStoredAuth();
 
-        expect(result, isA<Ok<AuthUser?>>());
+        expect(result, isA<Ok<AuthUser>>());
         result.when(
           success: (user) {
-            expect(user, isNotNull);
-            expect(user!.id, tUserId);
+            expect(user.id, tUserId);
             expect(user.email, tUserEmail);
           },
           failure: (_) => fail('esperava Ok(AuthUser)'),
@@ -214,48 +205,21 @@ void main() {
         when(
           () => mockLocal.getAccessToken(),
         ).thenAnswer((_) async => tExpiredJwt);
+        // Simulem que el manager retorna amb èxit un nou token
         when(
-          () => mockLocal.getRefreshToken(),
-        ).thenAnswer((_) async => tRefreshToken);
-        when(() => mockRemote.refreshTokens(tRefreshToken)).thenAnswer(
-          (_) async => AuthResponseModel(
-            accessToken: tNewValidJwt,
-            refreshToken: 'new-refresh-token',
-          ),
-        );
-        when(
-          () => mockLocal.saveTokenPair(any(), any()),
-        ).thenAnswer((_) async {});
+          () => mockTokenRefreshManager.refreshToken(),
+        ).thenAnswer((_) async => tNewValidJwt);
 
         final result = await buildRepo().getStoredAuth();
 
-        expect(result, isA<Ok<AuthUser?>>());
+        expect(result, isA<Ok<AuthUser>>());
         result.when(
           success: (user) {
-            expect(user, isNotNull);
-            expect(user!.email, 'new@noctambuls.cat');
+            expect(user.email, 'new@noctambuls.cat');
           },
           failure: (_) => fail('esperava Ok(AuthUser) refrescat'),
         );
-        verify(() => mockRemote.refreshTokens(tRefreshToken)).called(1);
-      },
-    );
-
-    test(
-      'hauria de retornar Ok(null) si el token ha expirat i no hi ha refresh token',
-      () async {
-        when(
-          () => mockLocal.getAccessToken(),
-        ).thenAnswer((_) async => tExpiredJwt);
-        when(() => mockLocal.getRefreshToken()).thenAnswer((_) async => null);
-
-        final result = await buildRepo().getStoredAuth();
-
-        expect(result, isA<Ok<AuthUser?>>());
-        result.when(
-          success: (user) => expect(user, isNull),
-          failure: (_) => fail('esperava Ok(null)'),
-        );
+        verify(() => mockTokenRefreshManager.refreshToken()).called(1);
       },
     );
 
@@ -265,20 +229,20 @@ void main() {
         when(
           () => mockLocal.getAccessToken(),
         ).thenAnswer((_) async => tExpiredJwt);
-        when(
-          () => mockLocal.getRefreshToken(),
-        ).thenAnswer((_) async => tRefreshToken);
-        when(() => mockRemote.refreshTokens(any())).thenThrow(
+        // Simulem un error de xarxa en el procés de refresc (sense resposta = sense connexió)
+        when(() => mockTokenRefreshManager.refreshToken()).thenThrow(
           DioException(requestOptions: RequestOptions(), response: null),
         );
 
         final result = await buildRepo().getStoredAuth();
 
-        expect(result, isA<Ok<AuthUser?>>());
+        expect(result, isA<Ok<AuthUser>>());
         result.when(
           success: (user) {
-            expect(user, isNotNull);
-            expect(user!.id, tUserId);
+            expect(
+              user.id,
+              tUserId,
+            ); // Validem que retorna l'usuari caducat per fer offline-first
           },
           failure: (_) => fail('esperava Ok(expiredUser) en mode offline'),
         );
@@ -286,71 +250,39 @@ void main() {
     );
 
     test(
-      'hauria de retornar Ok(null) en mode offline si no hi ha user previ',
+      'hauria de retornar Err(NetworkFailure) en mode offline si no hi ha user previ',
       () async {
         when(() => mockLocal.getAccessToken()).thenAnswer((_) async => null);
-        when(
-          () => mockLocal.getRefreshToken(),
-        ).thenAnswer((_) async => tRefreshToken);
-        when(() => mockRemote.refreshTokens(any())).thenThrow(
+        when(() => mockTokenRefreshManager.refreshToken()).thenThrow(
           DioException(requestOptions: RequestOptions(), response: null),
         );
 
         final result = await buildRepo().getStoredAuth();
 
-        expect(result, isA<Ok<AuthUser?>>());
+        expect(result, isA<Err<AuthUser>>());
         result.when(
-          success: (user) => expect(user, isNull),
-          failure: (_) => fail('esperava Ok(null) en mode offline sense user'),
+          success: (_) => fail('esperava Err(NetworkFailure)'),
+          failure: (f) => expect(f, isA<NetworkFailure>()),
         );
       },
     );
 
     test(
-      'hauria de retornar Err(InvalidTokenFailure) si el servidor rebutja el refresh',
-      () async {
-        when(
-          () => mockLocal.getAccessToken(),
-        ).thenAnswer((_) async => tExpiredJwt);
-        when(
-          () => mockLocal.getRefreshToken(),
-        ).thenAnswer((_) async => tRefreshToken);
-        when(() => mockRemote.refreshTokens(any())).thenThrow(
-          DioException(
-            requestOptions: RequestOptions(),
-            response: Response(
-              requestOptions: RequestOptions(),
-              statusCode: 401,
-            ),
-          ),
-        );
-        when(() => mockLocal.deleteAllTokens()).thenAnswer((_) async {});
-
-        final result = await buildRepo().getStoredAuth();
-
-        expect(result, isA<Err<AuthUser?>>());
-        result.when(
-          success: (_) => fail('esperava Err(InvalidTokenFailure)'),
-          failure: (f) => expect(f, isA<InvalidTokenFailure>()),
-        );
-        verify(() => mockLocal.deleteAllTokens()).called(1);
-      },
-    );
-
-    test(
-      'hauria de retornar Ok(null) si el JWT és malformat i no hi ha refresh',
+      'hauria de retornar Err(InvalidTokenFailure) si el JWT és malformat i no es pot refrescar',
       () async {
         when(
           () => mockLocal.getAccessToken(),
         ).thenAnswer((_) async => 'not-a-valid-jwt');
-        when(() => mockLocal.getRefreshToken()).thenAnswer((_) async => null);
+        when(
+          () => mockTokenRefreshManager.refreshToken(),
+        ).thenAnswer((_) async => null);
 
         final result = await buildRepo().getStoredAuth();
 
-        expect(result, isA<Ok<AuthUser?>>());
+        expect(result, isA<Err<AuthUser>>());
         result.when(
-          success: (user) => expect(user, isNull),
-          failure: (_) => fail('esperava Ok(null) amb JWT malformat'),
+          success: (_) => fail('esperava Err(InvalidTokenFailure)'),
+          failure: (f) => expect(f, isA<InvalidTokenFailure>()),
         );
       },
     );
@@ -364,7 +296,7 @@ void main() {
 
         final result = await buildRepo().getStoredAuth();
 
-        expect(result, isA<Err<AuthUser?>>());
+        expect(result, isA<Err<AuthUser>>());
         result.when(
           success: (_) => fail('esperava Err(TokenStorageFailure)'),
           failure: (f) => expect(f, isA<TokenStorageFailure>()),

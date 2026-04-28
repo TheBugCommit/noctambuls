@@ -11,6 +11,7 @@ import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource
 import 'package:noctambuls/features/auth/data/datasources/google_auth_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
 import 'package:noctambuls/features/auth/data/network/auth_interceptor.dart';
+import 'package:noctambuls/features/auth/data/network/token_refresh_manager.dart';
 import 'package:noctambuls/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/repositories/auth_repository.dart';
@@ -27,6 +28,12 @@ void initAuthFeature() {
     ..registerLazySingleton<TokenLocalDataSource>(
       () => TokenLocalDataSourceImpl(storage: sl()),
     )
+    ..registerLazySingleton(
+      () => TokenRefreshManager(
+        authRemoteDataSource: sl(),
+        tokenLocalDataSource: sl(),
+      ),
+    )
     // authDio: no interceptors — used by auth endpoints only
     ..registerLazySingleton<Dio>(
       () => Dio()..options.baseUrl = EnvConfig.serverUrl,
@@ -38,7 +45,7 @@ void initAuthFeature() {
     ..registerLazySingleton<AuthInterceptor>(
       () => AuthInterceptor(
         tokenLocalDataSource: sl(),
-        authRemoteDataSource: sl(),
+        refreshManager: sl(),
       ),
     )
     // apiDio: includes AuthInterceptor for protected endpoints
@@ -65,6 +72,7 @@ void initAuthFeature() {
             ),
           ),
         },
+        refreshManager: sl(),
       ),
     )
     ..registerLazySingleton(() => GetStoredAuthUseCase(sl()))

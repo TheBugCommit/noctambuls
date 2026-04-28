@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
+import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_provider_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
 import 'package:noctambuls/features/auth/data/models/auth_user_model.dart';
+import 'package:noctambuls/features/auth/data/network/token_refresh_manager.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
@@ -14,11 +16,13 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required this.remoteDataSource,
     required this.tokenLocalDataSource,
+    required this.refreshManager,
     required Map<Type, AuthProviderDataSource> providers,
   }) : _providers = providers;
 
   final AuthRemoteDataSource remoteDataSource;
   final TokenLocalDataSource tokenLocalDataSource;
+  final TokenRefreshManager refreshManager;
   final Map<Type, AuthProviderDataSource> _providers;
 
   @override
@@ -32,40 +36,71 @@ class AuthRepositoryImpl implements AuthRepository {
         return const Err(SignInCancelledFailure());
       }
 
-      final response = await remoteDataSource.signInWithGoogle(externalToken);
+      final response = await remoteDataSource.signInWithProvider(
+        provider.authProviderType,
+        externalToken,
+      );
       await tokenLocalDataSource.saveTokenPair(
         response.accessToken,
         response.refreshToken,
       );
       return Ok(AuthUserModel.fromJwt(response.accessToken));
-    } on Exception catch (e, st) {
+    } on DioException catch (e, st) {
+      if (e.response == null) {
+        return Err(const NetworkFailure().withDebug(e, st));
+      }
+      final code = e.response!.statusCode!;
+      return code >= 500
+          ? Err(BackendAuthFailure(statusCode: code).withDebug(e, st))
+          : Err(SignInFailure(statusCode: code).withDebug(e, st));
+    } catch (e, st) {
       return Err(const BackendAuthFailure().withDebug(e, st));
     }
   }
 
   @override
-  Future<Result<AuthUser?>> getStoredAuth() async {
+  Future<Result<AuthUser>> getStoredAuth() async {
+    AuthUserModel? expiredUser;
+
     try {
       final accessToken = await tokenLocalDataSource.getAccessToken();
 
-      if (accessToken == null) {
-        return _refreshWithFallback(expiredUser: null);
+      if (accessToken != null) {
+        try {
+          expiredUser = AuthUserModel.fromJwt(accessToken);
+          if (!expiredUser.isTokenExpired) {
+            return Ok(expiredUser);
+          }
+        } on FormatException catch (e, st) {
+          AppLogger.failure(const InvalidTokenFailure().withDebug(e, st));
+        }
       }
 
-      AuthUserModel user;
-      try {
-        user = AuthUserModel.fromJwt(accessToken);
-      } on FormatException catch (e, st) {
-        AppLogger.failure(const InvalidTokenFailure().withDebug(e, st));
-        return _refreshWithFallback(expiredUser: null);
+      final newToken = await refreshManager.refreshToken();
+
+      if (newToken != null) {
+        return Ok(AuthUserModel.fromJwt(newToken));
+      } else {
+        return const Err(InvalidTokenFailure());
+      }
+    } on DioException catch (e, st) {
+      if (e.response == null) {
+        if (expiredUser != null) {
+          return Ok(expiredUser);
+        }
+        return const Err(NetworkFailure());
       }
 
-      if (!user.isTokenExpired) {
-        return Ok(user);
+      if (e.response?.statusCode != null && e.response!.statusCode! >= 500) {
+        return Err(
+          BackendAuthFailure(
+            statusCode: e.response!.statusCode,
+          ).withDebug(e, st),
+        );
       }
 
-      return _refreshWithFallback(expiredUser: user);
-    } on Exception catch (e, st) {
+      return const Err(RefreshTokenFailure());
+    } catch (e, st) {
       return Err(const TokenStorageFailure().withDebug(e, st));
     }
   }
@@ -89,7 +124,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       return const Ok(Unit.instance);
-    } on Exception catch (e, st) {
+    } catch (e, st) {
       final failure = const TokenStorageFailure().withDebug(e, st);
       AppLogger.failure(failure);
       return Err(failure);
@@ -97,15 +132,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   /// Attempts to refresh the access token using the stored refresh token.
-  ///
-  /// If offline ([DioException] with no response), returns [Ok] with
-  /// [expiredUser] so the app stays functional without network.
-  /// If [expiredUser] is null and offline, returns [Ok(null)] (no session).
-  Future<Result<AuthUser?>> _refreshWithFallback({
+  Future<Result<AuthUser>> _refreshWithFallback({
     required AuthUserModel? expiredUser,
   }) async {
     final refreshToken = await tokenLocalDataSource.getRefreshToken();
-    if (refreshToken == null) return const Ok(null);
+    if (refreshToken == null) return const Err(InvalidTokenFailure());
 
     try {
       final response = await remoteDataSource.refreshTokens(refreshToken);
@@ -116,16 +147,33 @@ class AuthRepositoryImpl implements AuthRepository {
       return Ok(AuthUserModel.fromJwt(response.accessToken));
     } on DioException catch (e, st) {
       // No response means network error — go offline if possible
-      if (e.response == null) {
+      if (e.response == null && expiredUser == null) {
+        return const Err(NetworkFailure());
+      } else if (expiredUser != null && e.response == null) {
         return Ok(expiredUser);
       }
-      // Server responded with an auth error — refresh token is invalid
-      AppLogger.failure(const InvalidTokenFailure().withDebug(e, st));
-      await tokenLocalDataSource.deleteAllTokens();
-      return Err(const InvalidTokenFailure().withDebug(e, st));
-    } on Exception catch (e, st) {
-      await tokenLocalDataSource.deleteAllTokens();
-      return Err(const InvalidTokenFailure().withDebug(e, st));
+
+      if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
+        AppLogger.failure(const InvalidTokenFailure().withDebug(e, st));
+        await tokenLocalDataSource.deleteAllTokens();
+        return Err(const InvalidTokenFailure().withDebug(e, st));
+      }
+
+      if (e.response?.statusCode != null && e.response!.statusCode! >= 500) {
+        return Err(
+          BackendAuthFailure(
+            statusCode: e.response!.statusCode,
+          ).withDebug(e, st),
+        );
+      }
+
+      if (expiredUser != null) {
+        return Ok(expiredUser);
+      } else {
+        return const Err(RefreshTokenFailure());
+      }
+    } catch (e, st) {
+      return Err(const BackendAuthFailure().withDebug(e, st));
     }
   }
 }
