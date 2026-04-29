@@ -37,7 +37,7 @@ class SoLoudAudioService implements AudioService {
   Future<void> preload(List<String> assetPaths) async {
     if (!_isInitialized) await init();
 
-    final futures = assetPaths
+    /*final futures = assetPaths
         .where((path) => path.isNotEmpty && !_loadedSources.containsKey(path))
         .map((path) async {
           try {
@@ -52,7 +52,7 @@ class SoLoudAudioService implements AudioService {
           }
         });
 
-    await Future.wait(futures);
+    await Future.wait(futures);*/
   }
 
   @override

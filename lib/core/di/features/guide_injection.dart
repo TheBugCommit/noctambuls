@@ -40,6 +40,7 @@ void initGuideFeature() {
         getBirdsUseCase: sl(),
         audioService: sl(),
         logger: sl<IAppLogger>(),
+        openLinkUseCase: sl(),
       ),
     )
     ..registerFactory(

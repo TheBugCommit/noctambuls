@@ -15,3 +15,21 @@ final class LoadBirds extends GuideEvent {
   @override
   List<Object?> get props => [languageCode];
 }
+
+final class PlayBirdAudio extends GuideEvent {
+  const PlayBirdAudio({required this.audioPath});
+
+  final String audioPath;
+
+  @override
+  List<Object?> get props => [audioPath];
+}
+
+final class OpenBirdLink extends GuideEvent {
+  const OpenBirdLink({required this.url});
+
+  final String url;
+
+  @override
+  List<Object?> get props => [url];
+}

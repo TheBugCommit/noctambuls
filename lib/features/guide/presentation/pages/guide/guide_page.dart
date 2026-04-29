@@ -10,6 +10,7 @@ import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_
 import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_state.dart';
 import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
+import 'package:noctambuls/l10n/app_localizations.dart';
 
 class GuidePage extends StatelessWidget {
   const GuidePage({super.key});
@@ -36,14 +37,37 @@ class _GuideView extends StatelessWidget {
         final newLanguageCode = state.appLanguage.toLanguageCode;
         context.read<GuideBloc>().add(LoadBirds(languageCode: newLanguageCode));
       },
-      child: Scaffold(
-        appBar: const TaxusAppBar(),
-        body: BlocBuilder<GuideBloc, GuideState>(
-          builder: (context, state) => switch (state) {
-            GuideInitial() || GuideLoading() => const _GuideLoadingView(),
-            GuideLoaded(:final birds) => BirdList(birds: birds),
-            GuideError() => const _GuideErrorView(),
-          },
+      child: BlocListener<GuideBloc, GuideState>(
+        listenWhen: (previous, current) {
+          if (previous is GuideLoaded && current is GuideLoaded) {
+            return previous.actionError != current.actionError &&
+                current.actionError != null;
+          }
+          return false;
+        },
+        listener: (context, state) {
+          if (state is GuideLoaded && state.actionError != null) {
+            final l10n = AppLocalizations.of(context)!;
+
+            final errorMessage = switch (state.actionError!) {
+              GuideUrlError() => l10n.cantOpenLink,
+              GuideAudioError() => l10n.cantPlayAudio,
+            };
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(errorMessage)),
+            );
+          }
+        },
+        child: Scaffold(
+          appBar: const TaxusAppBar(),
+          body: BlocBuilder<GuideBloc, GuideState>(
+            builder: (context, state) => switch (state) {
+              GuideInitial() || GuideLoading() => const _GuideLoadingView(),
+              GuideLoaded(:final birds) => BirdList(birds: birds),
+              GuideError() => const _GuideErrorView(),
+            },
+          ),
         ),
       ),
     );

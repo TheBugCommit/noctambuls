@@ -79,7 +79,7 @@ final class AudioFailure extends Failure {
 // Wraps url launcher errors
 final class UrlLauncherFailure extends Failure {
   const UrlLauncherFailure({
-    super.debugMessage = 'Audio operation failed',
+    super.debugMessage = 'Launch URL operation failed',
     super.statusCode = 503,
     super.stackTrace,
   });

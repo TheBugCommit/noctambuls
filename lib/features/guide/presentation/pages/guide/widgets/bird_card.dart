@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
-import 'package:noctambuls/core/di/injection_container.dart';
-import 'package:noctambuls/core/services/external_service_link.dart';
 import 'package:noctambuls/core/widgets/app_button.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_audio_button.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -150,17 +151,6 @@ class BirdCardActions extends StatelessWidget {
   final String infoUrl;
   final String audioPath;
 
-  Future<void> _openBirdUrl(BuildContext context) async {
-    final l10n = AppLocalizations.of(context)!;
-    final success = await sl<ExternalLinkService>().openUrl(infoUrl);
-
-    if (!success && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(l10n.cantOpenLink)),
-      );
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -174,7 +164,9 @@ class BirdCardActions extends StatelessWidget {
           labelStop: l10n.stopPlayingAudio,
         ),
         AppButton.primary(
-          onPressed: infoUrl.isEmpty ? null : () => _openBirdUrl(context),
+          onPressed: infoUrl.isEmpty
+              ? null
+              : () => context.read<GuideBloc>().add(OpenBirdLink(url: infoUrl)),
           icon: Icons.link,
           label: l10n.moreInfo,
         ),
