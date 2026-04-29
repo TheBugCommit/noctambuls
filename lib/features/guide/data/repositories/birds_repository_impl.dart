@@ -15,11 +15,13 @@ class BirdsRepositoryImpl implements BirdsRepository {
     required this.localDataSource,
     required this.remoteDataSource,
     required this.mediaService,
+    required this.logger,
   });
 
   final BirdsLocalDataSource localDataSource;
   final BirdsRemoteDataSource remoteDataSource;
   final CatalogMediaService mediaService;
+  final IAppLogger logger;
 
   bool _syncedThisSession = false;
 
@@ -50,7 +52,7 @@ class BirdsRepositoryImpl implements BirdsRepository {
           ),
           StackTrace.current,
         );
-        AppLogger.failure(failure);
+        logger.failure(failure);
         return Err(failure);
       }
 
@@ -82,7 +84,7 @@ class BirdsRepositoryImpl implements BirdsRepository {
       return const Ok(Unit.instance);
     } catch (e, st) {
       final failure = const CatalogSyncFailure().withDebug(e, st);
-      AppLogger.failure(failure);
+      logger.failure(failure);
       return Err(failure);
     }
   }
@@ -115,7 +117,7 @@ class BirdsRepositoryImpl implements BirdsRepository {
         } catch (e) {
           // RESILIÈNCIA: Si peta el fitxer, guardem l'ocell amb la URL original.
           // D'aquesta manera no perdem l'espècie de la base de dades.
-          AppLogger.warning('Error descarregant arxius per ${bird.id}: $e');
+          logger.warning('Error descarregant arxius per ${bird.id}: $e');
           return bird.toEntityData(
             localImagePath: bird.imagePath,
             localAudioPath: bird.audioPath,
@@ -135,7 +137,7 @@ class BirdsRepositoryImpl implements BirdsRepository {
       final v = await remoteDataSource.getCatalogVersion();
       return v.version;
     } catch (e) {
-      AppLogger.warning('Catalog version check failed (offline?): $e');
+      logger.warning('Catalog version check failed (offline?): $e');
       return null;
     }
   }

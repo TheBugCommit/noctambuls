@@ -5,12 +5,13 @@ import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_event.d
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
 
 class CatalogSyncBloc extends Bloc<CatalogSyncEvent, CatalogSyncState> {
-  CatalogSyncBloc({required this.syncCatalogUseCase})
+  CatalogSyncBloc({required this.syncCatalogUseCase, required this.logger})
     : super(const CatalogSyncInitial()) {
     on<CatalogSyncEventRequest>(_onSyncCatalogRequested);
   }
 
   final SyncCatalogUseCase syncCatalogUseCase;
+  final IAppLogger logger;
 
   Future<void> _onSyncCatalogRequested(
     CatalogSyncEventRequest event,
@@ -27,7 +28,7 @@ class CatalogSyncBloc extends Bloc<CatalogSyncEvent, CatalogSyncState> {
         emit(const CatalogSyncSuccess());
       },
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(CatalogSyncFailure(failure: failure));
       },
     );

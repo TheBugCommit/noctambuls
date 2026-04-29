@@ -6,9 +6,10 @@ import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CatalogMediaService {
-  const CatalogMediaService({required this.dio});
+  const CatalogMediaService({required this.dio, required this.logger});
 
   final Dio dio;
+  final IAppLogger logger;
 
   Future<String?> ensureImage(String serverPath) =>
       _ensureFile(serverPath, 'images');
@@ -29,7 +30,7 @@ class CatalogMediaService {
       await dio.download('${EnvConfig.serverUrl}$serverPath', localPath);
       return localPath;
     } catch (e) {
-      AppLogger.warning('Failed to download media $serverPath: $e');
+      logger.warning('Failed to download media $serverPath: $e');
       return null;
     }
   }

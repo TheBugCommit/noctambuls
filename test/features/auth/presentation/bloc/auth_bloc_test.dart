@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart'
     show GoogleAuthCredentials;
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
@@ -23,11 +24,14 @@ class MockSignOutUseCase extends Mock implements SignOutUseCase {}
 
 class MockUserDatabaseManager extends Mock implements UserDatabaseManager {}
 
+class MockLogger extends Mock implements IAppLogger {}
+
 void main() {
   late MockGetStoredAuthUseCase mockGetStoredAuth;
   late MockSignInUseCase mockSignIn;
   late MockSignOutUseCase mockSignOut;
   late MockUserDatabaseManager mockDbManager;
+  late MockLogger mockLogger;
 
   final tAuthUser = AuthUser(
     id: 'user-123',
@@ -44,6 +48,7 @@ void main() {
     mockSignIn = MockSignInUseCase();
     mockSignOut = MockSignOutUseCase();
     mockDbManager = MockUserDatabaseManager();
+    mockLogger = MockLogger();
 
     when(() => mockDbManager.initDatabase(any())).thenAnswer((_) async {});
     when(() => mockDbManager.closeDatabase()).thenAnswer((_) async {});
@@ -54,6 +59,7 @@ void main() {
     signInUseCase: mockSignIn,
     signOutUseCase: mockSignOut,
     dbManager: mockDbManager,
+    logger: mockLogger,
   );
 
   test("l'estat inicial hauria de ser AuthInitial", () {

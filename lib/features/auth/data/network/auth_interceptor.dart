@@ -9,11 +9,13 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor({
     required TokenLocalDataSource tokenLocalDataSource,
     required TokenRefreshManager refreshManager,
+    required this.logger,
   }) : _tokenLocalDataSource = tokenLocalDataSource,
        _refreshManager = refreshManager;
 
   final TokenLocalDataSource _tokenLocalDataSource;
   final TokenRefreshManager _refreshManager;
+  final IAppLogger logger;
 
   // Assigned after construction to break the circular dependency with apiDio.
   late Dio dio;
@@ -40,7 +42,7 @@ class AuthInterceptor extends Interceptor {
         final newToken = await _refreshManager.refreshToken();
         if (newToken != null) accessToken = newToken;
       } catch (e, st) {
-        AppLogger.failure(const NetworkFailure().withDebug(e, st));
+        logger.failure(const NetworkFailure().withDebug(e, st));
       } // Ignore Network errors
     }
 
@@ -64,7 +66,7 @@ class AuthInterceptor extends Interceptor {
           return;
         }
       } catch (e, st) {
-        AppLogger.failure(const NetworkFailure().withDebug(e, st));
+        logger.failure(const NetworkFailure().withDebug(e, st));
       }
     }
 

@@ -15,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.signInUseCase,
     required this.signOutUseCase,
     required this.dbManager,
+    required this.logger,
   }) : super(const AuthInitial()) {
     on<CheckStoredAuth>(_onCheckStoredAuth);
     on<SignInWithGoogleRequested>(
@@ -27,6 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SignInUseCase signInUseCase;
   final SignOutUseCase signOutUseCase;
   final UserDatabaseManager dbManager;
+  final IAppLogger logger;
 
   Future<void> _onCheckStoredAuth(
     CheckStoredAuth event,
@@ -40,7 +42,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(Authenticated(user: user));
       },
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(const Unauthenticated());
       },
     );
@@ -61,7 +63,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (failure is SignInCancelledFailure) {
           emit(const Unauthenticated());
         } else {
-          AppLogger.failure(failure);
+          logger.failure(failure);
           emit(AuthError(failure: failure));
         }
       },
@@ -80,7 +82,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(const Unauthenticated());
       },
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(const Unauthenticated());
       },
     );

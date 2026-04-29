@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_provider_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
@@ -27,11 +28,14 @@ class MockGoogleAuthProviderDataSource extends Mock
 
 class FakeGoogleAuthCredentials extends Fake implements GoogleAuthCredentials {}
 
+class MockLogger extends Mock implements IAppLogger {}
+
 void main() {
   late MockAuthRemoteDataSource mockRemote;
   late MockTokenLocalDataSource mockLocal;
   late MockGoogleAuthProviderDataSource mockGoogleProvider;
   late MockTokenRefreshManager mockTokenRefreshManager;
+  late MockLogger mockLogger;
 
   const tUserId = 'user-123';
   const tUserEmail = 'test@noctambuls.cat';
@@ -51,6 +55,7 @@ void main() {
     mockLocal = MockTokenLocalDataSource();
     mockGoogleProvider = MockGoogleAuthProviderDataSource();
     mockTokenRefreshManager = MockTokenRefreshManager();
+    mockLogger = MockLogger();
 
     when(
       () => mockGoogleProvider.authProviderType,
@@ -73,6 +78,7 @@ void main() {
         providers: includeProvider
             ? {GoogleAuthCredentials: mockGoogleProvider}
             : {},
+        logger: mockLogger,
       );
 
   group('signIn', () {

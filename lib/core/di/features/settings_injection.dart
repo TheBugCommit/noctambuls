@@ -1,4 +1,5 @@
 import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/settings/data/datasources/language_local_datasource.dart';
 import 'package:noctambuls/features/settings/data/datasources/theme_local_datasource.dart';
 import 'package:noctambuls/features/settings/data/datasources/theme_system_datasource.dart';
@@ -41,9 +42,14 @@ void initSettingsFeature() {
         getThemeUseCase: sl(),
         saveThemeUseCase: sl(),
         getSystemThemeUseCase: sl(),
+        logger: sl<IAppLogger>(),
       ),
     )
     ..registerFactory(
-      () => LanguageCubit(getLanguageUseCase: sl(), saveLanguageUseCase: sl()),
+      () => LanguageCubit(
+        getLanguageUseCase: sl(),
+        saveLanguageUseCase: sl(),
+        logger: sl<IAppLogger>(),
+      ),
     );
 }

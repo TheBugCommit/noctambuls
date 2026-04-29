@@ -1,5 +1,6 @@
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/observations/data/datasources/observation_local_datasource.dart';
 import 'package:noctambuls/features/observations/data/repositories/observation_repository_impl.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
@@ -46,6 +47,7 @@ void initObservationsFeature() {
         createSessionUseCase: sl(),
         updateSessionUseCase: sl(),
         deleteSessionUseCase: sl(),
+        logger: sl<IAppLogger>(),
       ),
     )
     ..registerFactoryParam<SessionObservationBloc, String, void>(
@@ -54,6 +56,7 @@ void initObservationsFeature() {
         watchObservationsUseCase: sl(),
         addObservationUseCase: sl(),
         deleteObservationUseCase: sl(),
+        logger: sl<IAppLogger>(),
       ),
     );
 }

@@ -2,6 +2,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/settings/domain/entities/app_theme.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_system_theme_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_theme_usecase.dart';
@@ -15,11 +16,14 @@ class MockSaveThemeUseCase extends Mock implements SaveThemeUseCase {}
 
 class MockGetSystemThemeUseCase extends Mock implements GetSystemThemeUseCase {}
 
+class MockLogger extends Mock implements IAppLogger {}
+
 void main() {
   late ThemeCubit themeCubit;
   late MockGetThemeUseCase mockGetTheme;
   late MockSaveThemeUseCase mockSaveTheme;
   late MockGetSystemThemeUseCase mockGetSystemTheme;
+  late MockLogger mockLogger;
 
   setUpAll(() {
     registerFallbackValue(AppTheme.light);
@@ -29,6 +33,7 @@ void main() {
     mockGetTheme = MockGetThemeUseCase();
     mockSaveTheme = MockSaveThemeUseCase();
     mockGetSystemTheme = MockGetSystemThemeUseCase();
+    mockLogger = MockLogger();
 
     when(() => mockGetTheme.call()).thenReturn(AppTheme.light);
     when(() => mockSaveTheme.call(any())).thenAnswer(
@@ -39,6 +44,7 @@ void main() {
       getThemeUseCase: mockGetTheme,
       saveThemeUseCase: mockSaveTheme,
       getSystemThemeUseCase: mockGetSystemTheme,
+      logger: mockLogger,
     );
   });
 

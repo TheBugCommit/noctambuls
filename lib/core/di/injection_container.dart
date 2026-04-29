@@ -6,14 +6,18 @@ import 'package:noctambuls/core/di/features/guide_injection.dart';
 import 'package:noctambuls/core/di/features/observations_injection.dart';
 import 'package:noctambuls/core/di/features/settings_injection.dart';
 import 'package:noctambuls/core/di/services_injection.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final GetIt sl = GetIt.instance;
 
 Future<void> init() async {
   sl
+    ..registerLazySingleton<IAppLogger>(() => AppLogger.instance)
     ..registerLazySingleton<AppDatabase>(AppDatabase.new)
-    ..registerLazySingleton<UserDatabaseManager>(UserDatabaseManager.new);
+    ..registerLazySingleton<UserDatabaseManager>(
+      () => UserDatabaseManager(sl<IAppLogger>()),
+    );
 
   final sharedPreferences = await SharedPreferences.getInstance();
   sl.registerLazySingleton(() => sharedPreferences);

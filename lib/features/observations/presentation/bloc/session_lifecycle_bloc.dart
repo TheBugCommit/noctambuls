@@ -18,6 +18,7 @@ class SessionLifecycleBloc
     required this.createSessionUseCase,
     required this.updateSessionUseCase,
     required this.deleteSessionUseCase,
+    required this.logger,
   }) : super(const SessionLifecycleIdle()) {
     on<WatchSession>(_onWatchSession);
     on<SessionStreamUpdated>(_onSessionStreamUpdated);
@@ -34,6 +35,7 @@ class SessionLifecycleBloc
   final CreateSessionUseCase createSessionUseCase;
   final UpdateSessionUseCase updateSessionUseCase;
   final DeleteSessionUseCase deleteSessionUseCase;
+  final IAppLogger logger;
 
   StreamSubscription<ObservationSession?>? _sessionSubscription;
 
@@ -92,7 +94,7 @@ class SessionLifecycleBloc
     result.when(
       success: (_) {},
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(SessionLifecycleError(failure: failure));
       },
     );
@@ -116,7 +118,7 @@ class SessionLifecycleBloc
     result.when(
       success: (_) {},
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(SessionLifecycleError(failure: failure));
       },
     );
@@ -136,7 +138,7 @@ class SessionLifecycleBloc
     result.when(
       success: (_) {},
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(SessionLifecycleError(failure: failure));
       },
     );
@@ -155,7 +157,7 @@ class SessionLifecycleBloc
     result.when(
       success: (_) {},
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(SessionLifecycleError(failure: failure));
       },
     );
@@ -174,7 +176,7 @@ class SessionLifecycleBloc
     result.when(
       success: (_) {},
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(SessionLifecycleError(failure: failure));
       },
     );
@@ -192,7 +194,7 @@ class SessionLifecycleBloc
     result.when(
       success: (_) {},
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(SessionLifecycleError(failure: failure));
       },
     );

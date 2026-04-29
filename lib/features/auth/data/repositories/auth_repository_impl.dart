@@ -18,11 +18,13 @@ class AuthRepositoryImpl implements AuthRepository {
     required this.tokenLocalDataSource,
     required this.refreshManager,
     required Map<Type, AuthProviderDataSource> providers,
+    required this.logger,
   }) : _providers = providers;
 
   final AuthRemoteDataSource remoteDataSource;
   final TokenLocalDataSource tokenLocalDataSource;
   final TokenRefreshManager refreshManager;
+  final IAppLogger logger;
   final Map<Type, AuthProviderDataSource> _providers;
 
   @override
@@ -72,7 +74,7 @@ class AuthRepositoryImpl implements AuthRepository {
             return Ok(expiredUser);
           }
         } on FormatException catch (e, st) {
-          AppLogger.failure(const InvalidTokenFailure().withDebug(e, st));
+          logger.failure(const InvalidTokenFailure().withDebug(e, st));
         }
       }
 
@@ -126,7 +128,7 @@ class AuthRepositoryImpl implements AuthRepository {
       return const Ok(Unit.instance);
     } catch (e, st) {
       final failure = const TokenStorageFailure().withDebug(e, st);
-      AppLogger.failure(failure);
+      logger.failure(failure);
       return Err(failure);
     }
   }
@@ -154,7 +156,7 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       if (e.response?.statusCode == 401 || e.response?.statusCode == 403) {
-        AppLogger.failure(const InvalidTokenFailure().withDebug(e, st));
+        logger.failure(const InvalidTokenFailure().withDebug(e, st));
         await tokenLocalDataSource.deleteAllTokens();
         return Err(const InvalidTokenFailure().withDebug(e, st));
       }

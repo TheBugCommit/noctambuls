@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/services/catalog_media_service.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_local_datasource.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_remote_datasource.dart';
@@ -19,13 +20,17 @@ void initGuideFeature() {
       () => BirdsRemoteDataSourceImpl(dio: sl<Dio>(instanceName: 'apiDio')),
     )
     ..registerLazySingleton<CatalogMediaService>(
-      () => CatalogMediaService(dio: sl<Dio>(instanceName: 'apiDio')),
+      () => CatalogMediaService(
+        dio: sl<Dio>(instanceName: 'apiDio'),
+        logger: sl<IAppLogger>(),
+      ),
     )
     ..registerLazySingleton<BirdsRepository>(
       () => BirdsRepositoryImpl(
         localDataSource: sl(),
         remoteDataSource: sl(),
         mediaService: sl(),
+        logger: sl<IAppLogger>(),
       ),
     )
     ..registerLazySingleton(() => GetBirdsUseCase(sl()))
@@ -34,11 +39,10 @@ void initGuideFeature() {
       () => GuideBloc(
         getBirdsUseCase: sl(),
         audioService: sl(),
+        logger: sl<IAppLogger>(),
       ),
     )
     ..registerFactory(
-      () => CatalogSyncBloc(
-        syncCatalogUseCase: sl(),
-      ),
+      () => CatalogSyncBloc(syncCatalogUseCase: sl(), logger: sl<IAppLogger>()),
     );
 }

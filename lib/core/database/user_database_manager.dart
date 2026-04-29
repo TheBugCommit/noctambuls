@@ -9,6 +9,10 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class UserDatabaseManager {
+  UserDatabaseManager(this.logger);
+
+  final IAppLogger logger;
+
   UserDatabase? _database;
 
   Future<void> initDatabase(String userId) async {
@@ -25,7 +29,7 @@ class UserDatabaseManager {
         'Try to access DB before initialization',
         StackTrace.current,
       );
-      AppLogger.failure(failure);
+      logger.failure(failure);
       throw StateError(failure.debugMessage);
     }
 

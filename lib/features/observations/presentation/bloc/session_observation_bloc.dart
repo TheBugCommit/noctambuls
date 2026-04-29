@@ -16,6 +16,7 @@ class SessionObservationBloc
     required this.watchObservationsUseCase,
     required this.addObservationUseCase,
     required this.deleteObservationUseCase,
+    required this.logger,
   }) : super(const ObservationsInitial()) {
     on<WatchObservations>(_onWatchObservations);
     on<ObservationsStreamUpdated>(_onObservationsStreamUpdated);
@@ -27,6 +28,7 @@ class SessionObservationBloc
   final WatchObservationsForSessionUseCase watchObservationsUseCase;
   final AddObservationUseCase addObservationUseCase;
   final DeleteObservationUseCase deleteObservationUseCase;
+  final IAppLogger logger;
 
   StreamSubscription<List<ObservationRecord>>? _observationsSubscription;
 
@@ -58,7 +60,7 @@ class SessionObservationBloc
     result.when(
       success: (_) {},
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(ObservationsError(failure: failure));
       },
     );
@@ -72,7 +74,7 @@ class SessionObservationBloc
     result.when(
       success: (_) {},
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(ObservationsError(failure: failure));
       },
     );

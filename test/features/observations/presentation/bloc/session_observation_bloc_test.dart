@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
@@ -25,10 +26,13 @@ class MockDeleteObservationUseCase extends Mock
 
 class FakeObservationRecord extends Fake implements ObservationRecord {}
 
+class MockLogger extends Mock implements IAppLogger {}
+
 void main() {
   late MockWatchObservationsForSessionUseCase mockWatchObservations;
   late MockAddObservationUseCase mockAddObservation;
   late MockDeleteObservationUseCase mockDeleteObservation;
+  late MockLogger mockLogger;
 
   const tSessionId = 'sess-1';
 
@@ -61,6 +65,7 @@ void main() {
     mockWatchObservations = MockWatchObservationsForSessionUseCase();
     mockAddObservation = MockAddObservationUseCase();
     mockDeleteObservation = MockDeleteObservationUseCase();
+    mockLogger = MockLogger();
   });
 
   SessionObservationBloc buildBloc() => SessionObservationBloc(
@@ -68,6 +73,7 @@ void main() {
     watchObservationsUseCase: mockWatchObservations,
     addObservationUseCase: mockAddObservation,
     deleteObservationUseCase: mockDeleteObservation,
+    logger: mockLogger,
   );
 
   // ─── Estat inicial ────────────────────────────────────────────────────────────

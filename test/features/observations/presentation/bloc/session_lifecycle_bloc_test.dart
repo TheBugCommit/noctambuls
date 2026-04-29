@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
@@ -27,11 +28,14 @@ class MockDeleteSessionUseCase extends Mock implements DeleteSessionUseCase {}
 
 class FakeObservationSession extends Fake implements ObservationSession {}
 
+class MockLogger extends Mock implements IAppLogger {}
+
 void main() {
   late MockWatchActiveSessionUseCase mockWatchActiveSession;
   late MockCreateSessionUseCase mockCreateSession;
   late MockUpdateSessionUseCase mockUpdateSession;
   late MockDeleteSessionUseCase mockDeleteSession;
+  late MockLogger mockLogger;
 
   // endTime == null, !isLocked → SessionObserving
   final tObservingSession = ObservationSession(
@@ -72,6 +76,7 @@ void main() {
     mockCreateSession = MockCreateSessionUseCase();
     mockUpdateSession = MockUpdateSessionUseCase();
     mockDeleteSession = MockDeleteSessionUseCase();
+    mockLogger = MockLogger();
   });
 
   SessionLifecycleBloc buildBloc() => SessionLifecycleBloc(
@@ -79,6 +84,7 @@ void main() {
     createSessionUseCase: mockCreateSession,
     updateSessionUseCase: mockUpdateSession,
     deleteSessionUseCase: mockDeleteSession,
+    logger: mockLogger,
   );
 
   // Idle state

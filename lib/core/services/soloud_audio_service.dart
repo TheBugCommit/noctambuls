@@ -8,6 +8,10 @@ import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/services/audio_service.dart';
 
 class SoLoudAudioService implements AudioService {
+  SoLoudAudioService({required this.logger});
+
+  final IAppLogger logger;
+
   bool _isInitialized = false;
   final Map<String, AudioSource> _loadedSources = {};
   SoundHandle? _currentHandle;
@@ -25,7 +29,7 @@ class SoLoudAudioService implements AudioService {
       await SoLoud.instance.init();
       _isInitialized = true;
     } on Exception catch (e, st) {
-      AppLogger.failure(const AudioFailure().withDebug(e, st));
+      logger.failure(const AudioFailure().withDebug(e, st));
     }
   }
 
@@ -41,10 +45,10 @@ class SoLoudAudioService implements AudioService {
               final source = await SoLoud.instance.loadAsset(path);
               _loadedSources[path] = source;
             } else {
-              AppLogger.warning('Audio file not found locally: $path');
+              logger.warning('Audio file not found locally: $path');
             }
           } on Exception catch (e, st) {
-            AppLogger.failure(const AudioFailure().withDebug(e, st));
+            logger.failure(const AudioFailure().withDebug(e, st));
           }
         });
 
@@ -74,7 +78,7 @@ class SoLoudAudioService implements AudioService {
           source = await SoLoud.instance.loadAsset(assetPath);
           _loadedSources[assetPath] = source;
         } else {
-          AppLogger.warning('Audio file not found locally: $assetPath');
+          logger.warning('Audio file not found locally: $assetPath');
           return false;
         }
       }
@@ -92,7 +96,7 @@ class SoLoudAudioService implements AudioService {
 
       return true;
     } on Exception catch (e, st) {
-      AppLogger.failure(const AudioFailure().withDebug(e, st));
+      logger.failure(const AudioFailure().withDebug(e, st));
 
       if (_currentlyPlaying.value == assetPath) {
         _currentlyPlaying.value = null;

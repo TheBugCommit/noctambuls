@@ -8,13 +8,17 @@ import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_state.dart';
 
 class GuideBloc extends Bloc<GuideEvent, GuideState> {
-  GuideBloc({required this.getBirdsUseCase, required this.audioService})
-    : super(const GuideInitial()) {
+  GuideBloc({
+    required this.getBirdsUseCase,
+    required this.audioService,
+    required this.logger,
+  }) : super(const GuideInitial()) {
     on<LoadBirds>(_onLoadBirds);
   }
 
   final GetBirdsUseCase getBirdsUseCase;
   final AudioService audioService;
+  final IAppLogger logger;
 
   Future<void> _onLoadBirds(
     LoadBirds event,
@@ -30,7 +34,7 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
         emit(GuideLoaded(birds: birds));
       },
       failure: (failure) {
-        AppLogger.failure(failure);
+        logger.failure(failure);
         emit(GuideError(failure: failure));
       },
     );

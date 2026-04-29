@@ -11,11 +11,13 @@ class ThemeCubit extends Cubit<ThemeState> {
     required this.getThemeUseCase,
     required this.saveThemeUseCase,
     required this.getSystemThemeUseCase,
+    required this.logger,
   }) : super(ThemeState(appTheme: getThemeUseCase()));
 
   final GetThemeUseCase getThemeUseCase;
   final SaveThemeUseCase saveThemeUseCase;
   final GetSystemThemeUseCase getSystemThemeUseCase;
+  final IAppLogger logger;
 
   Future<void> toggleTheme() async {
     final currentTheme = state.appTheme;
@@ -40,7 +42,7 @@ class ThemeCubit extends Cubit<ThemeState> {
     final result = await saveThemeUseCase(theme);
     result.when(
       success: (_) {},
-      failure: AppLogger.failure,
+      failure: logger.failure,
     );
   }
 }

@@ -9,17 +9,19 @@ class LanguageCubit extends Cubit<LanguageState> {
   LanguageCubit({
     required this.getLanguageUseCase,
     required this.saveLanguageUseCase,
+    required this.logger,
   }) : super(LanguageState(appLanguage: getLanguageUseCase()));
 
   final GetLanguageUseCase getLanguageUseCase;
   final SaveLanguageUseCase saveLanguageUseCase;
+  final IAppLogger logger;
 
   Future<void> changeLanguage(AppLanguage newLanguage) async {
     emit(LanguageState(appLanguage: newLanguage));
     final result = await saveLanguageUseCase(newLanguage);
     result.when(
       success: (_) {},
-      failure: AppLogger.failure,
+      failure: logger.failure,
     );
   }
 }
