@@ -1,4 +1,4 @@
-import 'package:noctambuls/core/domain/services/ExternalLinkService.dart';
+import 'package:noctambuls/core/domain/services/external_link_service.dart';
 import 'package:noctambuls/core/error/result.dart';
 
 class OpenLinkUseCase {
@@ -6,5 +6,5 @@ class OpenLinkUseCase {
 
   final ExternalLinkService service;
 
-  Future<Result<bool>> call(String url) => service.openUrl(url);
+  Future<Result<Unit>> call(String url) => service.openUrl(url);
 }

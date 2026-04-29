@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:noctambuls/core/di/injection_container.dart';
-import 'package:noctambuls/core/services/audio_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/widgets/app_button.dart';
-import 'package:noctambuls/l10n/app_localizations.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/guide_state.dart';
 
 class BirdAudioButton extends StatelessWidget {
   const BirdAudioButton({
@@ -18,17 +19,6 @@ class BirdAudioButton extends StatelessWidget {
   final String labelPlay;
   final String labelStop;
 
-  Future<void> togglePlay(BuildContext context) async {
-    final l10n = AppLocalizations.of(context)!;
-    final success = await sl<AudioService>().togglePlay(audioPath);
-
-    if (!success && context.mounted) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(l10n.cantPlayAudio)));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     if (audioPath.isEmpty) {
@@ -39,13 +29,20 @@ class BirdAudioButton extends StatelessWidget {
       );
     }
 
-    return ValueListenableBuilder<String?>(
-      valueListenable: sl<AudioService>().currentlyPlaying,
-      builder: (context, currentlyPlayingPath, child) {
+    return BlocSelector<GuideBloc, GuideState, String?>(
+      selector: (state) {
+        if (state is GuideLoaded) {
+          return state.currentlyPlayingPath;
+        }
+        return null;
+      },
+      builder: (context, currentlyPlayingPath) {
         final isPlaying = currentlyPlayingPath == audioPath;
 
         return AppButton.outline(
-          onPressed: () => sl<AudioService>().togglePlay(audioPath),
+          onPressed: () => context.read<GuideBloc>().add(
+            ToggleBirdAudio(audioPath: audioPath),
+          ),
           customIcon: isPlaying ? const _AudioWaveAnimation() : null,
           icon: isPlaying ? null : Icons.volume_up_outlined,
           label: isPlaying ? labelStop : labelPlay,

@@ -89,8 +89,6 @@ class BirdsRepositoryImpl implements BirdsRepository {
     }
   }
 
-  /// Descarrega imatges i àudios agrupant-los per evitar saturar la xarxa
-  /// i captura els errors individualment per no trencar la sincronització.
   Future<List<BirdEntityData>> _downloadMediaInBatches(
     List<BirdRemoteModel> birds,
   ) async {
@@ -101,10 +99,8 @@ class BirdsRepositoryImpl implements BirdsRepository {
       final end = (i + batchSize < birds.length) ? i + batchSize : birds.length;
       final batch = birds.sublist(i, end);
 
-      // Creem les promeses (Futures) per aquest lot concret
       final batchFutures = batch.map((bird) async {
         try {
-          // Descarreguem foto i àudio de l'ocell ALHORA
           final (localImage, localAudio) = await (
             mediaService.ensureImage(bird.imagePath),
             mediaService.ensureAudio(bird.audioPath),
@@ -115,9 +111,7 @@ class BirdsRepositoryImpl implements BirdsRepository {
             localAudioPath: localAudio ?? bird.audioPath,
           );
         } catch (e) {
-          // RESILIÈNCIA: Si peta el fitxer, guardem l'ocell amb la URL original.
-          // D'aquesta manera no perdem l'espècie de la base de dades.
-          logger.warning('Error descarregant arxius per ${bird.id}: $e');
+          logger.warning('Error dowloading resources for bird ${bird.id}: $e');
           return bird.toEntityData(
             localImagePath: bird.imagePath,
             localAudioPath: bird.audioPath,
@@ -125,7 +119,6 @@ class BirdsRepositoryImpl implements BirdsRepository {
         }
       });
 
-      // Esperem a que els 5 ocells acabin per passar als següents 5
       results.addAll(await Future.wait(batchFutures));
     }
 

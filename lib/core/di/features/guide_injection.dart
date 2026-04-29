@@ -38,9 +38,11 @@ void initGuideFeature() {
     ..registerFactory(
       () => GuideBloc(
         getBirdsUseCase: sl(),
-        audioService: sl(),
         logger: sl<IAppLogger>(),
         openLinkUseCase: sl(),
+        toggleAudioUseCase: sl(),
+        listenAudioStateUseCase: sl(),
+        preloadAudioUseCase: sl(),
       ),
     )
     ..registerFactory(

@@ -33,22 +33,29 @@ final class GuideLoading extends GuideState {
 }
 
 final class GuideLoaded extends GuideState {
-  const GuideLoaded({required this.birds, this.actionError});
+  const GuideLoaded({
+    required this.birds,
+    this.actionError,
+    this.currentlyPlayingPath,
+  });
 
   final List<Bird> birds;
   final GuideSideEffectError? actionError;
+  final String? currentlyPlayingPath;
 
   @override
-  List<Object?> get props => [birds, actionError];
+  List<Object?> get props => [birds, actionError, currentlyPlayingPath];
 
   GuideLoaded copyWith({
     List<Bird>? birds,
     GuideSideEffectError? actionError,
+    String? currentlyPlayingPath,
     bool clearError = false,
   }) {
     return GuideLoaded(
       birds: birds ?? this.birds,
       actionError: clearError ? null : (actionError ?? this.actionError),
+      currentlyPlayingPath: currentlyPlayingPath ?? this.currentlyPlayingPath,
     );
   }
 }

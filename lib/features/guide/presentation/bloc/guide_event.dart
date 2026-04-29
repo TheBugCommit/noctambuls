@@ -33,3 +33,21 @@ final class OpenBirdLink extends GuideEvent {
   @override
   List<Object?> get props => [url];
 }
+
+final class ToggleBirdAudio extends GuideEvent {
+  const ToggleBirdAudio({required this.audioPath});
+
+  final String audioPath;
+
+  @override
+  List<Object?> get props => [audioPath];
+}
+
+final class AudioStateChanged extends GuideEvent {
+  const AudioStateChanged({this.playingPath});
+
+  final String? playingPath;
+
+  @override
+  List<Object?> get props => [playingPath];
+}

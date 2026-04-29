@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
@@ -72,8 +74,8 @@ class BirdCardHeader extends StatelessWidget {
 
     return AspectRatio(
       aspectRatio: 4 / 3,
-      child: Image.asset(
-        imagePath,
+      child: Image.file(
+        File(imagePath),
         fit: BoxFit.cover,
         gaplessPlayback: true,
         alignment: Alignment.topCenter,
