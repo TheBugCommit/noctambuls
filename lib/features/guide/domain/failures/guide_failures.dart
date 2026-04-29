@@ -23,3 +23,19 @@ final class GuideFetchFailure extends GuideFailure {
         stackTrace: stackTrace,
       );
 }
+
+final class CatalogSyncFailure extends GuideFailure {
+  const CatalogSyncFailure({
+    super.debugMessage = 'Failed to sync catalog from remote',
+    super.statusCode = 503,
+    super.stackTrace,
+  });
+
+  @override
+  CatalogSyncFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      CatalogSyncFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}

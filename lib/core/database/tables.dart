@@ -93,3 +93,16 @@ class BirdNamesTable extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+@DataClassName('CatalogMetadataData')
+class CatalogMetadataTable extends Table {
+  @override
+  String get tableName => 'catalog_metadata';
+
+  TextColumn get key => text()();
+
+  TextColumn get value => text()();
+
+  @override
+  Set<Column> get primaryKey => {key};
+}

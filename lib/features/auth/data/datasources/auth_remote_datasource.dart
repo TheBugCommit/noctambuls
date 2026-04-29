@@ -23,7 +23,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   String _getEndpointForProvider(AuthProviderType provider) {
     switch (provider) {
       case AuthProviderType.google:
-        return '/auth/google';
+        return '/api/auth/google';
       case AuthProviderType.apple:
         return '/auth/apple';
       case AuthProviderType.email:
@@ -56,7 +56,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<AuthResponseModel> refreshTokens(String refreshToken) async {
     final response = await dio.post<dynamic>(
-      '/token/refresh',
+      '/api/token/refresh',
       data: RefreshTokenRequestModel(refreshToken: refreshToken).toJson(),
     );
 
@@ -73,7 +73,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<void> invalidateToken(String refreshToken) async {
     await dio.post<void>(
-      '/token/invalidate',
+      '/api/token/invalidate',
       data: RefreshTokenRequestModel(refreshToken: refreshToken).toJson(),
     );
   }

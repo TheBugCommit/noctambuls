@@ -6,6 +6,8 @@ import 'package:noctambuls/core/theme/theme.dart';
 import 'package:noctambuls/core/theme/util.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
@@ -30,6 +32,7 @@ class NoctambulsApp extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authenticated) {
+          context.read<CatalogSyncBloc>().add(const CatalogSyncEventRequest());
           context.read<SessionLifecycleBloc>().add(WatchSession());
         }
       },

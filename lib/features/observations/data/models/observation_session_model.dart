@@ -1,4 +1,4 @@
-import 'package:noctambuls/core/database/app_database.dart';
+import 'package:noctambuls/core/database/user_database.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';

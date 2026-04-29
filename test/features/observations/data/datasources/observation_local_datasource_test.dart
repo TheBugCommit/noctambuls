@@ -1,7 +1,7 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:noctambuls/core/database/app_database.dart';
+import 'package:noctambuls/core/database/user_database.dart';
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/features/observations/data/datasources/observation_local_datasource.dart';
 import 'package:noctambuls/features/observations/data/models/observation_record_model.dart';
@@ -12,12 +12,12 @@ import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 class MockUserDatabaseManager extends Mock implements UserDatabaseManager {}
 
 void main() {
-  late AppDatabase db;
+  late UserDatabase db;
   late ObservationLocalDataSourceImpl dataSource;
   late MockUserDatabaseManager mockDbManager;
 
   setUp(() {
-    db = AppDatabase.forTesting(NativeDatabase.memory());
+    db = UserDatabase.forTesting(NativeDatabase.memory());
     mockDbManager = MockUserDatabaseManager();
     when(() => mockDbManager.database).thenReturn(db);
 

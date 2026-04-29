@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
@@ -36,8 +37,12 @@ class SoLoudAudioService implements AudioService {
         .where((path) => path.isNotEmpty && !_loadedSources.containsKey(path))
         .map((path) async {
           try {
-            final source = await SoLoud.instance.loadAsset(path);
-            _loadedSources[path] = source;
+            if (File(path).existsSync()) {
+              final source = await SoLoud.instance.loadAsset(path);
+              _loadedSources[path] = source;
+            } else {
+              AppLogger.warning('Audio file not found locally: $path');
+            }
           } on Exception catch (e, st) {
             AppLogger.failure(const AudioFailure().withDebug(e, st));
           }
@@ -65,8 +70,13 @@ class SoLoudAudioService implements AudioService {
       if (_loadedSources.containsKey(assetPath)) {
         source = _loadedSources[assetPath]!;
       } else {
-        source = await SoLoud.instance.loadAsset(assetPath);
-        _loadedSources[assetPath] = source;
+        if (File(assetPath).existsSync()) {
+          source = await SoLoud.instance.loadAsset(assetPath);
+          _loadedSources[assetPath] = source;
+        } else {
+          AppLogger.warning('Audio file not found locally: $assetPath');
+          return false;
+        }
       }
 
       if (_currentlyPlaying.value != assetPath) return false;

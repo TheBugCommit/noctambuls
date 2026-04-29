@@ -2,24 +2,24 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
-import 'package:noctambuls/core/database/app_database.dart';
+import 'package:noctambuls/core/database/user_database.dart';
 import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 class UserDatabaseManager {
-  AppDatabase? _database;
+  UserDatabase? _database;
 
   Future<void> initDatabase(String userId) async {
     if (_database != null) {
       await closeDatabase();
     }
 
-    _database = AppDatabase(_openConnection(userId));
+    _database = UserDatabase(_openConnection(userId));
   }
 
-  AppDatabase get database {
+  UserDatabase get database {
     if (_database == null) {
       final failure = const DatabaseFailure().withDebug(
         'Try to access DB before initialization',
