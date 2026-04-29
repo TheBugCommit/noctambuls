@@ -1,10 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
-import 'package:noctambuls/core/services/catalog_media_service.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_local_datasource.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_remote_datasource.dart';
 import 'package:noctambuls/features/guide/data/repositories/birds_repository_impl.dart';
+import 'package:noctambuls/features/guide/data/services/catalog_media_service.dart';
 import 'package:noctambuls/features/guide/domain/repositories/birds_repository.dart';
 import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart';
 import 'package:noctambuls/features/guide/domain/usecases/sync_catalog_usecase.dart';

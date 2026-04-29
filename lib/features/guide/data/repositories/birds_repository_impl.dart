@@ -1,11 +1,12 @@
 import 'package:noctambuls/core/database/app_database.dart';
+import 'package:noctambuls/core/error/failure.dart';
 import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
-import 'package:noctambuls/core/services/catalog_media_service.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_local_datasource.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_remote_datasource.dart';
 import 'package:noctambuls/features/guide/data/models/bird_remote_model.dart';
+import 'package:noctambuls/features/guide/data/services/catalog_media_service.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
 import 'package:noctambuls/features/guide/domain/failures/guide_failures.dart';
 import 'package:noctambuls/features/guide/domain/repositories/birds_repository.dart';
@@ -23,8 +24,6 @@ class BirdsRepositoryImpl implements BirdsRepository {
   final CatalogMediaService mediaService;
   final IAppLogger logger;
 
-  bool _syncedThisSession = false;
-
   @override
   Future<Result<List<Bird>>> getBirds(String languageCode) async {
     try {
@@ -36,51 +35,44 @@ class BirdsRepositoryImpl implements BirdsRepository {
   }
 
   @override
-  Future<Result<Unit>> syncCatalog() async {
-    if (_syncedThisSession) return const Ok(Unit.instance);
-
-    final (remoteVersion, localVersion) = await (
-      _fetchRemoteVersion(),
-      localDataSource.getCatalogVersion(),
-    ).wait;
-
+  Future<Result<String?>> getLocalVersion() async {
     try {
-      if (remoteVersion == null && localVersion == null) {
-        final failure = const CatalogSyncFailure().withDebug(
-          Exception(
-            'Error de sincronització: versió remota i local són nul·les. No hi ha dades.',
-          ),
-          StackTrace.current,
-        );
-        logger.failure(failure);
-        return Err(failure);
-      }
+      final version = await localDataSource.getCatalogVersion();
+      return Ok(version);
+    } catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
+  }
 
-      if (remoteVersion == null || remoteVersion == localVersion) {
-        _syncedThisSession = true;
-        return const Ok(Unit.instance);
-      }
+  @override
+  Future<Result<String>> getRemoteVersion() async {
+    try {
+      final v = await remoteDataSource.getCatalogVersion();
+      return Ok(v.version);
+    } catch (e, st) {
+      final Failure failure = const NetworkFailure().withDebug(e, st);
+      logger.failure(failure);
+      return Err(failure);
+    }
+  }
 
-      // 1. Obtenim les dades ESSENCIALS de text.
+  @override
+  Future<Result<Unit>> downloadAndSaveCatalog() async {
+    try {
       final remoteBirds = await remoteDataSource.getBirdsCatalog();
+      final remoteCatalogVersion = await remoteDataSource.getCatalogVersion();
 
-      // 2. Descarreguem els fitxers de forma concurrent però segura (per lots).
       final birdEntities = await _downloadMediaInBatches(remoteBirds);
-
-      // 3. Mapegem les traduccions ràpidament
       final nameEntities = remoteBirds
           .expand((bird) => bird.translations.map((t) => t.toEntityData()))
           .toList();
 
-      // 4. Guardem TOT el catàleg. Si hem arribat aquí, tenim com a mínim
-      // les dades essencials, fins i tot si algun àudio ha fallat.
       await localDataSource.saveFullCatalogTransaction(
         birdEntities,
         nameEntities,
-        remoteVersion,
+        remoteCatalogVersion.version,
       );
 
-      _syncedThisSession = true;
       return const Ok(Unit.instance);
     } catch (e, st) {
       final failure = const CatalogSyncFailure().withDebug(e, st);
@@ -123,15 +115,5 @@ class BirdsRepositoryImpl implements BirdsRepository {
     }
 
     return results;
-  }
-
-  Future<String?> _fetchRemoteVersion() async {
-    try {
-      final v = await remoteDataSource.getCatalogVersion();
-      return v.version;
-    } catch (e) {
-      logger.warning('Catalog version check failed (offline?): $e');
-      return null;
-    }
   }
 }
