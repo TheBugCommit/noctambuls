@@ -1,16 +1,17 @@
-class CatalogVersionModel {
-  const CatalogVersionModel({
-    required this.version,
-    required this.lastUpdatedAt,
-  });
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  factory CatalogVersionModel.fromJson(Map<String, dynamic> json) {
-    return CatalogVersionModel(
-      version: json['version'].toString(),
-      lastUpdatedAt: DateTime.parse(json['lastUpdatedAt'] as String),
-    );
-  }
+part 'catalog_version_model.freezed.dart';
+part 'catalog_version_model.g.dart';
 
-  final String version;
-  final DateTime lastUpdatedAt;
+@freezed
+abstract class CatalogVersionModel with _$CatalogVersionModel {
+  const factory CatalogVersionModel({
+    @JsonKey(fromJson: _versionFromJson) required String version,
+    required DateTime lastUpdatedAt,
+  }) = _CatalogVersionModel;
+
+  factory CatalogVersionModel.fromJson(Map<String, dynamic> json) =>
+      _$CatalogVersionModelFromJson(json);
 }
+
+String _versionFromJson(dynamic value) => value.toString();

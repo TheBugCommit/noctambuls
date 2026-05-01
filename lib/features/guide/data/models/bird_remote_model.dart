@@ -1,42 +1,43 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:noctambuls/core/constants/env_config.dart';
 import 'package:noctambuls/core/database/app_database.dart';
 
-class BirdRemoteModel {
-  const BirdRemoteModel({
-    required this.id,
-    required this.scientificName,
-    required this.imagePath,
-    required this.audioPath,
-    required this.translations,
-    this.infoUrl,
-  });
+part 'bird_remote_model.freezed.dart';
+part 'bird_remote_model.g.dart';
 
-  factory BirdRemoteModel.fromJson(Map<String, dynamic> json) {
-    final birdId = json['id'] as String;
+Object? _injectBirdIdInTranslations(Map map, String key) {
+  final birdId = map['id'] as String?;
+  final translations = map[key] as List<dynamic>?;
 
-    return BirdRemoteModel(
-      id: birdId,
-      scientificName: json['scientificName'] as String,
-      imagePath: json['imagePath'] as String,
-      audioPath: json['audioPath'] as String,
-      infoUrl: json['informationUrl'] as String?,
-      translations: (json['translations'] as List<dynamic>)
-          .map(
-            (t) => BirdNameRemoteModel.fromJson(
-              t as Map<String, dynamic>,
-              birdId,
-            ),
-          )
-          .toList(),
-    );
-  }
+  if (birdId == null || translations == null) return translations;
 
-  final String id;
-  final String scientificName;
-  final String imagePath;
-  final String audioPath;
-  final String? infoUrl;
-  final List<BirdNameRemoteModel> translations;
+  return translations.map((t) {
+    final tMap = Map<String, dynamic>.from(t as Map);
+    final langCode = tMap['languageCode'] as String;
+
+    tMap['birdId'] = birdId;
+    tMap['id'] = '${birdId}_$langCode';
+
+    return tMap;
+  }).toList();
+}
+
+@freezed
+abstract class BirdRemoteModel with _$BirdRemoteModel {
+  const factory BirdRemoteModel({
+    required String id,
+    required String scientificName,
+    required String imagePath,
+    required String audioPath,
+    @JsonKey(readValue: _injectBirdIdInTranslations)
+    required List<BirdNameRemoteModel> translations,
+    @JsonKey(name: 'informationUrl') String? infoUrl,
+  }) = _BirdRemoteModel;
+
+  const BirdRemoteModel._();
+
+  factory BirdRemoteModel.fromJson(Map<String, dynamic> json) =>
+      _$BirdRemoteModelFromJson(json);
 
   BirdEntityData toEntityData({
     required String? localImagePath,
@@ -54,35 +55,20 @@ class BirdRemoteModel {
   }
 }
 
-class BirdNameRemoteModel {
-  const BirdNameRemoteModel({
-    required this.id,
-    required this.birdId,
-    required this.languageCode,
-    required this.commonName,
-    required this.description,
-  });
+@freezed
+abstract class BirdNameRemoteModel with _$BirdNameRemoteModel {
+  const factory BirdNameRemoteModel({
+    required String id,
+    required String birdId,
+    required String languageCode,
+    required String commonName,
+    required String description,
+  }) = _BirdNameRemoteModel;
 
-  factory BirdNameRemoteModel.fromJson(
-    Map<String, dynamic> json,
-    String birdId,
-  ) {
-    final langCode = json['languageCode'] as String;
+  const BirdNameRemoteModel._();
 
-    return BirdNameRemoteModel(
-      id: '${birdId}_$langCode',
-      birdId: birdId,
-      languageCode: langCode,
-      commonName: json['commonName'] as String,
-      description: json['description'] as String,
-    );
-  }
-
-  final String id;
-  final String birdId;
-  final String languageCode;
-  final String commonName;
-  final String description;
+  factory BirdNameRemoteModel.fromJson(Map<String, dynamic> json) =>
+      _$BirdNameRemoteModelFromJson(json);
 
   BirdNameEntityData toEntityData() {
     return BirdNameEntityData(
