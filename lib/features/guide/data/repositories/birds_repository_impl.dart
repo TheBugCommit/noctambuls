@@ -78,6 +78,22 @@ class BirdsRepositoryImpl implements BirdsRepository {
         hasMediaErrors ? localCatalogVersion : remoteCatalogVersion.version,
       );
 
+      try {
+        final (validImagePaths, validAudioPaths) = await (
+          localDataSource.getAllLocalImagePaths(),
+          localDataSource.getAllLocalAudioPaths(),
+        ).wait;
+
+        await mediaService.cleanOrphanedFiles(
+          validAudioPaths: validAudioPaths,
+          validImagePaths: validImagePaths,
+        );
+      } catch (cleanupError) {
+        logger.warning(
+          'Cleanup operation failed, but sync was successful: $cleanupError',
+        );
+      }
+
       return const Ok(Unit.instance);
     } catch (e, st) {
       final failure = const CatalogSyncFailure().withDebug(e, st);
