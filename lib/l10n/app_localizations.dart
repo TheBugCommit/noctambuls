@@ -398,6 +398,12 @@ abstract class AppLocalizations {
   /// **'Tornar a intentar'**
   String get retry;
 
+  /// No description provided for @ignore.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ignorar'**
+  String get ignore;
+
   /// No description provided for @requiredBirdCatalog.
   ///
   /// In ca, this message translates to:
@@ -415,6 +421,18 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Descarregar ara'**
   String get downloadNow;
+
+  /// No description provided for @homeErrorDownloadCatalog.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descàrrega del catàleg d\'ocells fallida'**
+  String get homeErrorDownloadCatalog;
+
+  /// No description provided for @homeErrorDownloadCatalogMsg.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut actualitzar el catàleg d\'ocells. Pots seguir utilitzant l\'aplicació o tornar-ho a intentar la descàrrega.'**
+  String get homeErrorDownloadCatalogMsg;
 
   /// No description provided for @cantOpenLink.
   ///

@@ -170,6 +170,9 @@ class AppLocalizationsCa extends AppLocalizations {
   String get retry => 'Tornar a intentar';
 
   @override
+  String get ignore => 'Ignorar';
+
+  @override
   String get requiredBirdCatalog => 'Catàleg d\'ocells requerit';
 
   @override
@@ -178,6 +181,14 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get downloadNow => 'Descarregar ara';
+
+  @override
+  String get homeErrorDownloadCatalog =>
+      'Descàrrega del catàleg d\'ocells fallida';
+
+  @override
+  String get homeErrorDownloadCatalogMsg =>
+      'No s\'ha pogut actualitzar el catàleg d\'ocells. Pots seguir utilitzant l\'aplicació o tornar-ho a intentar la descàrrega.';
 
   @override
   String get cantOpenLink => 'No s\'ha pogut obrir l\'enllaç';

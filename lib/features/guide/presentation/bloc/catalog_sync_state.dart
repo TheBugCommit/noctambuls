@@ -21,10 +21,23 @@ final class CatalogSyncSuccess extends CatalogSyncState {
 }
 
 final class CatalogSyncFailure extends CatalogSyncState {
-  const CatalogSyncFailure({required this.failure});
+  const CatalogSyncFailure({
+    required this.failure,
+    required this.isCatalogEmpty,
+    required this.showGlobalError,
+    required this.timestamp,
+  });
 
   final Failure failure;
+  final bool isCatalogEmpty;
+  final bool showGlobalError;
+  final DateTime timestamp;
 
   @override
-  List<Object?> get props => [failure];
+  List<Object?> get props => [
+    failure,
+    isCatalogEmpty,
+    showGlobalError,
+    timestamp,
+  ];
 }

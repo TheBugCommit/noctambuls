@@ -6,9 +6,13 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/widgets/app_button.dart';
+import 'package:noctambuls/core/widgets/app_sheet.dart';
 import 'package:noctambuls/core/widgets/taxus_app_bar.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_event.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
@@ -65,17 +69,16 @@ class HomePage extends StatelessWidget {
       builder: (context, state) {
         return switch (state) {
           SessionLifecycleIdle() || SessionLifecycleError() => _IdleScaffold(
-            onTypeSelected: (type) =>
-                context.read<SessionLifecycleBloc>().add(
-                  StartNewSession(
-                    sessionType: type,
-                    annotatorId:
-                        (context.read<AuthBloc>().state as Authenticated?)
-                            ?.user
-                            .id ??
-                        'unknown',
-                  ),
-                ),
+            onTypeSelected: (type) => context.read<SessionLifecycleBloc>().add(
+              StartNewSession(
+                sessionType: type,
+                annotatorId:
+                    (context.read<AuthBloc>().state as Authenticated?)
+                        ?.user
+                        .id ??
+                    'unknown',
+              ),
+            ),
           ),
           SessionLifecycleLoading() => const _LoadingScaffold(),
           SessionObserving() => _ActiveScaffold(
@@ -96,19 +99,50 @@ class _BaseHomeLayout extends StatelessWidget {
 
   final Widget child;
 
+  Future<void> _handleSyncFailure(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    final shouldRetry = await AppSheet.showConfirm(
+      context: context,
+      title: l10n.homeErrorDownloadCatalog,
+      message: l10n.homeErrorDownloadCatalogMsg,
+      confirmText: l10n.retry,
+      cancelText: l10n.ignore,
+    );
+
+    if (shouldRetry == true && context.mounted) {
+      context.read<CatalogSyncBloc>().add(
+        const CatalogSyncEventRequest(showGlobalError: true),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: const TaxusAppBar(),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(AppDimensions.lg),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const HomeHeader(),
-            const SizedBox(height: AppDimensions.xl),
-            child,
-          ],
+    return BlocListener<CatalogSyncBloc, CatalogSyncState>(
+      listenWhen: (previous, current) {
+        if (current is CatalogSyncFailure) {
+          return current.isCatalogEmpty && current.showGlobalError;
+        }
+        return false;
+      },
+      listener: (context, state) async {
+        if (state is CatalogSyncFailure && state.isCatalogEmpty) {
+          await _handleSyncFailure(context);
+        }
+      },
+      child: Scaffold(
+        appBar: const TaxusAppBar(),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(AppDimensions.lg),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const HomeHeader(),
+              const SizedBox(height: AppDimensions.xl),
+              child,
+            ],
+          ),
         ),
       ),
     );

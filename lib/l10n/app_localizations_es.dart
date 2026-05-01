@@ -171,6 +171,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get retry => 'Volver a intentar';
 
   @override
+  String get ignore => 'Ignorar';
+
+  @override
   String get requiredBirdCatalog => 'Catálago de pájaros requerido';
 
   @override
@@ -179,6 +182,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get downloadNow => 'Descargar ahora';
+
+  @override
+  String get homeErrorDownloadCatalog =>
+      'Descarga del catálogo de pájaros fallida';
+
+  @override
+  String get homeErrorDownloadCatalogMsg =>
+      'No se ha podido descargar el catálago de pájaros. Puedes seguir usando la aplicación o volver a intentar la descarga.';
 
   @override
   String get cantOpenLink => 'No se ha podido abrir el enlace';

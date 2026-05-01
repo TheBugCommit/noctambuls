@@ -8,5 +8,10 @@ sealed class CatalogSyncEvent extends Equatable {
 }
 
 final class CatalogSyncEventRequest extends CatalogSyncEvent {
-  const CatalogSyncEventRequest();
+  const CatalogSyncEventRequest({this.showGlobalError = false});
+
+  final bool showGlobalError;
+
+  @override
+  List<Object?> get props => [showGlobalError];
 }

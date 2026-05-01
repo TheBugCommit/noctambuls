@@ -32,7 +32,9 @@ class NoctambulsApp extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authenticated) {
-          context.read<CatalogSyncBloc>().add(const CatalogSyncEventRequest());
+          context.read<CatalogSyncBloc>().add(
+            const CatalogSyncEventRequest(showGlobalError: true),
+          );
           context.read<SessionLifecycleBloc>().add(WatchSession());
         }
       },

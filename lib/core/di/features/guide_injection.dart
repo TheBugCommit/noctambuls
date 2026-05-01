@@ -6,6 +6,7 @@ import 'package:noctambuls/features/guide/data/datasources/birds_remote_datasour
 import 'package:noctambuls/features/guide/data/repositories/birds_repository_impl.dart';
 import 'package:noctambuls/features/guide/data/services/catalog_media_service.dart';
 import 'package:noctambuls/features/guide/domain/repositories/birds_repository.dart';
+import 'package:noctambuls/features/guide/domain/usecases/check_is_catalog_empty_usecase.dart';
 import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart';
 import 'package:noctambuls/features/guide/domain/usecases/sync_catalog_usecase.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
@@ -35,6 +36,7 @@ void initGuideFeature() {
     )
     ..registerLazySingleton(() => GetBirdsUseCase(sl()))
     ..registerLazySingleton(() => SyncCatalogUseCase(sl()))
+    ..registerLazySingleton(() => CheckIsCatalogEmptyUseCase(sl()))
     ..registerFactory(
       () => GuideBloc(
         getBirdsUseCase: sl(),
@@ -46,6 +48,10 @@ void initGuideFeature() {
       ),
     )
     ..registerFactory(
-      () => CatalogSyncBloc(syncCatalogUseCase: sl(), logger: sl<IAppLogger>()),
+      () => CatalogSyncBloc(
+        syncCatalogUseCase: sl(),
+        checkIsCatalogEmptyUseCase: sl(),
+        logger: sl<IAppLogger>(),
+      ),
     );
 }
