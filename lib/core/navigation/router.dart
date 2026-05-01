@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
+import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/navigation/go_router_refresh_stream.dart';
 import 'package:noctambuls/core/navigation/main_navigation_screen.dart';
-import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
+import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/observing_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/review_page.dart';
@@ -62,7 +64,9 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.guide,
-              builder: (context, state) => const GuidePage(),
+              builder: (context, state) => GuidePage(
+                blocBuilder: () => sl<GuideBloc>(),
+              ),
             ),
           ],
         ),

@@ -73,6 +73,13 @@
         }
     },
     "noImageAvailable": "La imagen no esta disponible",
+    "downloadingCatalog": "Descargando los pájaros...",
+    "connectionError": "Error de connexion",
+    "catalogDownloadError": "No se ha podido descargar el catálago de pájaros. Comprueba tu connexion a internet.",
+    "retry": "Volver a intentar",
+    "requiredBirdCatalog": "Catálago de pájaros requerido",
+    "requiredBirdCatalogMsg": "Para usar esta sección necessitas descargar el catálago de pájaros almenos una vez.",
+    "downloadNow": "Descargar ahora",
     "cantOpenLink": "No se ha podido abrir el enlace",
     "cantPlayAudio": "No se ha podido reproducir el audio",
     "stopPlayingAudio": "Detener",

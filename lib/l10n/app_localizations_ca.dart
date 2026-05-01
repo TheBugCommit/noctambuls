@@ -157,6 +157,29 @@ class AppLocalizationsCa extends AppLocalizations {
   String get noImageAvailable => 'La imatge no està disponible';
 
   @override
+  String get downloadingCatalog => 'Descarregant els ocells...';
+
+  @override
+  String get connectionError => 'Error de connexió';
+
+  @override
+  String get catalogDownloadError =>
+      'No s\'ha pogut descarregar el catàleg inicial. Comprova la teva connexió a internet.';
+
+  @override
+  String get retry => 'Tornar a intentar';
+
+  @override
+  String get requiredBirdCatalog => 'Catàleg d\'ocells requerit';
+
+  @override
+  String get requiredBirdCatalogMsg =>
+      'Per utilitzar aquesta secció necessites descarregar el catàleg d\'ocells almenys un cop.';
+
+  @override
+  String get downloadNow => 'Descarregar ara';
+
+  @override
   String get cantOpenLink => 'No s\'ha pogut obrir l\'enllaç';
 
   @override

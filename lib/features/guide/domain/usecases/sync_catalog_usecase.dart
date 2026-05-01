@@ -7,11 +7,7 @@ class SyncCatalogUseCase {
 
   final BirdsRepository _repository;
 
-  bool _syncedThisSession = false;
-
   Future<Result<Unit>> call() async {
-    if (_syncedThisSession) return const Ok(Unit.instance);
-
     final localVersionResult = await _repository.getLocalVersion();
     final remoteVersionResult = await _repository.getRemoteVersion();
 
@@ -36,16 +32,10 @@ class SyncCatalogUseCase {
     }
 
     if (remoteVersion == null || remoteVersion == localVersion) {
-      _syncedThisSession = true;
       return const Ok(Unit.instance);
     }
 
     final syncResult = await _repository.downloadAndSaveCatalog();
-
-    if (syncResult.isOk) {
-      _syncedThisSession = true;
-    }
-
     return syncResult;
   }
 }

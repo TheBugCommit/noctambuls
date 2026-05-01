@@ -45,6 +45,11 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
 
     result.when(
       success: (birds) {
+        if (birds.isEmpty) {
+          emit(const GuideEmptyNeedsSync());
+          return;
+        }
+
         final audioPaths = birds
             .map(
               (bird) =>

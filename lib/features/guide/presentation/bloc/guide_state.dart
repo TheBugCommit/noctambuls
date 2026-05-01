@@ -68,3 +68,7 @@ final class GuideError extends GuideState {
   @override
   List<Object?> get props => [failure];
 }
+
+final class GuideEmptyNeedsSync extends GuideState {
+  const GuideEmptyNeedsSync();
+}

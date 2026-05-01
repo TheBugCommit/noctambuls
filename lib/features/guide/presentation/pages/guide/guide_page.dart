@@ -1,27 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
-import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/widgets/taxus_app_bar.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_state.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_list.dart';
+import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/catalog_sync_requiered_view.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_state.dart';
 import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class GuidePage extends StatelessWidget {
-  const GuidePage({super.key});
+  const GuidePage({
+    required this.blocBuilder,
+    super.key,
+  });
+
+  final GuideBloc Function() blocBuilder;
 
   @override
   Widget build(BuildContext context) {
     final languageCode = Localizations.localeOf(context).languageCode;
 
     return BlocProvider(
-      create: (_) =>
-          sl<GuideBloc>()..add(LoadBirds(languageCode: languageCode)),
+      create: (_) => blocBuilder()..add(LoadBirds(languageCode: languageCode)),
       child: const _GuideView(),
     );
   }
@@ -32,42 +38,60 @@ class _GuideView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<LanguageCubit, LanguageState>(
-      listener: (context, state) {
-        final newLanguageCode = state.appLanguage.toLanguageCode;
-        context.read<GuideBloc>().add(LoadBirds(languageCode: newLanguageCode));
-      },
-      child: BlocListener<GuideBloc, GuideState>(
-        listenWhen: (previous, current) {
-          if (previous is GuideLoaded && current is GuideLoaded) {
-            return previous.actionError != current.actionError &&
-                current.actionError != null;
-          }
-          return false;
-        },
-        listener: (context, state) {
-          if (state is GuideLoaded && state.actionError != null) {
-            final l10n = AppLocalizations.of(context)!;
-
-            final errorMessage = switch (state.actionError!) {
-              GuideUrlError() => l10n.cantOpenLink,
-              GuideAudioError() => l10n.cantPlayAudio,
-            };
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(errorMessage)),
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LanguageCubit, LanguageState>(
+          listener: (context, state) {
+            final newLanguageCode = state.appLanguage.toLanguageCode;
+            context.read<GuideBloc>().add(
+              LoadBirds(languageCode: newLanguageCode),
             );
-          }
-        },
-        child: Scaffold(
-          appBar: const TaxusAppBar(),
-          body: BlocBuilder<GuideBloc, GuideState>(
-            builder: (context, state) => switch (state) {
-              GuideInitial() || GuideLoading() => const _GuideLoadingView(),
-              GuideLoaded(:final birds) => BirdList(birds: birds),
-              GuideError() => const _GuideErrorView(),
-            },
-          ),
+          },
+        ),
+        BlocListener<CatalogSyncBloc, CatalogSyncState>(
+          listenWhen: (previous, current) =>
+              previous is CatalogSyncInProgress &&
+              current is CatalogSyncSuccess,
+          listener: (context, state) {
+            final languageCode = Localizations.localeOf(context).languageCode;
+            context.read<GuideBloc>().add(
+              LoadBirds(languageCode: languageCode),
+            );
+          },
+        ),
+        BlocListener<GuideBloc, GuideState>(
+          listenWhen: (previous, current) {
+            if (previous is GuideLoaded && current is GuideLoaded) {
+              return previous.actionError != current.actionError &&
+                  current.actionError != null;
+            }
+            return false;
+          },
+          listener: (context, state) {
+            if (state is GuideLoaded && state.actionError != null) {
+              final l10n = AppLocalizations.of(context)!;
+
+              final errorMessage = switch (state.actionError!) {
+                GuideUrlError() => l10n.cantOpenLink,
+                GuideAudioError() => l10n.cantPlayAudio,
+              };
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(errorMessage)),
+              );
+            }
+          },
+        ),
+      ],
+      child: Scaffold(
+        appBar: const TaxusAppBar(),
+        body: BlocBuilder<GuideBloc, GuideState>(
+          builder: (context, state) => switch (state) {
+            GuideInitial() || GuideLoading() => const _GuideLoadingView(),
+            GuideLoaded(:final birds) => BirdList(birds: birds),
+            GuideError() => const _GuideErrorView(),
+            GuideEmptyNeedsSync() => const CatalogSyncRequiredView(),
+          },
         ),
       ),
     );

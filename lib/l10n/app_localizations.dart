@@ -374,6 +374,48 @@ abstract class AppLocalizations {
   /// **'La imatge no està disponible'**
   String get noImageAvailable;
 
+  /// No description provided for @downloadingCatalog.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descarregant els ocells...'**
+  String get downloadingCatalog;
+
+  /// No description provided for @connectionError.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error de connexió'**
+  String get connectionError;
+
+  /// No description provided for @catalogDownloadError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut descarregar el catàleg inicial. Comprova la teva connexió a internet.'**
+  String get catalogDownloadError;
+
+  /// No description provided for @retry.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tornar a intentar'**
+  String get retry;
+
+  /// No description provided for @requiredBirdCatalog.
+  ///
+  /// In ca, this message translates to:
+  /// **'Catàleg d\'ocells requerit'**
+  String get requiredBirdCatalog;
+
+  /// No description provided for @requiredBirdCatalogMsg.
+  ///
+  /// In ca, this message translates to:
+  /// **'Per utilitzar aquesta secció necessites descarregar el catàleg d\'ocells almenys un cop.'**
+  String get requiredBirdCatalogMsg;
+
+  /// No description provided for @downloadNow.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descarregar ara'**
+  String get downloadNow;
+
   /// No description provided for @cantOpenLink.
   ///
   /// In ca, this message translates to:

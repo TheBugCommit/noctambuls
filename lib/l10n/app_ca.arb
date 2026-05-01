@@ -76,6 +76,13 @@
         }
     },
     "noImageAvailable": "La imatge no està disponible",
+    "downloadingCatalog": "Descarregant els ocells...",
+    "connectionError": "Error de connexió",
+    "catalogDownloadError": "No s'ha pogut descarregar el catàleg inicial. Comprova la teva connexió a internet.",
+    "retry": "Tornar a intentar",
+    "requiredBirdCatalog": "Catàleg d'ocells requerit",
+    "requiredBirdCatalogMsg": "Per utilitzar aquesta secció necessites descarregar el catàleg d'ocells almenys un cop.",
+    "downloadNow": "Descarregar ara",
     "cantOpenLink": "No s'ha pogut obrir l'enllaç",
     "cantPlayAudio": "No s'ha pogut reproduir l'àudio",
     "stopPlayingAudio": "Atura",

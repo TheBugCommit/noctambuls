@@ -158,6 +158,29 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noImageAvailable => 'La imagen no esta disponible';
 
   @override
+  String get downloadingCatalog => 'Descargando los pájaros...';
+
+  @override
+  String get connectionError => 'Error de connexion';
+
+  @override
+  String get catalogDownloadError =>
+      'No se ha podido descargar el catálago de pájaros. Comprueba tu connexion a internet.';
+
+  @override
+  String get retry => 'Volver a intentar';
+
+  @override
+  String get requiredBirdCatalog => 'Catálago de pájaros requerido';
+
+  @override
+  String get requiredBirdCatalogMsg =>
+      'Para usar esta sección necessitas descargar el catálago de pájaros almenos una vez.';
+
+  @override
+  String get downloadNow => 'Descargar ahora';
+
+  @override
   String get cantOpenLink => 'No se ha podido abrir el enlace';
 
   @override
