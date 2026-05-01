@@ -434,23 +434,23 @@ abstract class AppLocalizations {
   /// **'No s\'ha pogut actualitzar el catàleg d\'ocells. Pots seguir utilitzant l\'aplicació o tornar-ho a intentar la descàrrega.'**
   String get homeErrorDownloadCatalogMsg;
 
-  /// No description provided for @usage_warning_title.
+  /// No description provided for @usageWarningTitle.
   ///
   /// In ca, this message translates to:
   /// **'Advertència d\'ús'**
-  String get usage_warning_title;
+  String get usageWarningTitle;
 
-  /// No description provided for @usage_warning_message.
+  /// No description provided for @usageWarningMessage.
   ///
   /// In ca, this message translates to:
   /// **'La reproducció d\'aquest àudio durant un cens pot alterar el comportament dels ocells i distorsionar els resultats de l\'observació.\n\nSi us plau, fes-ne un ús responsable.'**
-  String get usage_warning_message;
+  String get usageWarningMessage;
 
-  /// No description provided for @usage_warning_confirm.
+  /// No description provided for @usageWarningConfirm.
   ///
   /// In ca, this message translates to:
   /// **'Sí, ho entenc'**
-  String get usage_warning_confirm;
+  String get usageWarningConfirm;
 
   /// No description provided for @cantOpenLink.
   ///
@@ -469,6 +469,54 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Atura'**
   String get stopPlayingAudio;
+
+  /// No description provided for @observingMethodTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sobre els mètodes d\'observació'**
+  String get observingMethodTitle;
+
+  /// No description provided for @observingMethodConfirmLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Entesos'**
+  String get observingMethodConfirmLabel;
+
+  /// No description provided for @observingMethodCensTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cens'**
+  String get observingMethodCensTitle;
+
+  /// No description provided for @observingMethodCensDescription.
+  ///
+  /// In ca, this message translates to:
+  /// **'És un treball coordinat entre diversos grups de persones en punts fixos de forma simultània. S\'utilitza en campanyes oficials o jornades de cens col·lectiu privats.'**
+  String get observingMethodCensDescription;
+
+  /// No description provided for @observingMethodESTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Estació de Seguiment'**
+  String get observingMethodESTitle;
+
+  /// No description provided for @observingMethodESDescription.
+  ///
+  /// In ca, this message translates to:
+  /// **'És una observació típicament individual des d\'un únic punt fix durant un temps determinat. S\'utilitza per mostrejos repetitius en el mateix lloc.'**
+  String get observingMethodESDescription;
+
+  /// No description provided for @observingMethodIncTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observació Incidental'**
+  String get observingMethodIncTitle;
+
+  /// No description provided for @observingMethodIncDescription.
+  ///
+  /// In ca, this message translates to:
+  /// **'És una observació inesperada o aïllada mentre fas una altra activitat. Utilitze\'l quan vegis un ocell de forma casual i el vulguis anotar ràpidament sense seguir un protocol fix.'**
+  String get observingMethodIncDescription;
 
   /// No description provided for @loginTitle.
   ///

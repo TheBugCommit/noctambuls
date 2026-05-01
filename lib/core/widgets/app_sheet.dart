@@ -16,6 +16,7 @@ class AppSheet {
       isScrollControlled: true,
       isDismissible: isDismissible,
       showDragHandle: true,
+      useSafeArea: true,
       builder: (context) => child,
     );
   }

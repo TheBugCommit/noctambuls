@@ -191,14 +191,14 @@ class AppLocalizationsCa extends AppLocalizations {
       'No s\'ha pogut actualitzar el catàleg d\'ocells. Pots seguir utilitzant l\'aplicació o tornar-ho a intentar la descàrrega.';
 
   @override
-  String get usage_warning_title => 'Advertència d\'ús';
+  String get usageWarningTitle => 'Advertència d\'ús';
 
   @override
-  String get usage_warning_message =>
+  String get usageWarningMessage =>
       'La reproducció d\'aquest àudio durant un cens pot alterar el comportament dels ocells i distorsionar els resultats de l\'observació.\n\nSi us plau, fes-ne un ús responsable.';
 
   @override
-  String get usage_warning_confirm => 'Sí, ho entenc';
+  String get usageWarningConfirm => 'Sí, ho entenc';
 
   @override
   String get cantOpenLink => 'No s\'ha pogut obrir l\'enllaç';
@@ -208,6 +208,33 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get stopPlayingAudio => 'Atura';
+
+  @override
+  String get observingMethodTitle => 'Sobre els mètodes d\'observació';
+
+  @override
+  String get observingMethodConfirmLabel => 'Entesos';
+
+  @override
+  String get observingMethodCensTitle => 'Cens';
+
+  @override
+  String get observingMethodCensDescription =>
+      'És un treball coordinat entre diversos grups de persones en punts fixos de forma simultània. S\'utilitza en campanyes oficials o jornades de cens col·lectiu privats.';
+
+  @override
+  String get observingMethodESTitle => 'Estació de Seguiment';
+
+  @override
+  String get observingMethodESDescription =>
+      'És una observació típicament individual des d\'un únic punt fix durant un temps determinat. S\'utilitza per mostrejos repetitius en el mateix lloc.';
+
+  @override
+  String get observingMethodIncTitle => 'Observació Incidental';
+
+  @override
+  String get observingMethodIncDescription =>
+      'És una observació inesperada o aïllada mentre fas una altra activitat. Utilitze\'l quan vegis un ocell de forma casual i el vulguis anotar ràpidament sense seguir un protocol fix.';
 
   @override
   String get loginTitle => 'Benvingut/da';

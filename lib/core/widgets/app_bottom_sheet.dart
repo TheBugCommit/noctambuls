@@ -43,20 +43,30 @@ class AppBottomSheet extends StatelessWidget {
             ),
             const SizedBox(height: AppDimensions.md),
 
-            if (message != null) ...[
-              Text(
-                message!,
-                style: theme.textTheme.bodyLarge?.copyWith(
-                  color: colorScheme.onSurfaceVariant,
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    if (message != null) ...[
+                      Text(
+                        message!,
+                        style: theme.textTheme.bodyLarge?.copyWith(
+                          color: colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      const SizedBox(height: AppDimensions.lg),
+                    ],
+
+                    if (content != null) ...[
+                      content!,
+                      const SizedBox(height: AppDimensions.lg),
+                    ],
+                  ],
                 ),
               ),
-              const SizedBox(height: AppDimensions.lg),
-            ],
-
-            if (content != null) ...[
-              content!,
-              const SizedBox(height: AppDimensions.lg),
-            ],
+            ),
 
             Row(
               children: [

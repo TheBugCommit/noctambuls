@@ -46,9 +46,9 @@ class _GuideView extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final shouldPlay = await AppSheet.showConfirm(
       context: context,
-      title: l10n.usage_warning_title,
-      message: l10n.usage_warning_message,
-      confirmText: l10n.usage_warning_confirm,
+      title: l10n.usageWarningTitle,
+      message: l10n.usageWarningMessage,
+      confirmText: l10n.usageWarningConfirm,
       cancelText: l10n.cancel,
     );
 

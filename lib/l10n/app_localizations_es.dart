@@ -192,14 +192,14 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se ha podido descargar el catálago de pájaros. Puedes seguir usando la aplicación o volver a intentar la descarga.';
 
   @override
-  String get usage_warning_title => 'Advertencia de uso';
+  String get usageWarningTitle => 'Advertencia de uso';
 
   @override
-  String get usage_warning_message =>
+  String get usageWarningMessage =>
       'La reproducción de este audio durante un censo puede alterar el comportamiento de las aves y distorsionar los resultados de la observación.\n\nPor favor, haz un uso responsable.';
 
   @override
-  String get usage_warning_confirm => 'Sí, lo entiendo';
+  String get usageWarningConfirm => 'Sí, lo entiendo';
 
   @override
   String get cantOpenLink => 'No se ha podido abrir el enlace';
@@ -209,6 +209,33 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get stopPlayingAudio => 'Detener';
+
+  @override
+  String get observingMethodTitle => 'Sobre los métodos de observación';
+
+  @override
+  String get observingMethodConfirmLabel => 'Entendido';
+
+  @override
+  String get observingMethodCensTitle => 'Censo';
+
+  @override
+  String get observingMethodCensDescription =>
+      'Es un trabajo coordinado entre varios grupos de personas en puntos fijos de forma simultánea. Se utiliza en campañas oficiales o jornadas de censo colectivo privadas.';
+
+  @override
+  String get observingMethodESTitle => 'Estación de Seguimiento';
+
+  @override
+  String get observingMethodESDescription =>
+      'Es una observación típicamente individual desde un único punto fijo durante un tiempo determinado. Se utiliza para muestreos repetitivos en el mismo lugar.';
+
+  @override
+  String get observingMethodIncTitle => 'Observación incidental';
+
+  @override
+  String get observingMethodIncDescription =>
+      'Es una observación inesperada o aislada mientras realizas otra actividad. Úsalo cuando veas un ave de forma casual y quieras anotarlo rápidamente sin seguir un protocolo fijo.';
 
   @override
   String get loginTitle => 'Bienvenido/a';
