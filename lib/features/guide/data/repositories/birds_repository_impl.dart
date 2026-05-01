@@ -60,9 +60,14 @@ class BirdsRepositoryImpl implements BirdsRepository {
   Future<Result<Unit>> downloadAndSaveCatalog() async {
     try {
       final remoteBirds = await remoteDataSource.getBirdsCatalog();
+      final localCatalogVersion = await localDataSource.getCatalogVersion();
       final remoteCatalogVersion = await remoteDataSource.getCatalogVersion();
 
-      final birdEntities = await _downloadMediaInBatches(remoteBirds);
+      var hasMediaErrors = false;
+      final birdEntities = await _downloadMediaInBatches(
+        remoteBirds,
+        () => hasMediaErrors = true,
+      );
       final nameEntities = remoteBirds
           .expand((bird) => bird.translations.map((t) => t.toEntityData()))
           .toList();
@@ -70,7 +75,7 @@ class BirdsRepositoryImpl implements BirdsRepository {
       await localDataSource.saveFullCatalogTransaction(
         birdEntities,
         nameEntities,
-        remoteCatalogVersion.version,
+        hasMediaErrors ? localCatalogVersion : remoteCatalogVersion.version,
       );
 
       return const Ok(Unit.instance);
@@ -83,10 +88,10 @@ class BirdsRepositoryImpl implements BirdsRepository {
 
   Future<List<BirdEntityData>> _downloadMediaInBatches(
     List<BirdRemoteModel> birds,
+    void Function() onMediaError,
   ) async {
     final results = <BirdEntityData>[];
     const batchSize = 5;
-
     for (var i = 0; i < birds.length; i += batchSize) {
       final end = (i + batchSize < birds.length) ? i + batchSize : birds.length;
       final batch = birds.sublist(i, end);
@@ -98,15 +103,22 @@ class BirdsRepositoryImpl implements BirdsRepository {
             mediaService.ensureAudio(bird.audioPath),
           ).wait;
 
+          if (localImage == null || localAudio == null) {
+            throw Exception('Error downloading resources');
+          }
+
           return bird.toEntityData(
-            localImagePath: localImage ?? bird.imagePath,
-            localAudioPath: localAudio ?? bird.audioPath,
+            localImagePath: localImage,
+            localAudioPath: localAudio,
           );
         } catch (e) {
-          logger.warning('Error dowloading resources for bird ${bird.id}: $e');
+          logger.warning(
+            'Error dowloading resources for bird ${bird.id}: $e',
+          );
+          onMediaError();
           return bird.toEntityData(
-            localImagePath: bird.imagePath,
-            localAudioPath: bird.audioPath,
+            localImagePath: null,
+            localAudioPath: null,
           );
         }
       });

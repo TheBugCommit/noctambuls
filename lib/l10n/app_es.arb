@@ -72,6 +72,7 @@
             }
         }
     },
+    "noImageAvailable": "La imagen no esta disponible",
     "cantOpenLink": "No se ha podido abrir el enlace",
     "cantPlayAudio": "No se ha podido reproducir el audio",
     "stopPlayingAudio": "Detener",

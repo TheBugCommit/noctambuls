@@ -68,9 +68,13 @@ class BirdsTable extends Table {
 
   TextColumn get scientificName => text()();
 
-  TextColumn get imagePath => text()();
+  TextColumn get localImagePath => text().nullable()();
 
-  TextColumn get audioPath => text()();
+  TextColumn get localAudioPath => text().nullable()();
+
+  TextColumn get imageUrl => text()();
+
+  TextColumn get audioUrl => text()();
 
   TextColumn get infoUrl => text().nullable()();
 
@@ -101,7 +105,7 @@ class CatalogMetadataTable extends Table {
 
   TextColumn get key => text()();
 
-  TextColumn get value => text()();
+  TextColumn get value => text().nullable()();
 
   @override
   Set<Column> get primaryKey => {key};

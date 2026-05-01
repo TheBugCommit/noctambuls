@@ -1,3 +1,4 @@
+import 'package:noctambuls/core/constants/env_config.dart';
 import 'package:noctambuls/core/database/app_database.dart';
 
 class BirdRemoteModel {
@@ -38,15 +39,17 @@ class BirdRemoteModel {
   final List<BirdNameRemoteModel> translations;
 
   BirdEntityData toEntityData({
-    required String localImagePath,
-    required String localAudioPath,
+    required String? localImagePath,
+    required String? localAudioPath,
   }) {
     return BirdEntityData(
       id: id,
       scientificName: scientificName,
-      imagePath: localImagePath,
-      audioPath: localAudioPath,
+      imageUrl: '${EnvConfig.serverUrl}$imagePath',
+      audioUrl: '${EnvConfig.serverUrl}$audioPath',
       infoUrl: infoUrl,
+      localImagePath: localImagePath,
+      localAudioPath: localAudioPath,
     );
   }
 }

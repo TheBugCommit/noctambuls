@@ -30,10 +30,7 @@ class BirdCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          BirdCardHeader(
-            imagePath: bird.imagePath,
-            birdName: bird.commonName,
-          ),
+          BirdCardHeader(bird: bird),
           Padding(
             padding: const EdgeInsets.all(AppDimensions.lg),
             child: Column(
@@ -45,10 +42,7 @@ class BirdCard extends StatelessWidget {
                   scientificName: bird.scientificName,
                   description: bird.description,
                 ),
-                BirdCardActions(
-                  infoUrl: bird.infoUrl,
-                  audioPath: bird.audioPath,
-                ),
+                BirdCardActions(bird: bird),
               ],
             ),
           ),
@@ -60,13 +54,11 @@ class BirdCard extends StatelessWidget {
 
 class BirdCardHeader extends StatelessWidget {
   const BirdCardHeader({
-    required this.imagePath,
-    required this.birdName,
+    required this.bird,
     super.key,
   });
 
-  final String imagePath;
-  final String birdName;
+  final Bird bird;
 
   @override
   Widget build(BuildContext context) {
@@ -74,20 +66,87 @@ class BirdCardHeader extends StatelessWidget {
 
     return AspectRatio(
       aspectRatio: 4 / 3,
-      child: Image.file(
-        File(imagePath),
-        fit: BoxFit.cover,
-        gaplessPlayback: true,
-        alignment: Alignment.topCenter,
-        semanticLabel: l10n.semanticLabelBirdImage(birdName),
-        errorBuilder: (context, error, stackTrace) => ColoredBox(
-          color: Theme.of(context).colorScheme.surfaceContainerHighest,
-          child: const Center(
-            child: Icon(
-              Icons.image_not_supported_outlined,
-              size: AppDimensions.xxl,
-            ),
-          ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(12),
+        child: _buildImage(context, l10n),
+      ),
+    );
+  }
+
+  Widget _buildImage(BuildContext context, AppLocalizations l10n) {
+    if (bird.hasLocalImage) {
+      return _buildLocalImage(context, l10n);
+    } else if (bird.imageUrl.isNotEmpty) {
+      return _buildNetworkImage(context, l10n);
+    } else {
+      return _errorBuilder(context, l10n.noImageAvailable, null);
+    }
+  }
+
+  Widget _buildLocalImage(BuildContext context, AppLocalizations l10n) {
+    return Image.file(
+      File(bird.localImagePath!),
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+      semanticLabel: l10n.semanticLabelBirdImage(bird.commonName),
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded) return child;
+        return AnimatedOpacity(
+          opacity: frame == null ? 0 : 1,
+          duration: const Duration(milliseconds: 300),
+          child: child,
+        );
+      },
+      errorBuilder: _errorBuilder,
+    );
+  }
+
+  Widget _buildNetworkImage(BuildContext context, AppLocalizations l10n) {
+    return Image.network(
+      bird.imageUrl,
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+      semanticLabel: l10n.semanticLabelBirdImage(bird.commonName),
+      cacheWidth: 800,
+
+      loadingBuilder: (context, child, loadingProgress) {
+        if (loadingProgress == null) return child;
+        return _placeholder(context);
+      },
+
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded) return child;
+        return AnimatedOpacity(
+          opacity: frame == null ? 0 : 1,
+          duration: const Duration(milliseconds: 300),
+          child: child,
+        );
+      },
+
+      errorBuilder: _errorBuilder,
+    );
+  }
+
+  Widget _placeholder(BuildContext context) {
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      child: const Center(
+        child: CircularProgressIndicator(strokeWidth: 2),
+      ),
+    );
+  }
+
+  Widget _errorBuilder(
+    BuildContext context,
+    Object error,
+    StackTrace? stackTrace,
+  ) {
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surfaceContainerHighest,
+      child: const Center(
+        child: Icon(
+          Icons.image_not_supported_outlined,
+          size: AppDimensions.xxl,
         ),
       ),
     );
@@ -145,13 +204,11 @@ class BirdCardContent extends StatelessWidget {
 
 class BirdCardActions extends StatelessWidget {
   const BirdCardActions({
-    required this.infoUrl,
-    required this.audioPath,
+    required this.bird,
     super.key,
   });
 
-  final String infoUrl;
-  final String audioPath;
+  final Bird bird;
 
   @override
   Widget build(BuildContext context) {
@@ -161,14 +218,16 @@ class BirdCardActions extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         BirdAudioButton(
-          audioPath: audioPath,
+          audioPath: bird.hasLocalAudio ? bird.localAudioPath! : bird.audioUrl,
           labelPlay: l10n.listen,
           labelStop: l10n.stopPlayingAudio,
         ),
         AppButton.primary(
-          onPressed: infoUrl.isEmpty
+          onPressed: bird.infoUrl.isEmpty
               ? null
-              : () => context.read<GuideBloc>().add(OpenBirdLink(url: infoUrl)),
+              : () => context.read<GuideBloc>().add(
+                  OpenBirdLink(url: bird.infoUrl),
+                ),
           icon: Icons.link,
           label: l10n.moreInfo,
         ),

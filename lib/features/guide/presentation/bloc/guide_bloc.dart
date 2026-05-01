@@ -45,7 +45,12 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
 
     result.when(
       success: (birds) {
-        final audioPaths = birds.map((bird) => bird.audioPath).toList();
+        final audioPaths = birds
+            .map(
+              (bird) =>
+                  bird.hasLocalAudio ? bird.localAudioPath! : bird.audioUrl,
+            )
+            .toList();
         unawaited(preloadAudioUseCase(audioPaths));
         emit(GuideLoaded(birds: birds));
       },

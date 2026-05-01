@@ -75,6 +75,7 @@
             }
         }
     },
+    "noImageAvailable": "La imatge no està disponible",
     "cantOpenLink": "No s'ha pogut obrir l'enllaç",
     "cantPlayAudio": "No s'ha pogut reproduir l'àudio",
     "stopPlayingAudio": "Atura",

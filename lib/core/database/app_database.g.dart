@@ -29,23 +29,45 @@ class $BirdsTableTable extends BirdsTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _imagePathMeta = const VerificationMeta(
-    'imagePath',
+  static const VerificationMeta _localImagePathMeta = const VerificationMeta(
+    'localImagePath',
   );
   @override
-  late final GeneratedColumn<String> imagePath = GeneratedColumn<String>(
-    'image_path',
+  late final GeneratedColumn<String> localImagePath = GeneratedColumn<String>(
+    'local_image_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _localAudioPathMeta = const VerificationMeta(
+    'localAudioPath',
+  );
+  @override
+  late final GeneratedColumn<String> localAudioPath = GeneratedColumn<String>(
+    'local_audio_path',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _imageUrlMeta = const VerificationMeta(
+    'imageUrl',
+  );
+  @override
+  late final GeneratedColumn<String> imageUrl = GeneratedColumn<String>(
+    'image_url',
     aliasedName,
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _audioPathMeta = const VerificationMeta(
-    'audioPath',
+  static const VerificationMeta _audioUrlMeta = const VerificationMeta(
+    'audioUrl',
   );
   @override
-  late final GeneratedColumn<String> audioPath = GeneratedColumn<String>(
-    'audio_path',
+  late final GeneratedColumn<String> audioUrl = GeneratedColumn<String>(
+    'audio_url',
     aliasedName,
     false,
     type: DriftSqlType.string,
@@ -66,8 +88,10 @@ class $BirdsTableTable extends BirdsTable
   List<GeneratedColumn> get $columns => [
     id,
     scientificName,
-    imagePath,
-    audioPath,
+    localImagePath,
+    localAudioPath,
+    imageUrl,
+    audioUrl,
     infoUrl,
   ];
   @override
@@ -98,21 +122,39 @@ class $BirdsTableTable extends BirdsTable
     } else if (isInserting) {
       context.missing(_scientificNameMeta);
     }
-    if (data.containsKey('image_path')) {
+    if (data.containsKey('local_image_path')) {
       context.handle(
-        _imagePathMeta,
-        imagePath.isAcceptableOrUnknown(data['image_path']!, _imagePathMeta),
+        _localImagePathMeta,
+        localImagePath.isAcceptableOrUnknown(
+          data['local_image_path']!,
+          _localImagePathMeta,
+        ),
       );
-    } else if (isInserting) {
-      context.missing(_imagePathMeta);
     }
-    if (data.containsKey('audio_path')) {
+    if (data.containsKey('local_audio_path')) {
       context.handle(
-        _audioPathMeta,
-        audioPath.isAcceptableOrUnknown(data['audio_path']!, _audioPathMeta),
+        _localAudioPathMeta,
+        localAudioPath.isAcceptableOrUnknown(
+          data['local_audio_path']!,
+          _localAudioPathMeta,
+        ),
+      );
+    }
+    if (data.containsKey('image_url')) {
+      context.handle(
+        _imageUrlMeta,
+        imageUrl.isAcceptableOrUnknown(data['image_url']!, _imageUrlMeta),
       );
     } else if (isInserting) {
-      context.missing(_audioPathMeta);
+      context.missing(_imageUrlMeta);
+    }
+    if (data.containsKey('audio_url')) {
+      context.handle(
+        _audioUrlMeta,
+        audioUrl.isAcceptableOrUnknown(data['audio_url']!, _audioUrlMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_audioUrlMeta);
     }
     if (data.containsKey('info_url')) {
       context.handle(
@@ -137,13 +179,21 @@ class $BirdsTableTable extends BirdsTable
         DriftSqlType.string,
         data['${effectivePrefix}scientific_name'],
       )!,
-      imagePath: attachedDatabase.typeMapping.read(
+      localImagePath: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}image_path'],
+        data['${effectivePrefix}local_image_path'],
+      ),
+      localAudioPath: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}local_audio_path'],
+      ),
+      imageUrl: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}image_url'],
       )!,
-      audioPath: attachedDatabase.typeMapping.read(
+      audioUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
-        data['${effectivePrefix}audio_path'],
+        data['${effectivePrefix}audio_url'],
       )!,
       infoUrl: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
@@ -161,14 +211,18 @@ class $BirdsTableTable extends BirdsTable
 class BirdEntityData extends DataClass implements Insertable<BirdEntityData> {
   final String id;
   final String scientificName;
-  final String imagePath;
-  final String audioPath;
+  final String? localImagePath;
+  final String? localAudioPath;
+  final String imageUrl;
+  final String audioUrl;
   final String? infoUrl;
   const BirdEntityData({
     required this.id,
     required this.scientificName,
-    required this.imagePath,
-    required this.audioPath,
+    this.localImagePath,
+    this.localAudioPath,
+    required this.imageUrl,
+    required this.audioUrl,
     this.infoUrl,
   });
   @override
@@ -176,8 +230,14 @@ class BirdEntityData extends DataClass implements Insertable<BirdEntityData> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['scientific_name'] = Variable<String>(scientificName);
-    map['image_path'] = Variable<String>(imagePath);
-    map['audio_path'] = Variable<String>(audioPath);
+    if (!nullToAbsent || localImagePath != null) {
+      map['local_image_path'] = Variable<String>(localImagePath);
+    }
+    if (!nullToAbsent || localAudioPath != null) {
+      map['local_audio_path'] = Variable<String>(localAudioPath);
+    }
+    map['image_url'] = Variable<String>(imageUrl);
+    map['audio_url'] = Variable<String>(audioUrl);
     if (!nullToAbsent || infoUrl != null) {
       map['info_url'] = Variable<String>(infoUrl);
     }
@@ -188,8 +248,14 @@ class BirdEntityData extends DataClass implements Insertable<BirdEntityData> {
     return BirdsTableCompanion(
       id: Value(id),
       scientificName: Value(scientificName),
-      imagePath: Value(imagePath),
-      audioPath: Value(audioPath),
+      localImagePath: localImagePath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localImagePath),
+      localAudioPath: localAudioPath == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localAudioPath),
+      imageUrl: Value(imageUrl),
+      audioUrl: Value(audioUrl),
       infoUrl: infoUrl == null && nullToAbsent
           ? const Value.absent()
           : Value(infoUrl),
@@ -204,8 +270,10 @@ class BirdEntityData extends DataClass implements Insertable<BirdEntityData> {
     return BirdEntityData(
       id: serializer.fromJson<String>(json['id']),
       scientificName: serializer.fromJson<String>(json['scientificName']),
-      imagePath: serializer.fromJson<String>(json['imagePath']),
-      audioPath: serializer.fromJson<String>(json['audioPath']),
+      localImagePath: serializer.fromJson<String?>(json['localImagePath']),
+      localAudioPath: serializer.fromJson<String?>(json['localAudioPath']),
+      imageUrl: serializer.fromJson<String>(json['imageUrl']),
+      audioUrl: serializer.fromJson<String>(json['audioUrl']),
       infoUrl: serializer.fromJson<String?>(json['infoUrl']),
     );
   }
@@ -215,8 +283,10 @@ class BirdEntityData extends DataClass implements Insertable<BirdEntityData> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'scientificName': serializer.toJson<String>(scientificName),
-      'imagePath': serializer.toJson<String>(imagePath),
-      'audioPath': serializer.toJson<String>(audioPath),
+      'localImagePath': serializer.toJson<String?>(localImagePath),
+      'localAudioPath': serializer.toJson<String?>(localAudioPath),
+      'imageUrl': serializer.toJson<String>(imageUrl),
+      'audioUrl': serializer.toJson<String>(audioUrl),
       'infoUrl': serializer.toJson<String?>(infoUrl),
     };
   }
@@ -224,14 +294,22 @@ class BirdEntityData extends DataClass implements Insertable<BirdEntityData> {
   BirdEntityData copyWith({
     String? id,
     String? scientificName,
-    String? imagePath,
-    String? audioPath,
+    Value<String?> localImagePath = const Value.absent(),
+    Value<String?> localAudioPath = const Value.absent(),
+    String? imageUrl,
+    String? audioUrl,
     Value<String?> infoUrl = const Value.absent(),
   }) => BirdEntityData(
     id: id ?? this.id,
     scientificName: scientificName ?? this.scientificName,
-    imagePath: imagePath ?? this.imagePath,
-    audioPath: audioPath ?? this.audioPath,
+    localImagePath: localImagePath.present
+        ? localImagePath.value
+        : this.localImagePath,
+    localAudioPath: localAudioPath.present
+        ? localAudioPath.value
+        : this.localAudioPath,
+    imageUrl: imageUrl ?? this.imageUrl,
+    audioUrl: audioUrl ?? this.audioUrl,
     infoUrl: infoUrl.present ? infoUrl.value : this.infoUrl,
   );
   BirdEntityData copyWithCompanion(BirdsTableCompanion data) {
@@ -240,8 +318,14 @@ class BirdEntityData extends DataClass implements Insertable<BirdEntityData> {
       scientificName: data.scientificName.present
           ? data.scientificName.value
           : this.scientificName,
-      imagePath: data.imagePath.present ? data.imagePath.value : this.imagePath,
-      audioPath: data.audioPath.present ? data.audioPath.value : this.audioPath,
+      localImagePath: data.localImagePath.present
+          ? data.localImagePath.value
+          : this.localImagePath,
+      localAudioPath: data.localAudioPath.present
+          ? data.localAudioPath.value
+          : this.localAudioPath,
+      imageUrl: data.imageUrl.present ? data.imageUrl.value : this.imageUrl,
+      audioUrl: data.audioUrl.present ? data.audioUrl.value : this.audioUrl,
       infoUrl: data.infoUrl.present ? data.infoUrl.value : this.infoUrl,
     );
   }
@@ -251,66 +335,87 @@ class BirdEntityData extends DataClass implements Insertable<BirdEntityData> {
     return (StringBuffer('BirdEntityData(')
           ..write('id: $id, ')
           ..write('scientificName: $scientificName, ')
-          ..write('imagePath: $imagePath, ')
-          ..write('audioPath: $audioPath, ')
+          ..write('localImagePath: $localImagePath, ')
+          ..write('localAudioPath: $localAudioPath, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('audioUrl: $audioUrl, ')
           ..write('infoUrl: $infoUrl')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, scientificName, imagePath, audioPath, infoUrl);
+  int get hashCode => Object.hash(
+    id,
+    scientificName,
+    localImagePath,
+    localAudioPath,
+    imageUrl,
+    audioUrl,
+    infoUrl,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is BirdEntityData &&
           other.id == this.id &&
           other.scientificName == this.scientificName &&
-          other.imagePath == this.imagePath &&
-          other.audioPath == this.audioPath &&
+          other.localImagePath == this.localImagePath &&
+          other.localAudioPath == this.localAudioPath &&
+          other.imageUrl == this.imageUrl &&
+          other.audioUrl == this.audioUrl &&
           other.infoUrl == this.infoUrl);
 }
 
 class BirdsTableCompanion extends UpdateCompanion<BirdEntityData> {
   final Value<String> id;
   final Value<String> scientificName;
-  final Value<String> imagePath;
-  final Value<String> audioPath;
+  final Value<String?> localImagePath;
+  final Value<String?> localAudioPath;
+  final Value<String> imageUrl;
+  final Value<String> audioUrl;
   final Value<String?> infoUrl;
   final Value<int> rowid;
   const BirdsTableCompanion({
     this.id = const Value.absent(),
     this.scientificName = const Value.absent(),
-    this.imagePath = const Value.absent(),
-    this.audioPath = const Value.absent(),
+    this.localImagePath = const Value.absent(),
+    this.localAudioPath = const Value.absent(),
+    this.imageUrl = const Value.absent(),
+    this.audioUrl = const Value.absent(),
     this.infoUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   BirdsTableCompanion.insert({
     required String id,
     required String scientificName,
-    required String imagePath,
-    required String audioPath,
+    this.localImagePath = const Value.absent(),
+    this.localAudioPath = const Value.absent(),
+    required String imageUrl,
+    required String audioUrl,
     this.infoUrl = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        scientificName = Value(scientificName),
-       imagePath = Value(imagePath),
-       audioPath = Value(audioPath);
+       imageUrl = Value(imageUrl),
+       audioUrl = Value(audioUrl);
   static Insertable<BirdEntityData> custom({
     Expression<String>? id,
     Expression<String>? scientificName,
-    Expression<String>? imagePath,
-    Expression<String>? audioPath,
+    Expression<String>? localImagePath,
+    Expression<String>? localAudioPath,
+    Expression<String>? imageUrl,
+    Expression<String>? audioUrl,
     Expression<String>? infoUrl,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (scientificName != null) 'scientific_name': scientificName,
-      if (imagePath != null) 'image_path': imagePath,
-      if (audioPath != null) 'audio_path': audioPath,
+      if (localImagePath != null) 'local_image_path': localImagePath,
+      if (localAudioPath != null) 'local_audio_path': localAudioPath,
+      if (imageUrl != null) 'image_url': imageUrl,
+      if (audioUrl != null) 'audio_url': audioUrl,
       if (infoUrl != null) 'info_url': infoUrl,
       if (rowid != null) 'rowid': rowid,
     });
@@ -319,16 +424,20 @@ class BirdsTableCompanion extends UpdateCompanion<BirdEntityData> {
   BirdsTableCompanion copyWith({
     Value<String>? id,
     Value<String>? scientificName,
-    Value<String>? imagePath,
-    Value<String>? audioPath,
+    Value<String?>? localImagePath,
+    Value<String?>? localAudioPath,
+    Value<String>? imageUrl,
+    Value<String>? audioUrl,
     Value<String?>? infoUrl,
     Value<int>? rowid,
   }) {
     return BirdsTableCompanion(
       id: id ?? this.id,
       scientificName: scientificName ?? this.scientificName,
-      imagePath: imagePath ?? this.imagePath,
-      audioPath: audioPath ?? this.audioPath,
+      localImagePath: localImagePath ?? this.localImagePath,
+      localAudioPath: localAudioPath ?? this.localAudioPath,
+      imageUrl: imageUrl ?? this.imageUrl,
+      audioUrl: audioUrl ?? this.audioUrl,
       infoUrl: infoUrl ?? this.infoUrl,
       rowid: rowid ?? this.rowid,
     );
@@ -343,11 +452,17 @@ class BirdsTableCompanion extends UpdateCompanion<BirdEntityData> {
     if (scientificName.present) {
       map['scientific_name'] = Variable<String>(scientificName.value);
     }
-    if (imagePath.present) {
-      map['image_path'] = Variable<String>(imagePath.value);
+    if (localImagePath.present) {
+      map['local_image_path'] = Variable<String>(localImagePath.value);
     }
-    if (audioPath.present) {
-      map['audio_path'] = Variable<String>(audioPath.value);
+    if (localAudioPath.present) {
+      map['local_audio_path'] = Variable<String>(localAudioPath.value);
+    }
+    if (imageUrl.present) {
+      map['image_url'] = Variable<String>(imageUrl.value);
+    }
+    if (audioUrl.present) {
+      map['audio_url'] = Variable<String>(audioUrl.value);
     }
     if (infoUrl.present) {
       map['info_url'] = Variable<String>(infoUrl.value);
@@ -363,8 +478,10 @@ class BirdsTableCompanion extends UpdateCompanion<BirdEntityData> {
     return (StringBuffer('BirdsTableCompanion(')
           ..write('id: $id, ')
           ..write('scientificName: $scientificName, ')
-          ..write('imagePath: $imagePath, ')
-          ..write('audioPath: $audioPath, ')
+          ..write('localImagePath: $localImagePath, ')
+          ..write('localAudioPath: $localAudioPath, ')
+          ..write('imageUrl: $imageUrl, ')
+          ..write('audioUrl: $audioUrl, ')
           ..write('infoUrl: $infoUrl, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -769,9 +886,9 @@ class $CatalogMetadataTableTable extends CatalogMetadataTable
   late final GeneratedColumn<String> value = GeneratedColumn<String>(
     'value',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   @override
   List<GeneratedColumn> get $columns => [key, value];
@@ -800,8 +917,6 @@ class $CatalogMetadataTableTable extends CatalogMetadataTable
         _valueMeta,
         value.isAcceptableOrUnknown(data['value']!, _valueMeta),
       );
-    } else if (isInserting) {
-      context.missing(_valueMeta);
     }
     return context;
   }
@@ -819,7 +934,7 @@ class $CatalogMetadataTableTable extends CatalogMetadataTable
       value: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}value'],
-      )!,
+      ),
     );
   }
 
@@ -832,18 +947,25 @@ class $CatalogMetadataTableTable extends CatalogMetadataTable
 class CatalogMetadataData extends DataClass
     implements Insertable<CatalogMetadataData> {
   final String key;
-  final String value;
-  const CatalogMetadataData({required this.key, required this.value});
+  final String? value;
+  const CatalogMetadataData({required this.key, this.value});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['key'] = Variable<String>(key);
-    map['value'] = Variable<String>(value);
+    if (!nullToAbsent || value != null) {
+      map['value'] = Variable<String>(value);
+    }
     return map;
   }
 
   CatalogMetadataTableCompanion toCompanion(bool nullToAbsent) {
-    return CatalogMetadataTableCompanion(key: Value(key), value: Value(value));
+    return CatalogMetadataTableCompanion(
+      key: Value(key),
+      value: value == null && nullToAbsent
+          ? const Value.absent()
+          : Value(value),
+    );
   }
 
   factory CatalogMetadataData.fromJson(
@@ -853,7 +975,7 @@ class CatalogMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CatalogMetadataData(
       key: serializer.fromJson<String>(json['key']),
-      value: serializer.fromJson<String>(json['value']),
+      value: serializer.fromJson<String?>(json['value']),
     );
   }
   @override
@@ -861,12 +983,17 @@ class CatalogMetadataData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'key': serializer.toJson<String>(key),
-      'value': serializer.toJson<String>(value),
+      'value': serializer.toJson<String?>(value),
     };
   }
 
-  CatalogMetadataData copyWith({String? key, String? value}) =>
-      CatalogMetadataData(key: key ?? this.key, value: value ?? this.value);
+  CatalogMetadataData copyWith({
+    String? key,
+    Value<String?> value = const Value.absent(),
+  }) => CatalogMetadataData(
+    key: key ?? this.key,
+    value: value.present ? value.value : this.value,
+  );
   CatalogMetadataData copyWithCompanion(CatalogMetadataTableCompanion data) {
     return CatalogMetadataData(
       key: data.key.present ? data.key.value : this.key,
@@ -896,7 +1023,7 @@ class CatalogMetadataData extends DataClass
 class CatalogMetadataTableCompanion
     extends UpdateCompanion<CatalogMetadataData> {
   final Value<String> key;
-  final Value<String> value;
+  final Value<String?> value;
   final Value<int> rowid;
   const CatalogMetadataTableCompanion({
     this.key = const Value.absent(),
@@ -905,10 +1032,9 @@ class CatalogMetadataTableCompanion
   });
   CatalogMetadataTableCompanion.insert({
     required String key,
-    required String value,
+    this.value = const Value.absent(),
     this.rowid = const Value.absent(),
-  }) : key = Value(key),
-       value = Value(value);
+  }) : key = Value(key);
   static Insertable<CatalogMetadataData> custom({
     Expression<String>? key,
     Expression<String>? value,
@@ -923,7 +1049,7 @@ class CatalogMetadataTableCompanion
 
   CatalogMetadataTableCompanion copyWith({
     Value<String>? key,
-    Value<String>? value,
+    Value<String?>? value,
     Value<int>? rowid,
   }) {
     return CatalogMetadataTableCompanion(
@@ -981,8 +1107,10 @@ typedef $$BirdsTableTableCreateCompanionBuilder =
     BirdsTableCompanion Function({
       required String id,
       required String scientificName,
-      required String imagePath,
-      required String audioPath,
+      Value<String?> localImagePath,
+      Value<String?> localAudioPath,
+      required String imageUrl,
+      required String audioUrl,
       Value<String?> infoUrl,
       Value<int> rowid,
     });
@@ -990,8 +1118,10 @@ typedef $$BirdsTableTableUpdateCompanionBuilder =
     BirdsTableCompanion Function({
       Value<String> id,
       Value<String> scientificName,
-      Value<String> imagePath,
-      Value<String> audioPath,
+      Value<String?> localImagePath,
+      Value<String?> localAudioPath,
+      Value<String> imageUrl,
+      Value<String> audioUrl,
       Value<String?> infoUrl,
       Value<int> rowid,
     });
@@ -1038,13 +1168,23 @@ class $$BirdsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get imagePath => $composableBuilder(
-    column: $table.imagePath,
+  ColumnFilters<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get audioPath => $composableBuilder(
-    column: $table.audioPath,
+  ColumnFilters<String> get localAudioPath => $composableBuilder(
+    column: $table.localAudioPath,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get audioUrl => $composableBuilder(
+    column: $table.audioUrl,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -1098,13 +1238,23 @@ class $$BirdsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get imagePath => $composableBuilder(
-    column: $table.imagePath,
+  ColumnOrderings<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get audioPath => $composableBuilder(
-    column: $table.audioPath,
+  ColumnOrderings<String> get localAudioPath => $composableBuilder(
+    column: $table.localAudioPath,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get imageUrl => $composableBuilder(
+    column: $table.imageUrl,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get audioUrl => $composableBuilder(
+    column: $table.audioUrl,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -1131,11 +1281,21 @@ class $$BirdsTableTableAnnotationComposer
     builder: (column) => column,
   );
 
-  GeneratedColumn<String> get imagePath =>
-      $composableBuilder(column: $table.imagePath, builder: (column) => column);
+  GeneratedColumn<String> get localImagePath => $composableBuilder(
+    column: $table.localImagePath,
+    builder: (column) => column,
+  );
 
-  GeneratedColumn<String> get audioPath =>
-      $composableBuilder(column: $table.audioPath, builder: (column) => column);
+  GeneratedColumn<String> get localAudioPath => $composableBuilder(
+    column: $table.localAudioPath,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get imageUrl =>
+      $composableBuilder(column: $table.imageUrl, builder: (column) => column);
+
+  GeneratedColumn<String> get audioUrl =>
+      $composableBuilder(column: $table.audioUrl, builder: (column) => column);
 
   GeneratedColumn<String> get infoUrl =>
       $composableBuilder(column: $table.infoUrl, builder: (column) => column);
@@ -1196,15 +1356,19 @@ class $$BirdsTableTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> scientificName = const Value.absent(),
-                Value<String> imagePath = const Value.absent(),
-                Value<String> audioPath = const Value.absent(),
+                Value<String?> localImagePath = const Value.absent(),
+                Value<String?> localAudioPath = const Value.absent(),
+                Value<String> imageUrl = const Value.absent(),
+                Value<String> audioUrl = const Value.absent(),
                 Value<String?> infoUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => BirdsTableCompanion(
                 id: id,
                 scientificName: scientificName,
-                imagePath: imagePath,
-                audioPath: audioPath,
+                localImagePath: localImagePath,
+                localAudioPath: localAudioPath,
+                imageUrl: imageUrl,
+                audioUrl: audioUrl,
                 infoUrl: infoUrl,
                 rowid: rowid,
               ),
@@ -1212,15 +1376,19 @@ class $$BirdsTableTableTableManager
               ({
                 required String id,
                 required String scientificName,
-                required String imagePath,
-                required String audioPath,
+                Value<String?> localImagePath = const Value.absent(),
+                Value<String?> localAudioPath = const Value.absent(),
+                required String imageUrl,
+                required String audioUrl,
                 Value<String?> infoUrl = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => BirdsTableCompanion.insert(
                 id: id,
                 scientificName: scientificName,
-                imagePath: imagePath,
-                audioPath: audioPath,
+                localImagePath: localImagePath,
+                localAudioPath: localAudioPath,
+                imageUrl: imageUrl,
+                audioUrl: audioUrl,
                 infoUrl: infoUrl,
                 rowid: rowid,
               ),
@@ -1622,13 +1790,13 @@ typedef $$BirdNamesTableTableProcessedTableManager =
 typedef $$CatalogMetadataTableTableCreateCompanionBuilder =
     CatalogMetadataTableCompanion Function({
       required String key,
-      required String value,
+      Value<String?> value,
       Value<int> rowid,
     });
 typedef $$CatalogMetadataTableTableUpdateCompanionBuilder =
     CatalogMetadataTableCompanion Function({
       Value<String> key,
-      Value<String> value,
+      Value<String?> value,
       Value<int> rowid,
     });
 
@@ -1732,7 +1900,7 @@ class $$CatalogMetadataTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> key = const Value.absent(),
-                Value<String> value = const Value.absent(),
+                Value<String?> value = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CatalogMetadataTableCompanion(
                 key: key,
@@ -1742,7 +1910,7 @@ class $$CatalogMetadataTableTableTableManager
           createCompanionCallback:
               ({
                 required String key,
-                required String value,
+                Value<String?> value = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => CatalogMetadataTableCompanion.insert(
                 key: key,

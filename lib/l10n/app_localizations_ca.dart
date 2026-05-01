@@ -154,6 +154,9 @@ class AppLocalizationsCa extends AppLocalizations {
   }
 
   @override
+  String get noImageAvailable => 'La imatge no està disponible';
+
+  @override
   String get cantOpenLink => 'No s\'ha pogut obrir l\'enllaç';
 
   @override

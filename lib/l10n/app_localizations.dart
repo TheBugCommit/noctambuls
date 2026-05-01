@@ -368,6 +368,12 @@ abstract class AppLocalizations {
   /// **'Fotografia de {bird}'**
   String semanticLabelBirdImage(String bird);
 
+  /// No description provided for @noImageAvailable.
+  ///
+  /// In ca, this message translates to:
+  /// **'La imatge no està disponible'**
+  String get noImageAvailable;
+
   /// No description provided for @cantOpenLink.
   ///
   /// In ca, this message translates to:

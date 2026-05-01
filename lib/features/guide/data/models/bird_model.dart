@@ -7,9 +7,11 @@ class BirdModel extends Bird {
     required super.commonName,
     required super.scientificName,
     required super.description,
-    required super.imagePath,
-    required super.audioPath,
+    required super.imageUrl,
+    required super.audioUrl,
     required super.infoUrl,
+    super.localImagePath,
+    super.localAudioPath,
   });
 
   factory BirdModel.fromDrift(BirdEntityData bird, BirdNameEntityData name) {
@@ -18,9 +20,11 @@ class BirdModel extends Bird {
       commonName: name.commonName,
       scientificName: bird.scientificName,
       description: name.description,
-      imagePath: bird.imagePath,
-      audioPath: bird.audioPath,
+      imageUrl: bird.imageUrl,
+      audioUrl: bird.audioUrl,
       infoUrl: bird.infoUrl ?? '',
+      localAudioPath: bird.localAudioPath,
+      localImagePath: bird.localImagePath,
     );
   }
 }

@@ -12,8 +12,12 @@ abstract class BirdsLocalDataSource {
   Future<void> saveFullCatalogTransaction(
     List<BirdEntityData> birds,
     List<BirdNameEntityData> names,
-    String version,
+    String? version,
   );
+
+  Future<List<String>> getAllLocalImagePaths();
+
+  Future<List<String>> getAllLocalAudioPaths();
 }
 
 class BirdsLocalDataSourceDriftImpl implements BirdsLocalDataSource {
@@ -46,45 +50,61 @@ class BirdsLocalDataSourceDriftImpl implements BirdsLocalDataSource {
   Future<void> saveFullCatalogTransaction(
     List<BirdEntityData> birds,
     List<BirdNameEntityData> names,
-    String version,
+    String? version,
   ) async {
     await db.transaction(() async {
-      await upsertBirds(birds);
-      await upsertBirdNames(names);
-      await saveCatalogVersion(version);
+      await db.delete(db.birdNamesTable).go();
+      await db.delete(db.birdsTable).go();
+
+      await _insertBirdsBatch(birds);
+      await _insertBirdNamesBatch(names);
+
+      if (version != null) {
+        await saveCatalogVersion(version);
+      }
     });
   }
 
-  Future<void> upsertBirds(List<BirdEntityData> birds) async {
-    for (final bird in birds) {
-      await db
-          .into(db.birdsTable)
-          .insertOnConflictUpdate(
-            BirdsTableCompanion(
-              id: Value(bird.id),
-              scientificName: Value(bird.scientificName),
-              imagePath: Value(bird.imagePath),
-              audioPath: Value(bird.audioPath),
-              infoUrl: Value(bird.infoUrl),
-            ),
-          );
-    }
+  Future<void> _insertBirdsBatch(List<BirdEntityData> birds) async {
+    await db.batch((batch) {
+      for (final bird in birds) {
+        batch.insert(
+          db.birdsTable,
+          BirdsTableCompanion(
+            id: Value(bird.id),
+            scientificName: Value(bird.scientificName),
+            imageUrl: Value(bird.imageUrl),
+            audioUrl: Value(bird.audioUrl),
+            infoUrl: Value(bird.infoUrl),
+            localImagePath: bird.localImagePath == null
+                ? const Value.absent()
+                : Value(bird.localImagePath),
+            localAudioPath: bird.localAudioPath == null
+                ? const Value.absent()
+                : Value(bird.localAudioPath),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+    });
   }
 
-  Future<void> upsertBirdNames(List<BirdNameEntityData> names) async {
-    for (final name in names) {
-      await db
-          .into(db.birdNamesTable)
-          .insertOnConflictUpdate(
-            BirdNamesTableCompanion(
-              id: Value(name.id),
-              birdId: Value(name.birdId),
-              languageCode: Value(name.languageCode),
-              commonName: Value(name.commonName),
-              description: Value(name.description),
-            ),
-          );
-    }
+  Future<void> _insertBirdNamesBatch(List<BirdNameEntityData> names) async {
+    await db.batch((batch) {
+      for (final name in names) {
+        batch.insert(
+          db.birdNamesTable,
+          BirdNamesTableCompanion(
+            id: Value(name.id),
+            birdId: Value(name.birdId),
+            languageCode: Value(name.languageCode),
+            commonName: Value(name.commonName),
+            description: Value(name.description),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+      }
+    });
   }
 
   @override
@@ -96,7 +116,7 @@ class BirdsLocalDataSourceDriftImpl implements BirdsLocalDataSource {
   }
 
   @override
-  Future<void> saveCatalogVersion(String version) async {
+  Future<void> saveCatalogVersion(String? version) async {
     await db
         .into(db.catalogMetadataTable)
         .insertOnConflictUpdate(
@@ -105,5 +125,29 @@ class BirdsLocalDataSourceDriftImpl implements BirdsLocalDataSource {
             value: Value(version),
           ),
         );
+  }
+
+  @override
+  Future<List<String>> getAllLocalImagePaths() async {
+    final query = db.selectOnly(db.birdsTable)
+      ..addColumns([db.birdsTable.localImagePath])
+      ..where(db.birdsTable.localImagePath.isNotNull());
+
+    final results = await query
+        .map((row) => row.read(db.birdsTable.localImagePath))
+        .get();
+    return results.whereType<String>().toList();
+  }
+
+  @override
+  Future<List<String>> getAllLocalAudioPaths() async {
+    final query = db.selectOnly(db.birdsTable)
+      ..addColumns([db.birdsTable.localAudioPath])
+      ..where(db.birdsTable.localAudioPath.isNotNull());
+
+    final results = await query
+        .map((row) => row.read(db.birdsTable.localAudioPath))
+        .get();
+    return results.whereType<String>().toList();
   }
 }

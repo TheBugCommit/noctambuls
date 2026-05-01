@@ -59,7 +59,8 @@ class SoLoudAudioServiceImpl implements AudioPlayerService {
               final source = await SoLoud.instance.loadFile(path);
               _loadedSources[path] = source;
             } else {
-              logger.warning('Audio file not found locally: $path');
+              final source = await SoLoud.instance.loadUrl(path);
+              _loadedSources[path] = source;
             }
           } catch (e, st) {
             logger.failure(const AudioFailure().withDebug(e, st));
@@ -90,7 +91,7 @@ class SoLoudAudioServiceImpl implements AudioPlayerService {
         source = _loadedSources[assetPath]!;
       } else {
         if (File(assetPath).existsSync()) {
-          source = await SoLoud.instance.loadAsset(assetPath);
+          source = await SoLoud.instance.loadFile(assetPath);
           _loadedSources[assetPath] = source;
         } else {
           final failure = const AudioFailure().withDebug(

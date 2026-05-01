@@ -6,18 +6,26 @@ class Bird extends Equatable {
     required this.commonName,
     required this.scientificName,
     required this.description,
-    required this.imagePath,
-    required this.audioPath,
+    required this.imageUrl,
+    required this.audioUrl,
     required this.infoUrl,
+    this.localAudioPath,
+    this.localImagePath,
   });
 
   final String id;
   final String commonName;
   final String scientificName;
   final String description;
-  final String imagePath;
-  final String audioPath;
+  final String imageUrl;
+  final String audioUrl;
   final String infoUrl;
+  final String? localAudioPath;
+  final String? localImagePath;
+
+  bool get hasLocalImage => localImagePath != null;
+
+  bool get hasLocalAudio => localAudioPath != null;
 
   @override
   List<Object?> get props => [
@@ -25,8 +33,10 @@ class Bird extends Equatable {
     commonName,
     scientificName,
     description,
-    imagePath,
-    audioPath,
+    imageUrl,
+    audioUrl,
     infoUrl,
+    localImagePath,
+    localAudioPath,
   ];
 }
