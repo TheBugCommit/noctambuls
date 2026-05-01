@@ -34,4 +34,33 @@ class CatalogMediaService {
       return null;
     }
   }
+
+  /* Future<void> cleanOrphanedFiles() async {
+    try {
+      // 1. Demanem a la Base de dades totes les rutes locals ACTUALS que tenim guardades
+      // (Això requerirà que passis el BirdsLocalDataSource al servei o ho facis des del repositori)
+      final requiredImagePaths = await localDataSource.getAllLocalImagePaths();
+      final requiredAudioPaths = await localDataSource.getAllLocalAudioPaths();
+
+      final validPaths = {...requiredImagePaths, ...requiredAudioPaths}.whereType<String>().toSet();
+
+      final appDir = await getApplicationDocumentsDirectory();
+      final catalogDir = Directory('${appDir.path}/catalog');
+
+      // 2. Iterem TOT el directori de forma recursiva
+      if (catalogDir.existsSync()) {
+        await for (final entity in catalogDir.list(recursive: true)) {
+          if (entity is File) {
+            // Si el fitxer que trobem NO està a la llista de la Base de Dades, l'esborrem.
+            // És brossa o pertanyia a una versió antiga.
+            if (!validPaths.contains(entity.path)) {
+              await entity.delete();
+            }
+          }
+        }
+      }
+    } catch (e) {
+      logger.warning('Failed to clean orphaned files: $e');
+    }
+  }*/
 }

@@ -103,7 +103,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get delete => 'Eliminar';
 
   @override
-  String get cancel => 'Cancela';
+  String get cancel => 'Cancelar';
 
   @override
   String get confirmDelete => 'Sí, elimina';
@@ -190,6 +190,16 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get homeErrorDownloadCatalogMsg =>
       'No se ha podido descargar el catálago de pájaros. Puedes seguir usando la aplicación o volver a intentar la descarga.';
+
+  @override
+  String get usage_warning_title => 'Advertencia de uso';
+
+  @override
+  String get usage_warning_message =>
+      'La reproducción de este audio durante un censo puede alterar el comportamiento de las aves y distorsionar los resultados de la observación.\n\nPor favor, haz un uso responsable.';
+
+  @override
+  String get usage_warning_confirm => 'Sí, lo entiendo';
 
   @override
   String get cantOpenLink => 'No se ha podido abrir el enlace';

@@ -51,3 +51,12 @@ final class AudioStateChanged extends GuideEvent {
   @override
   List<Object?> get props => [playingPath];
 }
+
+final class AcceptAudioWarningAndPlay extends GuideEvent {
+  const AcceptAudioWarningAndPlay({required this.audioPath});
+
+  final String audioPath;
+
+  @override
+  List<Object?> get props => [audioPath];
+}

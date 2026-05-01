@@ -434,6 +434,24 @@ abstract class AppLocalizations {
   /// **'No s\'ha pogut actualitzar el catàleg d\'ocells. Pots seguir utilitzant l\'aplicació o tornar-ho a intentar la descàrrega.'**
   String get homeErrorDownloadCatalogMsg;
 
+  /// No description provided for @usage_warning_title.
+  ///
+  /// In ca, this message translates to:
+  /// **'Advertència d\'ús'**
+  String get usage_warning_title;
+
+  /// No description provided for @usage_warning_message.
+  ///
+  /// In ca, this message translates to:
+  /// **'La reproducció d\'aquest àudio durant un cens pot alterar el comportament dels ocells i distorsionar els resultats de l\'observació.\n\nSi us plau, fes-ne un ús responsable.'**
+  String get usage_warning_message;
+
+  /// No description provided for @usage_warning_confirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sí, ho entenc'**
+  String get usage_warning_confirm;
+
   /// No description provided for @cantOpenLink.
   ///
   /// In ca, this message translates to:

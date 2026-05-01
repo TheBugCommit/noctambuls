@@ -191,6 +191,16 @@ class AppLocalizationsCa extends AppLocalizations {
       'No s\'ha pogut actualitzar el catàleg d\'ocells. Pots seguir utilitzant l\'aplicació o tornar-ho a intentar la descàrrega.';
 
   @override
+  String get usage_warning_title => 'Advertència d\'ús';
+
+  @override
+  String get usage_warning_message =>
+      'La reproducció d\'aquest àudio durant un cens pot alterar el comportament dels ocells i distorsionar els resultats de l\'observació.\n\nSi us plau, fes-ne un ús responsable.';
+
+  @override
+  String get usage_warning_confirm => 'Sí, ho entenc';
+
+  @override
   String get cantOpenLink => 'No s\'ha pogut obrir l\'enllaç';
 
   @override

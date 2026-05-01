@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/widgets/app_sheet.dart';
 import 'package:noctambuls/core/widgets/taxus_app_bar.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
@@ -36,6 +39,26 @@ class GuidePage extends StatelessWidget {
 class _GuideView extends StatelessWidget {
   const _GuideView();
 
+  Future<void> _showAudioWarningModal(
+    BuildContext context,
+    String audioPath,
+  ) async {
+    final l10n = AppLocalizations.of(context)!;
+    final shouldPlay = await AppSheet.showConfirm(
+      context: context,
+      title: l10n.usage_warning_title,
+      message: l10n.usage_warning_message,
+      confirmText: l10n.usage_warning_confirm,
+      cancelText: l10n.cancel,
+    );
+
+    if (shouldPlay == true && context.mounted) {
+      context.read<GuideBloc>().add(
+        AcceptAudioWarningAndPlay(audioPath: audioPath),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -62,23 +85,33 @@ class _GuideView extends StatelessWidget {
         BlocListener<GuideBloc, GuideState>(
           listenWhen: (previous, current) {
             if (previous is GuideLoaded && current is GuideLoaded) {
-              return previous.actionError != current.actionError &&
-                  current.actionError != null;
+              return (previous.actionError != current.actionError &&
+                      current.actionError != null) ||
+                  (previous.action != current.action && current.action != null);
             }
             return false;
           },
           listener: (context, state) {
-            if (state is GuideLoaded && state.actionError != null) {
+            if (state is GuideLoaded &&
+                (state.actionError != null || state.action != null)) {
               final l10n = AppLocalizations.of(context)!;
 
-              final errorMessage = switch (state.actionError!) {
-                GuideUrlError() => l10n.cantOpenLink,
-                GuideAudioError() => l10n.cantPlayAudio,
-              };
+              final action = state.action;
+              if (action is GuideAudioWarning) {
+                unawaited(_showAudioWarningModal(context, action.audioPath));
+              }
 
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(errorMessage)),
-              );
+              final error = state.actionError;
+              if (error != null) {
+                final errorMessage = switch (error) {
+                  GuideUrlError() => l10n.cantOpenLink,
+                  GuideAudioError() => l10n.cantPlayAudio,
+                };
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(errorMessage)),
+                );
+              }
             }
           },
         ),
