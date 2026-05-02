@@ -18,3 +18,13 @@ final class SignInWithGoogleRequested extends AuthEvent {
 final class SignOutRequested extends AuthEvent {
   const SignOutRequested();
 }
+
+final class SignUpRequested extends AuthEvent {
+  const SignUpRequested({required this.name, required this.phone});
+
+  final String name;
+  final String phone;
+
+  @override
+  List<Object?> get props => [name, phone];
+}

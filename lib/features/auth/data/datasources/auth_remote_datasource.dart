@@ -2,17 +2,25 @@ import 'package:dio/dio.dart';
 import 'package:noctambuls/features/auth/data/models/auth_response_model.dart';
 import 'package:noctambuls/features/auth/data/models/provider_auth_request_model.dart';
 import 'package:noctambuls/features/auth/data/models/refresh_token_request_model.dart';
+import 'package:noctambuls/features/auth/data/models/sign_up_request_model.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
 
 abstract class AuthRemoteDataSource {
   Future<AuthResponseModel> signInWithProvider(
     AuthProviderType provider,
-    String idToken,
+    ProviderAuthRequestModel requestModel,
   );
 
-  Future<AuthResponseModel> refreshTokens(String refreshToken);
+  Future<AuthResponseModel> signUpWithProvider(
+    AuthProviderType provider,
+    SignUpRequestModel requestModel,
+  );
 
-  Future<void> invalidateToken(String refreshToken);
+  Future<AuthResponseModel> refreshTokens(
+    RefreshTokenRequestModel requestModel,
+  );
+
+  Future<void> invalidateToken(RefreshTokenRequestModel requestModel);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -20,27 +28,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   final Dio dio;
 
-  String _getEndpointForProvider(AuthProviderType provider) {
-    switch (provider) {
-      case AuthProviderType.google:
-        return '/api/auth/google';
-      case AuthProviderType.apple:
-        return '/auth/apple';
-      case AuthProviderType.email:
-        return '/auth/local';
-    }
+  String _getSignInEndpoint(AuthProviderType provider) {
+    return '/api/auth/${AuthProviderType.google.value}/signin';
+  }
+
+  String _getSignUpEndpoint(AuthProviderType provider) {
+    return '/api/auth/${AuthProviderType.google.value}/signup';
   }
 
   @override
   Future<AuthResponseModel> signInWithProvider(
     AuthProviderType provider,
-    String idToken,
+    ProviderAuthRequestModel requestModel,
   ) async {
-    final endpoint = _getEndpointForProvider(provider);
-
+    final endpoint = _getSignInEndpoint(provider);
     final response = await dio.post<dynamic>(
       endpoint,
-      data: ProviderAuthRequestModel(idToken: idToken).toJson(),
+      data: requestModel.toJson(),
     );
 
     final data = response.data;
@@ -54,10 +58,33 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthResponseModel> refreshTokens(String refreshToken) async {
+  Future<AuthResponseModel> signUpWithProvider(
+    AuthProviderType provider,
+    SignUpRequestModel requestModel,
+  ) async {
+    final endpoint = _getSignUpEndpoint(provider);
+    final response = await dio.post<dynamic>(
+      endpoint,
+      data: requestModel.toJson(),
+    );
+
+    final data = response.data;
+    if (data is! Map<String, dynamic>) {
+      throw const FormatException(
+        "Server response isn't a valid JSON",
+      );
+    }
+
+    return AuthResponseModel.fromJson(data);
+  }
+
+  @override
+  Future<AuthResponseModel> refreshTokens(
+    RefreshTokenRequestModel requestModel,
+  ) async {
     final response = await dio.post<dynamic>(
       '/api/token/refresh',
-      data: RefreshTokenRequestModel(refreshToken: refreshToken).toJson(),
+      data: requestModel.toJson(),
     );
 
     final data = response.data;
@@ -71,10 +98,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<void> invalidateToken(String refreshToken) async {
+  Future<void> invalidateToken(RefreshTokenRequestModel requestModel) async {
     await dio.post<void>(
       '/api/token/invalidate',
-      data: RefreshTokenRequestModel(refreshToken: refreshToken).toJson(),
+      data: requestModel.toJson(),
     );
   }
 }

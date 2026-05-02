@@ -9,6 +9,7 @@ import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
+import 'package:noctambuls/features/auth/presentation/pages/signup/sign_up_page.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
@@ -20,22 +21,27 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: AppRoutes.login,
+  initialLocation: AppRoutes.signin,
   refreshListenable: GoRouterRefreshStream(authBloc.stream),
   redirect: (context, state) {
     final authState = authBloc.state;
-    final isOnLogin = state.matchedLocation == AppRoutes.login;
+    final isOnSignIn = state.matchedLocation == AppRoutes.signin;
+    final isOnSignUp = state.matchedLocation == AppRoutes.signup;
 
-    if (authState is AuthInitial) {
-      return null;
-    }
+    if (authState is AuthInitial || authState is AuthLoading) return null;
+
     if (authState is Unauthenticated || authState is AuthError) {
-      if (isOnLogin) return null;
-      return AppRoutes.login;
+      if (isOnSignIn) return null;
+      return AppRoutes.signin;
     }
 
-    if (authState is Authenticated && isOnLogin) {
-      return AppRoutes.home;
+    if (authState is AuthRequiresProfile) {
+      if (isOnSignUp) return null;
+      return AppRoutes.signup;
+    }
+
+    if (authState is Authenticated) {
+      if (isOnSignIn || isOnSignUp) return AppRoutes.home;
     }
 
     return null;
@@ -43,9 +49,14 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
 
   routes: [
     GoRoute(
-      path: AppRoutes.login,
+      path: AppRoutes.signin,
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const SignInPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.signup,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const SignUpPage(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

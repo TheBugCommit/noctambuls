@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
+import 'package:noctambuls/features/auth/data/models/refresh_token_request_model.dart';
 
 class TokenRefreshManager {
   TokenRefreshManager({
@@ -36,7 +37,9 @@ class TokenRefreshManager {
     if (refreshToken == null) return null;
 
     try {
-      final response = await authRemoteDataSource.refreshTokens(refreshToken);
+      final response = await authRemoteDataSource.refreshTokens(
+        RefreshTokenRequestModel(refreshToken: refreshToken),
+      );
       await tokenLocalDataSource.saveTokenPair(
         response.accessToken,
         response.refreshToken,

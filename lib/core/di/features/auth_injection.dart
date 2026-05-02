@@ -14,11 +14,12 @@ import 'package:noctambuls/features/auth/data/datasources/token_local_datasource
 import 'package:noctambuls/features/auth/data/network/auth_interceptor.dart';
 import 'package:noctambuls/features/auth/data/network/token_refresh_manager.dart';
 import 'package:noctambuls/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/repositories/auth_repository.dart';
+import 'package:noctambuls/features/auth/domain/usecases/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/usecases/get_stored_auth_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:noctambuls/features/auth/domain/usecases/sign_up_usecase.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 
 void initAuthFeature() {
@@ -80,11 +81,13 @@ void initAuthFeature() {
     )
     ..registerLazySingleton(() => GetStoredAuthUseCase(sl()))
     ..registerLazySingleton(() => SignInUseCase(sl()))
+    ..registerLazySingleton(() => SignUpUseCase(sl()))
     ..registerLazySingleton(() => SignOutUseCase(sl()))
     ..registerLazySingleton<AuthBloc>(
       () => AuthBloc(
         getStoredAuthUseCase: sl(),
         signInUseCase: sl(),
+        signUpUseCase: sl(),
         signOutUseCase: sl(),
         dbManager: sl(),
         logger: sl<IAppLogger>(),

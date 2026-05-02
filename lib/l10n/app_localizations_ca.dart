@@ -251,4 +251,42 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get signOutLabel => 'Tanca la sessió';
+
+  @override
+  String get signUpTitle => 'Completa el teu perfil';
+
+  @override
+  String get signUpSessionExpired =>
+      'La sessió ha caducat, si us plau, torna a iniciar sessió';
+
+  @override
+  String get signUpError => 'S\'ha produït un error. Torna-ho a provar.';
+
+  @override
+  String get signUpHeaderTitle => 'Ja gairebé hi som!';
+
+  @override
+  String get signUpHeaderSubTitle =>
+      'Necessitem algunes dades bàsiques per finalitzar el teu registre.';
+
+  @override
+  String get signUpFormNameLabel => 'Nom complet';
+
+  @override
+  String get signUpFormNameLength => 'El nom ha de tenir almenys 3 caràcters';
+
+  @override
+  String get signUpFormFieldRequired => 'Aquest camp és obligatori';
+
+  @override
+  String get signUpFormPhoneLabel => 'Telèfon';
+
+  @override
+  String get signUpFormPhoneFormat => 'Introdueix un telèfon vàlid';
+
+  @override
+  String get signUpSendButton => 'Finalitzar Registre';
+
+  @override
+  String get signUpSendButtonLoading => 'Registrant...';
 }

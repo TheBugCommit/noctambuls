@@ -547,6 +547,78 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Tanca la sessió'**
   String get signOutLabel;
+
+  /// No description provided for @signUpTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Completa el teu perfil'**
+  String get signUpTitle;
+
+  /// No description provided for @signUpSessionExpired.
+  ///
+  /// In ca, this message translates to:
+  /// **'La sessió ha caducat, si us plau, torna a iniciar sessió'**
+  String get signUpSessionExpired;
+
+  /// No description provided for @signUpError.
+  ///
+  /// In ca, this message translates to:
+  /// **'S\'ha produït un error. Torna-ho a provar.'**
+  String get signUpError;
+
+  /// No description provided for @signUpHeaderTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ja gairebé hi som!'**
+  String get signUpHeaderTitle;
+
+  /// No description provided for @signUpHeaderSubTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Necessitem algunes dades bàsiques per finalitzar el teu registre.'**
+  String get signUpHeaderSubTitle;
+
+  /// No description provided for @signUpFormNameLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Nom complet'**
+  String get signUpFormNameLabel;
+
+  /// No description provided for @signUpFormNameLength.
+  ///
+  /// In ca, this message translates to:
+  /// **'El nom ha de tenir almenys 3 caràcters'**
+  String get signUpFormNameLength;
+
+  /// No description provided for @signUpFormFieldRequired.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aquest camp és obligatori'**
+  String get signUpFormFieldRequired;
+
+  /// No description provided for @signUpFormPhoneLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Telèfon'**
+  String get signUpFormPhoneLabel;
+
+  /// No description provided for @signUpFormPhoneFormat.
+  ///
+  /// In ca, this message translates to:
+  /// **'Introdueix un telèfon vàlid'**
+  String get signUpFormPhoneFormat;
+
+  /// No description provided for @signUpSendButton.
+  ///
+  /// In ca, this message translates to:
+  /// **'Finalitzar Registre'**
+  String get signUpSendButton;
+
+  /// No description provided for @signUpSendButtonLoading.
+  ///
+  /// In ca, this message translates to:
+  /// **'Registrant...'**
+  String get signUpSendButtonLoading;
 }
 
 class _AppLocalizationsDelegate

@@ -8,12 +8,14 @@ import 'package:noctambuls/features/auth/data/datasources/auth_provider_datasour
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
 import 'package:noctambuls/features/auth/data/models/auth_response_model.dart';
+import 'package:noctambuls/features/auth/data/models/provider_auth_request_model.dart';
+import 'package:noctambuls/features/auth/data/models/refresh_token_request_model.dart';
 import 'package:noctambuls/features/auth/data/network/token_refresh_manager.dart';
 import 'package:noctambuls/features/auth/data/repositories/auth_repository_impl.dart';
-import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
+import 'package:noctambuls/features/auth/domain/usecases/auth_credentials.dart';
 
 import '../../helpers/jwt_helper.dart';
 
@@ -119,7 +121,10 @@ void main() {
         () => mockGoogleProvider.authenticate(any()),
       ).thenAnswer((_) async => tIdToken);
       when(
-        () => mockRemote.signInWithProvider(AuthProviderType.google, tIdToken),
+        () => mockRemote.signInWithProvider(
+          AuthProviderType.google,
+          const ProviderAuthRequestModel(idToken: tIdToken),
+        ),
       ).thenAnswer(
         (_) async => AuthResponseModel(
           accessToken: tValidJwt,
@@ -317,7 +322,9 @@ void main() {
         () => mockLocal.getRefreshToken(),
       ).thenAnswer((_) async => tRefreshToken);
       when(
-        () => mockRemote.invalidateToken(tRefreshToken),
+        () => mockRemote.invalidateToken(
+          const RefreshTokenRequestModel(refreshToken: tRefreshToken),
+        ),
       ).thenAnswer((_) async {});
       when(() => mockLocal.deleteAllTokens()).thenAnswer((_) async {});
       when(() => mockGoogleProvider.signOut()).thenAnswer((_) async {});
@@ -325,7 +332,11 @@ void main() {
       final result = await buildRepo().signOut();
 
       expect(result, isA<Ok<Unit>>());
-      verify(() => mockRemote.invalidateToken(tRefreshToken)).called(1);
+      verify(
+        () => mockRemote.invalidateToken(
+          const RefreshTokenRequestModel(refreshToken: tRefreshToken),
+        ),
+      ).called(1);
       verify(() => mockLocal.deleteAllTokens()).called(1);
     });
 

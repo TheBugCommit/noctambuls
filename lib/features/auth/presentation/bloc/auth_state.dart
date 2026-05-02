@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:noctambuls/core/error/failure.dart';
+import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 
 sealed class AuthState extends Equatable {
@@ -39,4 +40,17 @@ final class AuthError extends AuthState {
 
   @override
   List<Object?> get props => [failure];
+}
+
+final class AuthRequiresProfile extends AuthState {
+  const AuthRequiresProfile({
+    required this.idToken,
+    required this.providerType,
+  });
+
+  final String idToken;
+  final AuthProviderType providerType;
+
+  @override
+  List<Object?> get props => [idToken, providerType];
 }

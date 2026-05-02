@@ -111,5 +111,19 @@
     "loginSubtitle": "Inicia sesión para continuar",
     "signInWithGoogle": "Iniciar sesión con Google",
     "signInError": "No se pudo iniciar sesión. Inténtalo de nuevo.",
-    "signOutLabel": "Cerrar sesión"
+    "signOutLabel": "Cerrar sesión",
+
+    "signOutLabel": "Cerrar sesión",
+    "signUpTitle": "Completa tu perfil",
+    "signUpSessionExpired": "La sesión ha caducado, por favor, vuelve a iniciar sesión",
+    "signUpError": "Se ha producido un error. Vuelve a intentarlo.",
+    "signUpHeaderTitle": "¡Ya casi estamos!",
+    "signUpHeaderSubTitle": "Necesitamos algunos datos básicos para finalizar tu registro.",
+    "signUpFormNameLabel": "Nombre completo",
+    "signUpFormNameLength": "El nombre debe tener al menos 3 caracteres",
+    "signUpFormFieldRequired": "Este campo es obligatorio",
+    "signUpFormPhoneLabel": "Teléfono",
+    "signUpFormPhoneFormat": "Introduce un teléfono válido",
+    "signUpSendButton": "Finalizar registro",
+    "signUpSendButtonLoading": "Registrando..."
 }

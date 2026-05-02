@@ -5,13 +5,14 @@ import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
-import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart'
-    show GoogleAuthCredentials;
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
+import 'package:noctambuls/features/auth/domain/usecases/auth_credentials.dart'
+    show GoogleAuthCredentials;
 import 'package:noctambuls/features/auth/domain/usecases/get_stored_auth_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:noctambuls/features/auth/domain/usecases/sign_up_usecase.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
@@ -22,6 +23,8 @@ class MockSignInUseCase extends Mock implements SignInUseCase {}
 
 class MockSignOutUseCase extends Mock implements SignOutUseCase {}
 
+class MockSignUpUseCase extends Mock implements SignUpUseCase {}
+
 class MockUserDatabaseManager extends Mock implements UserDatabaseManager {}
 
 class MockLogger extends Mock implements IAppLogger {}
@@ -30,6 +33,7 @@ void main() {
   late MockGetStoredAuthUseCase mockGetStoredAuth;
   late MockSignInUseCase mockSignIn;
   late MockSignOutUseCase mockSignOut;
+  late MockSignUpUseCase mockSignUpUseCase;
   late MockUserDatabaseManager mockDbManager;
   late MockLogger mockLogger;
 
@@ -46,6 +50,7 @@ void main() {
   setUp(() {
     mockGetStoredAuth = MockGetStoredAuthUseCase();
     mockSignIn = MockSignInUseCase();
+    mockSignUpUseCase = MockSignUpUseCase();
     mockSignOut = MockSignOutUseCase();
     mockDbManager = MockUserDatabaseManager();
     mockLogger = MockLogger();
@@ -57,6 +62,7 @@ void main() {
   AuthBloc buildBloc() => AuthBloc(
     getStoredAuthUseCase: mockGetStoredAuth,
     signInUseCase: mockSignIn,
+    signUpUseCase: mockSignUpUseCase,
     signOutUseCase: mockSignOut,
     dbManager: mockDbManager,
     logger: mockLogger,

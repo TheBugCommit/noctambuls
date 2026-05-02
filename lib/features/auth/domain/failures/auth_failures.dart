@@ -1,4 +1,5 @@
 import 'package:noctambuls/core/error/failure.dart';
+import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
 
 sealed class AuthFailure extends Failure {
   const AuthFailure({
@@ -36,6 +37,22 @@ final class SignInFailure extends AuthFailure {
   @override
   SignInFailure withDebug(Object error, [StackTrace? stackTrace]) =>
       SignInFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}
+
+final class SignUpFailure extends AuthFailure {
+  const SignUpFailure({
+    super.debugMessage = 'Sign-up failed',
+    super.statusCode = 400,
+    super.stackTrace,
+  });
+
+  @override
+  SignUpFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      SignUpFailure(
         debugMessage: error.toString(),
         statusCode: statusCode,
         stackTrace: stackTrace,
@@ -122,4 +139,45 @@ final class RefreshTokenFailure extends AuthFailure {
         statusCode: statusCode,
         stackTrace: stackTrace,
       );
+}
+
+final class UserNotRegisteredFailure extends AuthFailure {
+  const UserNotRegisteredFailure({
+    required this.idToken,
+    required this.providerType,
+    super.debugMessage = 'User not registered, profile completion required',
+    super.statusCode = 404,
+    super.stackTrace,
+  });
+
+  final String idToken;
+  final AuthProviderType providerType;
+
+  @override
+  UserNotRegisteredFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      UserNotRegisteredFailure(
+        idToken: idToken,
+        providerType: providerType,
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}
+
+final class ProviderTokenExpiredFailure extends AuthFailure {
+  const ProviderTokenExpiredFailure({
+    super.debugMessage = 'The provider token has expired',
+    super.statusCode = 401,
+    super.stackTrace,
+  });
+
+  @override
+  ProviderTokenExpiredFailure withDebug(
+    Object error, [
+    StackTrace? stackTrace,
+  ]) => ProviderTokenExpiredFailure(
+    debugMessage: error.toString(),
+    statusCode: statusCode,
+    stackTrace: stackTrace,
+  );
 }

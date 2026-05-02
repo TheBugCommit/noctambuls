@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$BirdRemoteModel {
 
- String get id; String get scientificName; String get imagePath; String get audioPath;// 2. Apliquem la funció només a aquest camp
-@JsonKey(readValue: _injectBirdIdInTranslations) List<BirdNameRemoteModel> get translations;@JsonKey(name: 'informationUrl') String? get infoUrl;
+ String get id; String get scientificName; String get imagePath; String get audioPath;@JsonKey(readValue: _injectBirdIdInTranslations) List<BirdNameRemoteModel> get translations;@JsonKey(name: 'informationUrl') String? get infoUrl;
 /// Create a copy of BirdRemoteModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -222,9 +221,7 @@ class _BirdRemoteModel extends BirdRemoteModel {
 @override final  String scientificName;
 @override final  String imagePath;
 @override final  String audioPath;
-// 2. Apliquem la funció només a aquest camp
  final  List<BirdNameRemoteModel> _translations;
-// 2. Apliquem la funció només a aquest camp
 @override@JsonKey(readValue: _injectBirdIdInTranslations) List<BirdNameRemoteModel> get translations {
   if (_translations is EqualUnmodifiableListView) return _translations;
   // ignore: implicit_dynamic_type

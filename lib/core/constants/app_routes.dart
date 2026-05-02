@@ -8,7 +8,8 @@ class AppRoutes {
   static const String profile = '/profile';
 
   // Auth Routes
-  static const String login = '/';
+  static const String signin = '/';
+  static const String signup = '/signup';
 
   // Secondary Routes
   static const String settings = '/settings';

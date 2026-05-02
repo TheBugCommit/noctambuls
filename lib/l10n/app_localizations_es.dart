@@ -251,4 +251,43 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get signOutLabel => 'Cerrar sesión';
+
+  @override
+  String get signUpTitle => 'Completa tu perfil';
+
+  @override
+  String get signUpSessionExpired =>
+      'La sesión ha caducado, por favor, vuelve a iniciar sesión';
+
+  @override
+  String get signUpError => 'Se ha producido un error. Vuelve a intentarlo.';
+
+  @override
+  String get signUpHeaderTitle => '¡Ya casi estamos!';
+
+  @override
+  String get signUpHeaderSubTitle =>
+      'Necesitamos algunos datos básicos para finalizar tu registro.';
+
+  @override
+  String get signUpFormNameLabel => 'Nombre completo';
+
+  @override
+  String get signUpFormNameLength =>
+      'El nombre debe tener al menos 3 caracteres';
+
+  @override
+  String get signUpFormFieldRequired => 'Este campo es obligatorio';
+
+  @override
+  String get signUpFormPhoneLabel => 'Teléfono';
+
+  @override
+  String get signUpFormPhoneFormat => 'Introduce un teléfono válido';
+
+  @override
+  String get signUpSendButton => 'Finalizar registro';
+
+  @override
+  String get signUpSendButtonLoading => 'Registrando...';
 }

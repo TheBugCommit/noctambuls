@@ -1,7 +1,7 @@
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_provider_datasource.dart';
-import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
+import 'package:noctambuls/features/auth/domain/usecases/auth_credentials.dart';
 
 class GoogleAuthDataSourceImpl
     implements AuthProviderDataSource<GoogleAuthCredentials> {

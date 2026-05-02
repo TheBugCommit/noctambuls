@@ -1,11 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
-import 'package:noctambuls/features/auth/domain/entities/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
+import 'package:noctambuls/features/auth/domain/usecases/auth_credentials.dart';
 import 'package:noctambuls/features/auth/domain/usecases/get_stored_auth_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_out_usecase.dart';
+import 'package:noctambuls/features/auth/domain/usecases/sign_up_usecase.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 
@@ -14,6 +15,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     required this.getStoredAuthUseCase,
     required this.signInUseCase,
     required this.signOutUseCase,
+    required this.signUpUseCase,
     required this.dbManager,
     required this.logger,
   }) : super(const AuthInitial()) {
@@ -22,11 +24,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       (event, emit) => _handleSignIn(const GoogleAuthCredentials(), emit),
     );
     on<SignOutRequested>(_onSignOut);
+    on<SignUpRequested>(_onSignUpRequested);
   }
 
   final GetStoredAuthUseCase getStoredAuthUseCase;
   final SignInUseCase signInUseCase;
   final SignOutUseCase signOutUseCase;
+  final SignUpUseCase signUpUseCase;
   final UserDatabaseManager dbManager;
   final IAppLogger logger;
 
@@ -62,9 +66,48 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       failure: (failure) {
         if (failure is SignInCancelledFailure) {
           emit(const Unauthenticated());
+        } else if (failure is UserNotRegisteredFailure) {
+          emit(
+            AuthRequiresProfile(
+              idToken: failure.idToken,
+              providerType: failure.providerType,
+            ),
+          );
         } else {
           logger.failure(failure);
           emit(AuthError(failure: failure));
+        }
+      },
+    );
+  }
+
+  Future<void> _onSignUpRequested(
+    SignUpRequested event,
+    Emitter<AuthState> emit,
+  ) async {
+    if (state is! AuthRequiresProfile) return;
+    final currentState = state as AuthRequiresProfile;
+    emit(const AuthLoading());
+
+    final params = SignUpParams(
+      provider: currentState.providerType,
+      idToken: currentState.idToken,
+      name: event.name,
+      phone: event.phone,
+    );
+
+    final result = await signUpUseCase(params);
+
+    await result.when(
+      success: (user) async {
+        await dbManager.initDatabase(user.id);
+        emit(Authenticated(user: user));
+      },
+      failure: (failure) {
+        logger.failure(failure);
+        emit(AuthError(failure: failure));
+        if (failure.statusCode == 401) {
+          emit(const Unauthenticated());
         }
       },
     );

@@ -114,5 +114,17 @@
     "loginSubtitle": "Inicia sessió per continuar",
     "signInWithGoogle": "Inicia sessió amb Google",
     "signInError": "No s'ha pogut iniciar sessió. Torna-ho a intentar.",
-    "signOutLabel": "Tanca la sessió"
+    "signOutLabel": "Tanca la sessió",
+    "signUpTitle": "Completa el teu perfil",
+    "signUpSessionExpired": "La sessió ha caducat, si us plau, torna a iniciar sessió",
+    "signUpError": "S'ha produït un error. Torna-ho a provar.",
+    "signUpHeaderTitle": "Ja gairebé hi som!",
+    "signUpHeaderSubTitle": "Necessitem algunes dades bàsiques per finalitzar el teu registre.",
+    "signUpFormNameLabel": "Nom complet",
+    "signUpFormNameLength": "El nom ha de tenir almenys 3 caràcters",
+    "signUpFormFieldRequired": "Aquest camp és obligatori",
+    "signUpFormPhoneLabel": "Telèfon",
+    "signUpFormPhoneFormat": "Introdueix un telèfon vàlid",
+    "signUpSendButton": "Finalitzar Registre",
+    "signUpSendButtonLoading": "Registrant..."
 }
