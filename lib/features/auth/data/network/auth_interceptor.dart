@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
@@ -9,12 +10,14 @@ class AuthInterceptor extends Interceptor {
   AuthInterceptor({
     required TokenLocalDataSource tokenLocalDataSource,
     required TokenRefreshManager refreshManager,
+    required this.onSessionExpired,
     required this.logger,
   }) : _tokenLocalDataSource = tokenLocalDataSource,
        _refreshManager = refreshManager;
 
   final TokenLocalDataSource _tokenLocalDataSource;
   final TokenRefreshManager _refreshManager;
+  final VoidCallback onSessionExpired;
   final IAppLogger logger;
 
   // Assigned after construction to break the circular dependency with apiDio.
@@ -64,6 +67,8 @@ class AuthInterceptor extends Interceptor {
         if (newToken != null) {
           handler.resolve(await _retry(err.requestOptions));
           return;
+        } else {
+          onSessionExpired();
         }
       } catch (e, st) {
         logger.failure(const NetworkFailure().withDebug(e, st));

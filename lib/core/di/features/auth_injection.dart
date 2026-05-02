@@ -21,6 +21,7 @@ import 'package:noctambuls/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_out_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_up_usecase.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 
 void initAuthFeature() {
   sl
@@ -49,6 +50,9 @@ void initAuthFeature() {
         tokenLocalDataSource: sl(),
         refreshManager: sl(),
         logger: sl<IAppLogger>(),
+        onSessionExpired: () {
+          sl<AuthBloc>().add(const SignOutRequested());
+        },
       ),
     )
     // apiDio: includes AuthInterceptor for protected endpoints

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
@@ -29,6 +30,8 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
     final isOnSignUp = state.matchedLocation == AppRoutes.signup;
 
     if (authState is AuthInitial || authState is AuthLoading) return null;
+
+    FlutterNativeSplash.remove();
 
     if (authState is Unauthenticated || authState is AuthError) {
       if (isOnSignIn) return null;

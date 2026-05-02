@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:noctambuls/app.dart';
 import 'package:noctambuls/core/di/injection_container.dart' as di;
 import 'package:noctambuls/core/utils/app_bloc_observer.dart';
@@ -11,7 +12,8 @@ import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.d
 import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await di.init();
 

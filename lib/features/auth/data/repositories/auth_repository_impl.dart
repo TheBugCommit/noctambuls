@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:noctambuls/core/error/dio_error_extension.dart';
 import 'package:noctambuls/core/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
@@ -53,12 +54,12 @@ class AuthRepositoryImpl implements AuthRepository {
       );
       return Ok(AuthUserModel.fromJwt(response.accessToken));
     } on DioException catch (e, st) {
-      if (e.response == null) {
+      if (e.isNetworkError || e.isInfrastructureError) {
         return Err(const NetworkFailure().withDebug(e, st));
       }
 
       final code = e.response!.statusCode!;
-      if (code == 404 && idToken != null) {
+      if (code == 404 && e.isOurBackendError && idToken != null) {
         final provider = _providers[credentials.runtimeType]!;
         return Err(
           UserNotRegisteredFailure(
@@ -68,9 +69,7 @@ class AuthRepositoryImpl implements AuthRepository {
         );
       }
 
-      return code >= 500
-          ? Err(BackendAuthFailure(statusCode: code).withDebug(e, st))
-          : Err(SignInFailure(statusCode: code).withDebug(e, st));
+      return Err(SignInFailure(statusCode: code).withDebug(e, st));
     } catch (e, st) {
       return Err(const BackendAuthFailure().withDebug(e, st));
     }
@@ -139,22 +138,14 @@ class AuthRepositoryImpl implements AuthRepository {
         return const Err(InvalidTokenFailure());
       }
     } on DioException catch (e, st) {
-      if (e.response == null) {
+      if (e.isNetworkError || e.isInfrastructureError) {
         if (expiredUser != null) {
           return Ok(expiredUser);
         }
-        return const Err(NetworkFailure());
+        return Err(const NetworkFailure().withDebug(e, st));
       }
 
-      if (e.response?.statusCode != null && e.response!.statusCode! >= 500) {
-        return Err(
-          BackendAuthFailure(
-            statusCode: e.response!.statusCode,
-          ).withDebug(e, st),
-        );
-      }
-
-      return const Err(RefreshTokenFailure());
+      return Err(const RefreshTokenFailure().withDebug(e, st));
     } catch (e, st) {
       return Err(const TokenStorageFailure().withDebug(e, st));
     }
