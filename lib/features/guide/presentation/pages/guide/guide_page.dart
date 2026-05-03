@@ -12,8 +12,8 @@ import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_state.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_list.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/catalog_sync_requiered_view.dart';
-import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
-import 'package:noctambuls/features/settings/presentation/cubit/language_state.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/language_bloc.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/language_state.dart';
 import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -63,7 +63,7 @@ class _GuideView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocListener(
       listeners: [
-        BlocListener<LanguageCubit, LanguageState>(
+        BlocListener<LanguageBloc, LanguageState>(
           listener: (context, state) {
             final newLanguageCode = state.appLanguage.toLanguageCode;
             context.read<GuideBloc>().add(

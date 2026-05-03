@@ -7,8 +7,10 @@ import 'package:noctambuls/features/settings/domain/entities/app_theme.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_system_theme_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_theme_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/save_theme_usecase.dart';
-import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
-import 'package:noctambuls/features/settings/presentation/cubit/theme_state.dart';
+// IMPORTEM EL BLOC I ELS EVENTS EN LLOC DEL CUBIT
+import 'package:noctambuls/features/settings/presentation/bloc/theme_bloc.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/theme_event.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/theme_state.dart';
 
 class MockGetThemeUseCase extends Mock implements GetThemeUseCase {}
 
@@ -19,7 +21,7 @@ class MockGetSystemThemeUseCase extends Mock implements GetSystemThemeUseCase {}
 class MockLogger extends Mock implements IAppLogger {}
 
 void main() {
-  late ThemeCubit themeCubit;
+  late ThemeBloc themeBloc;
   late MockGetThemeUseCase mockGetTheme;
   late MockSaveThemeUseCase mockSaveTheme;
   late MockGetSystemThemeUseCase mockGetSystemTheme;
@@ -40,7 +42,7 @@ void main() {
       (_) async => const Ok(Unit.instance),
     );
 
-    themeCubit = ThemeCubit(
+    themeBloc = ThemeBloc(
       getThemeUseCase: mockGetTheme,
       saveThemeUseCase: mockSaveTheme,
       getSystemThemeUseCase: mockGetSystemTheme,
@@ -49,18 +51,18 @@ void main() {
   });
 
   tearDown(() async {
-    await themeCubit.close();
+    await themeBloc.close();
   });
 
-  group('ThemeCubit', () {
+  group('ThemeBloc', () {
     test("L'estat inicial hauria de ser AppTheme.light", () {
-      expect(themeCubit.state.appTheme, AppTheme.light);
+      expect(themeBloc.state.appTheme, AppTheme.light);
     });
 
-    blocTest<ThemeCubit, ThemeState>(
-      "Emet [ThemeState(AppTheme.dark)] quan es crida toggleTheme i l'estat actual és light",
-      build: () => themeCubit,
-      act: (cubit) => cubit.toggleTheme(),
+    blocTest<ThemeBloc, ThemeState>(
+      "Emet [ThemeState(AppTheme.dark)] quan s'afegeix ToggleThemeRequested i l'estat actual és light",
+      build: () => themeBloc,
+      act: (bloc) => bloc.add(const ToggleThemeRequested()),
       expect: () => [
         const ThemeState(appTheme: AppTheme.dark),
       ],
@@ -69,10 +71,10 @@ void main() {
       },
     );
 
-    blocTest<ThemeCubit, ThemeState>(
-      'Emet [ThemeState(AppTheme.dark)] quan es crida setTheme(AppTheme.dark)',
-      build: () => themeCubit,
-      act: (cubit) => cubit.setTheme(AppTheme.dark),
+    blocTest<ThemeBloc, ThemeState>(
+      "Emet [ThemeState(AppTheme.dark)] quan s'afegeix SetThemeRequested(AppTheme.dark)",
+      build: () => themeBloc,
+      act: (bloc) => bloc.add(const SetThemeRequested(AppTheme.dark)),
       expect: () => [
         const ThemeState(appTheme: AppTheme.dark),
       ],

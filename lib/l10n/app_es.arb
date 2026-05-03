@@ -3,9 +3,12 @@
     "appTitle": "Noctámbulos",
     "settingsTitle": "Configuración",
     "languageLabel": "Idioma",
+    "settingsPreferencesTitle": "Preferencias",
+    "settingsAccountTitle": "Cuenta",
     "systemLabel": "Sistema",
     "catalanLabel": "Catalan",
     "spanishLabel": "Castellano",
+    "themeLabel": "Tema visual",
     "themeLightLabel": "Claro",
     "themeDarkLabel": "Oscuro",
     "themeSystemLabel": "Sistema",
@@ -121,6 +124,7 @@
     "signUpHeaderSubTitle": "Necesitamos algunos datos básicos para finalizar tu registro.",
     "signUpFormNameLabel": "Nombre completo",
     "signUpFormNameLength": "El nombre debe tener al menos 3 caracteres",
+    "signUpFormNameMaxLength": "El nombre no debe superar los 40 caracteres",
     "signUpFormFieldRequired": "Este campo es obligatorio",
     "signUpFormPhoneLabel": "Teléfono",
     "signUpFormPhoneFormat": "Introduce un teléfono válido",
@@ -138,6 +142,7 @@
     "profileEditSuccess": "Perfil actualizado correctamente",
     "profileEditError": "No se pudo actualizar el perfil",
     "profileLoadError": "No se pudo cargar el perfil",
+    "profileObservationsEmpty": "Aún no hay observaciones.",
     "profileRetry": "Volver a intentar",
     "profileSignOut": "Cerrar sesión"
 }

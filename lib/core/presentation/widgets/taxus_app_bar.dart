@@ -5,7 +5,8 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_assets.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
-import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/theme_bloc.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/theme_event.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 class TaxusAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -70,7 +71,8 @@ class _ThemeToggleButon extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     return IconButton(
-      onPressed: () => context.read<ThemeCubit>().toggleTheme(),
+      onPressed: () =>
+          context.read<ThemeBloc>().add(const ToggleThemeRequested()),
       icon: AnimatedSwitcher(
         duration: const Duration(milliseconds: 400),
         transitionBuilder: (child, animation) {

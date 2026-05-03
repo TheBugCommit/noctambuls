@@ -18,6 +18,12 @@ class AppLocalizationsCa extends AppLocalizations {
   String get languageLabel => 'Idioma';
 
   @override
+  String get settingsPreferencesTitle => 'Preferències';
+
+  @override
+  String get settingsAccountTitle => 'Compte';
+
+  @override
   String get systemLabel => 'Sistema';
 
   @override
@@ -25,6 +31,9 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get spanishLabel => 'Castellà';
+
+  @override
+  String get themeLabel => 'Tema visual';
 
   @override
   String get themeLightLabel => 'Clar';
@@ -276,6 +285,10 @@ class AppLocalizationsCa extends AppLocalizations {
   String get signUpFormNameLength => 'El nom ha de tenir almenys 3 caràcters';
 
   @override
+  String get signUpFormNameMaxLength =>
+      'El nom no pot superar els 40 caràcters';
+
+  @override
   String get signUpFormFieldRequired => 'Aquest camp és obligatori';
 
   @override
@@ -322,6 +335,9 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get profileLoadError => 'No s\'ha pogut carregar el perfil';
+
+  @override
+  String get profileObservationsEmpty => 'Encara no hi han observacións.';
 
   @override
   String get profileRetry => 'Tornar a intentar';

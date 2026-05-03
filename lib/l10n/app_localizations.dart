@@ -116,6 +116,18 @@ abstract class AppLocalizations {
   /// **'Idioma'**
   String get languageLabel;
 
+  /// No description provided for @settingsPreferencesTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Preferències'**
+  String get settingsPreferencesTitle;
+
+  /// No description provided for @settingsAccountTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Compte'**
+  String get settingsAccountTitle;
+
   /// No description provided for @systemLabel.
   ///
   /// In ca, this message translates to:
@@ -133,6 +145,12 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Castellà'**
   String get spanishLabel;
+
+  /// No description provided for @themeLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tema visual'**
+  String get themeLabel;
 
   /// No description provided for @themeLightLabel.
   ///
@@ -590,6 +608,12 @@ abstract class AppLocalizations {
   /// **'El nom ha de tenir almenys 3 caràcters'**
   String get signUpFormNameLength;
 
+  /// No description provided for @signUpFormNameMaxLength.
+  ///
+  /// In ca, this message translates to:
+  /// **'El nom no pot superar els 40 caràcters'**
+  String get signUpFormNameMaxLength;
+
   /// No description provided for @signUpFormFieldRequired.
   ///
   /// In ca, this message translates to:
@@ -685,6 +709,12 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'No s\'ha pogut carregar el perfil'**
   String get profileLoadError;
+
+  /// No description provided for @profileObservationsEmpty.
+  ///
+  /// In ca, this message translates to:
+  /// **'Encara no hi han observacións.'**
+  String get profileObservationsEmpty;
 
   /// No description provided for @profileRetry.
   ///

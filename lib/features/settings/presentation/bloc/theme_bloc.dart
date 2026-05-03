@@ -4,22 +4,29 @@ import 'package:noctambuls/features/settings/domain/entities/app_theme.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_system_theme_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_theme_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/save_theme_usecase.dart';
-import 'package:noctambuls/features/settings/presentation/cubit/theme_state.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/theme_event.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/theme_state.dart';
 
-class ThemeCubit extends Cubit<ThemeState> {
-  ThemeCubit({
+class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
+  ThemeBloc({
     required this.getThemeUseCase,
     required this.saveThemeUseCase,
     required this.getSystemThemeUseCase,
     required this.logger,
-  }) : super(ThemeState(appTheme: getThemeUseCase()));
+  }) : super(ThemeState(appTheme: getThemeUseCase())) {
+    on<ToggleThemeRequested>(_onToggleTheme);
+    on<SetThemeRequested>(_onSetTheme);
+  }
 
   final GetThemeUseCase getThemeUseCase;
   final SaveThemeUseCase saveThemeUseCase;
   final GetSystemThemeUseCase getSystemThemeUseCase;
   final IAppLogger logger;
 
-  Future<void> toggleTheme() async {
+  Future<void> _onToggleTheme(
+    ToggleThemeRequested event,
+    Emitter<ThemeState> emit,
+  ) async {
     final currentTheme = state.appTheme;
     AppTheme newTheme;
 
@@ -34,10 +41,20 @@ class ThemeCubit extends Cubit<ThemeState> {
           : AppTheme.light;
     }
 
-    await setTheme(newTheme);
+    await _saveAndEmitTheme(newTheme, emit);
   }
 
-  Future<void> setTheme(AppTheme theme) async {
+  Future<void> _onSetTheme(
+    SetThemeRequested event,
+    Emitter<ThemeState> emit,
+  ) async {
+    await _saveAndEmitTheme(event.theme, emit);
+  }
+
+  Future<void> _saveAndEmitTheme(
+    AppTheme theme,
+    Emitter<ThemeState> emit,
+  ) async {
     emit(ThemeState(appTheme: theme));
     final result = await saveThemeUseCase(theme);
     result.when(

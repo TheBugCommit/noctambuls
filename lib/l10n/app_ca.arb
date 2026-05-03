@@ -6,9 +6,12 @@
     },
     "settingsTitle": "Configuració",
     "languageLabel": "Idioma",
+    "settingsPreferencesTitle": "Preferències",
+    "settingsAccountTitle": "Compte",
     "systemLabel": "Sistema",
     "catalanLabel": "Català",
     "spanishLabel": "Castellà",
+    "themeLabel": "Tema visual",
     "themeLightLabel": "Clar",
     "themeDarkLabel": "Fosc",
     "themeSystemLabel": "Sistema",
@@ -122,6 +125,7 @@
     "signUpHeaderSubTitle": "Necessitem algunes dades bàsiques per finalitzar el teu registre.",
     "signUpFormNameLabel": "Nom complet",
     "signUpFormNameLength": "El nom ha de tenir almenys 3 caràcters",
+    "signUpFormNameMaxLength": "El nom no pot superar els 40 caràcters",
     "signUpFormFieldRequired": "Aquest camp és obligatori",
     "signUpFormPhoneLabel": "Telèfon",
     "signUpFormPhoneFormat": "Introdueix un telèfon vàlid",
@@ -139,6 +143,7 @@
     "profileEditSuccess": "Perfil actualitzat correctament",
     "profileEditError": "No s'ha pogut actualitzar el perfil",
     "profileLoadError": "No s'ha pogut carregar el perfil",
+    "profileObservationsEmpty": "Encara no hi han observacións.",
     "profileRetry": "Tornar a intentar",
     "profileSignOut": "Tanca la sessió"
 }

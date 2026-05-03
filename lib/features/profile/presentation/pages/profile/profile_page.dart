@@ -7,16 +7,18 @@ import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/presentation/widgets/app_bottom_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
+import 'package:noctambuls/core/presentation/widgets/app_icon_text.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/taxus_app_bar.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/profile/domain/entities/user_profile.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_event.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_state.dart';
+import 'package:noctambuls/features/profile/presentation/pages/widgets/formatted_profile_name.dart';
+import 'package:noctambuls/features/profile/presentation/pages/widgets/user_avatar.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -115,42 +117,37 @@ class _ProfileContent extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return Column(
-      children: [
-        Expanded(
-          child: NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return [
-                SliverToBoxAdapter(
-                  child: _ProfileHeader(profile: profile, authUser: authUser),
-                ),
-                const SliverToBoxAdapter(
-                  child: Divider(height: 1),
-                ),
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: _SliverTabBarDelegate(
-                    TabBar(
-                      tabs: [
-                        Tab(text: l10n.profileObservationsTab),
-                        Tab(text: l10n.profileParticipationsTab),
-                      ],
-                    ),
-                    theme.colorScheme.surface,
-                  ),
-                ),
-              ];
-            },
-            body: const TabBarView(
-              children: [
-                _EmptyTabContent(),
-                _EmptyTabContent(),
-              ],
+    return Expanded(
+      child: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverToBoxAdapter(
+              child: _ProfileHeader(profile: profile, authUser: authUser),
             ),
-          ),
+            const SliverToBoxAdapter(
+              child: Divider(height: 1),
+            ),
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: _SliverTabBarDelegate(
+                TabBar(
+                  tabs: [
+                    Tab(text: l10n.profileObservationsTab),
+                    Tab(text: l10n.profileParticipationsTab),
+                  ],
+                ),
+                theme.colorScheme.surface,
+              ),
+            ),
+          ];
+        },
+        body: const TabBarView(
+          children: [
+            _EmptyTabContent(),
+            _EmptyTabContent(),
+          ],
         ),
-        const _SignOutTile(),
-      ],
+      ),
     );
   }
 }
@@ -160,22 +157,6 @@ class _ProfileHeader extends StatelessWidget {
 
   final UserProfile profile;
   final AuthUser authUser;
-
-  String _formatName(String fullName) {
-    final parts = fullName.trim().split(RegExp(r'\s+'));
-    if (parts.isEmpty || parts[0].isEmpty) return fullName;
-
-    final firstName = parts[0];
-    if (parts.length == 1) return firstName;
-
-    final initials = parts
-        .skip(1)
-        .take(2)
-        .map((word) => '${word[0].toUpperCase()}.')
-        .join();
-
-    return '$firstName $initials';
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -192,17 +173,9 @@ class _ProfileHeader extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
+          UserAvatar(
+            photoUrl: photoUrl,
             radius: AppDimensions.xxl,
-            backgroundColor: theme.colorScheme.surfaceContainerHigh,
-            backgroundImage: photoUrl != null ? NetworkImage(photoUrl) : null,
-            child: photoUrl == null
-                ? Icon(
-                    Icons.person,
-                    size: AppDimensions.xxl,
-                    color: theme.colorScheme.onSurfaceVariant,
-                  )
-                : null,
           ),
           const SizedBox(width: AppDimensions.lg),
           Expanded(
@@ -218,30 +191,24 @@ class _ProfileHeader extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         spacing: AppDimensions.xs,
                         children: [
-                          Text(
-                            _formatName(profile.name),
+                          FormattedProfileName(
+                            fullName: profile.name,
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.onSurface,
                             ),
                             maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                           ),
-                          Text(
-                            authUser.email,
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              color: theme.colorScheme.onSurface,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          AppIconText(
+                            icon: Icons.email_outlined,
+                            text: authUser.email,
+
+                            color: theme.colorScheme.onSurface,
                           ),
-                          Text(
-                            profile.phone,
-                            style: theme.textTheme.labelMedium?.copyWith(
-                              color: theme.colorScheme.onSurface,
-                            ),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
+                          AppIconText(
+                            icon: Icons.phone_outlined,
+                            text: profile.phone,
+                            color: theme.colorScheme.onSurface,
                           ),
                         ],
                       ),
@@ -293,7 +260,7 @@ class _EditProfileButton extends StatelessWidget {
       tooltip: l10n.profileEditTitle,
       onPressed: () => context.push(AppRoutes.profileEdit),
       style: IconButton.styleFrom(
-        backgroundColor: colorScheme.secondaryContainer, // Fons sòlid
+        backgroundColor: colorScheme.secondaryContainer,
         foregroundColor: colorScheme.onSecondaryContainer,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
@@ -323,7 +290,6 @@ class _QrButton extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final l10n = AppLocalizations.of(context)!;
 
-    // NOU: Format idèntic al botó d'editar!
     return IconButton(
       icon: const Icon(Icons.qr_code),
       tooltip: l10n.profileShowQr,
@@ -421,38 +387,12 @@ class _EmptyTabContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Center(
       child: Text(
-        'Cap dada disponible encara.',
+        l10n.profileObservationsEmpty,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
           color: Theme.of(context).colorScheme.onSurfaceVariant,
-        ),
-      ),
-    );
-  }
-}
-
-class _SignOutTile extends StatelessWidget {
-  const _SignOutTile();
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: AppDimensions.sm),
-        child: TextButton.icon(
-          onPressed: () =>
-              context.read<AuthBloc>().add(const SignOutRequested()),
-          icon: Icon(Icons.logout, color: theme.colorScheme.error),
-          label: Text(
-            l10n.profileSignOut,
-            style: theme.textTheme.labelLarge?.copyWith(
-              color: theme.colorScheme.error,
-            ),
-          ),
         ),
       ),
     );

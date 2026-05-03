@@ -12,8 +12,8 @@ import 'package:noctambuls/features/settings/domain/usecases/get_system_theme_us
 import 'package:noctambuls/features/settings/domain/usecases/get_theme_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/save_language_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/save_theme_usecase.dart';
-import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
-import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/language_bloc.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/theme_bloc.dart';
 
 void initSettingsFeature() {
   sl
@@ -38,7 +38,7 @@ void initSettingsFeature() {
     ..registerLazySingleton(() => GetSystemThemeUseCase(sl()))
     ..registerLazySingleton(() => SaveLanguageUseCase(sl()))
     ..registerFactory(
-      () => ThemeCubit(
+      () => ThemeBloc(
         getThemeUseCase: sl(),
         saveThemeUseCase: sl(),
         getSystemThemeUseCase: sl(),
@@ -46,7 +46,7 @@ void initSettingsFeature() {
       ),
     )
     ..registerFactory(
-      () => LanguageCubit(
+      () => LanguageBloc(
         getLanguageUseCase: sl(),
         saveLanguageUseCase: sl(),
         logger: sl<IAppLogger>(),
