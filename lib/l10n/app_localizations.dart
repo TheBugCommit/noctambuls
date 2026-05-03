@@ -278,6 +278,18 @@ abstract class AppLocalizations {
   /// **'Registrant...'**
   String get signUpSendButtonLoading;
 
+  /// No description provided for @accept_terms_prefix.
+  ///
+  /// In ca, this message translates to:
+  /// **'He llegit i accepto els '**
+  String get accept_terms_prefix;
+
+  /// No description provided for @terms_and_conditions.
+  ///
+  /// In ca, this message translates to:
+  /// **'Termes i Condicions'**
+  String get terms_and_conditions;
+
   /// No description provided for @settingsTitle.
   ///
   /// In ca, this message translates to:

@@ -36,6 +36,8 @@
     "signUpFormPhoneFormat": "Introdueix un telèfon vàlid",
     "signUpSendButton": "Finalitzar registre",
     "signUpSendButtonLoading": "Registrant...",
+    "accept_terms_prefix": "He llegit i accepto els ",
+    "terms_and_conditions": "Termes i Condicions",
 
     "settingsTitle": "Configuració",
     "settingsPreferencesTitle": "Preferències",

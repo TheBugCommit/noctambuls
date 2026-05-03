@@ -103,6 +103,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get signUpSendButtonLoading => 'Registrando...';
 
   @override
+  String get accept_terms_prefix => 'He leído y acepto los ';
+
+  @override
+  String get terms_and_conditions => 'Términos y Condiciones';
+
+  @override
   String get settingsTitle => 'Configuración';
 
   @override

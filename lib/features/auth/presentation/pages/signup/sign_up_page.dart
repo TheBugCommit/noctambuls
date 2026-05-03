@@ -1,6 +1,12 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/constants/app_routes.dart';
+import 'package:noctambuls/core/constants/env_config.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_event.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
@@ -21,11 +27,39 @@ class _SignUpPageState extends State<SignUpPage> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
 
+  bool _acceptedTerms = false;
+  bool _isFormValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.addListener(_validateFormSilently);
+    _phoneController.addListener(_validateFormSilently);
+  }
+
   @override
   void dispose() {
+    _nameController.removeListener(_validateFormSilently);
+    _phoneController.removeListener(_validateFormSilently);
     _nameController.dispose();
     _phoneController.dispose();
     super.dispose();
+  }
+
+  void _validateFormSilently() {
+    final isNameValid = _nameController.text.trim().length >= 3;
+    final phoneRegex = RegExp(r'^\+?[0-9]{9,15}$');
+    final isPhoneValid = phoneRegex.hasMatch(
+      _phoneController.text.trim().replaceAll(' ', ''),
+    );
+
+    final isValid = isNameValid && isPhoneValid && _acceptedTerms;
+
+    if (_isFormValid != isValid) {
+      setState(() {
+        _isFormValid = isValid;
+      });
+    }
   }
 
   void _submit() {
@@ -46,72 +80,104 @@ class _SignUpPageState extends State<SignUpPage> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.signUpTitle),
-        centerTitle: true,
-      ),
-      body: BlocConsumer<AuthBloc, AuthState>(
-        listenWhen: (prev, curr) =>
-            curr is AuthError || curr is Unauthenticated,
-        listener: (context, state) {
-          if (state is AuthError) {
-            final isSessionExpired =
-                state.failure is ProviderTokenExpiredFailure;
+    void popAction() {
+      context.read<AuthBloc>().add(const SignOutRequested());
+      if (context.canPop()) {
+        context.pop();
+      } else {
+        context.go(AppRoutes.signin);
+      }
+    }
 
-            final missatge = isSessionExpired
-                ? l10n.signUpSessionExpired
-                : l10n.signUpError;
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        popAction();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(l10n.signUpTitle),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: popAction,
+          ),
+        ),
+        body: BlocConsumer<AuthBloc, AuthState>(
+          listenWhen: (prev, curr) =>
+              curr is AuthError || curr is Unauthenticated,
+          listener: (context, state) {
+            if (state is AuthError) {
+              final isSessionExpired =
+                  state.failure is ProviderTokenExpiredFailure;
 
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(missatge),
-                backgroundColor: theme.colorScheme.error,
-              ),
-            );
-          }
-        },
-        builder: (context, state) {
-          final isLoading = state is AuthLoading;
+              final message = isSessionExpired
+                  ? l10n.signUpSessionExpired
+                  : l10n.signUpError;
 
-          return SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Padding(
-                    padding: const EdgeInsets.all(AppDimensions.lg),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          const _HeaderSection(),
-                          const SizedBox(height: AppDimensions.xl),
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(message),
+                  backgroundColor: theme.colorScheme.error,
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            final isLoading = state is AuthLoading;
 
-                          ProfileFormFields(
-                            nameController: _nameController,
-                            phoneController: _phoneController,
-                            isLoading: isLoading,
-                            onSubmit: _submit,
-                          ),
+            return SafeArea(
+              child: CustomScrollView(
+                slivers: [
+                  SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppDimensions.lg),
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const _HeaderSection(),
+                            const SizedBox(height: AppDimensions.xl),
 
-                          const Spacer(),
-                          const SizedBox(height: AppDimensions.lg),
+                            ProfileFormFields(
+                              nameController: _nameController,
+                              phoneController: _phoneController,
+                              isLoading: isLoading,
+                              onSubmit: _submit,
+                            ),
 
-                          _SubmitButton(
-                            isLoading: isLoading,
-                            onSubmit: _submit,
-                          ),
-                        ],
+                            const SizedBox(height: AppDimensions.md),
+                            _TermsAndConditions(
+                              value: _acceptedTerms,
+                              isLoading: isLoading,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  _acceptedTerms = newValue ?? false;
+                                });
+                                _validateFormSilently();
+                              },
+                            ),
+
+                            const Spacer(),
+                            const SizedBox(height: AppDimensions.lg),
+
+                            _SubmitButton(
+                              isLoading: isLoading,
+                              isValid: _isFormValid,
+                              onSubmit: _submit,
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-          );
-        },
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
@@ -149,32 +215,85 @@ class _HeaderSection extends StatelessWidget {
 class _SubmitButton extends StatelessWidget {
   const _SubmitButton({
     required this.isLoading,
+    required this.isValid,
     required this.onSubmit,
   });
 
   final bool isLoading;
+  final bool isValid;
   final VoidCallback onSubmit;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    if (isLoading) {
+      return const SizedBox(
+        width: double.infinity,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     final l10n = AppLocalizations.of(context)!;
     return SizedBox(
       height: AppDimensions.buttonHeightLg,
       child: AppButton.primary(
-        onPressed: isLoading ? null : onSubmit,
-        customIcon: isLoading
-            ? SizedBox(
-                width: AppDimensions.iconMd,
-                height: AppDimensions.iconMd,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: theme.colorScheme.onPrimary,
-                ),
-              )
-            : const Icon(Icons.check),
-        label: isLoading ? l10n.signUpSendButtonLoading : l10n.signUpSendButton,
+        onPressed: !isValid ? null : onSubmit,
+        customIcon: const Icon(Icons.check),
+        label: l10n.signUpSendButton,
       ),
+    );
+  }
+}
+
+class _TermsAndConditions extends StatelessWidget {
+  const _TermsAndConditions({
+    required this.value,
+    required this.onChanged,
+    required this.isLoading,
+  });
+
+  final bool value;
+  final ValueChanged<bool?> onChanged;
+  final bool isLoading;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+
+    return Row(
+      children: [
+        Checkbox(
+          value: value,
+          activeColor: theme.colorScheme.primary,
+          onChanged: isLoading ? null : onChanged,
+        ),
+        Expanded(
+          child: Text.rich(
+            TextSpan(
+              text: l10n.accept_terms_prefix,
+              style: theme.textTheme.bodyMedium,
+              children: [
+                TextSpan(
+                  text: l10n.terms_and_conditions,
+                  style: TextStyle(
+                    color: theme.colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      context.read<UrlBloc>().add(
+                        const OpenUrlRequested(EnvConfig.termsAndConditionsUrl),
+                      );
+                    },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

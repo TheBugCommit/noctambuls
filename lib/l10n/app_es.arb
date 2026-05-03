@@ -33,6 +33,8 @@
     "signUpFormPhoneFormat": "Introduce un teléfono válido",
     "signUpSendButton": "Finalizar registro",
     "signUpSendButtonLoading": "Registrando...",
+    "accept_terms_prefix": "He leído y acepto los ",
+    "terms_and_conditions": "Términos y Condiciones",
 
     "settingsTitle": "Configuración",
     "settingsPreferencesTitle": "Preferencias",

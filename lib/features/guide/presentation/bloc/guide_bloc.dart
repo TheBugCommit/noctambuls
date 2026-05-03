@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/domain/usecases/listen_audio_state_usecase.dart';
-import 'package:noctambuls/core/domain/usecases/open_link_usecase.dart';
+import 'package:noctambuls/core/domain/usecases/open_url_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/preload_audio_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/toggle_audio_usecase.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
@@ -35,7 +35,7 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
 
   final GetBirdsUseCase getBirdsUseCase;
   final IAppLogger logger;
-  final OpenLinkUseCase openLinkUseCase;
+  final OpenUrlUseCase openLinkUseCase;
   final ToggleAudioUseCase toggleAudioUseCase;
   final ListenAudioStateUseCase listenAudioStateUseCase;
   final PreloadAudioUseCase preloadAudioUseCase;
