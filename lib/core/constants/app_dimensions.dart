@@ -11,6 +11,7 @@ class AppDimensions {
   static const double radiusLg = 16;
   static const double radiusXl = 24;
 
+  static const double iconXs = 14;
   static const double iconSm = 18;
   static const double iconMd = 20;
   static const double iconLg = 24;
