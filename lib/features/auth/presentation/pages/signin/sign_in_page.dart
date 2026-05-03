@@ -5,8 +5,8 @@ import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
-import 'package:noctambuls/features/auth/presentation/pages/signin/widgets/SignInActions.dart';
-import 'package:noctambuls/features/auth/presentation/pages/signin/widgets/SignInHeader.dart';
+import 'package:noctambuls/features/auth/presentation/pages/signin/widgets/sign_in_actions.dart';
+import 'package:noctambuls/features/auth/presentation/pages/signin/widgets/sign_in_header.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class SignInPage extends StatelessWidget {
