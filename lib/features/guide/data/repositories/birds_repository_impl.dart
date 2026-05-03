@@ -5,6 +5,7 @@ import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_local_datasource.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_remote_datasource.dart';
+import 'package:noctambuls/features/guide/data/models/bird_model.dart';
 import 'package:noctambuls/features/guide/data/models/bird_remote_model.dart';
 import 'package:noctambuls/features/guide/data/services/catalog_media_service.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
@@ -28,7 +29,7 @@ class BirdsRepositoryImpl implements BirdsRepository {
   Future<Result<List<Bird>>> getBirds(String languageCode) async {
     try {
       final models = await localDataSource.getBirds(languageCode);
-      return Ok(models);
+      return Ok(models.map((e) => e.toDomain()).toList());
     } catch (e, st) {
       return Err(const DatabaseFailure().withDebug(e, st));
     }

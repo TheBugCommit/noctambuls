@@ -38,7 +38,7 @@ class BirdsLocalDataSourceDriftImpl implements BirdsLocalDataSource {
 
     return rows
         .map(
-          (row) => BirdModel.fromDrift(
+          (row) => BirdModel.fromEntity(
             row.readTable(db.birdsTable),
             row.readTable(db.birdNamesTable),
           ),
