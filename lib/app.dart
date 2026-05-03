@@ -46,6 +46,14 @@ class NoctambulsApp extends StatelessWidget {
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         routerConfig: router,
+        builder: (context, child) {
+          return GestureDetector(
+            onTap: () {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            child: child,
+          );
+        },
 
         themeMode: themeState.appTheme.toFlutterThemeMode,
         theme: myTheme.light(),

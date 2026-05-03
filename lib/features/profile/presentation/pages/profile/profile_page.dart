@@ -161,6 +161,22 @@ class _ProfileHeader extends StatelessWidget {
   final UserProfile profile;
   final AuthUser authUser;
 
+  String _formatName(String fullName) {
+    final parts = fullName.trim().split(RegExp(r'\s+'));
+    if (parts.isEmpty || parts[0].isEmpty) return fullName;
+
+    final firstName = parts[0];
+    if (parts.length == 1) return firstName;
+
+    final initials = parts
+        .skip(1)
+        .take(2)
+        .map((word) => '${word[0].toUpperCase()}.')
+        .join();
+
+    return '$firstName $initials';
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -203,7 +219,7 @@ class _ProfileHeader extends StatelessWidget {
                         spacing: AppDimensions.xs,
                         children: [
                           Text(
-                            profile.name,
+                            _formatName(profile.name),
                             style: theme.textTheme.titleLarge?.copyWith(
                               fontWeight: FontWeight.bold,
                               color: theme.colorScheme.onSurface,

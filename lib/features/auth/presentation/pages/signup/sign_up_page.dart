@@ -6,7 +6,7 @@ import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
-import 'package:noctambuls/features/auth/presentation/widgets/profile_form_fields.dart';
+import 'package:noctambuls/features/profile/presentation/pages/widgets/profile_form_fields.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class SignUpPage extends StatefulWidget {
