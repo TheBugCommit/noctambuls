@@ -5,6 +5,7 @@ import 'package:noctambuls/core/di/core_injection.dart';
 import 'package:noctambuls/core/di/features/auth_injection.dart';
 import 'package:noctambuls/core/di/features/guide_injection.dart';
 import 'package:noctambuls/core/di/features/observations_injection.dart';
+import 'package:noctambuls/core/di/features/profile_injection.dart';
 import 'package:noctambuls/core/di/features/settings_injection.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -27,4 +28,5 @@ Future<void> init() async {
   initSettingsFeature();
   initObservationsFeature();
   initGuideFeature();
+  initProfileFeature();
 }

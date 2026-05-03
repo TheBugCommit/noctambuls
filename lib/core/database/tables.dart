@@ -98,6 +98,25 @@ class BirdNamesTable extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+@DataClassName('UserProfileData')
+class UserProfileTable extends Table {
+  @override
+  String get tableName => 'user_profile';
+
+  TextColumn get id => text()();
+
+  TextColumn get name => text()();
+
+  TextColumn get phone => text()();
+
+  TextColumn get ornithologistCode => text().nullable()();
+
+  DateTimeColumn get createdAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 @DataClassName('CatalogMetadataData')
 class CatalogMetadataTable extends Table {
   @override

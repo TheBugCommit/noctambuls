@@ -7,12 +7,19 @@ import 'package:noctambuls/features/observations/domain/enums/validation_status.
 
 part 'user_database.g.dart';
 
-@DriftDatabase(tables: [SessionsTable, ObservationsTable])
+@DriftDatabase(tables: [SessionsTable, ObservationsTable, UserProfileTable])
 class UserDatabase extends _$UserDatabase {
   UserDatabase(QueryExecutor e) : super(e);
 
   UserDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onUpgrade: (m, from, to) async {
+      if (from < 2) await m.createTable(userProfileTable);
+    },
+  );
 }
