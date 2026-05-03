@@ -3,38 +3,44 @@ import 'package:noctambuls/core/error/failure.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
 
 sealed class GuideSideEffectError extends Equatable {
-  const GuideSideEffectError();
+  const GuideSideEffectError(this.timestamp);
+
+  final DateTime timestamp;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [timestamp];
 }
 
 sealed class GuideSideEffect extends Equatable {
-  const GuideSideEffect();
+  const GuideSideEffect(this.timestamp);
+
+  final DateTime timestamp;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [timestamp];
 }
 
 final class GuideAudioError extends GuideSideEffectError {
-  const GuideAudioError();
+  GuideAudioError() : super(DateTime.now());
 }
 
 final class GuideUrlError extends GuideSideEffectError {
-  const GuideUrlError();
+  GuideUrlError() : super(DateTime.now());
 }
 
 final class GuideAudioWarning extends GuideSideEffect {
-  const GuideAudioWarning({required this.audioPath});
+  GuideAudioWarning({required this.audioPath}) : super(DateTime.now());
 
   final String audioPath;
 
   @override
-  List<Object?> get props => [audioPath];
+  List<Object?> get props => [audioPath, timestamp];
 }
 
 sealed class GuideState extends Equatable {
   const GuideState();
+
+  GuideLoaded? get loaded => this is GuideLoaded ? this as GuideLoaded : null;
 
   @override
   List<Object?> get props => [];
@@ -68,15 +74,13 @@ final class GuideLoaded extends GuideState {
     List<Bird>? birds,
     GuideSideEffectError? actionError,
     String? currentlyPlayingPath,
-    bool clearError = false,
     GuideSideEffect? action,
-    bool clearAction = false,
   }) {
     return GuideLoaded(
       birds: birds ?? this.birds,
-      actionError: clearError ? null : (actionError ?? this.actionError),
+      actionError: actionError ?? this.actionError,
       currentlyPlayingPath: currentlyPlayingPath ?? this.currentlyPlayingPath,
-      action: clearAction ? null : (action ?? this.action),
+      action: action ?? this.action,
     );
   }
 }

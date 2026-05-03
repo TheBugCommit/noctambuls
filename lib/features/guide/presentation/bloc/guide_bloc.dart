@@ -82,10 +82,9 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
     result.when(
       success: (_) {},
       failure: (failure) {
-        if (state is GuideLoaded) {
-          final currentState = state as GuideLoaded;
-          emit(currentState.copyWith(actionError: const GuideUrlError()));
-          emit(currentState.copyWith(clearError: true));
+        final currentState = state.loaded;
+        if (currentState != null) {
+          emit(currentState.copyWith(actionError: GuideUrlError()));
         }
         logger.failure(failure);
       },
@@ -112,7 +111,6 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
           action: GuideAudioWarning(audioPath: event.audioPath),
         ),
       );
-      emit(currentState.copyWith(clearAction: true));
       return;
     }
 
@@ -121,10 +119,9 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
     result.when(
       success: (_) {},
       failure: (failure) {
-        if (state is GuideLoaded) {
-          final currentState = state as GuideLoaded;
-          emit(currentState.copyWith(actionError: const GuideAudioError()));
-          emit(currentState.copyWith(clearError: true));
+        final currentState = state.loaded;
+        if (currentState != null) {
+          emit(currentState.copyWith(actionError: GuideAudioError()));
         }
         logger.failure(failure);
       },
@@ -135,8 +132,8 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
     AudioStateChanged event,
     Emitter<GuideState> emit,
   ) {
-    if (state is GuideLoaded) {
-      final currentState = state as GuideLoaded;
+    final currentState = state.loaded;
+    if (currentState != null) {
       emit(
         GuideLoaded(
           birds: currentState.birds,
