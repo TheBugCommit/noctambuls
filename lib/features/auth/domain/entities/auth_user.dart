@@ -5,14 +5,16 @@ class AuthUser extends Equatable {
     required this.id,
     required this.email,
     required this.tokenExpiry,
+    this.photoUrl,
   });
 
   final String id;
   final String email;
   final DateTime tokenExpiry;
+  final String? photoUrl;
 
   bool get isTokenExpired => DateTime.now().isAfter(tokenExpiry);
 
   @override
-  List<Object?> get props => [id, email, tokenExpiry];
+  List<Object?> get props => [id, email, tokenExpiry, photoUrl];
 }

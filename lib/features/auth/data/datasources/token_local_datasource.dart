@@ -2,9 +2,16 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 abstract class TokenLocalDataSource {
   Future<void> saveTokenPair(String accessToken, String refreshToken);
+
   Future<String?> getAccessToken();
+
   Future<String?> getRefreshToken();
+
   Future<void> deleteAllTokens();
+
+  Future<void> savePhotoUrl(String? url);
+
+  Future<String?> getPhotoUrl();
 }
 
 class TokenLocalDataSourceImpl implements TokenLocalDataSource {
@@ -14,6 +21,7 @@ class TokenLocalDataSourceImpl implements TokenLocalDataSource {
 
   static const _accessTokenKey = 'auth_access_token';
   static const _refreshTokenKey = 'auth_refresh_token';
+  static const _photoUrlKey = 'auth_photo_url';
 
   @override
   Future<void> saveTokenPair(String accessToken, String refreshToken) async {
@@ -31,5 +39,18 @@ class TokenLocalDataSourceImpl implements TokenLocalDataSource {
   Future<void> deleteAllTokens() async {
     await storage.delete(key: _accessTokenKey);
     await storage.delete(key: _refreshTokenKey);
+    await storage.delete(key: _photoUrlKey);
   }
+
+  @override
+  Future<void> savePhotoUrl(String? url) async {
+    if (url == null) {
+      await storage.delete(key: _photoUrlKey);
+    } else {
+      await storage.write(key: _photoUrlKey, value: url);
+    }
+  }
+
+  @override
+  Future<String?> getPhotoUrl() => storage.read(key: _photoUrlKey);
 }

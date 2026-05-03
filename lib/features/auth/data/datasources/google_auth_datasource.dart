@@ -28,4 +28,7 @@ class GoogleAuthDataSourceImpl
   Future<void> signOut() async {
     await googleSignIn.signOut();
   }
+
+  @override
+  Future<String?> getPhotoUrl() async => googleSignIn.currentUser?.photoUrl;
 }

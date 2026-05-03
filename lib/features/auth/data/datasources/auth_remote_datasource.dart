@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:noctambuls/features/auth/data/models/auth_response_model.dart';
 import 'package:noctambuls/features/auth/data/models/provider_auth_request_model.dart';
 import 'package:noctambuls/features/auth/data/models/refresh_token_request_model.dart';
+import 'package:noctambuls/features/auth/data/models/refresh_token_response_model.dart';
 import 'package:noctambuls/features/auth/data/models/sign_up_request_model.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
 
@@ -16,7 +17,7 @@ abstract class AuthRemoteDataSource {
     SignUpRequestModel requestModel,
   );
 
-  Future<AuthResponseModel> refreshTokens(
+  Future<RefreshTokenResponseModel> refreshTokens(
     RefreshTokenRequestModel requestModel,
   );
 
@@ -79,7 +80,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<AuthResponseModel> refreshTokens(
+  Future<RefreshTokenResponseModel> refreshTokens(
     RefreshTokenRequestModel requestModel,
   ) async {
     final response = await dio.post<dynamic>(
@@ -94,7 +95,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
     }
 
-    return AuthResponseModel.fromJson(data);
+    return RefreshTokenResponseModel.fromJson(data);
   }
 
   @override

@@ -7,4 +7,6 @@ abstract class AuthProviderDataSource<T extends AuthCredentials> {
   Future<String?> authenticate(T credentials);
 
   Future<void> signOut();
+
+  Future<String?> getPhotoUrl();
 }

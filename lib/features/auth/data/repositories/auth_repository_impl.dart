@@ -44,6 +44,9 @@ class AuthRepositoryImpl implements AuthRepository {
         return const Err(SignInCancelledFailure());
       }
 
+      final photoUrl = await provider.getPhotoUrl();
+      await tokenLocalDataSource.savePhotoUrl(photoUrl);
+
       final response = await remoteDataSource.signInWithProvider(
         provider.authProviderType,
         ProviderAuthRequestModel(idToken: idToken),
@@ -52,7 +55,13 @@ class AuthRepositoryImpl implements AuthRepository {
         response.accessToken,
         response.refreshToken,
       );
-      return Ok(AuthUserModel.fromJwt(response.accessToken));
+
+      return Ok(
+        AuthUserModel.fromJwt(
+          response.accessToken,
+          photoUrl: photoUrl,
+        ).toDomain(),
+      );
     } on DioException catch (e, st) {
       if (e.isNetworkError || e.isInfrastructureError) {
         return Err(const NetworkFailure().withDebug(e, st));
@@ -93,7 +102,19 @@ class AuthRepositoryImpl implements AuthRepository {
         response.accessToken,
         response.refreshToken,
       );
-      return Ok(AuthUserModel.fromJwt(response.accessToken));
+      final provider = _providers.values
+          .where(
+            (p) => p.authProviderType == params.provider,
+          )
+          .firstOrNull;
+      final photoUrl = await provider?.getPhotoUrl();
+      await tokenLocalDataSource.savePhotoUrl(photoUrl);
+      return Ok(
+        AuthUserModel.fromJwt(
+          response.accessToken,
+          photoUrl: photoUrl,
+        ).toDomain(),
+      );
     } on DioException catch (e, st) {
       if (e.response == null) {
         return Err(const NetworkFailure().withDebug(e, st));
@@ -114,14 +135,19 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Result<AuthUser>> getStoredAuth() async {
-    AuthUserModel? expiredUser;
+    AuthUser? expiredUser;
 
     try {
       final accessToken = await tokenLocalDataSource.getAccessToken();
+      final photoUrl = await tokenLocalDataSource.getPhotoUrl();
 
       if (accessToken != null) {
         try {
-          expiredUser = AuthUserModel.fromJwt(accessToken);
+          expiredUser = AuthUserModel.fromJwt(
+            accessToken,
+            photoUrl: photoUrl,
+          ).toDomain();
+
           if (!expiredUser.isTokenExpired) {
             return Ok(expiredUser);
           }
@@ -133,7 +159,9 @@ class AuthRepositoryImpl implements AuthRepository {
       final newToken = await refreshManager.refreshToken();
 
       if (newToken != null) {
-        return Ok(AuthUserModel.fromJwt(newToken));
+        return Ok(
+          AuthUserModel.fromJwt(newToken, photoUrl: photoUrl).toDomain(),
+        );
       } else {
         return const Err(InvalidTokenFailure());
       }
