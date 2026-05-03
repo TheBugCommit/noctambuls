@@ -30,6 +30,12 @@ class MockGoogleAuthProviderDataSource extends Mock
 
 class FakeGoogleAuthCredentials extends Fake implements GoogleAuthCredentials {}
 
+class FakeProviderAuthRequestModel extends Fake
+    implements ProviderAuthRequestModel {}
+
+class FakeRefreshTokenRequestModel extends Fake
+    implements RefreshTokenRequestModel {}
+
 class MockLogger extends Mock implements IAppLogger {}
 
 void main() {
@@ -50,6 +56,8 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(FakeGoogleAuthCredentials());
+    registerFallbackValue(FakeProviderAuthRequestModel());
+    registerFallbackValue(FakeRefreshTokenRequestModel());
   });
 
   setUp(() {
@@ -62,6 +70,15 @@ void main() {
     when(
       () => mockGoogleProvider.authProviderType,
     ).thenReturn(AuthProviderType.google);
+    when(
+      () => mockGoogleProvider.getPhotoUrl(),
+    ).thenAnswer((_) async => null);
+    when(
+      () => mockLocal.savePhotoUrl(any()),
+    ).thenAnswer((_) async {});
+    when(
+      () => mockLocal.getPhotoUrl(),
+    ).thenAnswer((_) async => null);
 
     tValidJwt = makeJwt(id: tUserId, email: tUserEmail, exp: futureExp);
     tExpiredJwt = makeJwt(id: tUserId, email: tUserEmail, exp: pastExp);
