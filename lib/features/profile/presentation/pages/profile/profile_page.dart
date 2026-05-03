@@ -35,39 +35,72 @@ class ProfilePage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: const TaxusAppBar(),
-        body: BlocConsumer<ProfileBloc, ProfileState>(
-          listener: (context, state) {
-            if (state is ProfileUpdateSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    AppLocalizations.of(context)!.profileEditSuccess,
+        body: SafeArea(
+          child: BlocConsumer<ProfileBloc, ProfileState>(
+            listener: (context, state) {
+              if (state is ProfileUpdateSuccess) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      AppLocalizations.of(context)!.profileEditSuccess,
+                    ),
                   ),
+                );
+              }
+            },
+            builder: (context, state) {
+              return switch (state) {
+                ProfileInitial() || ProfileLoading() => const Center(
+                  child: CircularProgressIndicator(),
                 ),
-              );
-            }
-          },
-          builder: (context, state) {
-            return switch (state) {
-              ProfileInitial() || ProfileLoading() => const Center(
-                child: CircularProgressIndicator(),
-              ),
-              ProfileError(failure: final f) => _ProfileErrorView(
-                failure: f,
-                userId: authUser.id,
-              ),
-              ProfileLoaded(profile: final p) ||
-              ProfileUpdating(profile: final p) ||
-              ProfileUpdateSuccess(profile: final p) ||
-              ProfileUpdateError(profile: final p) => _ProfileContent(
-                profile: p,
-                authUser: authUser,
-              ),
-            };
-          },
+                ProfileError(failure: final f) => _ProfileErrorView(
+                  failure: f,
+                  userId: authUser.id,
+                ),
+                ProfileLoaded(profile: final p) ||
+                ProfileUpdating(profile: final p) ||
+                ProfileUpdateSuccess(profile: final p) ||
+                ProfileUpdateError(profile: final p) => _ProfileContent(
+                  profile: p,
+                  authUser: authUser,
+                ),
+              };
+            },
+          ),
         ),
       ),
     );
+  }
+}
+
+class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverTabBarDelegate(this.tabBar, this.backgroundColor);
+
+  final TabBar tabBar;
+  final Color backgroundColor;
+
+  @override
+  double get minExtent => tabBar.preferredSize.height;
+
+  @override
+  double get maxExtent => tabBar.preferredSize.height;
+
+  @override
+  Widget build(
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return ColoredBox(
+      color: backgroundColor,
+      child: tabBar,
+    );
+  }
+
+  @override
+  bool shouldRebuild(_SliverTabBarDelegate oldDelegate) {
+    return tabBar != oldDelegate.tabBar ||
+        backgroundColor != oldDelegate.backgroundColor;
   }
 }
 
@@ -80,23 +113,40 @@ class _ProfileContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Column(
       children: [
-        _ProfileHeader(profile: profile, authUser: authUser),
-        const Divider(height: 1),
-        TabBar(
-          tabs: [
-            Tab(text: l10n.profileObservationsTab),
-            Tab(text: l10n.profileParticipationsTab),
-          ],
-        ),
-        const Expanded(
-          child: TabBarView(
-            children: [
-              _EmptyTabContent(),
-              _EmptyTabContent(),
-            ],
+        Expanded(
+          child: NestedScrollView(
+            headerSliverBuilder: (context, innerBoxIsScrolled) {
+              return [
+                SliverToBoxAdapter(
+                  child: _ProfileHeader(profile: profile, authUser: authUser),
+                ),
+                const SliverToBoxAdapter(
+                  child: Divider(height: 1),
+                ),
+                SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _SliverTabBarDelegate(
+                    TabBar(
+                      tabs: [
+                        Tab(text: l10n.profileObservationsTab),
+                        Tab(text: l10n.profileParticipationsTab),
+                      ],
+                    ),
+                    theme.colorScheme.surface,
+                  ),
+                ),
+              ];
+            },
+            body: const TabBarView(
+              children: [
+                _EmptyTabContent(),
+                _EmptyTabContent(),
+              ],
+            ),
           ),
         ),
         const _SignOutTile(),
@@ -118,8 +168,8 @@ class _ProfileHeader extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.only(
-        left: AppDimensions.md,
-        right: AppDimensions.md,
+        left: AppDimensions.lg,
+        right: AppDimensions.lg,
         top: AppDimensions.xl,
         bottom: AppDimensions.md,
       ),
@@ -274,7 +324,6 @@ class _QrButton extends StatelessWidget {
   }
 }
 
-// NOU: El QR es mostra ara com un Bottom Sheet integrat a la teva app
 class _QrBottomSheetContent extends StatelessWidget {
   const _QrBottomSheetContent({required this.code});
 
@@ -291,7 +340,6 @@ class _QrBottomSheetContent extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(AppDimensions.md),
           decoration: BoxDecoration(
-            // El fons intern del QR ha de ser blanc sempre per temes òptics
             color: Colors.white,
             borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
             border: Border.all(
@@ -300,7 +348,6 @@ class _QrBottomSheetContent extends StatelessWidget {
           ),
           child: QrImageView(
             data: code,
-            // Eliminem el magic number i utilitzem múltiples de AppDimensions
             size: AppDimensions.xxl * 4,
           ),
         ),

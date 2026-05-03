@@ -118,13 +118,15 @@ class _GuideView extends StatelessWidget {
       ],
       child: Scaffold(
         appBar: const TaxusAppBar(),
-        body: BlocBuilder<GuideBloc, GuideState>(
-          builder: (context, state) => switch (state) {
-            GuideInitial() || GuideLoading() => const _GuideLoadingView(),
-            GuideLoaded(:final birds) => BirdList(birds: birds),
-            GuideError() => const _GuideErrorView(),
-            GuideEmptyNeedsSync() => const CatalogSyncRequiredView(),
-          },
+        body: SafeArea(
+          child: BlocBuilder<GuideBloc, GuideState>(
+            builder: (context, state) => switch (state) {
+              GuideInitial() || GuideLoading() => const _GuideLoadingView(),
+              GuideLoaded(:final birds) => BirdList(birds: birds),
+              GuideError() => const _GuideErrorView(),
+              GuideEmptyNeedsSync() => const CatalogSyncRequiredView(),
+            },
+          ),
         ),
       ),
     );
