@@ -7,7 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:noctambuls/core/constants/env_config.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
-import 'package:noctambuls/core/navigation/router.dart';
+import 'package:noctambuls/core/presentation/navigation/router.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/google_auth_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';

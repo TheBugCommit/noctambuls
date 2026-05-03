@@ -1,4 +1,4 @@
-import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';

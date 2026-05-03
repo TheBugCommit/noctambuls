@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/auth/domain/repositories/auth_repository.dart';

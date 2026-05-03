@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter_soloud/flutter_soloud.dart';
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/domain/services/audio_player_service.dart';
-import 'package:noctambuls/core/error/infrastrocture_failures.dart';
-import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 
 class SoLoudAudioServiceImpl implements AudioPlayerService {

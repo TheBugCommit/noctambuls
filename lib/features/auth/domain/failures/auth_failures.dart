@@ -1,4 +1,4 @@
-import 'package:noctambuls/core/error/failure.dart';
+import 'package:noctambuls/core/domain/error/failure.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_provider_type.dart';
 
 sealed class AuthFailure extends Failure {

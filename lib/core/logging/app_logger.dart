@@ -1,7 +1,7 @@
 import 'dart:developer' as developer;
 
 import 'package:flutter/foundation.dart';
-import 'package:noctambuls/core/error/failure.dart';
+import 'package:noctambuls/core/domain/error/failure.dart';
 
 abstract class IAppLogger {
   void info(String message);

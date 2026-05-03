@@ -1,4 +1,4 @@
-import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/guide/domain/failures/guide_failures.dart';
 import 'package:noctambuls/features/guide/domain/repositories/birds_repository.dart';
 

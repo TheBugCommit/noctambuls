@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
-import 'package:noctambuls/core/widgets/app_bottom_sheet.dart';
-import 'package:noctambuls/core/widgets/app_button.dart';
+import 'package:noctambuls/core/presentation/widgets/app_bottom_sheet.dart';
+import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class ObservationMethodsInfoSheet extends StatelessWidget {

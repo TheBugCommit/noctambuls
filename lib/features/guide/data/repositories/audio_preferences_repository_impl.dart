@@ -1,5 +1,5 @@
-import 'package:noctambuls/core/error/infrastrocture_failures.dart';
-import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/guide/data/datasources/audio_preferences_local_datasource.dart';
 import 'package:noctambuls/features/guide/domain/repositories/audio_preferences_repository.dart';

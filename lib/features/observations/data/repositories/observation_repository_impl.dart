@@ -1,5 +1,5 @@
-import 'package:noctambuls/core/error/infrastrocture_failures.dart';
-import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/observations/data/datasources/observation_local_datasource.dart';
 import 'package:noctambuls/features/observations/data/models/observation_record_model.dart';
 import 'package:noctambuls/features/observations/data/models/observation_session_model.dart';

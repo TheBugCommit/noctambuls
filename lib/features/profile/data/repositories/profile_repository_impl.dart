@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:noctambuls/core/error/dio_error_extension.dart';
-import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/data/error/dio_error_extension.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/profile/data/datasources/profile_local_datasource.dart';
 import 'package:noctambuls/features/profile/data/datasources/profile_remote_datasource.dart';
 import 'package:noctambuls/features/profile/data/models/update_profile_request_model.dart';

@@ -9,7 +9,7 @@ part 'user_database.g.dart';
 
 @DriftDatabase(tables: [SessionsTable, ObservationsTable, UserProfileTable])
 class UserDatabase extends _$UserDatabase {
-  UserDatabase(QueryExecutor e) : super(e);
+  UserDatabase(super.e);
 
   UserDatabase.forTesting(super.e);
 

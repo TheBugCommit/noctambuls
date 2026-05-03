@@ -1,4 +1,4 @@
-import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/settings/domain/entities/app_language.dart';
 import 'package:noctambuls/features/settings/domain/repositories/language_repository.dart';
 

@@ -1,7 +1,7 @@
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/domain/error/failure.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/domain/services/external_link_service.dart';
-import 'package:noctambuls/core/error/failure.dart';
-import 'package:noctambuls/core/error/infrastrocture_failures.dart';
-import 'package:noctambuls/core/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 

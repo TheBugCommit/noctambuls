@@ -1,4 +1,4 @@
-import 'package:noctambuls/core/error/failure.dart';
+import 'package:noctambuls/core/domain/error/failure.dart';
 
 sealed class GuideFailure extends Failure {
   const GuideFailure({

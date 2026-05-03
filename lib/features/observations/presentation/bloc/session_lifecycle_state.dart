@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:noctambuls/core/error/failure.dart';
+import 'package:noctambuls/core/domain/error/failure.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 
 sealed class SessionLifecycleState extends Equatable {

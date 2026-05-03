@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
-import 'package:noctambuls/core/widgets/app_sheet.dart';
+import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/widgets/observation_methods_info_sheet.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 

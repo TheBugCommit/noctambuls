@@ -1,7 +1,7 @@
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/database/app_database.dart';
-import 'package:noctambuls/core/error/failure.dart';
-import 'package:noctambuls/core/error/infrastrocture_failures.dart';
-import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/domain/error/failure.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_local_datasource.dart';
 import 'package:noctambuls/features/guide/data/datasources/birds_remote_datasource.dart';

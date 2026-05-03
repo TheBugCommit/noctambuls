@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:noctambuls/core/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 
 class AppBlocObserver extends BlocObserver {

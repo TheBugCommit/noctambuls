@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
-import 'package:noctambuls/core/widgets/app_button.dart';
+import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/features/auth/presentation/widgets/profile_form_fields.dart';
 import 'package:noctambuls/features/profile/domain/entities/user_profile.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';

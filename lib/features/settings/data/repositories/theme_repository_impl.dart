@@ -1,5 +1,5 @@
-import 'package:noctambuls/core/error/infrastrocture_failures.dart';
-import 'package:noctambuls/core/error/result.dart';
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/settings/data/datasources/theme_local_datasource.dart';
 import 'package:noctambuls/features/settings/data/datasources/theme_system_datasource.dart';
 import 'package:noctambuls/features/settings/domain/entities/app_theme.dart';

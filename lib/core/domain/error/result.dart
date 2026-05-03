@@ -1,4 +1,4 @@
-import 'package:noctambuls/core/error/failure.dart';
+import 'package:noctambuls/core/domain/error/failure.dart';
 
 /// Represents the absence of a meaningful return value.
 /// Use [Result<Unit>] for operations that succeed with no data.
@@ -28,6 +28,7 @@ sealed class Result<T> {
   });
 
   bool get isOk => this is Ok<T>;
+
   bool get isErr => this is Err<T>;
 }
 
