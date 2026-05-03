@@ -8,6 +8,8 @@ import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:noctambuls/features/profile/presentation/pages/widgets/formatted_profile_name.dart';
 import 'package:noctambuls/features/profile/presentation/pages/widgets/user_avatar.dart';
+import 'package:noctambuls/features/settings/presentation/pages/widgets/section_title.dart';
+import 'package:noctambuls/features/settings/presentation/pages/widgets/settings_card.dart';
 import 'package:noctambuls/features/settings/presentation/widgets/language_selector.dart';
 import 'package:noctambuls/features/settings/presentation/widgets/theme_selector.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
@@ -39,8 +41,8 @@ class SettingsPage extends StatelessWidget {
         ),
         children: [
           if (user != null && profile != null) ...[
-            _SectionTitle(title: l10n.settingsAccountTitle),
-            _SettingsCard(
+            SectionTitle(title: l10n.settingsAccountTitle),
+            SettingsCard(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(AppDimensions.md),
@@ -90,8 +92,8 @@ class SettingsPage extends StatelessWidget {
             const SizedBox(height: AppDimensions.xl),
           ],
 
-          _SectionTitle(title: l10n.settingsPreferencesTitle),
-          const _SettingsCard(
+          SectionTitle(title: l10n.settingsPreferencesTitle),
+          const SettingsCard(
             children: [
               LanguageSelector(),
               Divider(height: 1),
@@ -99,54 +101,6 @@ class SettingsPage extends StatelessWidget {
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle({required this.title});
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(
-        left: AppDimensions.sm,
-        bottom: AppDimensions.sm,
-      ),
-      child: Text(
-        title.toUpperCase(),
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.2,
-        ),
-      ),
-    );
-  }
-}
-
-class _SettingsCard extends StatelessWidget {
-  const _SettingsCard({required this.children});
-
-  final List<Widget> children;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 0,
-      margin: EdgeInsets.zero,
-      color: Theme.of(
-        context,
-      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: children,
       ),
     );
   }
