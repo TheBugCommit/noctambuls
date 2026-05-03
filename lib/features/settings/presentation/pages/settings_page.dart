@@ -34,73 +34,75 @@ class SettingsPage extends StatelessWidget {
       appBar: AppBar(
         title: Text(l10n.settingsTitle),
       ),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppDimensions.md,
-          vertical: AppDimensions.lg,
-        ),
-        children: [
-          if (user != null && profile != null) ...[
-            SectionTitle(title: l10n.settingsAccountTitle),
-            SettingsCard(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(AppDimensions.md),
-                  child: Row(
-                    children: [
-                      UserAvatar(
-                        photoUrl: user.photoUrl,
-                        radius: AppDimensions.xl,
-                      ),
-                      const SizedBox(width: AppDimensions.md),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          spacing: AppDimensions.xs,
-                          children: [
-                            FormattedProfileName(fullName: profile.name),
-                            AppIconText(
-                              icon: Icons.email_outlined,
-                              text: user.email,
-                            ),
-                          ],
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.md,
+            vertical: AppDimensions.lg,
+          ),
+          children: [
+            if (user != null && profile != null) ...[
+              SectionTitle(title: l10n.settingsAccountTitle),
+              SettingsCard(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(AppDimensions.md),
+                    child: Row(
+                      children: [
+                        UserAvatar(
+                          photoUrl: user.photoUrl,
+                          radius: AppDimensions.xl,
                         ),
+                        const SizedBox(width: AppDimensions.md),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            spacing: AppDimensions.xs,
+                            children: [
+                              FormattedProfileName(fullName: profile.name),
+                              AppIconText(
+                                icon: Icons.email_outlined,
+                                text: user.email,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Divider(height: 1),
+                  ListTile(
+                    leading: Icon(Icons.logout, color: colorScheme.error),
+                    title: Text(
+                      l10n.profileSignOut,
+                      style: TextStyle(
+                        color: colorScheme.error,
+                        fontWeight: FontWeight.w500,
                       ),
-                    ],
-                  ),
-                ),
-                const Divider(height: 1),
-                ListTile(
-                  leading: Icon(Icons.logout, color: colorScheme.error),
-                  title: Text(
-                    l10n.profileSignOut,
-                    style: TextStyle(
-                      color: colorScheme.error,
-                      fontWeight: FontWeight.w500,
                     ),
-                  ),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.vertical(
-                      bottom: Radius.circular(AppDimensions.radiusLg),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.vertical(
+                        bottom: Radius.circular(AppDimensions.radiusLg),
+                      ),
                     ),
+                    onTap: () =>
+                        context.read<AuthBloc>().add(const SignOutRequested()),
                   ),
-                  onTap: () =>
-                      context.read<AuthBloc>().add(const SignOutRequested()),
-                ),
+                ],
+              ),
+              const SizedBox(height: AppDimensions.xl),
+            ],
+
+            SectionTitle(title: l10n.settingsPreferencesTitle),
+            const SettingsCard(
+              children: [
+                LanguageSelector(),
+                Divider(height: 1),
+                ThemeSelector(),
               ],
             ),
-            const SizedBox(height: AppDimensions.xl),
           ],
-
-          SectionTitle(title: l10n.settingsPreferencesTitle),
-          const SettingsCard(
-            children: [
-              LanguageSelector(),
-              Divider(height: 1),
-              ThemeSelector(),
-            ],
-          ),
-        ],
+        ),
       ),
     );
   }
