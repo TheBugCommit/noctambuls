@@ -314,6 +314,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profileQrDialogTitle => 'Código QR de ornitólogo';
 
   @override
+  String get profileQrDialogClose => 'Cerrar';
+
+  @override
   String get profileObservationsTab => 'Observaciones';
 
   @override

@@ -134,6 +134,7 @@
     "profileOrnithologistCode": "Código de ornitólogo",
     "profileShowQr": "Mostrar QR",
     "profileQrDialogTitle": "Código QR de ornitólogo",
+    "profileQrDialogClose": "Cerrar",
     "profileObservationsTab": "Observaciones",
     "profileParticipationsTab": "Participaciones",
     "profileEditTitle": "Editar perfil",

@@ -662,6 +662,12 @@ abstract class AppLocalizations {
   /// **'Codi QR d\'ornitòleg'**
   String get profileQrDialogTitle;
 
+  /// No description provided for @profileQrDialogClose.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tancar'**
+  String get profileQrDialogClose;
+
   /// No description provided for @profileObservationsTab.
   ///
   /// In ca, this message translates to:

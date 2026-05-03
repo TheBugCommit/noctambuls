@@ -313,6 +313,9 @@ class AppLocalizationsCa extends AppLocalizations {
   String get profileQrDialogTitle => 'Codi QR d\'ornitòleg';
 
   @override
+  String get profileQrDialogClose => 'Tancar';
+
+  @override
   String get profileObservationsTab => 'Observacions';
 
   @override
