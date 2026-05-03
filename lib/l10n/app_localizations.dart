@@ -104,71 +104,47 @@ abstract class AppLocalizations {
   /// **'Noctàmbuls'**
   String get appTitle;
 
-  /// No description provided for @settingsTitle.
+  /// No description provided for @errorUnknown.
   ///
   /// In ca, this message translates to:
-  /// **'Configuració'**
-  String get settingsTitle;
+  /// **'S\'ha produït un error desconegut.'**
+  String get errorUnknown;
 
-  /// No description provided for @languageLabel.
+  /// No description provided for @back.
   ///
   /// In ca, this message translates to:
-  /// **'Idioma'**
-  String get languageLabel;
+  /// **'Tornar'**
+  String get back;
 
-  /// No description provided for @settingsPreferencesTitle.
+  /// No description provided for @delete.
   ///
   /// In ca, this message translates to:
-  /// **'Preferències'**
-  String get settingsPreferencesTitle;
+  /// **'Eliminar'**
+  String get delete;
 
-  /// No description provided for @settingsAccountTitle.
+  /// No description provided for @cancel.
   ///
   /// In ca, this message translates to:
-  /// **'Compte'**
-  String get settingsAccountTitle;
+  /// **'Cancel·la'**
+  String get cancel;
 
-  /// No description provided for @systemLabel.
+  /// No description provided for @retry.
   ///
   /// In ca, this message translates to:
-  /// **'Sistema'**
-  String get systemLabel;
+  /// **'Tornar-ho a intentar'**
+  String get retry;
 
-  /// No description provided for @catalanLabel.
+  /// No description provided for @ignore.
   ///
   /// In ca, this message translates to:
-  /// **'Català'**
-  String get catalanLabel;
+  /// **'Ignorar'**
+  String get ignore;
 
-  /// No description provided for @spanishLabel.
+  /// No description provided for @confirmDelete.
   ///
   /// In ca, this message translates to:
-  /// **'Castellà'**
-  String get spanishLabel;
-
-  /// No description provided for @themeLabel.
-  ///
-  /// In ca, this message translates to:
-  /// **'Tema visual'**
-  String get themeLabel;
-
-  /// No description provided for @themeLightLabel.
-  ///
-  /// In ca, this message translates to:
-  /// **'Clar'**
-  String get themeLightLabel;
-
-  /// No description provided for @themeDarkLabel.
-  ///
-  /// In ca, this message translates to:
-  /// **'Fosc'**
-  String get themeDarkLabel;
-
-  /// No description provided for @themeSystemLabel.
-  ///
-  /// In ca, this message translates to:
-  /// **'Sistema'**
-  String get themeSystemLabel;
+  /// **'Sí, elimina'**
+  String get confirmDelete;
 
   /// No description provided for @homeLabel.
   ///
@@ -193,348 +169,6 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Perfil'**
   String get profileLabel;
-
-  /// No description provided for @censusLabel.
-  ///
-  /// In ca, this message translates to:
-  /// **'Cens'**
-  String get censusLabel;
-
-  /// No description provided for @stationLabel.
-  ///
-  /// In ca, this message translates to:
-  /// **'Estació de Seguiment'**
-  String get stationLabel;
-
-  /// No description provided for @incidentalLabel.
-  ///
-  /// In ca, this message translates to:
-  /// **'Observació Incidental'**
-  String get incidentalLabel;
-
-  /// No description provided for @homeTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Inici'**
-  String get homeTitle;
-
-  /// No description provided for @errorSessionAlreadyExists.
-  ///
-  /// In ca, this message translates to:
-  /// **'Ja hi ha una sessió activa. Finalitza-la o cancel·la-la primer.'**
-  String get errorSessionAlreadyExists;
-
-  /// No description provided for @errorUnknown.
-  ///
-  /// In ca, this message translates to:
-  /// **'S\'ha produït un error desconegut.'**
-  String get errorUnknown;
-
-  /// No description provided for @activeSessionTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Sessió en curs'**
-  String get activeSessionTitle;
-
-  /// No description provided for @startedAt.
-  ///
-  /// In ca, this message translates to:
-  /// **'Observant des de {time}'**
-  String startedAt(String time);
-
-  /// No description provided for @observationsRegistered.
-  ///
-  /// In ca, this message translates to:
-  /// **'{count} observacions registrades'**
-  String observationsRegistered(int count);
-
-  /// No description provided for @noObservationsRegistered.
-  ///
-  /// In ca, this message translates to:
-  /// **'No hi ha cap observació registrada'**
-  String get noObservationsRegistered;
-
-  /// No description provided for @stopAndReview.
-  ///
-  /// In ca, this message translates to:
-  /// **'Aturar'**
-  String get stopAndReview;
-
-  /// No description provided for @deleteSession.
-  ///
-  /// In ca, this message translates to:
-  /// **'Cancel·lar Sessió'**
-  String get deleteSession;
-
-  /// No description provided for @deleteSessionTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Cancel·lar sessió?'**
-  String get deleteSessionTitle;
-
-  /// No description provided for @deleteSessionBody.
-  ///
-  /// In ca, this message translates to:
-  /// **'Es perdrà tota la informació i no es podrà recuperar.'**
-  String get deleteSessionBody;
-
-  /// No description provided for @back.
-  ///
-  /// In ca, this message translates to:
-  /// **'Tornar'**
-  String get back;
-
-  /// No description provided for @delete.
-  ///
-  /// In ca, this message translates to:
-  /// **'Eliminar'**
-  String get delete;
-
-  /// No description provided for @cancel.
-  ///
-  /// In ca, this message translates to:
-  /// **'Cancel·la'**
-  String get cancel;
-
-  /// No description provided for @confirmDelete.
-  ///
-  /// In ca, this message translates to:
-  /// **'Sí, elimina'**
-  String get confirmDelete;
-
-  /// No description provided for @confirmDeleteSessionMessage.
-  ///
-  /// In ca, this message translates to:
-  /// **'Es perdran totes les observacions d\'aquesta sessió. Aquesta acció no es pot desfer.'**
-  String get confirmDeleteSessionMessage;
-
-  /// No description provided for @confirmDeleteSessionTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Vols eliminar la sessió?'**
-  String get confirmDeleteSessionTitle;
-
-  /// No description provided for @stopSessionTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Aturar la sessió?'**
-  String get stopSessionTitle;
-
-  /// No description provided for @stopSessionBody.
-  ///
-  /// In ca, this message translates to:
-  /// **'Les observacions ja registrades es conservaran.'**
-  String get stopSessionBody;
-
-  /// No description provided for @stopSessionConfirm.
-  ///
-  /// In ca, this message translates to:
-  /// **'Aturar'**
-  String get stopSessionConfirm;
-
-  /// No description provided for @reviewTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Revisió'**
-  String get reviewTitle;
-
-  /// No description provided for @sessionInReview.
-  ///
-  /// In ca, this message translates to:
-  /// **'Sessió en revisió'**
-  String get sessionInReview;
-
-  /// No description provided for @continueReview.
-  ///
-  /// In ca, this message translates to:
-  /// **'Continuar la revisió'**
-  String get continueReview;
-
-  /// No description provided for @continueObserving.
-  ///
-  /// In ca, this message translates to:
-  /// **'Continuar observant'**
-  String get continueObserving;
-
-  /// No description provided for @observingTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Observant'**
-  String get observingTitle;
-
-  /// No description provided for @noBirdsFound.
-  ///
-  /// In ca, this message translates to:
-  /// **'No s\'han trobat ocells'**
-  String get noBirdsFound;
-
-  /// No description provided for @listen.
-  ///
-  /// In ca, this message translates to:
-  /// **'Escoltar'**
-  String get listen;
-
-  /// No description provided for @moreInfo.
-  ///
-  /// In ca, this message translates to:
-  /// **'Més info'**
-  String get moreInfo;
-
-  /// No description provided for @semanticLabelBirdImage.
-  ///
-  /// In ca, this message translates to:
-  /// **'Fotografia de {bird}'**
-  String semanticLabelBirdImage(String bird);
-
-  /// No description provided for @noImageAvailable.
-  ///
-  /// In ca, this message translates to:
-  /// **'La imatge no està disponible'**
-  String get noImageAvailable;
-
-  /// No description provided for @downloadingCatalog.
-  ///
-  /// In ca, this message translates to:
-  /// **'Descarregant els ocells...'**
-  String get downloadingCatalog;
-
-  /// No description provided for @connectionError.
-  ///
-  /// In ca, this message translates to:
-  /// **'Error de connexió'**
-  String get connectionError;
-
-  /// No description provided for @catalogDownloadError.
-  ///
-  /// In ca, this message translates to:
-  /// **'No s\'ha pogut descarregar el catàleg inicial. Comprova la teva connexió a internet.'**
-  String get catalogDownloadError;
-
-  /// No description provided for @retry.
-  ///
-  /// In ca, this message translates to:
-  /// **'Tornar a intentar'**
-  String get retry;
-
-  /// No description provided for @ignore.
-  ///
-  /// In ca, this message translates to:
-  /// **'Ignorar'**
-  String get ignore;
-
-  /// No description provided for @requiredBirdCatalog.
-  ///
-  /// In ca, this message translates to:
-  /// **'Catàleg d\'ocells requerit'**
-  String get requiredBirdCatalog;
-
-  /// No description provided for @requiredBirdCatalogMsg.
-  ///
-  /// In ca, this message translates to:
-  /// **'Per utilitzar aquesta secció necessites descarregar el catàleg d\'ocells almenys un cop.'**
-  String get requiredBirdCatalogMsg;
-
-  /// No description provided for @downloadNow.
-  ///
-  /// In ca, this message translates to:
-  /// **'Descarregar ara'**
-  String get downloadNow;
-
-  /// No description provided for @homeErrorDownloadCatalog.
-  ///
-  /// In ca, this message translates to:
-  /// **'Descàrrega del catàleg d\'ocells fallida'**
-  String get homeErrorDownloadCatalog;
-
-  /// No description provided for @homeErrorDownloadCatalogMsg.
-  ///
-  /// In ca, this message translates to:
-  /// **'No s\'ha pogut actualitzar el catàleg d\'ocells. Pots seguir utilitzant l\'aplicació o tornar-ho a intentar la descàrrega.'**
-  String get homeErrorDownloadCatalogMsg;
-
-  /// No description provided for @usageWarningTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Advertència d\'ús'**
-  String get usageWarningTitle;
-
-  /// No description provided for @usageWarningMessage.
-  ///
-  /// In ca, this message translates to:
-  /// **'La reproducció d\'aquest àudio durant un cens pot alterar el comportament dels ocells i distorsionar els resultats de l\'observació.\n\nSi us plau, fes-ne un ús responsable.'**
-  String get usageWarningMessage;
-
-  /// No description provided for @usageWarningConfirm.
-  ///
-  /// In ca, this message translates to:
-  /// **'Sí, ho entenc'**
-  String get usageWarningConfirm;
-
-  /// No description provided for @cantOpenLink.
-  ///
-  /// In ca, this message translates to:
-  /// **'No s\'ha pogut obrir l\'enllaç'**
-  String get cantOpenLink;
-
-  /// No description provided for @cantPlayAudio.
-  ///
-  /// In ca, this message translates to:
-  /// **'No s\'ha pogut reproduir l\'àudio'**
-  String get cantPlayAudio;
-
-  /// No description provided for @stopPlayingAudio.
-  ///
-  /// In ca, this message translates to:
-  /// **'Atura'**
-  String get stopPlayingAudio;
-
-  /// No description provided for @observingMethodTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Sobre els mètodes d\'observació'**
-  String get observingMethodTitle;
-
-  /// No description provided for @observingMethodConfirmLabel.
-  ///
-  /// In ca, this message translates to:
-  /// **'Entesos'**
-  String get observingMethodConfirmLabel;
-
-  /// No description provided for @observingMethodCensTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Cens'**
-  String get observingMethodCensTitle;
-
-  /// No description provided for @observingMethodCensDescription.
-  ///
-  /// In ca, this message translates to:
-  /// **'És un treball coordinat entre diversos grups de persones en punts fixos de forma simultània. S\'utilitza en campanyes oficials o jornades de cens col·lectiu privats.'**
-  String get observingMethodCensDescription;
-
-  /// No description provided for @observingMethodESTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Estació de Seguiment'**
-  String get observingMethodESTitle;
-
-  /// No description provided for @observingMethodESDescription.
-  ///
-  /// In ca, this message translates to:
-  /// **'És una observació típicament individual des d\'un únic punt fix durant un temps determinat. S\'utilitza per mostrejos repetitius en el mateix lloc.'**
-  String get observingMethodESDescription;
-
-  /// No description provided for @observingMethodIncTitle.
-  ///
-  /// In ca, this message translates to:
-  /// **'Observació Incidental'**
-  String get observingMethodIncTitle;
-
-  /// No description provided for @observingMethodIncDescription.
-  ///
-  /// In ca, this message translates to:
-  /// **'És una observació inesperada o aïllada mentre fas una altra activitat. Utilitze\'l quan vegis un ocell de forma casual i el vulguis anotar ràpidament sense seguir un protocol fix.'**
-  String get observingMethodIncDescription;
 
   /// No description provided for @loginTitle.
   ///
@@ -635,7 +269,7 @@ abstract class AppLocalizations {
   /// No description provided for @signUpSendButton.
   ///
   /// In ca, this message translates to:
-  /// **'Finalitzar Registre'**
+  /// **'Finalitzar registre'**
   String get signUpSendButton;
 
   /// No description provided for @signUpSendButtonLoading.
@@ -643,6 +277,372 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Registrant...'**
   String get signUpSendButtonLoading;
+
+  /// No description provided for @settingsTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Configuració'**
+  String get settingsTitle;
+
+  /// No description provided for @settingsPreferencesTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Preferències'**
+  String get settingsPreferencesTitle;
+
+  /// No description provided for @settingsAccountTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Compte'**
+  String get settingsAccountTitle;
+
+  /// No description provided for @languageLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Idioma'**
+  String get languageLabel;
+
+  /// No description provided for @systemLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sistema'**
+  String get systemLabel;
+
+  /// No description provided for @catalanLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Català'**
+  String get catalanLabel;
+
+  /// No description provided for @spanishLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Castellà'**
+  String get spanishLabel;
+
+  /// No description provided for @themeLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tema visual'**
+  String get themeLabel;
+
+  /// No description provided for @themeLightLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Clar'**
+  String get themeLightLabel;
+
+  /// No description provided for @themeDarkLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Fosc'**
+  String get themeDarkLabel;
+
+  /// No description provided for @themeSystemLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sistema'**
+  String get themeSystemLabel;
+
+  /// No description provided for @homeTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Inici'**
+  String get homeTitle;
+
+  /// No description provided for @censusLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cens'**
+  String get censusLabel;
+
+  /// No description provided for @stationLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Estació de seguiment'**
+  String get stationLabel;
+
+  /// No description provided for @incidentalLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observació incidental'**
+  String get incidentalLabel;
+
+  /// No description provided for @observingMethodTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sobre els mètodes d\'observació'**
+  String get observingMethodTitle;
+
+  /// No description provided for @observingMethodConfirmLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Entesos'**
+  String get observingMethodConfirmLabel;
+
+  /// No description provided for @observingMethodCensTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cens'**
+  String get observingMethodCensTitle;
+
+  /// No description provided for @observingMethodCensDescription.
+  ///
+  /// In ca, this message translates to:
+  /// **'És un treball coordinat entre diversos grups de persones en punts fixos de forma simultània. S\'utilitza en campanyes oficials o jornades de cens col·lectiu privades.'**
+  String get observingMethodCensDescription;
+
+  /// No description provided for @observingMethodESTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Estació de seguiment'**
+  String get observingMethodESTitle;
+
+  /// No description provided for @observingMethodESDescription.
+  ///
+  /// In ca, this message translates to:
+  /// **'És una observació típicament individual des d\'un únic punt fix durant un temps determinat. S\'utilitza per mostrejos repetitius en el mateix lloc.'**
+  String get observingMethodESDescription;
+
+  /// No description provided for @observingMethodIncTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observació incidental'**
+  String get observingMethodIncTitle;
+
+  /// No description provided for @observingMethodIncDescription.
+  ///
+  /// In ca, this message translates to:
+  /// **'És una observació inesperada o aïllada mentre fas una altra activitat. Fes-la servir quan vegis un ocell de forma casual i el vulguis anotar ràpidament sense seguir un protocol fix.'**
+  String get observingMethodIncDescription;
+
+  /// No description provided for @activeSessionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sessió en curs'**
+  String get activeSessionTitle;
+
+  /// No description provided for @startedAt.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observant des de {time}'**
+  String startedAt(String time);
+
+  /// No description provided for @errorSessionAlreadyExists.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ja hi ha una sessió activa. Finalitza-la o cancel·la-la primer.'**
+  String get errorSessionAlreadyExists;
+
+  /// No description provided for @observationsRegistered.
+  ///
+  /// In ca, this message translates to:
+  /// **'{count} observacions registrades'**
+  String observationsRegistered(int count);
+
+  /// No description provided for @noObservationsRegistered.
+  ///
+  /// In ca, this message translates to:
+  /// **'No hi ha cap observació registrada'**
+  String get noObservationsRegistered;
+
+  /// No description provided for @observingTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observant'**
+  String get observingTitle;
+
+  /// No description provided for @stopAndReview.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aturar'**
+  String get stopAndReview;
+
+  /// No description provided for @continueObserving.
+  ///
+  /// In ca, this message translates to:
+  /// **'Continuar observant'**
+  String get continueObserving;
+
+  /// No description provided for @stopSessionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aturar la sessió?'**
+  String get stopSessionTitle;
+
+  /// No description provided for @stopSessionBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Les observacions ja registrades es conservaran.'**
+  String get stopSessionBody;
+
+  /// No description provided for @stopSessionConfirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aturar'**
+  String get stopSessionConfirm;
+
+  /// No description provided for @reviewTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Revisió'**
+  String get reviewTitle;
+
+  /// No description provided for @sessionInReview.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sessió en revisió'**
+  String get sessionInReview;
+
+  /// No description provided for @continueReview.
+  ///
+  /// In ca, this message translates to:
+  /// **'Continuar la revisió'**
+  String get continueReview;
+
+  /// No description provided for @deleteSession.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel·lar sessió'**
+  String get deleteSession;
+
+  /// No description provided for @deleteSessionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel·lar sessió?'**
+  String get deleteSessionTitle;
+
+  /// No description provided for @deleteSessionBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Es perdrà tota la informació i no es podrà recuperar.'**
+  String get deleteSessionBody;
+
+  /// No description provided for @confirmDeleteSessionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Vols eliminar la sessió?'**
+  String get confirmDeleteSessionTitle;
+
+  /// No description provided for @confirmDeleteSessionMessage.
+  ///
+  /// In ca, this message translates to:
+  /// **'Es perdran totes les observacions d\'aquesta sessió. Aquesta acció no es pot desfer.'**
+  String get confirmDeleteSessionMessage;
+
+  /// No description provided for @noBirdsFound.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'han trobat ocells'**
+  String get noBirdsFound;
+
+  /// No description provided for @listen.
+  ///
+  /// In ca, this message translates to:
+  /// **'Escoltar'**
+  String get listen;
+
+  /// No description provided for @moreInfo.
+  ///
+  /// In ca, this message translates to:
+  /// **'Més info'**
+  String get moreInfo;
+
+  /// No description provided for @semanticLabelBirdImage.
+  ///
+  /// In ca, this message translates to:
+  /// **'Fotografia de {bird}'**
+  String semanticLabelBirdImage(String bird);
+
+  /// No description provided for @noImageAvailable.
+  ///
+  /// In ca, this message translates to:
+  /// **'La imatge no està disponible'**
+  String get noImageAvailable;
+
+  /// No description provided for @downloadingCatalog.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descarregant els ocells...'**
+  String get downloadingCatalog;
+
+  /// No description provided for @connectionError.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error de connexió'**
+  String get connectionError;
+
+  /// No description provided for @catalogDownloadError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut descarregar el catàleg inicial. Comprova la teva connexió a internet.'**
+  String get catalogDownloadError;
+
+  /// No description provided for @requiredBirdCatalog.
+  ///
+  /// In ca, this message translates to:
+  /// **'Catàleg d\'ocells requerit'**
+  String get requiredBirdCatalog;
+
+  /// No description provided for @requiredBirdCatalogMsg.
+  ///
+  /// In ca, this message translates to:
+  /// **'Per utilitzar aquesta secció necessites descarregar el catàleg d\'ocells almenys un cop.'**
+  String get requiredBirdCatalogMsg;
+
+  /// No description provided for @downloadNow.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descarregar ara'**
+  String get downloadNow;
+
+  /// No description provided for @homeErrorDownloadCatalog.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descàrrega del catàleg d\'ocells fallida'**
+  String get homeErrorDownloadCatalog;
+
+  /// No description provided for @homeErrorDownloadCatalogMsg.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut actualitzar el catàleg d\'ocells. Pots seguir utilitzant l\'aplicació o tornar a intentar la descàrrega.'**
+  String get homeErrorDownloadCatalogMsg;
+
+  /// No description provided for @usageWarningTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Advertència d\'ús'**
+  String get usageWarningTitle;
+
+  /// No description provided for @usageWarningMessage.
+  ///
+  /// In ca, this message translates to:
+  /// **'La reproducció d\'aquest àudio durant un cens pot alterar el comportament dels ocells i distorsionar els resultats de l\'observació.\n\nSi us plau, fes-ne un ús responsable.'**
+  String get usageWarningMessage;
+
+  /// No description provided for @usageWarningConfirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sí, ho entenc'**
+  String get usageWarningConfirm;
+
+  /// No description provided for @cantOpenLink.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut obrir l\'enllaç'**
+  String get cantOpenLink;
+
+  /// No description provided for @cantPlayAudio.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut reproduir l\'àudio'**
+  String get cantPlayAudio;
+
+  /// No description provided for @stopPlayingAudio.
+  ///
+  /// In ca, this message translates to:
+  /// **'Atura'**
+  String get stopPlayingAudio;
 
   /// No description provided for @profileOrnithologistCode.
   ///
@@ -719,7 +719,7 @@ abstract class AppLocalizations {
   /// No description provided for @profileObservationsEmpty.
   ///
   /// In ca, this message translates to:
-  /// **'Encara no hi han observacións.'**
+  /// **'Encara no hi ha observacions.'**
   String get profileObservationsEmpty;
 
   /// No description provided for @profileRetry.

@@ -59,7 +59,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(l10n.profileEditTitle),
-        centerTitle: true,
       ),
       body: BlocConsumer<ProfileBloc, ProfileState>(
         listenWhen: (_, curr) =>

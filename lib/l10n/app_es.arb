@@ -1,121 +1,24 @@
 {
     "@@locale": "es",
+
     "appTitle": "Noctámbulos",
-    "settingsTitle": "Configuración",
-    "languageLabel": "Idioma",
-    "settingsPreferencesTitle": "Preferencias",
-    "settingsAccountTitle": "Cuenta",
-    "systemLabel": "Sistema",
-    "catalanLabel": "Catalan",
-    "spanishLabel": "Castellano",
-    "themeLabel": "Tema visual",
-    "themeLightLabel": "Claro",
-    "themeDarkLabel": "Oscuro",
-    "themeSystemLabel": "Sistema",
+    "errorUnknown": "Se ha producido un error desconocido.",
+    "back": "Volver",
+    "delete": "Eliminar",
+    "cancel": "Cancelar",
+    "retry": "Volver a intentar",
+    "ignore": "Ignorar",
+    "confirmDelete": "Sí, eliminar",
+
     "homeLabel": "Inicio",
     "guideLabel": "Guía",
     "exploreLabel": "Explora",
     "profileLabel": "Perfil",
-    "censusLabel": "Censo",
-    "stationLabel": "Estación de Seguimiento",
-    "incidentalLabel": "Observación Incidental",
-    "homeTitle": "Inicio",
-
-    "errorSessionAlreadyExists": "Ya hay una sesión activa. Finalízala o cancélala primero.",
-    "errorUnknown": "Se ha producido un error desconocido.",
-    "activeSessionTitle": "Sesión en curso",
-
-    "startedAt": "Observando desde {time}",
-    "@startedAt": {
-        "placeholders": {
-            "time": {
-                "type": "String"
-            }
-        }
-    },
-
-    "observationsRegistered": "{count} observaciones registradas",
-    "@observationsRegistered": {
-        "placeholders": {
-            "count": {
-                "type": "int"
-            }
-        }
-    },
-    "noObservationsRegistered": "No hay ninguna observacion registrada",
-
-    "stopAndReview": "Detener",
-    "deleteSession": "Cancelar Sesión",
-    "deleteSessionTitle": "¿Cancelar sesión?",
-    "deleteSessionBody": "Se perderá toda la información y no se podrá recuperar.",
-    "back": "Volver",
-    "delete": "Eliminar",
-    "cancel": "Cancelar",
-    "confirmDelete": "Sí, elimina",
-    "confirmDeleteSessionMessage": "Se perderán todas las observaciones de esta sesión. Esta acción es irreversible.",
-    "confirmDeleteSessionTitle": "Quieres eliminar la session?",
-
-    "stopSessionTitle": "¿Detener la sesión?",
-    "stopSessionBody": "Las observaciones ya registradas se conservarán.",
-    "stopSessionConfirm": "Detener",
-    "reviewTitle": "Revisión",
-    "sessionInReview": "Sesión en revisión",
-    "continueReview": "Continuar la revisión",
-    "continueObserving": "Continuar observando",
-    "observingTitle": "Observando",
-
-    "noBirdsFound": "No se han encontrado aves",
-    "listen": "Escuchar",
-    "moreInfo": "Más info",
-    "semanticLabelBirdImage": "Fotografía de {bird}",
-    "@semanticLabelBirdImage": {
-        "placeholders": {
-            "bird": {
-              "type": "String"
-            }
-        }
-    },
-    "noImageAvailable": "La imagen no esta disponible",
-    "downloadingCatalog": "Descargando los pájaros...",
-    "connectionError": "Error de connexion",
-    "catalogDownloadError": "No se ha podido descargar el catálago de pájaros. Comprueba tu connexion a internet.",
-    "retry": "Volver a intentar",
-    "ignore": "Ignorar",
-    "requiredBirdCatalog": "Catálago de pájaros requerido",
-    "requiredBirdCatalogMsg": "Para usar esta sección necessitas descargar el catálago de pájaros almenos una vez.",
-    "downloadNow": "Descargar ahora",
-    "homeErrorDownloadCatalog": "Descarga del catálogo de pájaros fallida",
-    "homeErrorDownloadCatalogMsg": "No se ha podido descargar el catálago de pájaros. Puedes seguir usando la aplicación o volver a intentar la descarga.",
-    "usageWarningTitle": "Advertencia de uso",
-    "usageWarningMessage": "La reproducción de este audio durante un censo puede alterar el comportamiento de las aves y distorsionar los resultados de la observación.\n\nPor favor, haz un uso responsable.",
-    "usageWarningConfirm": "Sí, lo entiendo",
-    "cantOpenLink": "No se ha podido abrir el enlace",
-    "cantPlayAudio": "No se ha podido reproducir el audio",
-    "stopPlayingAudio": "Detener",
-    "stopSessionTitle": "¿Detener la sesión?",
-    "stopSessionBody": "Las observaciones ya registradas se conservarán.",
-    "stopSessionConfirm": "Detener",
-    "reviewTitle": "Revisión",
-    "sessionInReview": "Sesión en revisión",
-    "continueReview": "Continuar la revisión",
-    "continueObserving": "Continuar observando",
-    "observingTitle": "Observando",
-
-    "observingMethodTitle": "Sobre los métodos de observación",
-    "observingMethodConfirmLabel": "Entendido",
-    "observingMethodCensTitle": "Censo",
-    "observingMethodCensDescription": "Es un trabajo coordinado entre varios grupos de personas en puntos fijos de forma simultánea. Se utiliza en campañas oficiales o jornadas de censo colectivo privadas.",
-    "observingMethodESTitle": "Estación de Seguimiento",
-    "observingMethodESDescription": "Es una observación típicamente individual desde un único punto fijo durante un tiempo determinado. Se utiliza para muestreos repetitivos en el mismo lugar.",
-    "observingMethodIncTitle": "Observación incidental",
-    "observingMethodIncDescription": "Es una observación inesperada o aislada mientras realizas otra actividad. Úsalo cuando veas un ave de forma casual y quieras anotarlo rápidamente sin seguir un protocolo fijo.",
 
     "loginTitle": "Bienvenido/a",
     "loginSubtitle": "Inicia sesión para continuar",
     "signInWithGoogle": "Iniciar sesión con Google",
     "signInError": "No se pudo iniciar sesión. Inténtalo de nuevo.",
-    "signOutLabel": "Cerrar sesión",
-
     "signOutLabel": "Cerrar sesión",
     "signUpTitle": "Completa tu perfil",
     "signUpSessionExpired": "La sesión ha caducado, por favor, vuelve a iniciar sesión",
@@ -130,6 +33,92 @@
     "signUpFormPhoneFormat": "Introduce un teléfono válido",
     "signUpSendButton": "Finalizar registro",
     "signUpSendButtonLoading": "Registrando...",
+
+    "settingsTitle": "Configuración",
+    "settingsPreferencesTitle": "Preferencias",
+    "settingsAccountTitle": "Cuenta",
+    "languageLabel": "Idioma",
+    "systemLabel": "Sistema",
+    "catalanLabel": "Catalán",
+    "spanishLabel": "Castellano",
+    "themeLabel": "Tema visual",
+    "themeLightLabel": "Claro",
+    "themeDarkLabel": "Oscuro",
+    "themeSystemLabel": "Sistema",
+
+    "homeTitle": "Inicio",
+    "censusLabel": "Censo",
+    "stationLabel": "Estación de seguimiento",
+    "incidentalLabel": "Observación incidental",
+    "observingMethodTitle": "Sobre los métodos de observación",
+    "observingMethodConfirmLabel": "Entendido",
+    "observingMethodCensTitle": "Censo",
+    "observingMethodCensDescription": "Es un trabajo coordinado entre varios grupos de personas en puntos fijos de forma simultánea. Se utiliza en campañas oficiales o jornadas de censo colectivo privadas.",
+    "observingMethodESTitle": "Estación de seguimiento",
+    "observingMethodESDescription": "Es una observación típicamente individual desde un único punto fijo durante un tiempo determinado. Se utiliza para muestreos repetitivos en el mismo lugar.",
+    "observingMethodIncTitle": "Observación incidental",
+    "observingMethodIncDescription": "Es una observación inesperada o aislada mientras realizas otra actividad. Úsalo cuando veas un ave de forma casual y quieras anotarlo rápidamente sin seguir un protocolo fijo.",
+
+    "activeSessionTitle": "Sesión en curso",
+    "startedAt": "Observando desde {time}",
+    "@startedAt": {
+        "placeholders": {
+            "time": {
+                "type": "String"
+            }
+        }
+    },
+    "errorSessionAlreadyExists": "Ya hay una sesión activa. Finalízala o cancélala primero.",
+    "observationsRegistered": "{count} observaciones registradas",
+    "@observationsRegistered": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "noObservationsRegistered": "No hay ninguna observación registrada",
+    "observingTitle": "Observando",
+    "stopAndReview": "Detener",
+    "continueObserving": "Continuar observando",
+    "stopSessionTitle": "¿Detener la sesión?",
+    "stopSessionBody": "Las observaciones ya registradas se conservarán.",
+    "stopSessionConfirm": "Detener",
+    "reviewTitle": "Revisión",
+    "sessionInReview": "Sesión en revisión",
+    "continueReview": "Continuar la revisión",
+    "deleteSession": "Cancelar sesión",
+    "deleteSessionTitle": "¿Cancelar sesión?",
+    "deleteSessionBody": "Se perderá toda la información y no se podrá recuperar.",
+    "confirmDeleteSessionTitle": "¿Quieres eliminar la sesión?",
+    "confirmDeleteSessionMessage": "Se perderán todas las observaciones de esta sesión. Esta acción es irreversible.",
+
+    "noBirdsFound": "No se han encontrado aves",
+    "listen": "Escuchar",
+    "moreInfo": "Más info",
+    "semanticLabelBirdImage": "Fotografía de {bird}",
+    "@semanticLabelBirdImage": {
+        "placeholders": {
+            "bird": {
+              "type": "String"
+            }
+        }
+    },
+    "noImageAvailable": "La imagen no está disponible",
+    "downloadingCatalog": "Descargando las aves...",
+    "connectionError": "Error de conexión",
+    "catalogDownloadError": "No se ha podido descargar el catálogo de aves. Comprueba tu conexión a internet.",
+    "requiredBirdCatalog": "Catálogo de aves requerido",
+    "requiredBirdCatalogMsg": "Para usar esta sección necesitas descargar el catálogo de aves al menos una vez.",
+    "downloadNow": "Descargar ahora",
+    "homeErrorDownloadCatalog": "Descarga del catálogo de aves fallida",
+    "homeErrorDownloadCatalogMsg": "No se ha podido descargar el catálogo de aves. Puedes seguir usando la aplicación o volver a intentar la descarga.",
+    "usageWarningTitle": "Advertencia de uso",
+    "usageWarningMessage": "La reproducción de este audio durante un censo puede alterar el comportamiento de las aves y distorsionar los resultados de la observación.\n\nPor favor, haz un uso responsable.",
+    "usageWarningConfirm": "Sí, lo entiendo",
+    "cantOpenLink": "No se ha podido abrir el enlace",
+    "cantPlayAudio": "No se ha podido reproducir el audio",
+    "stopPlayingAudio": "Detener",
 
     "profileOrnithologistCode": "Código de ornitólogo",
     "profileShowQr": "Mostrar QR",

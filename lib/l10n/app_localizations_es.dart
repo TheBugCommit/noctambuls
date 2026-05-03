@@ -12,37 +12,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String get appTitle => 'Noctámbulos';
 
   @override
-  String get settingsTitle => 'Configuración';
+  String get errorUnknown => 'Se ha producido un error desconocido.';
 
   @override
-  String get languageLabel => 'Idioma';
+  String get back => 'Volver';
 
   @override
-  String get settingsPreferencesTitle => 'Preferencias';
+  String get delete => 'Eliminar';
 
   @override
-  String get settingsAccountTitle => 'Cuenta';
+  String get cancel => 'Cancelar';
 
   @override
-  String get systemLabel => 'Sistema';
+  String get retry => 'Volver a intentar';
 
   @override
-  String get catalanLabel => 'Catalan';
+  String get ignore => 'Ignorar';
 
   @override
-  String get spanishLabel => 'Castellano';
-
-  @override
-  String get themeLabel => 'Tema visual';
-
-  @override
-  String get themeLightLabel => 'Claro';
-
-  @override
-  String get themeDarkLabel => 'Oscuro';
-
-  @override
-  String get themeSystemLabel => 'Sistema';
+  String get confirmDelete => 'Sí, eliminar';
 
   @override
   String get homeLabel => 'Inicio';
@@ -55,196 +43,6 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get profileLabel => 'Perfil';
-
-  @override
-  String get censusLabel => 'Censo';
-
-  @override
-  String get stationLabel => 'Estación de Seguimiento';
-
-  @override
-  String get incidentalLabel => 'Observación Incidental';
-
-  @override
-  String get homeTitle => 'Inicio';
-
-  @override
-  String get errorSessionAlreadyExists =>
-      'Ya hay una sesión activa. Finalízala o cancélala primero.';
-
-  @override
-  String get errorUnknown => 'Se ha producido un error desconocido.';
-
-  @override
-  String get activeSessionTitle => 'Sesión en curso';
-
-  @override
-  String startedAt(String time) {
-    return 'Observando desde $time';
-  }
-
-  @override
-  String observationsRegistered(int count) {
-    return '$count observaciones registradas';
-  }
-
-  @override
-  String get noObservationsRegistered =>
-      'No hay ninguna observacion registrada';
-
-  @override
-  String get stopAndReview => 'Detener';
-
-  @override
-  String get deleteSession => 'Cancelar Sesión';
-
-  @override
-  String get deleteSessionTitle => '¿Cancelar sesión?';
-
-  @override
-  String get deleteSessionBody =>
-      'Se perderá toda la información y no se podrá recuperar.';
-
-  @override
-  String get back => 'Volver';
-
-  @override
-  String get delete => 'Eliminar';
-
-  @override
-  String get cancel => 'Cancelar';
-
-  @override
-  String get confirmDelete => 'Sí, elimina';
-
-  @override
-  String get confirmDeleteSessionMessage =>
-      'Se perderán todas las observaciones de esta sesión. Esta acción es irreversible.';
-
-  @override
-  String get confirmDeleteSessionTitle => 'Quieres eliminar la session?';
-
-  @override
-  String get stopSessionTitle => '¿Detener la sesión?';
-
-  @override
-  String get stopSessionBody =>
-      'Las observaciones ya registradas se conservarán.';
-
-  @override
-  String get stopSessionConfirm => 'Detener';
-
-  @override
-  String get reviewTitle => 'Revisión';
-
-  @override
-  String get sessionInReview => 'Sesión en revisión';
-
-  @override
-  String get continueReview => 'Continuar la revisión';
-
-  @override
-  String get continueObserving => 'Continuar observando';
-
-  @override
-  String get observingTitle => 'Observando';
-
-  @override
-  String get noBirdsFound => 'No se han encontrado aves';
-
-  @override
-  String get listen => 'Escuchar';
-
-  @override
-  String get moreInfo => 'Más info';
-
-  @override
-  String semanticLabelBirdImage(String bird) {
-    return 'Fotografía de $bird';
-  }
-
-  @override
-  String get noImageAvailable => 'La imagen no esta disponible';
-
-  @override
-  String get downloadingCatalog => 'Descargando los pájaros...';
-
-  @override
-  String get connectionError => 'Error de connexion';
-
-  @override
-  String get catalogDownloadError =>
-      'No se ha podido descargar el catálago de pájaros. Comprueba tu connexion a internet.';
-
-  @override
-  String get retry => 'Volver a intentar';
-
-  @override
-  String get ignore => 'Ignorar';
-
-  @override
-  String get requiredBirdCatalog => 'Catálago de pájaros requerido';
-
-  @override
-  String get requiredBirdCatalogMsg =>
-      'Para usar esta sección necessitas descargar el catálago de pájaros almenos una vez.';
-
-  @override
-  String get downloadNow => 'Descargar ahora';
-
-  @override
-  String get homeErrorDownloadCatalog =>
-      'Descarga del catálogo de pájaros fallida';
-
-  @override
-  String get homeErrorDownloadCatalogMsg =>
-      'No se ha podido descargar el catálago de pájaros. Puedes seguir usando la aplicación o volver a intentar la descarga.';
-
-  @override
-  String get usageWarningTitle => 'Advertencia de uso';
-
-  @override
-  String get usageWarningMessage =>
-      'La reproducción de este audio durante un censo puede alterar el comportamiento de las aves y distorsionar los resultados de la observación.\n\nPor favor, haz un uso responsable.';
-
-  @override
-  String get usageWarningConfirm => 'Sí, lo entiendo';
-
-  @override
-  String get cantOpenLink => 'No se ha podido abrir el enlace';
-
-  @override
-  String get cantPlayAudio => 'No se ha podido reproducir el audio';
-
-  @override
-  String get stopPlayingAudio => 'Detener';
-
-  @override
-  String get observingMethodTitle => 'Sobre los métodos de observación';
-
-  @override
-  String get observingMethodConfirmLabel => 'Entendido';
-
-  @override
-  String get observingMethodCensTitle => 'Censo';
-
-  @override
-  String get observingMethodCensDescription =>
-      'Es un trabajo coordinado entre varios grupos de personas en puntos fijos de forma simultánea. Se utiliza en campañas oficiales o jornadas de censo colectivo privadas.';
-
-  @override
-  String get observingMethodESTitle => 'Estación de Seguimiento';
-
-  @override
-  String get observingMethodESDescription =>
-      'Es una observación típicamente individual desde un único punto fijo durante un tiempo determinado. Se utiliza para muestreos repetitivos en el mismo lugar.';
-
-  @override
-  String get observingMethodIncTitle => 'Observación incidental';
-
-  @override
-  String get observingMethodIncDescription =>
-      'Es una observación inesperada o aislada mientras realizas otra actividad. Úsalo cuando veas un ave de forma casual y quieras anotarlo rápidamente sin seguir un protocolo fijo.';
 
   @override
   String get loginTitle => 'Bienvenido/a';
@@ -303,6 +101,208 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get signUpSendButtonLoading => 'Registrando...';
+
+  @override
+  String get settingsTitle => 'Configuración';
+
+  @override
+  String get settingsPreferencesTitle => 'Preferencias';
+
+  @override
+  String get settingsAccountTitle => 'Cuenta';
+
+  @override
+  String get languageLabel => 'Idioma';
+
+  @override
+  String get systemLabel => 'Sistema';
+
+  @override
+  String get catalanLabel => 'Catalán';
+
+  @override
+  String get spanishLabel => 'Castellano';
+
+  @override
+  String get themeLabel => 'Tema visual';
+
+  @override
+  String get themeLightLabel => 'Claro';
+
+  @override
+  String get themeDarkLabel => 'Oscuro';
+
+  @override
+  String get themeSystemLabel => 'Sistema';
+
+  @override
+  String get homeTitle => 'Inicio';
+
+  @override
+  String get censusLabel => 'Censo';
+
+  @override
+  String get stationLabel => 'Estación de seguimiento';
+
+  @override
+  String get incidentalLabel => 'Observación incidental';
+
+  @override
+  String get observingMethodTitle => 'Sobre los métodos de observación';
+
+  @override
+  String get observingMethodConfirmLabel => 'Entendido';
+
+  @override
+  String get observingMethodCensTitle => 'Censo';
+
+  @override
+  String get observingMethodCensDescription =>
+      'Es un trabajo coordinado entre varios grupos de personas en puntos fijos de forma simultánea. Se utiliza en campañas oficiales o jornadas de censo colectivo privadas.';
+
+  @override
+  String get observingMethodESTitle => 'Estación de seguimiento';
+
+  @override
+  String get observingMethodESDescription =>
+      'Es una observación típicamente individual desde un único punto fijo durante un tiempo determinado. Se utiliza para muestreos repetitivos en el mismo lugar.';
+
+  @override
+  String get observingMethodIncTitle => 'Observación incidental';
+
+  @override
+  String get observingMethodIncDescription =>
+      'Es una observación inesperada o aislada mientras realizas otra actividad. Úsalo cuando veas un ave de forma casual y quieras anotarlo rápidamente sin seguir un protocolo fijo.';
+
+  @override
+  String get activeSessionTitle => 'Sesión en curso';
+
+  @override
+  String startedAt(String time) {
+    return 'Observando desde $time';
+  }
+
+  @override
+  String get errorSessionAlreadyExists =>
+      'Ya hay una sesión activa. Finalízala o cancélala primero.';
+
+  @override
+  String observationsRegistered(int count) {
+    return '$count observaciones registradas';
+  }
+
+  @override
+  String get noObservationsRegistered =>
+      'No hay ninguna observación registrada';
+
+  @override
+  String get observingTitle => 'Observando';
+
+  @override
+  String get stopAndReview => 'Detener';
+
+  @override
+  String get continueObserving => 'Continuar observando';
+
+  @override
+  String get stopSessionTitle => '¿Detener la sesión?';
+
+  @override
+  String get stopSessionBody =>
+      'Las observaciones ya registradas se conservarán.';
+
+  @override
+  String get stopSessionConfirm => 'Detener';
+
+  @override
+  String get reviewTitle => 'Revisión';
+
+  @override
+  String get sessionInReview => 'Sesión en revisión';
+
+  @override
+  String get continueReview => 'Continuar la revisión';
+
+  @override
+  String get deleteSession => 'Cancelar sesión';
+
+  @override
+  String get deleteSessionTitle => '¿Cancelar sesión?';
+
+  @override
+  String get deleteSessionBody =>
+      'Se perderá toda la información y no se podrá recuperar.';
+
+  @override
+  String get confirmDeleteSessionTitle => '¿Quieres eliminar la sesión?';
+
+  @override
+  String get confirmDeleteSessionMessage =>
+      'Se perderán todas las observaciones de esta sesión. Esta acción es irreversible.';
+
+  @override
+  String get noBirdsFound => 'No se han encontrado aves';
+
+  @override
+  String get listen => 'Escuchar';
+
+  @override
+  String get moreInfo => 'Más info';
+
+  @override
+  String semanticLabelBirdImage(String bird) {
+    return 'Fotografía de $bird';
+  }
+
+  @override
+  String get noImageAvailable => 'La imagen no está disponible';
+
+  @override
+  String get downloadingCatalog => 'Descargando las aves...';
+
+  @override
+  String get connectionError => 'Error de conexión';
+
+  @override
+  String get catalogDownloadError =>
+      'No se ha podido descargar el catálogo de aves. Comprueba tu conexión a internet.';
+
+  @override
+  String get requiredBirdCatalog => 'Catálogo de aves requerido';
+
+  @override
+  String get requiredBirdCatalogMsg =>
+      'Para usar esta sección necesitas descargar el catálogo de aves al menos una vez.';
+
+  @override
+  String get downloadNow => 'Descargar ahora';
+
+  @override
+  String get homeErrorDownloadCatalog =>
+      'Descarga del catálogo de aves fallida';
+
+  @override
+  String get homeErrorDownloadCatalogMsg =>
+      'No se ha podido descargar el catálogo de aves. Puedes seguir usando la aplicación o volver a intentar la descarga.';
+
+  @override
+  String get usageWarningTitle => 'Advertencia de uso';
+
+  @override
+  String get usageWarningMessage =>
+      'La reproducción de este audio durante un censo puede alterar el comportamiento de las aves y distorsionar los resultados de la observación.\n\nPor favor, haz un uso responsable.';
+
+  @override
+  String get usageWarningConfirm => 'Sí, lo entiendo';
+
+  @override
+  String get cantOpenLink => 'No se ha podido abrir el enlace';
+
+  @override
+  String get cantPlayAudio => 'No se ha podido reproducir el audio';
+
+  @override
+  String get stopPlayingAudio => 'Detener';
 
   @override
   String get profileOrnithologistCode => 'Código de ornitólogo';

@@ -19,36 +19,34 @@ class ProfileContent extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return Expanded(
-      child: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverToBoxAdapter(
-              child: ProfileHeader(profile: profile, authUser: authUser),
-            ),
-            const SliverToBoxAdapter(
-              child: Divider(height: 1),
-            ),
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: _SliverTabBarDelegate(
-                TabBar(
-                  tabs: [
-                    Tab(text: l10n.profileObservationsTab),
-                    Tab(text: l10n.profileParticipationsTab),
-                  ],
-                ),
-                theme.colorScheme.surface,
+    return NestedScrollView(
+      headerSliverBuilder: (context, innerBoxIsScrolled) {
+        return [
+          SliverToBoxAdapter(
+            child: ProfileHeader(profile: profile, authUser: authUser),
+          ),
+          const SliverToBoxAdapter(
+            child: Divider(height: 1),
+          ),
+          SliverPersistentHeader(
+            pinned: true,
+            delegate: _SliverTabBarDelegate(
+              TabBar(
+                tabs: [
+                  Tab(text: l10n.profileObservationsTab),
+                  Tab(text: l10n.profileParticipationsTab),
+                ],
               ),
+              theme.colorScheme.surface,
             ),
-          ];
-        },
-        body: const TabBarView(
-          children: [
-            _EmptyTabContent(),
-            _EmptyTabContent(),
-          ],
-        ),
+          ),
+        ];
+      },
+      body: const TabBarView(
+        children: [
+          _EmptyTabContent(),
+          _EmptyTabContent(),
+        ],
       ),
     );
   }
