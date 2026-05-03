@@ -125,5 +125,19 @@
     "signUpFormPhoneLabel": "Teléfono",
     "signUpFormPhoneFormat": "Introduce un teléfono válido",
     "signUpSendButton": "Finalizar registro",
-    "signUpSendButtonLoading": "Registrando..."
+    "signUpSendButtonLoading": "Registrando...",
+
+    "profileOrnithologistCode": "Código de ornitólogo",
+    "profileShowQr": "Mostrar QR",
+    "profileQrDialogTitle": "Código QR de ornitólogo",
+    "profileObservationsTab": "Observaciones",
+    "profileParticipationsTab": "Participaciones",
+    "profileEditTitle": "Editar perfil",
+    "profileEditSaveButton": "Guardar cambios",
+    "profileEditSaveButtonLoading": "Guardando...",
+    "profileEditSuccess": "Perfil actualizado correctamente",
+    "profileEditError": "No se pudo actualizar el perfil",
+    "profileLoadError": "No se pudo cargar el perfil",
+    "profileRetry": "Volver a intentar",
+    "profileSignOut": "Cerrar sesión"
 }

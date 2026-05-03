@@ -126,5 +126,19 @@
     "signUpFormPhoneLabel": "Telèfon",
     "signUpFormPhoneFormat": "Introdueix un telèfon vàlid",
     "signUpSendButton": "Finalitzar Registre",
-    "signUpSendButtonLoading": "Registrant..."
+    "signUpSendButtonLoading": "Registrant...",
+
+    "profileOrnithologistCode": "Codi d'ornitòleg",
+    "profileShowQr": "Mostrar QR",
+    "profileQrDialogTitle": "Codi QR d'ornitòleg",
+    "profileObservationsTab": "Observacions",
+    "profileParticipationsTab": "Participacions",
+    "profileEditTitle": "Editar perfil",
+    "profileEditSaveButton": "Desar canvis",
+    "profileEditSaveButtonLoading": "Desant...",
+    "profileEditSuccess": "Perfil actualitzat correctament",
+    "profileEditError": "No s'ha pogut actualitzar el perfil",
+    "profileLoadError": "No s'ha pogut carregar el perfil",
+    "profileRetry": "Tornar a intentar",
+    "profileSignOut": "Tanca la sessió"
 }

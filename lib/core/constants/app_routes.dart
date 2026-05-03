@@ -15,4 +15,5 @@ class AppRoutes {
   static const String settings = '/settings';
   static const String observing = '/observing';
   static const String review = '/review';
+  static const String profileEdit = '/profile/edit';
 }

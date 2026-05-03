@@ -8,6 +8,7 @@ import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
+import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
 
@@ -32,6 +33,9 @@ void main() async {
         BlocProvider(create: (_) => di.sl<LanguageCubit>()),
         BlocProvider(
           create: (_) => di.sl<SessionLifecycleBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.sl<ProfileBloc>(),
         ),
       ],
       child: const NoctambulsApp(),

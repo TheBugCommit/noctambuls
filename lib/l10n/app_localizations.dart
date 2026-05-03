@@ -619,6 +619,84 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Registrant...'**
   String get signUpSendButtonLoading;
+
+  /// No description provided for @profileOrnithologistCode.
+  ///
+  /// In ca, this message translates to:
+  /// **'Codi d\'ornitòleg'**
+  String get profileOrnithologistCode;
+
+  /// No description provided for @profileShowQr.
+  ///
+  /// In ca, this message translates to:
+  /// **'Mostrar QR'**
+  String get profileShowQr;
+
+  /// No description provided for @profileQrDialogTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Codi QR d\'ornitòleg'**
+  String get profileQrDialogTitle;
+
+  /// No description provided for @profileObservationsTab.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observacions'**
+  String get profileObservationsTab;
+
+  /// No description provided for @profileParticipationsTab.
+  ///
+  /// In ca, this message translates to:
+  /// **'Participacions'**
+  String get profileParticipationsTab;
+
+  /// No description provided for @profileEditTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Editar perfil'**
+  String get profileEditTitle;
+
+  /// No description provided for @profileEditSaveButton.
+  ///
+  /// In ca, this message translates to:
+  /// **'Desar canvis'**
+  String get profileEditSaveButton;
+
+  /// No description provided for @profileEditSaveButtonLoading.
+  ///
+  /// In ca, this message translates to:
+  /// **'Desant...'**
+  String get profileEditSaveButtonLoading;
+
+  /// No description provided for @profileEditSuccess.
+  ///
+  /// In ca, this message translates to:
+  /// **'Perfil actualitzat correctament'**
+  String get profileEditSuccess;
+
+  /// No description provided for @profileEditError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut actualitzar el perfil'**
+  String get profileEditError;
+
+  /// No description provided for @profileLoadError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut carregar el perfil'**
+  String get profileLoadError;
+
+  /// No description provided for @profileRetry.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tornar a intentar'**
+  String get profileRetry;
+
+  /// No description provided for @profileSignOut.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tanca la sessió'**
+  String get profileSignOut;
 }
 
 class _AppLocalizationsDelegate

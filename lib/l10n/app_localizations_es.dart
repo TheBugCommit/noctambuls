@@ -290,4 +290,43 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get signUpSendButtonLoading => 'Registrando...';
+
+  @override
+  String get profileOrnithologistCode => 'Código de ornitólogo';
+
+  @override
+  String get profileShowQr => 'Mostrar QR';
+
+  @override
+  String get profileQrDialogTitle => 'Código QR de ornitólogo';
+
+  @override
+  String get profileObservationsTab => 'Observaciones';
+
+  @override
+  String get profileParticipationsTab => 'Participaciones';
+
+  @override
+  String get profileEditTitle => 'Editar perfil';
+
+  @override
+  String get profileEditSaveButton => 'Guardar cambios';
+
+  @override
+  String get profileEditSaveButtonLoading => 'Guardando...';
+
+  @override
+  String get profileEditSuccess => 'Perfil actualizado correctamente';
+
+  @override
+  String get profileEditError => 'No se pudo actualizar el perfil';
+
+  @override
+  String get profileLoadError => 'No se pudo cargar el perfil';
+
+  @override
+  String get profileRetry => 'Volver a intentar';
+
+  @override
+  String get profileSignOut => 'Cerrar sesión';
 }

@@ -10,6 +10,8 @@ import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.da
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
+import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:noctambuls/features/profile/presentation/bloc/profile_event.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/language_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/cubit/theme_cubit.dart';
 import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
@@ -36,6 +38,9 @@ class NoctambulsApp extends StatelessWidget {
             const CatalogSyncEventRequest(showGlobalError: true),
           );
           context.read<SessionLifecycleBloc>().add(WatchSession());
+          context.read<ProfileBloc>().add(
+            ProfileLoadRequested(userId: state.user.id),
+          );
         }
       },
       child: MaterialApp.router(

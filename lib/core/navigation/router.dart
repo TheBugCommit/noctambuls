@@ -7,7 +7,6 @@ import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/navigation/go_router_refresh_stream.dart';
 import 'package:noctambuls/core/navigation/main_navigation_screen.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signup/sign_up_page.dart';
@@ -16,6 +15,9 @@ import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.da
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/observing_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/review_page.dart';
+import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
+import 'package:noctambuls/features/profile/presentation/pages/edit_profile/edit_profile_page.dart';
+import 'package:noctambuls/features/profile/presentation/pages/profile/profile_page.dart';
 import 'package:noctambuls/features/settings/presentation/pages/settings_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -98,7 +100,7 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.profile,
-              builder: (context, state) => const _ProfilePage(),
+              builder: (context, state) => const ProfilePage(),
             ),
           ],
         ),
@@ -119,26 +121,20 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const ReviewPage(),
     ),
+    GoRoute(
+      path: AppRoutes.profileEdit,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final profileState = context.read<ProfileBloc>().state;
+        final profile = profileState.currentProfile;
+
+        if (profile == null) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return EditProfilePage(profile: profile);
+      },
+    ),
   ],
 );
-
-// Temporary profile page with sign-out button.
-// Replace with a proper ProfilePage widget when the profile feature is built.
-class _ProfilePage extends StatelessWidget {
-  const _ProfilePage();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Perfil')),
-      body: Center(
-        child: TextButton.icon(
-          onPressed: () =>
-              context.read<AuthBloc>().add(const SignOutRequested()),
-          icon: const Icon(Icons.logout),
-          label: const Text('Tanca la sessió'),
-        ),
-      ),
-    );
-  }
-}
