@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_event.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
-import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
-import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_audio_button.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -225,8 +225,8 @@ class BirdCardActions extends StatelessWidget {
         AppButton.primary(
           onPressed: bird.infoUrl.isEmpty
               ? null
-              : () => context.read<GuideBloc>().add(
-                  OpenBirdLink(url: bird.infoUrl),
+              : () => context.read<UrlBloc>().add(
+                  OpenUrlRequested(bird.infoUrl),
                 ),
           icon: Icons.link,
           label: l10n.moreInfo,

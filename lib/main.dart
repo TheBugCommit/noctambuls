@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:noctambuls/app.dart';
 import 'package:noctambuls/core/di/injection_container.dart' as di;
+import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
 import 'package:noctambuls/core/utils/app_bloc_observer.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
@@ -33,6 +34,7 @@ void main() async {
         BlocProvider(create: (_) => di.sl<ThemeBloc>()),
         BlocProvider(create: (_) => di.sl<LanguageBloc>()),
         BlocProvider(create: (_) => di.sl<UrlBloc>()),
+        BlocProvider(create: (_) => di.sl<AudioBloc>()),
         BlocProvider(
           create: (_) => di.sl<SessionLifecycleBloc>(),
         ),

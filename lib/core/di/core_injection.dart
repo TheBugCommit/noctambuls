@@ -8,6 +8,7 @@ import 'package:noctambuls/core/domain/usecases/open_url_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/preload_audio_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/toggle_audio_usecase.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
+import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
 
 void initCore() {
@@ -25,5 +26,13 @@ void initCore() {
     ..registerLazySingleton(() => PreloadAudioUseCase(sl()))
     ..registerFactory(
       () => UrlBloc(openUrlUseCase: sl(), logger: sl<IAppLogger>()),
+    )
+    ..registerFactory(
+      () => AudioBloc(
+        preloadAudioUseCase: sl(),
+        listenAudioStateUseCase: sl(),
+        toggleAudioUseCase: sl(),
+        logger: sl<IAppLogger>(),
+      ),
     );
 }

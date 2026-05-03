@@ -2,10 +2,11 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/audio/audio_state.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
-import 'package:noctambuls/features/guide/presentation/bloc/guide_state.dart';
 
 class BirdAudioButton extends StatelessWidget {
   const BirdAudioButton({
@@ -29,19 +30,14 @@ class BirdAudioButton extends StatelessWidget {
       );
     }
 
-    return BlocSelector<GuideBloc, GuideState, String?>(
-      selector: (state) {
-        if (state is GuideLoaded) {
-          return state.currentlyPlayingPath;
-        }
-        return null;
-      },
+    return BlocSelector<AudioBloc, AudioState, String?>(
+      selector: (state) => state.currentlyPlayingPath,
       builder: (context, currentlyPlayingPath) {
         final isPlaying = currentlyPlayingPath == audioPath;
 
         return AppButton.outline(
           onPressed: () => context.read<GuideBloc>().add(
-            ToggleBirdAudio(audioPath: audioPath),
+            CheckBirdAudioWarningRequested(audioPath: audioPath),
           ),
           customIcon: isPlaying ? const _AudioWaveAnimation() : null,
           icon: isPlaying ? null : Icons.volume_up_outlined,
