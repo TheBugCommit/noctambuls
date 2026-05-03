@@ -139,5 +139,11 @@
     "profileLoadError": "No s'ha pogut carregar el perfil",
     "profileObservationsEmpty": "Encara no hi ha observacions.",
     "profileRetry": "Tornar a intentar",
-    "profileSignOut": "Tanca la sessió"
+    "profileSignOut": "Tanca la sessió",
+
+    "settingsDeleteAccount": "Eliminar compte",
+    "settingsDeleteAccountDialogTitle": "Eliminar compte?",
+    "settingsDeleteAccountDialogBody": "Aquesta acció és irreversible. Totes les teves dades seran eliminades permanentment.",
+    "settingsDeleteAccountDialogConfirm": "Sí, eliminar",
+    "settingsDeleteAccountError": "No s'ha pogut eliminar el compte. Torna-ho a intentar."
 }

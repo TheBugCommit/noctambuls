@@ -10,5 +10,7 @@ abstract class AuthRepository {
 
   Future<Result<Unit>> signOut();
 
+  Future<Result<Unit>> deleteAccount();
+
   Future<Result<AuthUser>> getStoredAuth();
 }

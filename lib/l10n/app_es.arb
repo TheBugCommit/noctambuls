@@ -136,5 +136,11 @@
     "profileLoadError": "No se pudo cargar el perfil",
     "profileObservationsEmpty": "Aún no hay observaciones.",
     "profileRetry": "Volver a intentar",
-    "profileSignOut": "Cerrar sesión"
+    "profileSignOut": "Cerrar sesión",
+
+    "settingsDeleteAccount": "Eliminar cuenta",
+    "settingsDeleteAccountDialogTitle": "¿Eliminar cuenta?",
+    "settingsDeleteAccountDialogBody": "Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.",
+    "settingsDeleteAccountDialogConfirm": "Sí, eliminar",
+    "settingsDeleteAccountError": "No se pudo eliminar la cuenta. Inténtalo de nuevo."
 }

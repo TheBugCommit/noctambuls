@@ -353,4 +353,21 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get profileSignOut => 'Tanca la sessió';
+
+  @override
+  String get settingsDeleteAccount => 'Eliminar compte';
+
+  @override
+  String get settingsDeleteAccountDialogTitle => 'Eliminar compte?';
+
+  @override
+  String get settingsDeleteAccountDialogBody =>
+      'Aquesta acció és irreversible. Totes les teves dades seran eliminades permanentment.';
+
+  @override
+  String get settingsDeleteAccountDialogConfirm => 'Sí, eliminar';
+
+  @override
+  String get settingsDeleteAccountError =>
+      'No s\'ha pogut eliminar el compte. Torna-ho a intentar.';
 }

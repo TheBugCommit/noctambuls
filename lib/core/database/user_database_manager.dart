@@ -43,6 +43,15 @@ class UserDatabaseManager {
     }
   }
 
+  Future<void> deleteDatabase(String userId) async {
+    await closeDatabase();
+    final dbFolder = await getApplicationDocumentsDirectory();
+    final file = File(
+      p.join(dbFolder.path, 'noctambuls_db_user_$userId.sqlite'),
+    );
+    if (file.existsSync()) await file.delete();
+  }
+
   QueryExecutor _openConnection(String userId) {
     return LazyDatabase(() async {
       final dbFolder = await getApplicationDocumentsDirectory();

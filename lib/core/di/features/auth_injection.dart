@@ -8,6 +8,7 @@ import 'package:noctambuls/core/constants/env_config.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/presentation/navigation/router.dart';
+import 'package:noctambuls/features/auth/data/datasources/account_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/google_auth_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
@@ -16,6 +17,7 @@ import 'package:noctambuls/features/auth/data/network/token_refresh_manager.dart
 import 'package:noctambuls/features/auth/data/repositories/auth_repository_impl.dart';
 import 'package:noctambuls/features/auth/domain/repositories/auth_repository.dart';
 import 'package:noctambuls/features/auth/domain/usecases/auth_credentials.dart';
+import 'package:noctambuls/features/auth/domain/usecases/delete_account_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/get_stored_auth_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_out_usecase.dart';
@@ -67,9 +69,13 @@ void initAuthFeature() {
       },
       instanceName: 'apiDio',
     )
+    ..registerLazySingleton<AccountRemoteDataSource>(
+      () => AccountRemoteDataSourceImpl(dio: sl(instanceName: 'apiDio')),
+    )
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(
         remoteDataSource: sl(),
+        accountRemoteDataSource: sl(),
         tokenLocalDataSource: sl(),
         providers: {
           GoogleAuthCredentials: GoogleAuthDataSourceImpl(
@@ -87,12 +93,14 @@ void initAuthFeature() {
     ..registerLazySingleton(() => SignInUseCase(sl()))
     ..registerLazySingleton(() => SignUpUseCase(sl()))
     ..registerLazySingleton(() => SignOutUseCase(sl()))
+    ..registerLazySingleton(() => DeleteAccountUseCase(sl()))
     ..registerLazySingleton<AuthBloc>(
       () => AuthBloc(
         getStoredAuthUseCase: sl(),
         signInUseCase: sl(),
         signUpUseCase: sl(),
         signOutUseCase: sl(),
+        deleteAccountUseCase: sl(),
         dbManager: sl(),
         logger: sl<IAppLogger>(),
       ),

@@ -745,6 +745,36 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Tanca la sessió'**
   String get profileSignOut;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In ca, this message translates to:
+  /// **'Eliminar compte'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @settingsDeleteAccountDialogTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Eliminar compte?'**
+  String get settingsDeleteAccountDialogTitle;
+
+  /// No description provided for @settingsDeleteAccountDialogBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aquesta acció és irreversible. Totes les teves dades seran eliminades permanentment.'**
+  String get settingsDeleteAccountDialogBody;
+
+  /// No description provided for @settingsDeleteAccountDialogConfirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sí, eliminar'**
+  String get settingsDeleteAccountDialogConfirm;
+
+  /// No description provided for @settingsDeleteAccountError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut eliminar el compte. Torna-ho a intentar.'**
+  String get settingsDeleteAccountError;
 }
 
 class _AppLocalizationsDelegate

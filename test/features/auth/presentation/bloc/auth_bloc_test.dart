@@ -9,6 +9,7 @@ import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
 import 'package:noctambuls/features/auth/domain/usecases/auth_credentials.dart'
     show GoogleAuthCredentials;
+import 'package:noctambuls/features/auth/domain/usecases/delete_account_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/get_stored_auth_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_in_usecase.dart';
 import 'package:noctambuls/features/auth/domain/usecases/sign_out_usecase.dart';
@@ -25,6 +26,8 @@ class MockSignOutUseCase extends Mock implements SignOutUseCase {}
 
 class MockSignUpUseCase extends Mock implements SignUpUseCase {}
 
+class MockDeleteAccountUseCase extends Mock implements DeleteAccountUseCase {}
+
 class MockUserDatabaseManager extends Mock implements UserDatabaseManager {}
 
 class MockLogger extends Mock implements IAppLogger {}
@@ -34,6 +37,7 @@ void main() {
   late MockSignInUseCase mockSignIn;
   late MockSignOutUseCase mockSignOut;
   late MockSignUpUseCase mockSignUpUseCase;
+  late MockDeleteAccountUseCase mockDeleteAccount;
   late MockUserDatabaseManager mockDbManager;
   late MockLogger mockLogger;
 
@@ -52,6 +56,7 @@ void main() {
     mockSignIn = MockSignInUseCase();
     mockSignUpUseCase = MockSignUpUseCase();
     mockSignOut = MockSignOutUseCase();
+    mockDeleteAccount = MockDeleteAccountUseCase();
     mockDbManager = MockUserDatabaseManager();
     mockLogger = MockLogger();
 
@@ -64,6 +69,7 @@ void main() {
     signInUseCase: mockSignIn,
     signUpUseCase: mockSignUpUseCase,
     signOutUseCase: mockSignOut,
+    deleteAccountUseCase: mockDeleteAccount,
     dbManager: mockDbManager,
     logger: mockLogger,
   );
