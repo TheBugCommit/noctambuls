@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:noctambuls/core/constants/app_assets.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 class EmptyObservations extends StatelessWidget {
   const EmptyObservations({super.key});
@@ -14,10 +17,13 @@ class EmptyObservations extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.biotech_outlined,
-            size: AppDimensions.xxl * 1.5,
-            color: colorScheme.outlineVariant,
+          SvgPicture(
+            const AssetBytesLoader(AppAssets.owl),
+            height: AppDimensions.xxl * 1.5,
+            colorFilter: ColorFilter.mode(
+              colorScheme.onSurfaceVariant,
+              BlendMode.srcIn,
+            ),
           ),
           const SizedBox(height: AppDimensions.md),
           Text(
