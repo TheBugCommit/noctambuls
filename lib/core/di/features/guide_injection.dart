@@ -58,10 +58,6 @@ void initGuideFeature() {
       () => GuideBloc(
         getBirdsUseCase: sl(),
         logger: sl<IAppLogger>(),
-        openLinkUseCase: sl(),
-        toggleAudioUseCase: sl(),
-        listenAudioStateUseCase: sl(),
-        preloadAudioUseCase: sl(),
         acceptAudioWarningUseCase: sl(),
         checkAudioWarningUseCase: sl(),
       ),

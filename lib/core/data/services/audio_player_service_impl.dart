@@ -1,13 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_soloud/flutter_soloud.dart';
 import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/domain/services/audio_player_service.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 
-class SoLoudAudioServiceImpl implements AudioPlayerService {
+class SoLoudAudioServiceImpl
+    with WidgetsBindingObserver
+    implements AudioPlayerService {
   SoLoudAudioServiceImpl({required this.logger});
 
   final IAppLogger logger;
@@ -42,6 +45,7 @@ class SoLoudAudioServiceImpl implements AudioPlayerService {
     try {
       await SoLoud.instance.init();
       _isInitialized = true;
+      WidgetsBinding.instance.addObserver(this);
     } on Exception catch (e, st) {
       logger.failure(const AudioFailure().withDebug(e, st));
     }
@@ -144,6 +148,7 @@ class SoLoudAudioServiceImpl implements AudioPlayerService {
 
   @override
   Future<void> dispose() async {
+    WidgetsBinding.instance.removeObserver(this);
     await stop();
     await SoLoud.instance.disposeAllSources();
     SoLoud.instance.deinit();
@@ -153,5 +158,21 @@ class SoLoudAudioServiceImpl implements AudioPlayerService {
     _isInitialized = false;
 
     await _currentlyPlayingController.close();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (_currentHandle == null) return;
+
+    switch (state) {
+      case AppLifecycleState.paused:
+      case AppLifecycleState.inactive:
+      case AppLifecycleState.hidden:
+        SoLoud.instance.setPause(_currentHandle!, true);
+      case AppLifecycleState.resumed:
+        SoLoud.instance.setPause(_currentHandle!, false);
+      case AppLifecycleState.detached:
+        unawaited(stop());
+    }
   }
 }

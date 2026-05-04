@@ -16,8 +16,8 @@ final class LoadBirds extends GuideEvent {
   List<Object?> get props => [languageCode];
 }
 
-final class PlayBirdAudio extends GuideEvent {
-  const PlayBirdAudio({required this.audioPath});
+final class CheckBirdAudioWarningRequested extends GuideEvent {
+  const CheckBirdAudioWarningRequested({required this.audioPath});
 
   final String audioPath;
 
@@ -25,35 +25,8 @@ final class PlayBirdAudio extends GuideEvent {
   List<Object?> get props => [audioPath];
 }
 
-final class OpenBirdLink extends GuideEvent {
-  const OpenBirdLink({required this.url});
-
-  final String url;
-
-  @override
-  List<Object?> get props => [url];
-}
-
-final class ToggleBirdAudio extends GuideEvent {
-  const ToggleBirdAudio({required this.audioPath});
-
-  final String audioPath;
-
-  @override
-  List<Object?> get props => [audioPath];
-}
-
-final class AudioStateChanged extends GuideEvent {
-  const AudioStateChanged({this.playingPath});
-
-  final String? playingPath;
-
-  @override
-  List<Object?> get props => [playingPath];
-}
-
-final class AcceptAudioWarningAndPlay extends GuideEvent {
-  const AcceptAudioWarningAndPlay({required this.audioPath});
+final class AcceptAudioWarning extends GuideEvent {
+  const AcceptAudioWarning({required this.audioPath});
 
   final String audioPath;
 
