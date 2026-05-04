@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:noctambuls/features/settings/presentation/pages/widgets/language_selector.dart';
 import 'package:noctambuls/features/settings/presentation/pages/widgets/section_title.dart';
 import 'package:noctambuls/features/settings/presentation/pages/widgets/settings_card.dart';
-import 'package:noctambuls/features/settings/presentation/widgets/language_selector.dart';
-import 'package:noctambuls/features/settings/presentation/widgets/theme_selector.dart';
+import 'package:noctambuls/features/settings/presentation/pages/widgets/theme_selector.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class PreferencesSection extends StatelessWidget {

@@ -356,6 +356,31 @@ class AppLocalizationsEs extends AppLocalizations {
   String get profileSignOut => 'Cerrar sesión';
 
   @override
+  String get settingsSupportTitle => 'Soporte';
+
+  @override
+  String get settingsHelp => 'Ayuda';
+
+  @override
+  String get settingsAbout => 'Acerca de Noctámbulos';
+
+  @override
+  String get settingsTellAFriend => 'Díselo a un amigo';
+
+  @override
+  String get settingsTellAFriendText =>
+      '¡Descubre Noctámbulos, la app para registrar tus observaciones de aves! 🦉';
+
+  @override
+  String get settingsLegalTitle => 'Legal';
+
+  @override
+  String get settingsPrivacyPolicy => 'Política de privacidad';
+
+  @override
+  String get settingsTermsOfUse => 'Términos de uso';
+
+  @override
   String get settingsDeleteAccount => 'Eliminar cuenta';
 
   @override

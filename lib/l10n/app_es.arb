@@ -138,6 +138,15 @@
     "profileRetry": "Volver a intentar",
     "profileSignOut": "Cerrar sesión",
 
+    "settingsSupportTitle": "Soporte",
+    "settingsHelp": "Ayuda",
+    "settingsAbout": "Acerca de Noctámbulos",
+    "settingsTellAFriend": "Díselo a un amigo",
+    "settingsTellAFriendText": "¡Descubre Noctámbulos, la app para registrar tus observaciones de aves! 🦉",
+    "settingsLegalTitle": "Legal",
+    "settingsPrivacyPolicy": "Política de privacidad",
+    "settingsTermsOfUse": "Términos de uso",
+
     "settingsDeleteAccount": "Eliminar cuenta",
     "settingsDeleteAccountDialogTitle": "¿Eliminar cuenta?",
     "settingsDeleteAccountDialogBody": "Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.",

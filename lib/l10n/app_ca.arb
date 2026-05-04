@@ -141,6 +141,15 @@
     "profileRetry": "Tornar a intentar",
     "profileSignOut": "Tanca la sessió",
 
+    "settingsSupportTitle": "Suport",
+    "settingsHelp": "Ajuda",
+    "settingsAbout": "Acerca de Noctàmbuls",
+    "settingsTellAFriend": "Digali a un amic",
+    "settingsTellAFriendText": "Descobreix Noctàmbuls, l'app per registrar les teves observacions d'ocells! 🦉",
+    "settingsLegalTitle": "Legal",
+    "settingsPrivacyPolicy": "Política de privacitat",
+    "settingsTermsOfUse": "Termes d'ús",
+
     "settingsDeleteAccount": "Eliminar compte",
     "settingsDeleteAccountDialogTitle": "Eliminar compte?",
     "settingsDeleteAccountDialogBody": "Aquesta acció és irreversible. Totes les teves dades seran eliminades permanentment.",

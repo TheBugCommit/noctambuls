@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:noctambuls/core/domain/usecases/open_url_usecase.dart';
+import 'package:noctambuls/core/domain/usecases/url/open_url_usecase.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_event.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_state.dart';

@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:noctambuls/core/domain/usecases/listen_audio_state_usecase.dart';
-import 'package:noctambuls/core/domain/usecases/preload_audio_usecase.dart';
-import 'package:noctambuls/core/domain/usecases/toggle_audio_usecase.dart';
+import 'package:noctambuls/core/domain/usecases/audio/listen_audio_state_usecase.dart';
+import 'package:noctambuls/core/domain/usecases/audio/preload_audio_usecase.dart';
+import 'package:noctambuls/core/domain/usecases/audio/toggle_audio_usecase.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/presentation/bloc/audio/audio_event.dart';
 import 'package:noctambuls/core/presentation/bloc/audio/audio_state.dart';

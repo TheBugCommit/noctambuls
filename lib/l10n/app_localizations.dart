@@ -746,6 +746,54 @@ abstract class AppLocalizations {
   /// **'Tanca la sessió'**
   String get profileSignOut;
 
+  /// No description provided for @settingsSupportTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Suport'**
+  String get settingsSupportTitle;
+
+  /// No description provided for @settingsHelp.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ajuda'**
+  String get settingsHelp;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In ca, this message translates to:
+  /// **'Acerca de Noctàmbuls'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsTellAFriend.
+  ///
+  /// In ca, this message translates to:
+  /// **'Digali a un amic'**
+  String get settingsTellAFriend;
+
+  /// No description provided for @settingsTellAFriendText.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descobreix Noctàmbuls, l\'app per registrar les teves observacions d\'ocells! 🦉'**
+  String get settingsTellAFriendText;
+
+  /// No description provided for @settingsLegalTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Legal'**
+  String get settingsLegalTitle;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In ca, this message translates to:
+  /// **'Política de privacitat'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsTermsOfUse.
+  ///
+  /// In ca, this message translates to:
+  /// **'Termes d\'ús'**
+  String get settingsTermsOfUse;
+
   /// No description provided for @settingsDeleteAccount.
   ///
   /// In ca, this message translates to:

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_state.dart';
 import 'package:noctambuls/features/auth/domain/failures/auth_failures.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/pages/widgets/account_section.dart';
+import 'package:noctambuls/features/settings/presentation/pages/widgets/legal_section.dart';
 import 'package:noctambuls/features/settings/presentation/pages/widgets/preferences_section.dart';
+import 'package:noctambuls/features/settings/presentation/pages/widgets/support_section.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -23,14 +27,27 @@ class SettingsPage extends StatelessWidget {
     final user = authState is Authenticated ? authState.user : null;
     final profile = profileState.currentProfile;
 
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthError && state.failure is DeleteAccountFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(l10n.settingsDeleteAccountError)),
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthError && state.failure is DeleteAccountFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(l10n.settingsDeleteAccountError)),
+              );
+            }
+          },
+        ),
+        BlocListener<UrlBloc, UrlState>(
+          listener: (context, state) {
+            if (state is UrlActionFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(l10n.cantOpenLink)),
+              );
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         backgroundColor: colorScheme.surface,
         appBar: AppBar(
@@ -48,6 +65,10 @@ class SettingsPage extends StatelessWidget {
                 const SizedBox(height: AppDimensions.xl),
               ],
               const PreferencesSection(),
+              const SizedBox(height: AppDimensions.xl),
+              const SupportSection(),
+              const SizedBox(height: AppDimensions.xl),
+              const LegalSection(),
             ],
           ),
         ),
