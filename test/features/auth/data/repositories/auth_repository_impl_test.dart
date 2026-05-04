@@ -4,6 +4,7 @@ import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
+import 'package:noctambuls/features/auth/data/datasources/account_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_provider_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
@@ -20,6 +21,9 @@ import 'package:noctambuls/features/auth/domain/usecases/auth_credentials.dart';
 import '../../helpers/jwt_helper.dart';
 
 class MockAuthRemoteDataSource extends Mock implements AuthRemoteDataSource {}
+
+class MockAccountRemoteDataSource extends Mock
+    implements AccountRemoteDataSource {}
 
 class MockTokenLocalDataSource extends Mock implements TokenLocalDataSource {}
 
@@ -40,6 +44,7 @@ class MockLogger extends Mock implements IAppLogger {}
 
 void main() {
   late MockAuthRemoteDataSource mockRemote;
+  late MockAccountRemoteDataSource mockAccountRemote;
   late MockTokenLocalDataSource mockLocal;
   late MockGoogleAuthProviderDataSource mockGoogleProvider;
   late MockTokenRefreshManager mockTokenRefreshManager;
@@ -62,6 +67,7 @@ void main() {
 
   setUp(() {
     mockRemote = MockAuthRemoteDataSource();
+    mockAccountRemote = MockAccountRemoteDataSource();
     mockLocal = MockTokenLocalDataSource();
     mockGoogleProvider = MockGoogleAuthProviderDataSource();
     mockTokenRefreshManager = MockTokenRefreshManager();
@@ -92,6 +98,7 @@ void main() {
   AuthRepositoryImpl buildRepo({bool includeProvider = true}) =>
       AuthRepositoryImpl(
         remoteDataSource: mockRemote,
+        accountRemoteDataSource: mockAccountRemote,
         tokenLocalDataSource: mockLocal,
         refreshManager: mockTokenRefreshManager,
         providers: includeProvider

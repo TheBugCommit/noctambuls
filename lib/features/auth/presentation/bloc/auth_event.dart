@@ -19,6 +19,10 @@ final class SignOutRequested extends AuthEvent {
   const SignOutRequested();
 }
 
+final class DeleteAccountRequested extends AuthEvent {
+  const DeleteAccountRequested();
+}
+
 final class SignUpRequested extends AuthEvent {
   const SignUpRequested({required this.name, required this.phone});
 

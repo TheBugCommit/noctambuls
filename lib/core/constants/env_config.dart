@@ -10,4 +10,14 @@ class EnvConfig {
   );
 
   static const String iosClientId = String.fromEnvironment('ios_client_id');
+
+  static const String termsAndConditionsUrl = String.fromEnvironment(
+    'terms_url',
+  );
+
+  static const String privacyUrl = String.fromEnvironment('privacy_url');
+
+  static const String helpUrl = String.fromEnvironment('help_url');
+
+  static const String aboutUrl = String.fromEnvironment('about_url');
 }

@@ -1,8 +1,8 @@
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/domain/services/external_link_service.dart';
 
-class OpenLinkUseCase {
-  const OpenLinkUseCase(this.service);
+class OpenUrlUseCase {
+  const OpenUrlUseCase(this.service);
 
   final ExternalLinkService service;
 

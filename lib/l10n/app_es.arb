@@ -33,6 +33,8 @@
     "signUpFormPhoneFormat": "Introduce un teléfono válido",
     "signUpSendButton": "Finalizar registro",
     "signUpSendButtonLoading": "Registrando...",
+    "accept_terms_prefix": "He leído y acepto los ",
+    "terms_and_conditions": "Términos y Condiciones",
 
     "settingsTitle": "Configuración",
     "settingsPreferencesTitle": "Preferencias",
@@ -134,5 +136,20 @@
     "profileLoadError": "No se pudo cargar el perfil",
     "profileObservationsEmpty": "Aún no hay observaciones.",
     "profileRetry": "Volver a intentar",
-    "profileSignOut": "Cerrar sesión"
+    "profileSignOut": "Cerrar sesión",
+
+    "settingsSupportTitle": "Soporte",
+    "settingsHelp": "Ayuda",
+    "settingsAbout": "Acerca de Noctámbulos",
+    "settingsTellAFriend": "Díselo a un amigo",
+    "settingsTellAFriendText": "¡Descubre Noctámbulos, la app para registrar tus observaciones de aves! 🦉",
+    "settingsLegalTitle": "Legal",
+    "settingsPrivacyPolicy": "Política de privacidad",
+    "settingsTermsOfUse": "Términos de uso",
+
+    "settingsDeleteAccount": "Eliminar cuenta",
+    "settingsDeleteAccountDialogTitle": "¿Eliminar cuenta?",
+    "settingsDeleteAccountDialogBody": "Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.",
+    "settingsDeleteAccountDialogConfirm": "Sí, eliminar",
+    "settingsDeleteAccountError": "No se pudo eliminar la cuenta. Inténtalo de nuevo."
 }

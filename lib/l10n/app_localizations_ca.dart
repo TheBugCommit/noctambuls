@@ -103,6 +103,12 @@ class AppLocalizationsCa extends AppLocalizations {
   String get signUpSendButtonLoading => 'Registrant...';
 
   @override
+  String get accept_terms_prefix => 'He llegit i accepto els ';
+
+  @override
+  String get terms_and_conditions => 'Termes i Condicions';
+
+  @override
   String get settingsTitle => 'Configuració';
 
   @override
@@ -347,4 +353,46 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get profileSignOut => 'Tanca la sessió';
+
+  @override
+  String get settingsSupportTitle => 'Suport';
+
+  @override
+  String get settingsHelp => 'Ajuda';
+
+  @override
+  String get settingsAbout => 'Acerca de Noctàmbuls';
+
+  @override
+  String get settingsTellAFriend => 'Digali a un amic';
+
+  @override
+  String get settingsTellAFriendText =>
+      'Descobreix Noctàmbuls, l\'app per registrar les teves observacions d\'ocells! 🦉';
+
+  @override
+  String get settingsLegalTitle => 'Legal';
+
+  @override
+  String get settingsPrivacyPolicy => 'Política de privacitat';
+
+  @override
+  String get settingsTermsOfUse => 'Termes d\'ús';
+
+  @override
+  String get settingsDeleteAccount => 'Eliminar compte';
+
+  @override
+  String get settingsDeleteAccountDialogTitle => 'Eliminar compte?';
+
+  @override
+  String get settingsDeleteAccountDialogBody =>
+      'Aquesta acció és irreversible. Totes les teves dades seran eliminades permanentment.';
+
+  @override
+  String get settingsDeleteAccountDialogConfirm => 'Sí, eliminar';
+
+  @override
+  String get settingsDeleteAccountError =>
+      'No s\'ha pogut eliminar el compte. Torna-ho a intentar.';
 }

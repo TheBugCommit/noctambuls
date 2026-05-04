@@ -3,6 +3,7 @@ import 'package:noctambuls/core/data/error/dio_error_extension.dart';
 import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
+import 'package:noctambuls/features/auth/data/datasources/account_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_provider_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
@@ -20,6 +21,7 @@ import 'package:noctambuls/features/auth/domain/usecases/sign_up_usecase.dart';
 class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({
     required this.remoteDataSource,
+    required this.accountRemoteDataSource,
     required this.tokenLocalDataSource,
     required this.refreshManager,
     required Map<Type, AuthProviderDataSource> providers,
@@ -27,6 +29,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }) : _providers = providers;
 
   final AuthRemoteDataSource remoteDataSource;
+  final AccountRemoteDataSource accountRemoteDataSource;
   final TokenLocalDataSource tokenLocalDataSource;
   final TokenRefreshManager refreshManager;
   final IAppLogger logger;
@@ -204,6 +207,23 @@ class AuthRepositoryImpl implements AuthRepository {
       final failure = const TokenStorageFailure().withDebug(e, st);
       logger.failure(failure);
       return Err(failure);
+    }
+  }
+
+  @override
+  Future<Result<Unit>> deleteAccount() async {
+    try {
+      await accountRemoteDataSource.deleteAccount();
+      await tokenLocalDataSource.deleteAllTokens();
+      for (final provider in _providers.values) {
+        await provider.signOut();
+      }
+      return const Ok(Unit.instance);
+    } on DioException catch (e, st) {
+      final code = e.response?.statusCode ?? 400;
+      return Err(DeleteAccountFailure(statusCode: code).withDebug(e, st));
+    } catch (e, st) {
+      return Err(const DeleteAccountFailure().withDebug(e, st));
     }
   }
 }

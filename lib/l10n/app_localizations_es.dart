@@ -103,6 +103,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get signUpSendButtonLoading => 'Registrando...';
 
   @override
+  String get accept_terms_prefix => 'He leído y acepto los ';
+
+  @override
+  String get terms_and_conditions => 'Términos y Condiciones';
+
+  @override
   String get settingsTitle => 'Configuración';
 
   @override
@@ -348,4 +354,46 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get profileSignOut => 'Cerrar sesión';
+
+  @override
+  String get settingsSupportTitle => 'Soporte';
+
+  @override
+  String get settingsHelp => 'Ayuda';
+
+  @override
+  String get settingsAbout => 'Acerca de Noctámbulos';
+
+  @override
+  String get settingsTellAFriend => 'Díselo a un amigo';
+
+  @override
+  String get settingsTellAFriendText =>
+      '¡Descubre Noctámbulos, la app para registrar tus observaciones de aves! 🦉';
+
+  @override
+  String get settingsLegalTitle => 'Legal';
+
+  @override
+  String get settingsPrivacyPolicy => 'Política de privacidad';
+
+  @override
+  String get settingsTermsOfUse => 'Términos de uso';
+
+  @override
+  String get settingsDeleteAccount => 'Eliminar cuenta';
+
+  @override
+  String get settingsDeleteAccountDialogTitle => '¿Eliminar cuenta?';
+
+  @override
+  String get settingsDeleteAccountDialogBody =>
+      'Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.';
+
+  @override
+  String get settingsDeleteAccountDialogConfirm => 'Sí, eliminar';
+
+  @override
+  String get settingsDeleteAccountError =>
+      'No se pudo eliminar la cuenta. Inténtalo de nuevo.';
 }

@@ -26,7 +26,7 @@ class ThemeSelector extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.palette_outlined,
-                    color: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
                   const SizedBox(width: AppDimensions.md),
                   Text(

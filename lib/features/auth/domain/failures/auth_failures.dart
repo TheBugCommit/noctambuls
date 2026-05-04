@@ -181,3 +181,21 @@ final class ProviderTokenExpiredFailure extends AuthFailure {
     stackTrace: stackTrace,
   );
 }
+
+final class DeleteAccountFailure extends AuthFailure {
+  const DeleteAccountFailure({
+    super.debugMessage = 'Failed to delete account',
+    super.statusCode = 400,
+    super.stackTrace,
+  });
+
+  @override
+  DeleteAccountFailure withDebug(
+    Object error, [
+    StackTrace? stackTrace,
+  ]) => DeleteAccountFailure(
+    debugMessage: error.toString(),
+    statusCode: statusCode,
+    stackTrace: stackTrace,
+  );
+}

@@ -3,6 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/audio/audio_event.dart';
+import 'package:noctambuls/core/presentation/bloc/audio/audio_state.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_state.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/taxus_app_bar.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
@@ -54,7 +59,7 @@ class _GuideView extends StatelessWidget {
 
     if (shouldPlay == true && context.mounted) {
       context.read<GuideBloc>().add(
-        AcceptAudioWarningAndPlay(audioPath: audioPath),
+        AcceptAudioWarning(audioPath: audioPath),
       );
     }
   }
@@ -85,33 +90,63 @@ class _GuideView extends StatelessWidget {
         BlocListener<GuideBloc, GuideState>(
           listenWhen: (previous, current) {
             if (previous is GuideLoaded && current is GuideLoaded) {
-              return (previous.actionError != current.actionError &&
-                      current.actionError != null) ||
-                  (previous.action != current.action && current.action != null);
+              return previous.action != current.action &&
+                  current.action != null;
             }
             return false;
           },
           listener: (context, state) {
-            if (state is GuideLoaded &&
-                (state.actionError != null || state.action != null)) {
-              final l10n = AppLocalizations.of(context)!;
-
+            if (state is GuideLoaded && state.action != null) {
               final action = state.action;
               if (action is GuideAudioWarning) {
                 unawaited(_showAudioWarningModal(context, action.audioPath));
-              }
-
-              final error = state.actionError;
-              if (error != null) {
-                final errorMessage = switch (error) {
-                  GuideUrlError() => l10n.cantOpenLink,
-                  GuideAudioError() => l10n.cantPlayAudio,
-                };
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(errorMessage)),
+              } else if (action is GuideAudioPlayApproved) {
+                context.read<AudioBloc>().add(
+                  ToggleAudioRequested(audioPath: action.audioPath),
                 );
               }
+            }
+          },
+        ),
+        BlocListener<GuideBloc, GuideState>(
+          listenWhen: (previous, current) =>
+              previous is! GuideLoaded && current is GuideLoaded,
+          listener: (context, state) {
+            if (state is GuideLoaded && state.birds.isNotEmpty) {
+              final audioPaths = state.birds
+                  .map(
+                    (bird) => bird.hasLocalAudio
+                        ? bird.localAudioPath!
+                        : bird.audioUrl,
+                  )
+                  .toList();
+              context.read<AudioBloc>().add(
+                PreloadAudioRequested(audioPaths: audioPaths),
+              );
+            }
+          },
+        ),
+        BlocListener<UrlBloc, UrlState>(
+          listenWhen: (prev, current) => current is UrlActionFailure,
+          listener: (context, state) {
+            if (state is UrlActionFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.cantOpenLink),
+                ),
+              );
+            }
+          },
+        ),
+        BlocListener<AudioBloc, AudioState>(
+          listenWhen: (prev, current) => current is AudioActionFailure,
+          listener: (context, state) {
+            if (state is AudioActionFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(AppLocalizations.of(context)!.cantPlayAudio),
+                ),
+              );
             }
           },
         ),

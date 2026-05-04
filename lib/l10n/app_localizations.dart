@@ -278,6 +278,18 @@ abstract class AppLocalizations {
   /// **'Registrant...'**
   String get signUpSendButtonLoading;
 
+  /// No description provided for @accept_terms_prefix.
+  ///
+  /// In ca, this message translates to:
+  /// **'He llegit i accepto els '**
+  String get accept_terms_prefix;
+
+  /// No description provided for @terms_and_conditions.
+  ///
+  /// In ca, this message translates to:
+  /// **'Termes i Condicions'**
+  String get terms_and_conditions;
+
   /// No description provided for @settingsTitle.
   ///
   /// In ca, this message translates to:
@@ -733,6 +745,84 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Tanca la sessió'**
   String get profileSignOut;
+
+  /// No description provided for @settingsSupportTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Suport'**
+  String get settingsSupportTitle;
+
+  /// No description provided for @settingsHelp.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ajuda'**
+  String get settingsHelp;
+
+  /// No description provided for @settingsAbout.
+  ///
+  /// In ca, this message translates to:
+  /// **'Acerca de Noctàmbuls'**
+  String get settingsAbout;
+
+  /// No description provided for @settingsTellAFriend.
+  ///
+  /// In ca, this message translates to:
+  /// **'Digali a un amic'**
+  String get settingsTellAFriend;
+
+  /// No description provided for @settingsTellAFriendText.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descobreix Noctàmbuls, l\'app per registrar les teves observacions d\'ocells! 🦉'**
+  String get settingsTellAFriendText;
+
+  /// No description provided for @settingsLegalTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Legal'**
+  String get settingsLegalTitle;
+
+  /// No description provided for @settingsPrivacyPolicy.
+  ///
+  /// In ca, this message translates to:
+  /// **'Política de privacitat'**
+  String get settingsPrivacyPolicy;
+
+  /// No description provided for @settingsTermsOfUse.
+  ///
+  /// In ca, this message translates to:
+  /// **'Termes d\'ús'**
+  String get settingsTermsOfUse;
+
+  /// No description provided for @settingsDeleteAccount.
+  ///
+  /// In ca, this message translates to:
+  /// **'Eliminar compte'**
+  String get settingsDeleteAccount;
+
+  /// No description provided for @settingsDeleteAccountDialogTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Eliminar compte?'**
+  String get settingsDeleteAccountDialogTitle;
+
+  /// No description provided for @settingsDeleteAccountDialogBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aquesta acció és irreversible. Totes les teves dades seran eliminades permanentment.'**
+  String get settingsDeleteAccountDialogBody;
+
+  /// No description provided for @settingsDeleteAccountDialogConfirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sí, eliminar'**
+  String get settingsDeleteAccountDialogConfirm;
+
+  /// No description provided for @settingsDeleteAccountError.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha pogut eliminar el compte. Torna-ho a intentar.'**
+  String get settingsDeleteAccountError;
 }
 
 class _AppLocalizationsDelegate
