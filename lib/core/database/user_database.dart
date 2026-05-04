@@ -14,12 +14,15 @@ class UserDatabase extends _$UserDatabase {
   UserDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (m, from, to) async {
       if (from < 2) await m.createTable(userProfileTable);
+      if (from < 3) {
+        await m.addColumn(observationsTable, observationsTable.bearing);
+      }
     },
   );
 }

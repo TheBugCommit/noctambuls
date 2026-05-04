@@ -950,6 +950,17 @@ class $ObservationsTableTable extends ObservationsTable
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _bearingMeta = const VerificationMeta(
+    'bearing',
+  );
+  @override
+  late final GeneratedColumn<double> bearing = GeneratedColumn<double>(
+    'bearing',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
   @override
   late final GeneratedColumnWithTypeConverter<ValidationStatus, int>
   validationStatus =
@@ -978,6 +989,7 @@ class $ObservationsTableTable extends ObservationsTable
     notes,
     latitude,
     longitude,
+    bearing,
     validationStatus,
   ];
   @override
@@ -1090,6 +1102,12 @@ class $ObservationsTableTable extends ObservationsTable
         longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
       );
     }
+    if (data.containsKey('bearing')) {
+      context.handle(
+        _bearingMeta,
+        bearing.isAcceptableOrUnknown(data['bearing']!, _bearingMeta),
+      );
+    }
     return context;
   }
 
@@ -1157,6 +1175,10 @@ class $ObservationsTableTable extends ObservationsTable
         DriftSqlType.double,
         data['${effectivePrefix}longitude'],
       ),
+      bearing: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}bearing'],
+      ),
       validationStatus: $ObservationsTableTable.$convertervalidationStatus
           .fromSql(
             attachedDatabase.typeMapping.read(
@@ -1194,6 +1216,7 @@ class ObservationEntityData extends DataClass
   final String? notes;
   final double? latitude;
   final double? longitude;
+  final double? bearing;
   final ValidationStatus validationStatus;
   const ObservationEntityData({
     required this.id,
@@ -1210,6 +1233,7 @@ class ObservationEntityData extends DataClass
     this.notes,
     this.latitude,
     this.longitude,
+    this.bearing,
     required this.validationStatus,
   });
   @override
@@ -1238,6 +1262,9 @@ class ObservationEntityData extends DataClass
     }
     if (!nullToAbsent || longitude != null) {
       map['longitude'] = Variable<double>(longitude);
+    }
+    if (!nullToAbsent || bearing != null) {
+      map['bearing'] = Variable<double>(bearing);
     }
     {
       map['validation_status'] = Variable<int>(
@@ -1271,6 +1298,9 @@ class ObservationEntityData extends DataClass
       longitude: longitude == null && nullToAbsent
           ? const Value.absent()
           : Value(longitude),
+      bearing: bearing == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bearing),
       validationStatus: Value(validationStatus),
     );
   }
@@ -1297,6 +1327,7 @@ class ObservationEntityData extends DataClass
       notes: serializer.fromJson<String?>(json['notes']),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
+      bearing: serializer.fromJson<double?>(json['bearing']),
       validationStatus: $ObservationsTableTable.$convertervalidationStatus
           .fromJson(serializer.fromJson<int>(json['validationStatus'])),
     );
@@ -1321,6 +1352,7 @@ class ObservationEntityData extends DataClass
       'notes': serializer.toJson<String?>(notes),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
+      'bearing': serializer.toJson<double?>(bearing),
       'validationStatus': serializer.toJson<int>(
         $ObservationsTableTable.$convertervalidationStatus.toJson(
           validationStatus,
@@ -1344,6 +1376,7 @@ class ObservationEntityData extends DataClass
     Value<String?> notes = const Value.absent(),
     Value<double?> latitude = const Value.absent(),
     Value<double?> longitude = const Value.absent(),
+    Value<double?> bearing = const Value.absent(),
     ValidationStatus? validationStatus,
   }) => ObservationEntityData(
     id: id ?? this.id,
@@ -1360,6 +1393,7 @@ class ObservationEntityData extends DataClass
     notes: notes.present ? notes.value : this.notes,
     latitude: latitude.present ? latitude.value : this.latitude,
     longitude: longitude.present ? longitude.value : this.longitude,
+    bearing: bearing.present ? bearing.value : this.bearing,
     validationStatus: validationStatus ?? this.validationStatus,
   );
   ObservationEntityData copyWithCompanion(ObservationsTableCompanion data) {
@@ -1382,6 +1416,7 @@ class ObservationEntityData extends DataClass
       notes: data.notes.present ? data.notes.value : this.notes,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
+      bearing: data.bearing.present ? data.bearing.value : this.bearing,
       validationStatus: data.validationStatus.present
           ? data.validationStatus.value
           : this.validationStatus,
@@ -1405,6 +1440,7 @@ class ObservationEntityData extends DataClass
           ..write('notes: $notes, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('bearing: $bearing, ')
           ..write('validationStatus: $validationStatus')
           ..write(')'))
         .toString();
@@ -1426,6 +1462,7 @@ class ObservationEntityData extends DataClass
     notes,
     latitude,
     longitude,
+    bearing,
     validationStatus,
   );
   @override
@@ -1446,6 +1483,7 @@ class ObservationEntityData extends DataClass
           other.notes == this.notes &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
+          other.bearing == this.bearing &&
           other.validationStatus == this.validationStatus);
 }
 
@@ -1465,6 +1503,7 @@ class ObservationsTableCompanion
   final Value<String?> notes;
   final Value<double?> latitude;
   final Value<double?> longitude;
+  final Value<double?> bearing;
   final Value<ValidationStatus> validationStatus;
   final Value<int> rowid;
   const ObservationsTableCompanion({
@@ -1482,6 +1521,7 @@ class ObservationsTableCompanion
     this.notes = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
+    this.bearing = const Value.absent(),
     this.validationStatus = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1500,6 +1540,7 @@ class ObservationsTableCompanion
     this.notes = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
+    this.bearing = const Value.absent(),
     required ValidationStatus validationStatus,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -1529,6 +1570,7 @@ class ObservationsTableCompanion
     Expression<String>? notes,
     Expression<double>? latitude,
     Expression<double>? longitude,
+    Expression<double>? bearing,
     Expression<int>? validationStatus,
     Expression<int>? rowid,
   }) {
@@ -1547,6 +1589,7 @@ class ObservationsTableCompanion
       if (notes != null) 'notes': notes,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
+      if (bearing != null) 'bearing': bearing,
       if (validationStatus != null) 'validation_status': validationStatus,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1567,6 +1610,7 @@ class ObservationsTableCompanion
     Value<String?>? notes,
     Value<double?>? latitude,
     Value<double?>? longitude,
+    Value<double?>? bearing,
     Value<ValidationStatus>? validationStatus,
     Value<int>? rowid,
   }) {
@@ -1585,6 +1629,7 @@ class ObservationsTableCompanion
       notes: notes ?? this.notes,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      bearing: bearing ?? this.bearing,
       validationStatus: validationStatus ?? this.validationStatus,
       rowid: rowid ?? this.rowid,
     );
@@ -1637,6 +1682,9 @@ class ObservationsTableCompanion
     if (longitude.present) {
       map['longitude'] = Variable<double>(longitude.value);
     }
+    if (bearing.present) {
+      map['bearing'] = Variable<double>(bearing.value);
+    }
     if (validationStatus.present) {
       map['validation_status'] = Variable<int>(
         $ObservationsTableTable.$convertervalidationStatus.toSql(
@@ -1667,6 +1715,7 @@ class ObservationsTableCompanion
           ..write('notes: $notes, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('bearing: $bearing, ')
           ..write('validationStatus: $validationStatus, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -2562,6 +2611,7 @@ typedef $$ObservationsTableTableCreateCompanionBuilder =
       Value<String?> notes,
       Value<double?> latitude,
       Value<double?> longitude,
+      Value<double?> bearing,
       required ValidationStatus validationStatus,
       Value<int> rowid,
     });
@@ -2581,6 +2631,7 @@ typedef $$ObservationsTableTableUpdateCompanionBuilder =
       Value<String?> notes,
       Value<double?> latitude,
       Value<double?> longitude,
+      Value<double?> bearing,
       Value<ValidationStatus> validationStatus,
       Value<int> rowid,
     });
@@ -2696,6 +2747,11 @@ class $$ObservationsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<double> get bearing => $composableBuilder(
+    column: $table.bearing,
+    builder: (column) => ColumnFilters(column),
+  );
+
   ColumnWithTypeConverterFilters<ValidationStatus, ValidationStatus, int>
   get validationStatus => $composableBuilder(
     column: $table.validationStatus,
@@ -2800,6 +2856,11 @@ class $$ObservationsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get bearing => $composableBuilder(
+    column: $table.bearing,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get validationStatus => $composableBuilder(
     column: $table.validationStatus,
     builder: (column) => ColumnOrderings(column),
@@ -2882,6 +2943,9 @@ class $$ObservationsTableTableAnnotationComposer
   GeneratedColumn<double> get longitude =>
       $composableBuilder(column: $table.longitude, builder: (column) => column);
 
+  GeneratedColumn<double> get bearing =>
+      $composableBuilder(column: $table.bearing, builder: (column) => column);
+
   GeneratedColumnWithTypeConverter<ValidationStatus, int>
   get validationStatus => $composableBuilder(
     column: $table.validationStatus,
@@ -2959,6 +3023,7 @@ class $$ObservationsTableTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
+                Value<double?> bearing = const Value.absent(),
                 Value<ValidationStatus> validationStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ObservationsTableCompanion(
@@ -2976,6 +3041,7 @@ class $$ObservationsTableTableTableManager
                 notes: notes,
                 latitude: latitude,
                 longitude: longitude,
+                bearing: bearing,
                 validationStatus: validationStatus,
                 rowid: rowid,
               ),
@@ -2995,6 +3061,7 @@ class $$ObservationsTableTableTableManager
                 Value<String?> notes = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
+                Value<double?> bearing = const Value.absent(),
                 required ValidationStatus validationStatus,
                 Value<int> rowid = const Value.absent(),
               }) => ObservationsTableCompanion.insert(
@@ -3012,6 +3079,7 @@ class $$ObservationsTableTableTableManager
                 notes: notes,
                 latitude: latitude,
                 longitude: longitude,
+                bearing: bearing,
                 validationStatus: validationStatus,
                 rowid: rowid,
               ),
