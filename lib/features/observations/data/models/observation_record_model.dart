@@ -16,9 +16,9 @@ class ObservationRecordModel {
     required this.createdAt,
     required this.updatedAt,
     required this.bearing,
+    required this.latitude,
+    required this.longitude,
     this.notes,
-    this.latitude,
-    this.longitude,
     this.validationStatus = ValidationStatus.pending,
     this.syncStatus = SyncStatus.draft,
     this.isDeleted = false,
@@ -74,8 +74,8 @@ class ObservationRecordModel {
   final DateTime startTime;
   final DateTime endTime;
   final String? notes;
-  final double? latitude;
-  final double? longitude;
+  final double latitude;
+  final double longitude;
   final double bearing;
   final ValidationStatus validationStatus;
   final SyncStatus syncStatus;

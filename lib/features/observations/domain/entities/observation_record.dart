@@ -14,10 +14,10 @@ class ObservationRecord extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     required this.bearing,
+    required this.latitude,
+    required this.longitude,
     this.quantity = 1,
     this.notes,
-    this.latitude,
-    this.longitude,
     this.validationStatus = ValidationStatus.pending,
     this.syncStatus = SyncStatus.draft,
     this.isDeleted = false,
@@ -31,8 +31,8 @@ class ObservationRecord extends Equatable {
   final DateTime startTime;
   final DateTime endTime;
   final String? notes;
-  final double? latitude;
-  final double? longitude;
+  final double latitude;
+  final double longitude;
   final double bearing;
   final ValidationStatus validationStatus;
   final SyncStatus syncStatus;
@@ -45,8 +45,8 @@ class ObservationRecord extends Equatable {
   ObservationRecord copyWith({
     required DateTime updatedAt,
     Object? notes = _absent,
-    Object? latitude = _absent,
-    Object? longitude = _absent,
+    double? latitude,
+    double? longitude,
     double? bearing,
     int? quantity,
     ValidationStatus? validationStatus,
@@ -62,12 +62,8 @@ class ObservationRecord extends Equatable {
       startTime: startTime,
       endTime: endTime,
       notes: identical(notes, _absent) ? this.notes : notes as String?,
-      latitude: identical(latitude, _absent)
-          ? this.latitude
-          : latitude as double?,
-      longitude: identical(longitude, _absent)
-          ? this.longitude
-          : longitude as double?,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       bearing: bearing ?? this.bearing,
       validationStatus: validationStatus ?? this.validationStatus,
       syncStatus: syncStatus ?? this.syncStatus,

@@ -51,9 +51,9 @@ class ObservationsTable extends Table with OfflineFirstMixin {
 
   TextColumn get notes => text().nullable()();
 
-  RealColumn get latitude => real().nullable()();
+  RealColumn get latitude => real()();
 
-  RealColumn get longitude => real().nullable()();
+  RealColumn get longitude => real()();
 
   RealColumn get bearing => real()();
 

@@ -19,26 +19,66 @@ class SpeciesSelectorField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          l10n.selectSpecies,
-          style: Theme.of(context).textTheme.titleSmall,
-        ),
-        const SizedBox(height: AppDimensions.xs),
-        AppDropdown<String>(
-          value: selectedSpeciesId,
-          items: birds.map((bird) {
-            return DropdownMenuItem(
-              value: bird.id,
-              child: Text(bird.commonName),
-            );
-          }).toList(),
-          onChanged: onChanged,
-        ),
-      ],
+    return FormField<String>(
+      initialValue: selectedSpeciesId,
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Has de seleccionar una espècie.';
+        }
+        return null;
+      },
+      builder: (formFieldState) {
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              l10n.selectSpecies,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            const SizedBox(height: AppDimensions.xs),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                border: Border.all(
+                  color: formFieldState.hasError
+                      ? theme.colorScheme.error
+                      : Colors.transparent,
+                  width: formFieldState.hasError ? 1.5 : 0,
+                ),
+              ),
+              child: AppDropdown<String>(
+                value: selectedSpeciesId,
+                items: birds.map((bird) {
+                  return DropdownMenuItem(
+                    value: bird.id,
+                    child: Text(bird.commonName),
+                  );
+                }).toList(),
+                onChanged: (value) {
+                  onChanged(value);
+                  formFieldState.didChange(value);
+                },
+              ),
+            ),
+            if (formFieldState.hasError)
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: AppDimensions.xs,
+                  left: AppDimensions.sm,
+                ),
+                child: Text(
+                  formFieldState.errorText!,
+                  style: TextStyle(
+                    color: theme.colorScheme.error,
+                    fontSize: theme.textTheme.labelMedium?.fontSize,
+                  ),
+                ),
+              ),
+          ],
+        );
+      },
     );
   }
 }

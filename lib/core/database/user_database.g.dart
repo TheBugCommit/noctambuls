@@ -935,9 +935,9 @@ class $ObservationsTableTable extends ObservationsTable
   late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
     'latitude',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.double,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _longitudeMeta = const VerificationMeta(
     'longitude',
@@ -946,9 +946,9 @@ class $ObservationsTableTable extends ObservationsTable
   late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
     'longitude',
     aliasedName,
-    true,
+    false,
     type: DriftSqlType.double,
-    requiredDuringInsert: false,
+    requiredDuringInsert: true,
   );
   static const VerificationMeta _bearingMeta = const VerificationMeta(
     'bearing',
@@ -1084,12 +1084,16 @@ class $ObservationsTableTable extends ObservationsTable
         _latitudeMeta,
         latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta),
       );
+    } else if (isInserting) {
+      context.missing(_latitudeMeta);
     }
     if (data.containsKey('longitude')) {
       context.handle(
         _longitudeMeta,
         longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
       );
+    } else if (isInserting) {
+      context.missing(_longitudeMeta);
     }
     if (data.containsKey('bearing')) {
       context.handle(
@@ -1163,11 +1167,11 @@ class $ObservationsTableTable extends ObservationsTable
       latitude: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}latitude'],
-      ),
+      )!,
       longitude: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}longitude'],
-      ),
+      )!,
       bearing: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}bearing'],
@@ -1209,8 +1213,8 @@ class ObservationEntityData extends DataClass
   final DateTime startTime;
   final DateTime endTime;
   final String? notes;
-  final double? latitude;
-  final double? longitude;
+  final double latitude;
+  final double longitude;
   final double bearing;
   final ValidationStatus validationStatus;
   const ObservationEntityData({
@@ -1226,8 +1230,8 @@ class ObservationEntityData extends DataClass
     required this.startTime,
     required this.endTime,
     this.notes,
-    this.latitude,
-    this.longitude,
+    required this.latitude,
+    required this.longitude,
     required this.bearing,
     required this.validationStatus,
   });
@@ -1256,12 +1260,8 @@ class ObservationEntityData extends DataClass
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
     }
-    if (!nullToAbsent || latitude != null) {
-      map['latitude'] = Variable<double>(latitude);
-    }
-    if (!nullToAbsent || longitude != null) {
-      map['longitude'] = Variable<double>(longitude);
-    }
+    map['latitude'] = Variable<double>(latitude);
+    map['longitude'] = Variable<double>(longitude);
     map['bearing'] = Variable<double>(bearing);
     {
       map['validation_status'] = Variable<int>(
@@ -1289,12 +1289,8 @@ class ObservationEntityData extends DataClass
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
-      latitude: latitude == null && nullToAbsent
-          ? const Value.absent()
-          : Value(latitude),
-      longitude: longitude == null && nullToAbsent
-          ? const Value.absent()
-          : Value(longitude),
+      latitude: Value(latitude),
+      longitude: Value(longitude),
       bearing: Value(bearing),
       validationStatus: Value(validationStatus),
     );
@@ -1322,8 +1318,8 @@ class ObservationEntityData extends DataClass
       startTime: serializer.fromJson<DateTime>(json['startTime']),
       endTime: serializer.fromJson<DateTime>(json['endTime']),
       notes: serializer.fromJson<String?>(json['notes']),
-      latitude: serializer.fromJson<double?>(json['latitude']),
-      longitude: serializer.fromJson<double?>(json['longitude']),
+      latitude: serializer.fromJson<double>(json['latitude']),
+      longitude: serializer.fromJson<double>(json['longitude']),
       bearing: serializer.fromJson<double>(json['bearing']),
       validationStatus: $ObservationsTableTable.$convertervalidationStatus
           .fromJson(serializer.fromJson<int>(json['validationStatus'])),
@@ -1349,8 +1345,8 @@ class ObservationEntityData extends DataClass
       'startTime': serializer.toJson<DateTime>(startTime),
       'endTime': serializer.toJson<DateTime>(endTime),
       'notes': serializer.toJson<String?>(notes),
-      'latitude': serializer.toJson<double?>(latitude),
-      'longitude': serializer.toJson<double?>(longitude),
+      'latitude': serializer.toJson<double>(latitude),
+      'longitude': serializer.toJson<double>(longitude),
       'bearing': serializer.toJson<double>(bearing),
       'validationStatus': serializer.toJson<int>(
         $ObservationsTableTable.$convertervalidationStatus.toJson(
@@ -1373,8 +1369,8 @@ class ObservationEntityData extends DataClass
     DateTime? startTime,
     DateTime? endTime,
     Value<String?> notes = const Value.absent(),
-    Value<double?> latitude = const Value.absent(),
-    Value<double?> longitude = const Value.absent(),
+    double? latitude,
+    double? longitude,
     double? bearing,
     ValidationStatus? validationStatus,
   }) => ObservationEntityData(
@@ -1390,8 +1386,8 @@ class ObservationEntityData extends DataClass
     startTime: startTime ?? this.startTime,
     endTime: endTime ?? this.endTime,
     notes: notes.present ? notes.value : this.notes,
-    latitude: latitude.present ? latitude.value : this.latitude,
-    longitude: longitude.present ? longitude.value : this.longitude,
+    latitude: latitude ?? this.latitude,
+    longitude: longitude ?? this.longitude,
     bearing: bearing ?? this.bearing,
     validationStatus: validationStatus ?? this.validationStatus,
   );
@@ -1500,8 +1496,8 @@ class ObservationsTableCompanion
   final Value<DateTime> startTime;
   final Value<DateTime> endTime;
   final Value<String?> notes;
-  final Value<double?> latitude;
-  final Value<double?> longitude;
+  final Value<double> latitude;
+  final Value<double> longitude;
   final Value<double> bearing;
   final Value<ValidationStatus> validationStatus;
   final Value<int> rowid;
@@ -1537,8 +1533,8 @@ class ObservationsTableCompanion
     required DateTime startTime,
     required DateTime endTime,
     this.notes = const Value.absent(),
-    this.latitude = const Value.absent(),
-    this.longitude = const Value.absent(),
+    required double latitude,
+    required double longitude,
     required double bearing,
     required ValidationStatus validationStatus,
     this.rowid = const Value.absent(),
@@ -1553,6 +1549,8 @@ class ObservationsTableCompanion
        quantity = Value(quantity),
        startTime = Value(startTime),
        endTime = Value(endTime),
+       latitude = Value(latitude),
+       longitude = Value(longitude),
        bearing = Value(bearing),
        validationStatus = Value(validationStatus);
   static Insertable<ObservationEntityData> custom({
@@ -1608,8 +1606,8 @@ class ObservationsTableCompanion
     Value<DateTime>? startTime,
     Value<DateTime>? endTime,
     Value<String?>? notes,
-    Value<double?>? latitude,
-    Value<double?>? longitude,
+    Value<double>? latitude,
+    Value<double>? longitude,
     Value<double>? bearing,
     Value<ValidationStatus>? validationStatus,
     Value<int>? rowid,
@@ -2611,8 +2609,8 @@ typedef $$ObservationsTableTableCreateCompanionBuilder =
       required DateTime startTime,
       required DateTime endTime,
       Value<String?> notes,
-      Value<double?> latitude,
-      Value<double?> longitude,
+      required double latitude,
+      required double longitude,
       required double bearing,
       required ValidationStatus validationStatus,
       Value<int> rowid,
@@ -2631,8 +2629,8 @@ typedef $$ObservationsTableTableUpdateCompanionBuilder =
       Value<DateTime> startTime,
       Value<DateTime> endTime,
       Value<String?> notes,
-      Value<double?> latitude,
-      Value<double?> longitude,
+      Value<double> latitude,
+      Value<double> longitude,
       Value<double> bearing,
       Value<ValidationStatus> validationStatus,
       Value<int> rowid,
@@ -3025,8 +3023,8 @@ class $$ObservationsTableTableTableManager
                 Value<DateTime> startTime = const Value.absent(),
                 Value<DateTime> endTime = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
-                Value<double?> latitude = const Value.absent(),
-                Value<double?> longitude = const Value.absent(),
+                Value<double> latitude = const Value.absent(),
+                Value<double> longitude = const Value.absent(),
                 Value<double> bearing = const Value.absent(),
                 Value<ValidationStatus> validationStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -3063,8 +3061,8 @@ class $$ObservationsTableTableTableManager
                 required DateTime startTime,
                 required DateTime endTime,
                 Value<String?> notes = const Value.absent(),
-                Value<double?> latitude = const Value.absent(),
-                Value<double?> longitude = const Value.absent(),
+                required double latitude,
+                required double longitude,
                 required double bearing,
                 required ValidationStatus validationStatus,
                 Value<int> rowid = const Value.absent(),

@@ -27,6 +27,10 @@ final class SaveObservationRequested extends ObservationFormEvent {
     required this.contactType,
     required this.quantity,
     required this.bearing,
+    required this.latitude,
+    required this.longitude,
+    required this.startTime,
+    required this.endTime,
     this.notes,
     this.existingRecord,
   });
@@ -39,6 +43,10 @@ final class SaveObservationRequested extends ObservationFormEvent {
   final double bearing;
   final String? notes;
   final ObservationRecord? existingRecord;
+  final double latitude;
+  final double longitude;
+  final DateTime startTime;
+  final DateTime endTime;
 
   @override
   List<Object?> get props => [
@@ -49,5 +57,9 @@ final class SaveObservationRequested extends ObservationFormEvent {
     notes,
     bearing,
     existingRecord,
+    latitude,
+    longitude,
+    startTime,
+    endTime,
   ];
 }

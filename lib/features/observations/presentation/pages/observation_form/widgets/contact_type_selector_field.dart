@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
-import 'package:noctambuls/core/presentation/widgets/app_localizations_extensions.dart';
+import 'package:noctambuls/core/presentation/utils/app_localizations_extensions.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 

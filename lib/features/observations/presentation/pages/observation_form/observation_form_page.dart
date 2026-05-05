@@ -13,6 +13,7 @@ import 'package:noctambuls/features/observations/presentation/pages/observation_
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_event.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_state.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/contact_type_selector_field.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/date_time_range_selector.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/orientation_selector_field.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/species_selector_field.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/language_bloc.dart';
@@ -53,12 +54,17 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
   late TextEditingController _notesController;
   late TextEditingController _quantityController;
   late ContactType _selectedContactType;
+  late DateTime _startTime;
+  late DateTime _endTime;
   double? _selectedBearing;
   String? _selectedSpeciesId;
+  double? _latitude;
+  double? _longitude;
 
   @override
   void initState() {
     super.initState();
+    final now = DateTime.now();
 
     _notesController = TextEditingController(
       text: widget.existingRecord?.notes ?? '',
@@ -70,6 +76,10 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
     _selectedContactType =
         widget.existingRecord?.contactType ?? ContactType.auditive;
     _selectedBearing = widget.existingRecord?.bearing;
+    _latitude = widget.existingRecord?.latitude;
+    _longitude = widget.existingRecord?.longitude;
+    _startTime = widget.existingRecord?.startTime ?? now;
+    _endTime = widget.existingRecord?.endTime ?? now;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final langCode = context
@@ -89,17 +99,22 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
   }
 
   void _onSave() {
-    if (_formKey.currentState!.validate() && _selectedSpeciesId != null) {
+    if (_formKey.currentState!.validate()) {
       context.read<ObservationFormBloc>().add(
         SaveObservationRequested(
           sessionId: widget.sessionId,
           speciesId: _selectedSpeciesId!,
-          contactType: _selectedContactType!,
+          contactType: _selectedContactType,
           quantity: int.tryParse(_quantityController.text) ?? 1,
           notes: _notesController.text.isNotEmpty
               ? _notesController.text
               : null,
           bearing: _selectedBearing!,
+          latitude: _latitude ?? 0.0,
+          //TODO: CAMBIAR ES PER TEST
+          longitude: _longitude ?? 0.0,
+          startTime: _startTime,
+          endTime: _endTime,
           existingRecord: widget.existingRecord,
           sessionBloc: widget.sessionBloc,
         ),
@@ -151,57 +166,78 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          // Quan estem a l'estat d'error, el BLoC emetrà l'error i ràpidament tornarà a Ready
-          // amb els ocells en memòria, així que assumim que la UI només dibuixa quan hi ha ocells.
           final birds = state is ObservationFormReady ? state.birds : <Bird>[];
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(AppDimensions.lg),
             child: Form(
               key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  SpeciesSelectorField(
-                    birds: birds,
-                    selectedSpeciesId: _selectedSpeciesId,
-                    onChanged: (value) =>
-                        setState(() => _selectedSpeciesId = value),
-                  ),
-                  const SizedBox(height: AppDimensions.md),
+              child: SafeArea(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: SpeciesSelectorField(
+                            birds: birds,
+                            selectedSpeciesId: _selectedSpeciesId,
+                            onChanged: (value) =>
+                                setState(() => _selectedSpeciesId = value),
+                          ),
+                        ),
+                        const SizedBox(width: AppDimensions.md),
+                        Expanded(
+                          child: AppQuantitySelector(
+                            controller: _quantityController,
+                            label: l10n.quantityLabel,
+                            minValue: 1,
+                          ),
+                        ),
+                      ],
+                    ),
 
-                  ContactTypeSelectorField(
-                    selectedContactType: _selectedContactType!,
-                    onChanged: (value) =>
-                        setState(() => _selectedContactType = value),
-                  ),
-                  const SizedBox(height: AppDimensions.md),
+                    const SizedBox(height: AppDimensions.md),
+                    DateTimeRangeSelectorField(
+                      startTime: _startTime,
+                      endTime: _endTime,
+                      onChanged: (start, end) {
+                        setState(() {
+                          _startTime = start;
+                          _endTime = end;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: AppDimensions.md),
 
-                  AppQuantitySelector(
-                    controller: _quantityController,
-                    label: l10n.quantityLabel,
-                    minValue: 1,
-                  ),
-                  const SizedBox(height: AppDimensions.md),
+                    ContactTypeSelectorField(
+                      selectedContactType: _selectedContactType!,
+                      onChanged: (value) =>
+                          setState(() => _selectedContactType = value),
+                    ),
+                    const SizedBox(height: AppDimensions.md),
 
-                  OrientationSelectorField(
-                    selectedBearing: _selectedBearing,
-                    onChanged: (value) =>
-                        setState(() => _selectedBearing = value),
-                  ),
-                  const SizedBox(height: AppDimensions.md),
+                    OrientationSelectorField(
+                      selectedBearing: _selectedBearing,
+                      onChanged: (value) =>
+                          setState(() => _selectedBearing = value),
+                    ),
 
-                  AppTextField(
-                    controller: _notesController,
-                    label: l10n.notesLabel,
-                    keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.newline,
-                    prefixIcon: Icons.notes,
-                    maxLines: 20,
-                    minLines: 3,
-                  ),
-                  const SizedBox(height: AppDimensions.xl),
-                ],
+                    const SizedBox(height: AppDimensions.md),
+
+                    AppTextField(
+                      controller: _notesController,
+                      label: l10n.notesLabel,
+                      keyboardType: TextInputType.multiline,
+                      textInputAction: TextInputAction.newline,
+                      prefixIcon: Icons.notes,
+                      maxLines: 20,
+                      minLines: 3,
+                    ),
+                    const SizedBox(height: AppDimensions.xl),
+                  ],
+                ),
               ),
             ),
           );
