@@ -18,6 +18,8 @@ class AppTextField extends StatelessWidget {
     this.inputFormatters,
     this.validator,
     this.onFieldSubmitted,
+    this.maxLines = 1,
+    this.minLines,
     super.key,
   });
 
@@ -35,6 +37,8 @@ class AppTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
   final void Function(String)? onFieldSubmitted;
+  final int? maxLines;
+  final int? minLines;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +53,8 @@ class AppTextField extends StatelessWidget {
       textInputAction: textInputAction,
       textCapitalization: textCapitalization,
       maxLength: maxLength,
+      maxLines: maxLines,
+      minLines: minLines,
       inputFormatters: inputFormatters,
       onFieldSubmitted: onFieldSubmitted != null
           ? (_) => onFieldSubmitted!(controller.text)

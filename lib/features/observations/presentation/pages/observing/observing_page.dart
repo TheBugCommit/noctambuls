@@ -117,9 +117,11 @@ class _ObservingContent extends StatelessWidget {
           ),
           actions: const [PopupMenuObserving()],
         ),
-        body: showCatalogRequiredView
-            ? const CatalogSyncRequiredView()
-            : const _ObservationListBody(),
+        body: SafeArea(
+          child: showCatalogRequiredView
+              ? const CatalogSyncRequiredView()
+              : const _ObservationListBody(),
+        ),
         floatingActionButton: AppButtonFab.large(
           onPressed: () => context.push(
             AppRoutes.observationForm,

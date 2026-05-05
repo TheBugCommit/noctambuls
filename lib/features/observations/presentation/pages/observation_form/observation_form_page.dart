@@ -1,0 +1,202 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/presentation/widgets/app_button.dart';
+import 'package:noctambuls/core/presentation/widgets/app_quantity_selector.dart';
+import 'package:noctambuls/core/presentation/widgets/app_text_field.dart';
+import 'package:noctambuls/features/guide/domain/entities/bird.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
+import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_event.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_state.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/contact_type_selector_field.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/species_selector_field.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/language_bloc.dart';
+import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
+import 'package:noctambuls/l10n/app_localizations.dart';
+
+class ObservationFormArgs {
+  const ObservationFormArgs({
+    required this.sessionId,
+    required this.sessionBloc,
+    this.existingRecord,
+  });
+
+  final String sessionId;
+  final SessionObservationBloc sessionBloc;
+  final ObservationRecord? existingRecord;
+}
+
+class ObservationFormPage extends StatefulWidget {
+  const ObservationFormPage({
+    required this.sessionId,
+    required this.sessionBloc,
+    this.existingRecord,
+    super.key,
+  });
+
+  final String sessionId;
+  final SessionObservationBloc sessionBloc;
+  final ObservationRecord? existingRecord;
+
+  @override
+  State<ObservationFormPage> createState() => _ObservationFormPageState();
+}
+
+class _ObservationFormPageState extends State<ObservationFormPage> {
+  final _formKey = GlobalKey<FormState>();
+
+  late TextEditingController _notesController;
+  late TextEditingController _quantityController;
+  String? _selectedSpeciesId;
+  ContactType? _selectedContactType;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _notesController = TextEditingController(
+      text: widget.existingRecord?.notes ?? '',
+    );
+    _quantityController = TextEditingController(
+      text: widget.existingRecord?.quantity.toString() ?? '1',
+    );
+    _selectedSpeciesId = widget.existingRecord?.speciesId;
+    _selectedContactType =
+        widget.existingRecord?.contactType ?? ContactType.auditive;
+
+    // Demanem al BLoC que carregui els ocells segons l'idioma actual de l'app
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final langCode = context
+          .read<LanguageBloc>()
+          .state
+          .appLanguage
+          .toLanguageCode;
+      context.read<ObservationFormBloc>().add(LoadFormDataRequested(langCode));
+    });
+  }
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    _quantityController.dispose();
+    super.dispose();
+  }
+
+  void _onSave() {
+    if (_formKey.currentState!.validate() && _selectedSpeciesId != null) {
+      context.read<ObservationFormBloc>().add(
+        SaveObservationRequested(
+          sessionId: widget.sessionId,
+          speciesId: _selectedSpeciesId!,
+          contactType: _selectedContactType!,
+          quantity: int.tryParse(_quantityController.text) ?? 1,
+          notes: _notesController.text.isNotEmpty
+              ? _notesController.text
+              : null,
+          existingRecord: widget.existingRecord,
+          sessionBloc: widget.sessionBloc,
+        ),
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final isEditing = widget.existingRecord != null;
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          isEditing ? l10n.editObservationTitle : l10n.newObservationTitle,
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: AppDimensions.md),
+            child: AppButton.primary(
+              onPressed: _onSave,
+              label: l10n.saveObservation,
+              icon: Icons.save_outlined,
+              size: AppButtonSize.sm,
+            ),
+          ),
+        ],
+      ),
+      resizeToAvoidBottomInset: true,
+      body: BlocConsumer<ObservationFormBloc, ObservationFormState>(
+        listenWhen: (previous, current) =>
+            current is ObservationFormSuccess ||
+            current is ObservationFormError,
+        listener: (context, state) {
+          if (state is ObservationFormSuccess) {
+            context.pop();
+          } else if (state is ObservationFormError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.errorSavingObservation),
+              ),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is ObservationFormLoading ||
+              state is ObservationFormInitial) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          // Quan estem a l'estat d'error, el BLoC emetrà l'error i ràpidament tornarà a Ready
+          // amb els ocells en memòria, així que assumim que la UI només dibuixa quan hi ha ocells.
+          final birds = state is ObservationFormReady ? state.birds : <Bird>[];
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(AppDimensions.lg),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SpeciesSelectorField(
+                    birds: birds,
+                    selectedSpeciesId: _selectedSpeciesId,
+                    onChanged: (value) =>
+                        setState(() => _selectedSpeciesId = value),
+                  ),
+                  const SizedBox(height: AppDimensions.md),
+
+                  ContactTypeSelectorField(
+                    selectedContactType: _selectedContactType!,
+                    onChanged: (value) =>
+                        setState(() => _selectedContactType = value),
+                  ),
+                  const SizedBox(height: AppDimensions.md),
+
+                  AppQuantitySelector(
+                    controller: _quantityController,
+                    label: l10n.quantityLabel,
+                    minValue: 1,
+                  ),
+                  const SizedBox(height: AppDimensions.md),
+
+                  AppTextField(
+                    controller: _notesController,
+                    label: l10n.notesLabel,
+                    keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.newline,
+                    prefixIcon: Icons.notes,
+                    maxLines: 20,
+                    minLines: 3,
+                  ),
+                  const SizedBox(height: AppDimensions.xl),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

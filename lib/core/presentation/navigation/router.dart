@@ -120,15 +120,18 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
     GoRoute(
       path: AppRoutes.observationForm,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) {
+      pageBuilder: (context, state) {
         final args = state.extra! as ObservationFormArgs;
 
-        return BlocProvider(
-          create: (_) => sl<ObservationFormBloc>(),
-          child: ObservationFormPage(
-            sessionId: args.sessionId,
-            sessionBloc: args.sessionBloc,
-            existingRecord: args.existingRecord,
+        return MaterialPage(
+          fullscreenDialog: true,
+          child: BlocProvider(
+            create: (_) => sl<ObservationFormBloc>(),
+            child: ObservationFormPage(
+              sessionId: args.sessionId,
+              sessionBloc: args.sessionBloc,
+              existingRecord: args.existingRecord,
+            ),
           ),
         );
       },
