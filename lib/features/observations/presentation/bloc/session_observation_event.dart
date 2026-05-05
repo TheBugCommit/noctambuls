@@ -31,6 +31,16 @@ class AddRecord extends SessionObservationEvent {
   List<Object?> get props => [record];
 }
 
+/// Update observation event
+class UpdateRecord extends SessionObservationEvent {
+  const UpdateRecord(this.record);
+
+  final ObservationRecord record;
+
+  @override
+  List<Object?> get props => [record];
+}
+
 /// Delete observation event
 class DeleteRecord extends SessionObservationEvent {
   const DeleteRecord(this.recordId);

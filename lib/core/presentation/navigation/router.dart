@@ -12,6 +12,8 @@ import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.
 import 'package:noctambuls/features/auth/presentation/pages/signup/sign_up_page.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/observing_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/review_page.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
@@ -114,6 +116,22 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
       path: AppRoutes.observing,
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const ObservingPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.observationForm,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final args = state.extra! as ObservationFormArgs;
+
+        return BlocProvider(
+          create: (_) => sl<ObservationFormBloc>(),
+          child: ObservationFormPage(
+            sessionId: args.sessionId,
+            sessionBloc: args.sessionBloc,
+            existingRecord: args.existingRecord,
+          ),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.review,
