@@ -55,7 +55,7 @@ class ObservationsTable extends Table with OfflineFirstMixin {
 
   RealColumn get longitude => real().nullable()();
 
-  RealColumn get bearing => real().nullable()();
+  RealColumn get bearing => real()();
 
   IntColumn get validationStatus =>
       integer().map(const ValidationStatusConverter())();

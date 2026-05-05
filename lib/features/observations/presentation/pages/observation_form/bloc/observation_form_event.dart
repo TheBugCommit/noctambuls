@@ -26,6 +26,7 @@ final class SaveObservationRequested extends ObservationFormEvent {
     required this.speciesId,
     required this.contactType,
     required this.quantity,
+    required this.bearing,
     this.notes,
     this.existingRecord,
   });
@@ -35,6 +36,7 @@ final class SaveObservationRequested extends ObservationFormEvent {
   final String speciesId;
   final ContactType contactType;
   final int quantity;
+  final double bearing;
   final String? notes;
   final ObservationRecord? existingRecord;
 
@@ -45,6 +47,7 @@ final class SaveObservationRequested extends ObservationFormEvent {
     contactType,
     quantity,
     notes,
+    bearing,
     existingRecord,
   ];
 }

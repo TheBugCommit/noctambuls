@@ -949,6 +949,72 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Augmenta la quantitat'**
   String get incrementQuantityTooltip;
+
+  /// No description provided for @orientationTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Orientació'**
+  String get orientationTitle;
+
+  /// No description provided for @orientationHint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Toca per definir l\'orientació'**
+  String get orientationHint;
+
+  /// No description provided for @compassError.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error llegint els sensors.'**
+  String get compassError;
+
+  /// No description provided for @compassNoSensor.
+  ///
+  /// In ca, this message translates to:
+  /// **'El dispositiu no té sensor de brúixola.'**
+  String get compassNoSensor;
+
+  /// No description provided for @compassInstruction.
+  ///
+  /// In ca, this message translates to:
+  /// **'Apunta el telèfon cap a l\'observació i prem fixar.'**
+  String get compassInstruction;
+
+  /// No description provided for @compassFixDirection.
+  ///
+  /// In ca, this message translates to:
+  /// **'Fixar Orientació'**
+  String get compassFixDirection;
+
+  /// No description provided for @locationDirectionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació i Orientació'**
+  String get locationDirectionTitle;
+
+  /// No description provided for @orientationRequired.
+  ///
+  /// In ca, this message translates to:
+  /// **'L\'orientació és obligatòria'**
+  String get orientationRequired;
+
+  /// No description provided for @updateGPS.
+  ///
+  /// In ca, this message translates to:
+  /// **'Actualiza GPS'**
+  String get updateGPS;
+
+  /// No description provided for @updateOrientation.
+  ///
+  /// In ca, this message translates to:
+  /// **'Modificar orientació'**
+  String get updateOrientation;
+
+  /// No description provided for @orientationValueLong.
+  ///
+  /// In ca, this message translates to:
+  /// **'{orientation} {value}°'**
+  String orientationValueLong(String orientation, String value);
 }
 
 class _AppLocalizationsDelegate

@@ -460,4 +460,40 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get incrementQuantityTooltip => 'Augmenta la quantitat';
+
+  @override
+  String get orientationTitle => 'Orientació';
+
+  @override
+  String get orientationHint => 'Toca per definir l\'orientació';
+
+  @override
+  String get compassError => 'Error llegint els sensors.';
+
+  @override
+  String get compassNoSensor => 'El dispositiu no té sensor de brúixola.';
+
+  @override
+  String get compassInstruction =>
+      'Apunta el telèfon cap a l\'observació i prem fixar.';
+
+  @override
+  String get compassFixDirection => 'Fixar Orientació';
+
+  @override
+  String get locationDirectionTitle => 'Ubicació i Orientació';
+
+  @override
+  String get orientationRequired => 'L\'orientació és obligatòria';
+
+  @override
+  String get updateGPS => 'Actualiza GPS';
+
+  @override
+  String get updateOrientation => 'Modificar orientació';
+
+  @override
+  String orientationValueLong(String orientation, String value) {
+    return '$orientation $value°';
+  }
 }

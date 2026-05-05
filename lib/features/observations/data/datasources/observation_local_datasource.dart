@@ -164,7 +164,7 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       notes: Value(obs.notes),
       latitude: Value(obs.latitude),
       longitude: Value(obs.longitude),
-      bearing: Value(obs.bearing),
+      bearing: obs.bearing,
       validationStatus: obs.validationStatus,
       syncStatus: obs.syncStatus,
       createdAt: obs.createdAt,

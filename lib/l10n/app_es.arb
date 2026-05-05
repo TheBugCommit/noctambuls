@@ -173,5 +173,22 @@
     "visualContactType": "Visual",
     "auditiveContactType": "Auditivo",
     "reduceQuantityTooltip": "Reduece la cantidad",
-    "incrementQuantityTooltip": "Incrementa la cantidad"
+    "incrementQuantityTooltip": "Incrementa la cantidad",
+    "orientationTitle": "Orientación",
+    "orientationHint": "Toca para definir la orientación",
+    "compassError": "Error leyendo los sensores.",
+    "compassNoSensor": "El dispositivo no tiene sensor de brújula.",
+    "compassInstruction": "Apunta el teléfono hacia la observación y pulsa fijar.",
+    "compassFixDirection": "Fijar Dirección",
+    "locationDirectionTitle": "Ubicación y Orientación",
+    "updateGPS": "Actualizar GPS",
+    "orientationRequired": "La orientación es obligatoria",
+    "updateOrientation": "Modificar Orientación",
+    "orientationValueLong": "{orientation} {value}°",
+    "@orientationValueLong": {
+        "placeholders": {
+          "orientation": { "type": "String" },
+          "value": { "type": "String" }
+        }
+    }
 }

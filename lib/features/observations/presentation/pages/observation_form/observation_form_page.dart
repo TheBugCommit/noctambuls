@@ -13,6 +13,7 @@ import 'package:noctambuls/features/observations/presentation/pages/observation_
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_event.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_state.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/contact_type_selector_field.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/orientation_selector_field.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/species_selector_field.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/language_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
@@ -51,8 +52,9 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
 
   late TextEditingController _notesController;
   late TextEditingController _quantityController;
+  late ContactType _selectedContactType;
+  double? _selectedBearing;
   String? _selectedSpeciesId;
-  ContactType? _selectedContactType;
 
   @override
   void initState() {
@@ -67,8 +69,8 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
     _selectedSpeciesId = widget.existingRecord?.speciesId;
     _selectedContactType =
         widget.existingRecord?.contactType ?? ContactType.auditive;
+    _selectedBearing = widget.existingRecord?.bearing;
 
-    // Demanem al BLoC que carregui els ocells segons l'idioma actual de l'app
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final langCode = context
           .read<LanguageBloc>()
@@ -97,6 +99,7 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
           notes: _notesController.text.isNotEmpty
               ? _notesController.text
               : null,
+          bearing: _selectedBearing!,
           existingRecord: widget.existingRecord,
           sessionBloc: widget.sessionBloc,
         ),
@@ -178,6 +181,13 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
                     controller: _quantityController,
                     label: l10n.quantityLabel,
                     minValue: 1,
+                  ),
+                  const SizedBox(height: AppDimensions.md),
+
+                  OrientationSelectorField(
+                    selectedBearing: _selectedBearing,
+                    onChanged: (value) =>
+                        setState(() => _selectedBearing = value),
                   ),
                   const SizedBox(height: AppDimensions.md),
 

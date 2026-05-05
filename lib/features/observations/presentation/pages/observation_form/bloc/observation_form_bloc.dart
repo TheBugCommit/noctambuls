@@ -63,7 +63,7 @@ class ObservationFormBloc
       updatedAt: now,
       latitude: event.existingRecord?.latitude,
       longitude: event.existingRecord?.longitude,
-      bearing: event.existingRecord?.bearing,
+      bearing: event.bearing,
       validationStatus:
           event.existingRecord?.validationStatus ?? ValidationStatus.pending,
       syncStatus: SyncStatus.draft,
