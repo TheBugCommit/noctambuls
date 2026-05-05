@@ -875,17 +875,17 @@ class $ObservationsTableTable extends ObservationsTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _contactTypeMeta = const VerificationMeta(
-    'contactType',
-  );
   @override
-  late final GeneratedColumn<String> contactType = GeneratedColumn<String>(
-    'contact_type',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<ContactType, int> contactType =
+      GeneratedColumn<int>(
+        'contact_type',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<ContactType>(
+        $ObservationsTableTable.$convertercontactType,
+      );
   static const VerificationMeta _quantityMeta = const VerificationMeta(
     'quantity',
   );
@@ -1049,17 +1049,6 @@ class $ObservationsTableTable extends ObservationsTable
     } else if (isInserting) {
       context.missing(_speciesIdMeta);
     }
-    if (data.containsKey('contact_type')) {
-      context.handle(
-        _contactTypeMeta,
-        contactType.isAcceptableOrUnknown(
-          data['contact_type']!,
-          _contactTypeMeta,
-        ),
-      );
-    } else if (isInserting) {
-      context.missing(_contactTypeMeta);
-    }
     if (data.containsKey('quantity')) {
       context.handle(
         _quantityMeta,
@@ -1147,10 +1136,12 @@ class $ObservationsTableTable extends ObservationsTable
         DriftSqlType.string,
         data['${effectivePrefix}species_id'],
       )!,
-      contactType: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}contact_type'],
-      )!,
+      contactType: $ObservationsTableTable.$convertercontactType.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}contact_type'],
+        )!,
+      ),
       quantity: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}quantity'],
@@ -1196,6 +1187,8 @@ class $ObservationsTableTable extends ObservationsTable
 
   static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
       const SyncStatusConverter();
+  static JsonTypeConverter2<ContactType, int, int> $convertercontactType =
+      const ContactTypeConverter();
   static JsonTypeConverter2<ValidationStatus, int, int>
   $convertervalidationStatus = const ValidationStatusConverter();
 }
@@ -1209,7 +1202,7 @@ class ObservationEntityData extends DataClass
   final bool isDeleted;
   final String sessionId;
   final String speciesId;
-  final String contactType;
+  final ContactType contactType;
   final int quantity;
   final DateTime startTime;
   final DateTime endTime;
@@ -1250,7 +1243,11 @@ class ObservationEntityData extends DataClass
     map['is_deleted'] = Variable<bool>(isDeleted);
     map['session_id'] = Variable<String>(sessionId);
     map['species_id'] = Variable<String>(speciesId);
-    map['contact_type'] = Variable<String>(contactType);
+    {
+      map['contact_type'] = Variable<int>(
+        $ObservationsTableTable.$convertercontactType.toSql(contactType),
+      );
+    }
     map['quantity'] = Variable<int>(quantity);
     map['start_time'] = Variable<DateTime>(startTime);
     map['end_time'] = Variable<DateTime>(endTime);
@@ -1320,7 +1317,9 @@ class ObservationEntityData extends DataClass
       isDeleted: serializer.fromJson<bool>(json['isDeleted']),
       sessionId: serializer.fromJson<String>(json['sessionId']),
       speciesId: serializer.fromJson<String>(json['speciesId']),
-      contactType: serializer.fromJson<String>(json['contactType']),
+      contactType: $ObservationsTableTable.$convertercontactType.fromJson(
+        serializer.fromJson<int>(json['contactType']),
+      ),
       quantity: serializer.fromJson<int>(json['quantity']),
       startTime: serializer.fromJson<DateTime>(json['startTime']),
       endTime: serializer.fromJson<DateTime>(json['endTime']),
@@ -1345,7 +1344,9 @@ class ObservationEntityData extends DataClass
       'isDeleted': serializer.toJson<bool>(isDeleted),
       'sessionId': serializer.toJson<String>(sessionId),
       'speciesId': serializer.toJson<String>(speciesId),
-      'contactType': serializer.toJson<String>(contactType),
+      'contactType': serializer.toJson<int>(
+        $ObservationsTableTable.$convertercontactType.toJson(contactType),
+      ),
       'quantity': serializer.toJson<int>(quantity),
       'startTime': serializer.toJson<DateTime>(startTime),
       'endTime': serializer.toJson<DateTime>(endTime),
@@ -1369,7 +1370,7 @@ class ObservationEntityData extends DataClass
     bool? isDeleted,
     String? sessionId,
     String? speciesId,
-    String? contactType,
+    ContactType? contactType,
     int? quantity,
     DateTime? startTime,
     DateTime? endTime,
@@ -1496,7 +1497,7 @@ class ObservationsTableCompanion
   final Value<bool> isDeleted;
   final Value<String> sessionId;
   final Value<String> speciesId;
-  final Value<String> contactType;
+  final Value<ContactType> contactType;
   final Value<int> quantity;
   final Value<DateTime> startTime;
   final Value<DateTime> endTime;
@@ -1533,7 +1534,7 @@ class ObservationsTableCompanion
     required bool isDeleted,
     required String sessionId,
     required String speciesId,
-    required String contactType,
+    required ContactType contactType,
     required int quantity,
     required DateTime startTime,
     required DateTime endTime,
@@ -1563,7 +1564,7 @@ class ObservationsTableCompanion
     Expression<bool>? isDeleted,
     Expression<String>? sessionId,
     Expression<String>? speciesId,
-    Expression<String>? contactType,
+    Expression<int>? contactType,
     Expression<int>? quantity,
     Expression<DateTime>? startTime,
     Expression<DateTime>? endTime,
@@ -1603,7 +1604,7 @@ class ObservationsTableCompanion
     Value<bool>? isDeleted,
     Value<String>? sessionId,
     Value<String>? speciesId,
-    Value<String>? contactType,
+    Value<ContactType>? contactType,
     Value<int>? quantity,
     Value<DateTime>? startTime,
     Value<DateTime>? endTime,
@@ -1662,7 +1663,9 @@ class ObservationsTableCompanion
       map['species_id'] = Variable<String>(speciesId.value);
     }
     if (contactType.present) {
-      map['contact_type'] = Variable<String>(contactType.value);
+      map['contact_type'] = Variable<int>(
+        $ObservationsTableTable.$convertercontactType.toSql(contactType.value),
+      );
     }
     if (quantity.present) {
       map['quantity'] = Variable<int>(quantity.value);
@@ -2604,7 +2607,7 @@ typedef $$ObservationsTableTableCreateCompanionBuilder =
       required bool isDeleted,
       required String sessionId,
       required String speciesId,
-      required String contactType,
+      required ContactType contactType,
       required int quantity,
       required DateTime startTime,
       required DateTime endTime,
@@ -2624,7 +2627,7 @@ typedef $$ObservationsTableTableUpdateCompanionBuilder =
       Value<bool> isDeleted,
       Value<String> sessionId,
       Value<String> speciesId,
-      Value<String> contactType,
+      Value<ContactType> contactType,
       Value<int> quantity,
       Value<DateTime> startTime,
       Value<DateTime> endTime,
@@ -2712,9 +2715,10 @@ class $$ObservationsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get contactType => $composableBuilder(
+  ColumnWithTypeConverterFilters<ContactType, ContactType, int>
+  get contactType => $composableBuilder(
     column: $table.contactType,
-    builder: (column) => ColumnFilters(column),
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<int> get quantity => $composableBuilder(
@@ -2821,7 +2825,7 @@ class $$ObservationsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get contactType => $composableBuilder(
+  ColumnOrderings<int> get contactType => $composableBuilder(
     column: $table.contactType,
     builder: (column) => ColumnOrderings(column),
   );
@@ -2920,10 +2924,11 @@ class $$ObservationsTableTableAnnotationComposer
   GeneratedColumn<String> get speciesId =>
       $composableBuilder(column: $table.speciesId, builder: (column) => column);
 
-  GeneratedColumn<String> get contactType => $composableBuilder(
-    column: $table.contactType,
-    builder: (column) => column,
-  );
+  GeneratedColumnWithTypeConverter<ContactType, int> get contactType =>
+      $composableBuilder(
+        column: $table.contactType,
+        builder: (column) => column,
+      );
 
   GeneratedColumn<int> get quantity =>
       $composableBuilder(column: $table.quantity, builder: (column) => column);
@@ -3016,7 +3021,7 @@ class $$ObservationsTableTableTableManager
                 Value<bool> isDeleted = const Value.absent(),
                 Value<String> sessionId = const Value.absent(),
                 Value<String> speciesId = const Value.absent(),
-                Value<String> contactType = const Value.absent(),
+                Value<ContactType> contactType = const Value.absent(),
                 Value<int> quantity = const Value.absent(),
                 Value<DateTime> startTime = const Value.absent(),
                 Value<DateTime> endTime = const Value.absent(),
@@ -3054,7 +3059,7 @@ class $$ObservationsTableTableTableManager
                 required bool isDeleted,
                 required String sessionId,
                 required String speciesId,
-                required String contactType,
+                required ContactType contactType,
                 required int quantity,
                 required DateTime startTime,
                 required DateTime endTime,

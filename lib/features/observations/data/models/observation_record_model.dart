@@ -1,5 +1,6 @@
 import 'package:noctambuls/core/database/user_database.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
+import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
 
@@ -68,7 +69,7 @@ class ObservationRecordModel {
   final String id;
   final String sessionId;
   final String speciesId;
-  final String contactType;
+  final ContactType contactType;
   final int quantity;
   final DateTime startTime;
   final DateTime endTime;

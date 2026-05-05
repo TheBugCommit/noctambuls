@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:noctambuls/core/database/converters.dart';
 import 'package:noctambuls/core/database/tables.dart';
+import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
@@ -20,9 +21,9 @@ class UserDatabase extends _$UserDatabase {
   MigrationStrategy get migration => MigrationStrategy(
     onUpgrade: (m, from, to) async {
       if (from < 2) await m.createTable(userProfileTable);
-      if (from < 3) {
+      /*if (from < 3) {
         await m.addColumn(observationsTable, observationsTable.bearing);
-      }
+      }*/
     },
   );
 }

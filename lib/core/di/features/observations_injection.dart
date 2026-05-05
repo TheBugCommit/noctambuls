@@ -1,6 +1,7 @@
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
+import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart';
 import 'package:noctambuls/features/observations/data/datasources/observation_local_datasource.dart';
 import 'package:noctambuls/features/observations/data/repositories/observation_repository_impl.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
@@ -16,6 +17,8 @@ import 'package:noctambuls/features/observations/domain/usecases/watch_all_sessi
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
+import 'package:noctambuls/features/settings/domain/usecases/get_language_usecase.dart';
 
 void initObservationsFeature() {
   sl
@@ -50,12 +53,21 @@ void initObservationsFeature() {
         logger: sl<IAppLogger>(),
       ),
     )
+    ..registerFactory(
+      () => ObservationFormBloc(
+        getBirdsUseCase: sl<GetBirdsUseCase>(),
+        logger: sl<IAppLogger>(),
+      ),
+    )
     ..registerFactoryParam<SessionObservationBloc, String, void>(
       (sessionId, _) => SessionObservationBloc(
         sessionId: sessionId,
         watchObservationsUseCase: sl(),
         addObservationUseCase: sl(),
+        updateObservationUseCase: sl(),
         deleteObservationUseCase: sl(),
+        getBirdsUseCase: sl<GetBirdsUseCase>(),
+        getLanguageUseCase: sl<GetLanguageUseCase>(),
         logger: sl<IAppLogger>(),
       ),
     );

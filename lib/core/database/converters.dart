@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
@@ -61,4 +62,24 @@ class ValidationStatusConverter extends TypeConverter<ValidationStatus, int>
 
   @override
   int toJson(ValidationStatus value) => toSql(value);
+}
+
+class ContactTypeConverter extends TypeConverter<ContactType, int>
+    with JsonTypeConverter2<ContactType, int, int> {
+  const ContactTypeConverter();
+
+  @override
+  ContactType fromSql(int fromDb) => ContactType.values.firstWhere(
+    (e) => e.value == fromDb,
+    orElse: () => ContactType.auditive,
+  );
+
+  @override
+  int toSql(ContactType value) => value.value;
+
+  @override
+  ContactType fromJson(int json) => fromSql(json);
+
+  @override
+  int toJson(ContactType value) => toSql(value);
 }

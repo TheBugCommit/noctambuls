@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
 
@@ -25,7 +26,7 @@ class ObservationRecord extends Equatable {
   final String id;
   final String sessionId;
   final String speciesId;
-  final String contactType;
+  final ContactType contactType;
   final int quantity;
   final DateTime startTime;
   final DateTime endTime;
@@ -67,9 +68,7 @@ class ObservationRecord extends Equatable {
       longitude: identical(longitude, _absent)
           ? this.longitude
           : longitude as double?,
-      bearing: identical(bearing, _absent)
-          ? this.bearing
-          : bearing as double?,
+      bearing: identical(bearing, _absent) ? this.bearing : bearing as double?,
       validationStatus: validationStatus ?? this.validationStatus,
       syncStatus: syncStatus ?? this.syncStatus,
       createdAt: createdAt,

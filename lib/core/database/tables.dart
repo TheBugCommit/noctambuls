@@ -41,7 +41,7 @@ class ObservationsTable extends Table with OfflineFirstMixin {
 
   TextColumn get speciesId => text()();
 
-  TextColumn get contactType => text()();
+  IntColumn get contactType => integer().map(const ContactTypeConverter())();
 
   IntColumn get quantity => integer()();
 
