@@ -395,4 +395,69 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get settingsDeleteAccountError =>
       'No s\'ha pogut eliminar el compte. Torna-ho a intentar.';
+
+  @override
+  String get newObservationTitle => 'Nova Observació';
+
+  @override
+  String get editObservationTitle => 'Editar Observació';
+
+  @override
+  String get saveObservation => 'Desar';
+
+  @override
+  String get selectSpecies => 'Selecciona una espècie';
+
+  @override
+  String get timeRangeLabel => 'Hora d\'observació';
+
+  @override
+  String get quantityLabel => 'Quantitat';
+
+  @override
+  String get contactTypeLabel => 'Tipus de Contacte';
+
+  @override
+  String get locationLabel => 'Ubicació';
+
+  @override
+  String get directionLabel => 'Direcció';
+
+  @override
+  String get notesLabel => 'Notes';
+
+  @override
+  String get notesHint => 'Afegeix notes...';
+
+  @override
+  String get fetchingLocation => 'Obtenint ubicació...';
+
+  @override
+  String get locationUnavailable => 'Ubicació no disponible';
+
+  @override
+  String get compassLabel => 'Orientació';
+
+  @override
+  String get confirmDeleteObservationTitle => 'Vols eliminar l\'observació?';
+
+  @override
+  String get confirmDeleteObservationMessage =>
+      'Aquesta acció no es pot desfer.';
+
+  @override
+  String get errorSavingObservation =>
+      'Hi ha hagut un error al guardar l\'observació';
+
+  @override
+  String get visualContactType => 'Visual';
+
+  @override
+  String get auditiveContactType => 'Auditiu';
+
+  @override
+  String get reduceQuantityTooltip => 'Redueix la quantitat';
+
+  @override
+  String get incrementQuantityTooltip => 'Augmenta la quantitat';
 }

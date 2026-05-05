@@ -10,6 +10,9 @@ import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/bottom_nav_bar.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
+import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/catalog_sync_requiered_view.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
@@ -18,6 +21,7 @@ import 'package:noctambuls/features/observations/presentation/bloc/session_obser
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
 import 'package:noctambuls/features/observations/presentation/cubit/stopwatch_cubit.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/empty_observations.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/observation_tile.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/stopwatch_display.dart';
@@ -89,6 +93,14 @@ class _ObservingContent extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
+    final showCatalogRequiredView = context.select<CatalogSyncBloc, bool>((
+      bloc,
+    ) {
+      final state = bloc.state;
+      return state is CatalogSyncFailure && state.isCatalogEmpty ||
+          state is CatalogSyncInProgress;
+    });
+
     return BlocProvider(
       create: (_) => StopwatchCubit(
         startTime: session.startTime ?? DateTime.now(),
@@ -105,9 +117,17 @@ class _ObservingContent extends StatelessWidget {
           ),
           actions: const [PopupMenuObserving()],
         ),
-        body: const _ObservationListBody(),
+        body: showCatalogRequiredView
+            ? const CatalogSyncRequiredView()
+            : const _ObservationListBody(),
         floatingActionButton: AppButtonFab.large(
-          onPressed: () => {},
+          onPressed: () => context.push(
+            AppRoutes.observationForm,
+            extra: ObservationFormArgs(
+              sessionId: session.id,
+              sessionBloc: context.read<SessionObservationBloc>(),
+            ),
+          ),
           icon: Icons.add,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -147,8 +167,15 @@ class _ObservationListBody extends StatelessWidget {
           return ListView.builder(
             padding: const EdgeInsets.all(AppDimensions.md),
             itemCount: state.observations.length,
-            itemBuilder: (context, index) =>
-                ObservationTile(record: state.observations[index]),
+            itemBuilder: (context, index) {
+              final record = state.observations[index];
+              final bird = state.birdsMap[record.speciesId];
+
+              return ObservationTile(
+                record: state.observations[index],
+                bird: bird!,
+              );
+            },
           );
         }
 

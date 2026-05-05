@@ -396,4 +396,70 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get settingsDeleteAccountError =>
       'No se pudo eliminar la cuenta. Inténtalo de nuevo.';
+
+  @override
+  String get newObservationTitle => 'Nueva Observación';
+
+  @override
+  String get editObservationTitle => 'Editar Observación';
+
+  @override
+  String get saveObservation => 'Guardar';
+
+  @override
+  String get selectSpecies => 'Selecciona una especie';
+
+  @override
+  String get timeRangeLabel => 'Hora de observación';
+
+  @override
+  String get quantityLabel => 'Cantidad';
+
+  @override
+  String get contactTypeLabel => 'Tipo de Contacto';
+
+  @override
+  String get locationLabel => 'Ubicación';
+
+  @override
+  String get directionLabel => 'Dirección';
+
+  @override
+  String get notesLabel => 'Notas';
+
+  @override
+  String get notesHint => 'Añade notas...';
+
+  @override
+  String get fetchingLocation => 'Obteniendo ubicación...';
+
+  @override
+  String get locationUnavailable => 'Ubicación no disponible';
+
+  @override
+  String get compassLabel => 'Orientación';
+
+  @override
+  String get confirmDeleteObservationTitle =>
+      '¿Quieres eliminar la observación?';
+
+  @override
+  String get confirmDeleteObservationMessage =>
+      'Esta acción no se puede deshacer.';
+
+  @override
+  String get errorSavingObservation =>
+      'Ha ocurido un error al guardar la observacion';
+
+  @override
+  String get visualContactType => 'Visual';
+
+  @override
+  String get auditiveContactType => 'Auditivo';
+
+  @override
+  String get reduceQuantityTooltip => 'Reduece la cantidad';
+
+  @override
+  String get incrementQuantityTooltip => 'Incrementa la cantidad';
 }

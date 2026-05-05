@@ -823,6 +823,132 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'No s\'ha pogut eliminar el compte. Torna-ho a intentar.'**
   String get settingsDeleteAccountError;
+
+  /// No description provided for @newObservationTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Nova Observació'**
+  String get newObservationTitle;
+
+  /// No description provided for @editObservationTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Editar Observació'**
+  String get editObservationTitle;
+
+  /// No description provided for @saveObservation.
+  ///
+  /// In ca, this message translates to:
+  /// **'Desar'**
+  String get saveObservation;
+
+  /// No description provided for @selectSpecies.
+  ///
+  /// In ca, this message translates to:
+  /// **'Selecciona una espècie'**
+  String get selectSpecies;
+
+  /// No description provided for @timeRangeLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Hora d\'observació'**
+  String get timeRangeLabel;
+
+  /// No description provided for @quantityLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Quantitat'**
+  String get quantityLabel;
+
+  /// No description provided for @contactTypeLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tipus de Contacte'**
+  String get contactTypeLabel;
+
+  /// No description provided for @locationLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació'**
+  String get locationLabel;
+
+  /// No description provided for @directionLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Direcció'**
+  String get directionLabel;
+
+  /// No description provided for @notesLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Notes'**
+  String get notesLabel;
+
+  /// No description provided for @notesHint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Afegeix notes...'**
+  String get notesHint;
+
+  /// No description provided for @fetchingLocation.
+  ///
+  /// In ca, this message translates to:
+  /// **'Obtenint ubicació...'**
+  String get fetchingLocation;
+
+  /// No description provided for @locationUnavailable.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació no disponible'**
+  String get locationUnavailable;
+
+  /// No description provided for @compassLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Orientació'**
+  String get compassLabel;
+
+  /// No description provided for @confirmDeleteObservationTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Vols eliminar l\'observació?'**
+  String get confirmDeleteObservationTitle;
+
+  /// No description provided for @confirmDeleteObservationMessage.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aquesta acció no es pot desfer.'**
+  String get confirmDeleteObservationMessage;
+
+  /// No description provided for @errorSavingObservation.
+  ///
+  /// In ca, this message translates to:
+  /// **'Hi ha hagut un error al guardar l\'observació'**
+  String get errorSavingObservation;
+
+  /// No description provided for @visualContactType.
+  ///
+  /// In ca, this message translates to:
+  /// **'Visual'**
+  String get visualContactType;
+
+  /// No description provided for @auditiveContactType.
+  ///
+  /// In ca, this message translates to:
+  /// **'Auditiu'**
+  String get auditiveContactType;
+
+  /// No description provided for @reduceQuantityTooltip.
+  ///
+  /// In ca, this message translates to:
+  /// **'Redueix la quantitat'**
+  String get reduceQuantityTooltip;
+
+  /// No description provided for @incrementQuantityTooltip.
+  ///
+  /// In ca, this message translates to:
+  /// **'Augmenta la quantitat'**
+  String get incrementQuantityTooltip;
 }
 
 class _AppLocalizationsDelegate

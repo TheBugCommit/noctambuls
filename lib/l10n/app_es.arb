@@ -151,5 +151,27 @@
     "settingsDeleteAccountDialogTitle": "¿Eliminar cuenta?",
     "settingsDeleteAccountDialogBody": "Esta acción es irreversible. Todos tus datos serán eliminados permanentemente.",
     "settingsDeleteAccountDialogConfirm": "Sí, eliminar",
-    "settingsDeleteAccountError": "No se pudo eliminar la cuenta. Inténtalo de nuevo."
+    "settingsDeleteAccountError": "No se pudo eliminar la cuenta. Inténtalo de nuevo.",
+
+    "newObservationTitle": "Nueva Observación",
+    "editObservationTitle": "Editar Observación",
+    "saveObservation": "Guardar",
+    "selectSpecies": "Selecciona una especie",
+    "timeRangeLabel": "Hora de observación",
+    "quantityLabel": "Cantidad",
+    "contactTypeLabel": "Tipo de Contacto",
+    "locationLabel": "Ubicación",
+    "directionLabel": "Dirección",
+    "notesLabel": "Notas",
+    "notesHint": "Añade notas...",
+    "fetchingLocation": "Obteniendo ubicación...",
+    "locationUnavailable": "Ubicación no disponible",
+    "compassLabel": "Orientación",
+    "confirmDeleteObservationTitle": "¿Quieres eliminar la observación?",
+    "confirmDeleteObservationMessage": "Esta acción no se puede deshacer.",
+    "errorSavingObservation": "Ha ocurido un error al guardar la observacion",
+    "visualContactType": "Visual",
+    "auditiveContactType": "Auditivo",
+    "reduceQuantityTooltip": "Reduece la cantidad",
+    "incrementQuantityTooltip": "Incrementa la cantidad"
 }

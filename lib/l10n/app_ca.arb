@@ -154,5 +154,28 @@
     "settingsDeleteAccountDialogTitle": "Eliminar compte?",
     "settingsDeleteAccountDialogBody": "Aquesta acció és irreversible. Totes les teves dades seran eliminades permanentment.",
     "settingsDeleteAccountDialogConfirm": "Sí, eliminar",
-    "settingsDeleteAccountError": "No s'ha pogut eliminar el compte. Torna-ho a intentar."
+    "settingsDeleteAccountError": "No s'ha pogut eliminar el compte. Torna-ho a intentar.",
+
+    "newObservationTitle": "Nova Observació",
+    "editObservationTitle": "Editar Observació",
+    "saveObservation": "Desar",
+    "selectSpecies": "Selecciona una espècie",
+    "timeRangeLabel": "Hora d'observació",
+    "quantityLabel": "Quantitat",
+    "contactTypeLabel": "Tipus de Contacte",
+    "locationLabel": "Ubicació",
+    "directionLabel": "Direcció",
+    "notesLabel": "Notes",
+    "notesHint": "Afegeix notes...",
+    "fetchingLocation": "Obtenint ubicació...",
+    "locationUnavailable": "Ubicació no disponible",
+    "compassLabel": "Orientació",
+    "confirmDeleteObservationTitle": "Vols eliminar l'observació?",
+    "confirmDeleteObservationMessage": "Aquesta acció no es pot desfer.",
+    "errorSavingObservation": "Hi ha hagut un error al guardar l'observació",
+    "visualContactType": "Visual",
+    "auditiveContactType": "Auditiu",
+    "reduceQuantityTooltip": "Redueix la quantitat",
+    "incrementQuantityTooltip": "Augmenta la quantitat"
+
 }
