@@ -97,11 +97,7 @@ class _ReviewPageState extends State<ReviewPage> {
         listener: (context, state) {
           if (state is SessionReviewFinalized ||
               state is SessionReviewDeleted) {
-            if (context.canPop()) {
-              context.pop();
-            } else {
-              context.go(AppRoutes.profile);
-            }
+            context.go(AppRoutes.profile);
           } else if (state is SessionReviewError) {
             final l10n = AppLocalizations.of(context)!;
             ScaffoldMessenger.of(context).showSnackBar(
