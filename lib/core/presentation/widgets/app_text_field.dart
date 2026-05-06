@@ -5,7 +5,7 @@ import 'package:noctambuls/core/constants/app_dimensions.dart';
 class AppTextField extends StatelessWidget {
   const AppTextField({
     required this.controller,
-    required this.label,
+    this.label,
     this.hintText,
     this.prefixIcon,
     this.suffixIcon,
@@ -24,7 +24,7 @@ class AppTextField extends StatelessWidget {
   });
 
   final TextEditingController controller;
-  final String label;
+  final String? label;
   final String? hintText;
   final IconData? prefixIcon;
   final Widget? suffixIcon;

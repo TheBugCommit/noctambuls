@@ -23,7 +23,7 @@ import 'package:noctambuls/features/observations/presentation/bloc/session_obser
 import 'package:noctambuls/features/observations/presentation/cubit/stopwatch_cubit.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/empty_observations.dart';
-import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/observation_tile.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/observation_card.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/stopwatch_display.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/popup_menu_observing.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
@@ -201,7 +201,7 @@ class _ObservationListBody extends StatelessWidget {
               final record = state.observations[index];
               final bird = state.birdsMap[record.speciesId];
 
-              return ObservationTile(
+              return ObservationCard(
                 record: state.observations[index],
                 bird: bird!,
               );

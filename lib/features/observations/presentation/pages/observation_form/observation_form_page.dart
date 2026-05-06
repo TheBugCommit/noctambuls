@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/app_quantity_selector.dart';
-import 'package:noctambuls/core/presentation/widgets/app_text_field.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
@@ -14,6 +13,7 @@ import 'package:noctambuls/features/observations/presentation/pages/observation_
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_state.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/contact_type_selector_field.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/date_time_range_selector.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/notes_field.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/orientation_selector_field.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/species_selector_field.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/language_bloc.dart';
@@ -225,16 +225,7 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
                     ),
 
                     const SizedBox(height: AppDimensions.md),
-
-                    AppTextField(
-                      controller: _notesController,
-                      label: l10n.notesLabel,
-                      keyboardType: TextInputType.multiline,
-                      textInputAction: TextInputAction.newline,
-                      prefixIcon: Icons.notes,
-                      maxLines: 20,
-                      minLines: 3,
-                    ),
+                    NotesField(controller: _notesController),
                     const SizedBox(height: AppDimensions.xl),
                   ],
                 ),

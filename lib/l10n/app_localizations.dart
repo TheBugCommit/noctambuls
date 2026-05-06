@@ -1040,6 +1040,12 @@ abstract class AppLocalizations {
   /// **'Hora fi'**
   String get endTimeLabel;
 
+  /// No description provided for @obsCardQuantityLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'x{value}'**
+  String obsCardQuantityLabel(int value);
+
   /// No description provided for @statusObserving.
   ///
   /// In ca, this message translates to:

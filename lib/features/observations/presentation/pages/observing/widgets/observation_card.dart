@@ -18,8 +18,8 @@ import 'package:noctambuls/features/observations/presentation/bloc/session_obser
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
-class ObservationTile extends StatelessWidget {
-  const ObservationTile({
+class ObservationCard extends StatelessWidget {
+  const ObservationCard({
     required this.record,
     required this.bird,
     super.key,
@@ -160,6 +160,7 @@ class _ObservationTrailing extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -171,13 +172,13 @@ class _ObservationTrailing extends StatelessWidget {
             vertical: AppDimensions.xs,
           ),
           decoration: BoxDecoration(
-            color: colorScheme.primaryContainer,
+            color: colorScheme.tertiaryContainer,
             borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
           ),
           child: Text(
-            'x${record.quantity}',
+            l10n.obsCardQuantityLabel(record.quantity),
             style: textTheme.labelLarge?.copyWith(
-              color: colorScheme.onPrimaryContainer,
+              color: colorScheme.onTertiaryContainer,
               fontWeight: FontWeight.bold,
             ),
           ),

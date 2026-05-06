@@ -197,6 +197,12 @@
     "timeRangeLabel": "Franja horaria",
     "startTimeLabel": "Hora inicio",
     "endTimeLabel": "Hora fin",
+    "obsCardQuantityLabel": "x{value}",
+    "@obsCardQuantityLabel": {
+        "placeholders": {
+          "value": { "type": "int" }
+        }
+    },
 
     "statusObserving": "En curso",
     "statusReviewing": "En revisión",
