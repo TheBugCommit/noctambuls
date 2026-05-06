@@ -4,6 +4,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/presentation/navigation/auth_router_guard.dart';
 import 'package:noctambuls/core/presentation/navigation/go_router_refresh_stream.dart';
 import 'package:noctambuls/core/presentation/pages/main_navigation_screen.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signup/sign_up_page.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_event.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
@@ -30,27 +32,12 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
   initialLocation: AppRoutes.signin,
   refreshListenable: GoRouterRefreshStream(authBloc.stream),
   redirect: (context, state) {
-    final authState = authBloc.state;
-    final isOnSignIn = state.matchedLocation == AppRoutes.signin;
-    final isOnSignUp = state.matchedLocation == AppRoutes.signup;
-
-    if (authState is AuthInitial || authState is AuthLoading) return null;
-
-    FlutterNativeSplash.remove();
-
-    if (authState is Unauthenticated || authState is AuthError) {
-      if (isOnSignIn) return null;
-      return AppRoutes.signin;
+    if (authBloc.state is! AuthInitial && authBloc.state is! AuthLoading) {
+      FlutterNativeSplash.remove();
     }
 
-    if (authState is AuthRequiresProfile) {
-      if (isOnSignUp) return null;
-      return AppRoutes.signup;
-    }
-
-    if (authState is Authenticated) {
-      if (isOnSignIn || isOnSignUp) return AppRoutes.home;
-    }
+    final authRedirect = AuthRouterGuard.redirect(state, authBloc.state);
+    if (authRedirect != null) return authRedirect;
 
     return null;
   },
@@ -147,7 +134,17 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
     GoRoute(
       path: AppRoutes.review,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const ReviewPage(),
+      builder: (context, state) {
+        final sessionToReview = state.extra as ObservationSession?;
+
+        if (sessionToReview == null) {
+          return const Scaffold(
+            body: Center(child: Text('Error carregant revisió')),
+          );
+        }
+
+        return ReviewPage(session: sessionToReview);
+      },
     ),
     GoRoute(
       path: AppRoutes.profileEdit,

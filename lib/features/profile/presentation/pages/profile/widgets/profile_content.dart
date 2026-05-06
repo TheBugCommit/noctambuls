@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
@@ -159,7 +163,11 @@ class _SessionList extends StatelessWidget {
         return SessionCard(
           session: session,
           onTap: () {
-            // Lògica de navegació
+            if (session.isObserving) {
+              unawaited(context.push(AppRoutes.observing));
+            } else {
+              unawaited(context.push(AppRoutes.review, extra: session));
+            }
           },
         );
       },

@@ -1,3 +1,4 @@
+import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/data/services/audio_player_service_impl.dart';
 import 'package:noctambuls/core/data/services/external_link_service_impl.dart';
 import 'package:noctambuls/core/data/services/share_service_impl.dart';
@@ -15,9 +16,14 @@ import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/share/share_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
+import 'package:noctambuls/core/presentation/navigation/router.dart';
+import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 
 void initCore() {
   sl
+    ..registerLazySingleton<GoRouter>(
+      () => makeRouter(sl<AuthBloc>()),
+    )
     ..registerLazySingleton<ExternalLinkService>(
       () => ExternalLinkServiceImpl(logger: sl<IAppLogger>()),
     )

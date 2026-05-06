@@ -41,7 +41,7 @@ class HomePage extends StatelessWidget {
     return BlocConsumer<SessionLifecycleBloc, SessionLifecycleState>(
       listenWhen: (prev, curr) {
         if (curr is SessionLifecycleError) return true;
-        if (curr is SessionObserving) return prev is! SessionObserving;
+        if (curr is SessionObserving && prev is! SessionObserving) return true;
         return false;
       },
       listener: (context, state) {
