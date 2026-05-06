@@ -406,7 +406,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get saveObservation => 'Desar';
 
   @override
-  String get selectSpecies => 'Selecciona una espècie';
+  String get selectSpecies => 'Espècie';
 
   @override
   String get timeRangeLabel => 'Franja horària';

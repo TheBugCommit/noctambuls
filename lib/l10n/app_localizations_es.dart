@@ -407,7 +407,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get saveObservation => 'Guardar';
 
   @override
-  String get selectSpecies => 'Selecciona una especie';
+  String get selectSpecies => 'Especie';
 
   @override
   String get timeRangeLabel => 'Franja horaria';

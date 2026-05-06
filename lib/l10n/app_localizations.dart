@@ -845,7 +845,7 @@ abstract class AppLocalizations {
   /// No description provided for @selectSpecies.
   ///
   /// In ca, this message translates to:
-  /// **'Selecciona una espècie'**
+  /// **'Espècie'**
   String get selectSpecies;
 
   /// No description provided for @timeRangeLabel.
