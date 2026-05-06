@@ -212,7 +212,7 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
                     const SizedBox(height: AppDimensions.md),
 
                     ContactTypeSelectorField(
-                      selectedContactType: _selectedContactType!,
+                      selectedContactType: _selectedContactType,
                       onChanged: (value) =>
                           setState(() => _selectedContactType = value),
                     ),

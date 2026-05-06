@@ -13,7 +13,7 @@ class ReviewPage extends StatelessWidget {
 
   final ObservationSession session;
 
-  bool get isReadOnly => !session.isReviewing;
+  bool get isReadOnly => !session.isFinished;
 
   @override
   Widget build(BuildContext context) {
