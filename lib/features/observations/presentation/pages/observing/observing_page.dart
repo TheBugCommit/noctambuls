@@ -88,7 +88,7 @@ class _ObservingContent extends StatelessWidget {
     if (!context.mounted) return;
 
     if (isConfirmed == true) {
-      context.read<SessionLifecycleBloc>().add(DeleteActiveSession());
+      context.read<SessionLifecycleBloc>().add(DeleteSession());
     }
   }
 
@@ -108,6 +108,55 @@ class _ObservingContent extends StatelessWidget {
     if (isConfirmed == true) {
       context.read<SessionLifecycleBloc>().add(StopObservationPhase());
     }
+  }
+
+  Future<void> _pickGlobalDate(BuildContext context) async {
+    final now = DateTime.now();
+    final lifecycleState =
+        context.read<SessionLifecycleBloc>().state as SessionObserving;
+    final current =
+        lifecycleState.selectedObservationDate ??
+        session.startTime ??
+        now;
+
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: current.isAfter(now) ? now : current,
+      firstDate: DateTime(2020),
+      lastDate: now,
+    );
+    if (!context.mounted || pickedDate == null) return;
+
+    context
+        .read<SessionLifecycleBloc>()
+        .add(ChangeObservationDate(pickedDate));
+  }
+
+  void _openForm(BuildContext context) {
+    final lifecycleState =
+        context.read<SessionLifecycleBloc>().state as SessionObserving;
+    final globalDate =
+        session.canEditObservationDate
+            ? (lifecycleState.selectedObservationDate ??
+                session.startTime ??
+                DateTime.now())
+            : null;
+
+    unawaited(
+      context.push(
+        AppRoutes.observationForm,
+        extra: ObservationFormArgs(
+          session: session,
+          sessionBloc: context.read<SessionObservationBloc>(),
+          globalDate: globalDate,
+          onGlobalDateChanged: session.canEditObservationDate
+              ? (date) => context
+                  .read<SessionLifecycleBloc>()
+                  .add(ChangeObservationDate(date))
+              : null,
+        ),
+      ),
+    );
   }
 
   @override
@@ -143,21 +192,15 @@ class _ObservingContent extends StatelessWidget {
               const StopwatchDisplay(),
             ],
           ),
-          actions: const [PopupMenuObserving()],
+          actions: [PopupMenuObserving(session: session)],
         ),
         body: SafeArea(
           child: showCatalogRequiredView
               ? const CatalogSyncRequiredView()
-              : const _ObservationListBody(),
+              : _ObservationListBody(session: session),
         ),
         floatingActionButton: AppButtonFab.large(
-          onPressed: () => context.push(
-            AppRoutes.observationForm,
-            extra: ObservationFormArgs(
-              sessionId: session.id,
-              sessionBloc: context.read<SessionObservationBloc>(),
-            ),
-          ),
+          onPressed: () => _openForm(context),
           icon: Icons.add,
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -168,6 +211,14 @@ class _ObservingContent extends StatelessWidget {
                 icon: Icons.delete_outline,
                 onPressed: () => _confirmDelete(context),
               ),
+              if (session.canEditObservationDate) ...[
+                const SizedBox(width: AppDimensions.sm),
+                IconButton(
+                  icon: const Icon(Icons.calendar_today_outlined),
+                  tooltip: l10n.changeDateLabel,
+                  onPressed: () => _pickGlobalDate(context),
+                ),
+              ],
               const Spacer(),
               AppButton(
                 label: l10n.stopAndReview,
@@ -183,7 +234,9 @@ class _ObservingContent extends StatelessWidget {
 }
 
 class _ObservationListBody extends StatelessWidget {
-  const _ObservationListBody();
+  const _ObservationListBody({required this.session});
+
+  final ObservationSession session;
 
   @override
   Widget build(BuildContext context) {
@@ -204,6 +257,7 @@ class _ObservationListBody extends StatelessWidget {
               return ObservationCard(
                 record: state.observations[index],
                 bird: bird!,
+                session: session,
               );
             },
           );

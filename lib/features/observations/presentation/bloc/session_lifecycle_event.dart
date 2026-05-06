@@ -46,7 +46,6 @@ class StartNewSession extends SessionLifecycleEvent {
 /// Updates any session property event
 class UpdateSessionProperties extends SessionLifecycleEvent {
   const UpdateSessionProperties({
-    required this.session,
     this.temperature,
     this.wind,
     this.sky,
@@ -58,7 +57,6 @@ class UpdateSessionProperties extends SessionLifecycleEvent {
     this.longitude,
   });
 
-  final ObservationSession session;
   final TemperatureRange? temperature;
   final WindLevel? wind;
   final SkyCondition? sky;
@@ -93,7 +91,17 @@ class ResumeObservationPhase extends SessionLifecycleEvent {}
 class FinishAndLockSession extends SessionLifecycleEvent {}
 
 /// Delete active session event
-class DeleteActiveSession extends SessionLifecycleEvent {}
+class DeleteSession extends SessionLifecycleEvent {}
+
+/// Changes the globally selected observation date for incidental sessions.
+class ChangeObservationDate extends SessionLifecycleEvent {
+  const ChangeObservationDate(this.date);
+
+  final DateTime date;
+
+  @override
+  List<Object?> get props => [date];
+}
 
 /// Dismiss an error an returns to SessionLifecycleIdle event
 class DismissError extends SessionLifecycleEvent {}

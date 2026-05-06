@@ -510,6 +510,9 @@ class AppLocalizationsCa extends AppLocalizations {
   String get endTimeLabel => 'Hora fi';
 
   @override
+  String get changeDateLabel => 'Canvia la data';
+
+  @override
   String obsCardQuantityLabel(int value) {
     return 'x$value';
   }

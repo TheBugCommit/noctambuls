@@ -57,6 +57,18 @@ class ObservationSession extends Equatable {
 
   bool get isFinished => isLocked && !isDeleted;
 
+  bool get canEditObservationDate => sessionType == SessionType.incidental;
+
+  DateTime? get observationTimeMin =>
+      (sessionType == SessionType.census || sessionType == SessionType.station)
+          ? startTime
+          : null;
+
+  DateTime? get observationTimeMax =>
+      (sessionType == SessionType.census || sessionType == SessionType.station)
+          ? endTime
+          : null;
+
   static const Object _absent = Object();
 
   ObservationSession copyWith({

@@ -6,6 +6,7 @@ import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/app_quantity_selector.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
@@ -22,26 +23,39 @@ import 'package:noctambuls/l10n/app_localizations.dart';
 
 class ObservationFormArgs {
   const ObservationFormArgs({
-    required this.sessionId,
+    required this.session,
     required this.sessionBloc,
+    this.globalDate,
+    this.onGlobalDateChanged,
     this.existingRecord,
   });
 
-  final String sessionId;
+  final ObservationSession session;
   final SessionObservationBloc sessionBloc;
+
+  /// Pre-selected date for new observations (incidental sessions only).
+  final DateTime? globalDate;
+
+  /// Callback to propagate date changes back to the observing page state.
+  final void Function(DateTime)? onGlobalDateChanged;
+
   final ObservationRecord? existingRecord;
 }
 
 class ObservationFormPage extends StatefulWidget {
   const ObservationFormPage({
-    required this.sessionId,
+    required this.session,
     required this.sessionBloc,
+    this.globalDate,
+    this.onGlobalDateChanged,
     this.existingRecord,
     super.key,
   });
 
-  final String sessionId;
+  final ObservationSession session;
   final SessionObservationBloc sessionBloc;
+  final DateTime? globalDate;
+  final void Function(DateTime)? onGlobalDateChanged;
   final ObservationRecord? existingRecord;
 
   @override
@@ -78,8 +92,30 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
     _selectedBearing = widget.existingRecord?.bearing;
     _latitude = widget.existingRecord?.latitude;
     _longitude = widget.existingRecord?.longitude;
-    _startTime = widget.existingRecord?.startTime ?? now;
-    _endTime = widget.existingRecord?.endTime ?? now;
+
+    if (widget.existingRecord != null) {
+      _startTime = widget.existingRecord!.startTime;
+      _endTime = widget.existingRecord!.endTime;
+    } else if (widget.session.canEditObservationDate) {
+      final date = widget.globalDate ?? now;
+      final initial = DateTime(
+        date.year,
+        date.month,
+        date.day,
+        now.hour,
+        now.minute,
+      );
+      _startTime = initial;
+      _endTime = initial;
+    } else {
+      final min = widget.session.observationTimeMin;
+      final max = widget.session.observationTimeMax ?? now;
+      var initial = now;
+      if (initial.isAfter(max)) initial = max;
+      if (min != null && initial.isBefore(min)) initial = min;
+      _startTime = initial;
+      _endTime = initial;
+    }
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final langCode = context
@@ -102,7 +138,7 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
     if (_formKey.currentState!.validate()) {
       context.read<ObservationFormBloc>().add(
         SaveObservationRequested(
-          sessionId: widget.sessionId,
+          sessionId: widget.session.id,
           speciesId: _selectedSpeciesId!,
           contactType: _selectedContactType,
           quantity: int.tryParse(_quantityController.text) ?? 1,
@@ -200,6 +236,7 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
 
                     const SizedBox(height: AppDimensions.md),
                     DateTimeRangeSelectorField(
+                      session: widget.session,
                       startTime: _startTime,
                       endTime: _endTime,
                       onChanged: (start, end) {
@@ -208,6 +245,7 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
                           _endTime = end;
                         });
                       },
+                      onGlobalDateChanged: widget.onGlobalDateChanged,
                     ),
                     const SizedBox(height: AppDimensions.md),
 

@@ -28,7 +28,8 @@ class SessionLifecycleBloc
     on<StopObservationPhase>(_onStopObservationPhase);
     on<ResumeObservationPhase>(_onResumeObservationPhase);
     on<FinishAndLockSession>(_onFinishAndLockSession);
-    on<DeleteActiveSession>(_onDeleteActiveSession);
+    on<DeleteSession>(_onDeleteSession);
+    on<ChangeObservationDate>(_onChangeObservationDate);
     on<DismissError>(_onDismissError);
   }
 
@@ -40,8 +41,16 @@ class SessionLifecycleBloc
 
   StreamSubscription<ObservationSession?>? _sessionSubscription;
 
-  SessionLifecycleState _stateFromSession(ObservationSession session) {
-    if (session.isObserving) return SessionObserving(session: session);
+  SessionLifecycleState _stateFromSession(
+    ObservationSession session, {
+    DateTime? selectedObservationDate,
+  }) {
+    if (session.isObserving) {
+      return SessionObserving(
+        session: session,
+        selectedObservationDate: selectedObservationDate,
+      );
+    }
     if (session.isReviewing) return SessionReviewing(session: session);
     return SessionFinished(session: session);
   }
@@ -67,7 +76,10 @@ class SessionLifecycleBloc
       emit(const SessionLifecycleIdle());
       return;
     }
-    emit(_stateFromSession(event.session!));
+    final preservedDate = state is SessionObserving
+        ? (state as SessionObserving).selectedObservationDate
+        : null;
+    emit(_stateFromSession(event.session!, selectedObservationDate: preservedDate));
   }
 
   Future<void> _onStartNewSession(
@@ -105,7 +117,8 @@ class SessionLifecycleBloc
     UpdateSessionProperties event,
     Emitter<SessionLifecycleState> emit,
   ) async {
-    final current = event.session;
+    if (state is! ActiveSessionLifecycleState) return;
+    final current = (state as ActiveSessionLifecycleState).session;
 
     final updated = current.copyWith(
       temperature: event.temperature ?? current.temperature,
@@ -194,8 +207,8 @@ class SessionLifecycleBloc
     );
   }
 
-  Future<void> _onDeleteActiveSession(
-    DeleteActiveSession event,
+  Future<void> _onDeleteSession(
+    DeleteSession event,
     Emitter<SessionLifecycleState> emit,
   ) async {
     if (state is! ActiveSessionLifecycleState) return;
@@ -210,6 +223,19 @@ class SessionLifecycleBloc
         emit(SessionLifecycleError(failure: failure));
       },
     );
+  }
+
+  void _onChangeObservationDate(
+    ChangeObservationDate event,
+    Emitter<SessionLifecycleState> emit,
+  ) {
+    if (state is! SessionObserving) return;
+    final current = state as SessionObserving;
+    if (!current.session.canEditObservationDate) return;
+    emit(SessionObserving(
+      session: current.session,
+      selectedObservationDate: event.date,
+    ));
   }
 
   void _onDismissError(

@@ -199,6 +199,7 @@
     "timeRangeLabel": "Franja horària",
     "startTimeLabel": "Hora inici",
     "endTimeLabel": "Hora fi",
+    "changeDateLabel": "Canvia la data",
     "obsCardQuantityLabel": "x{value}",
     "@obsCardQuantityLabel": {
         "placeholders": {

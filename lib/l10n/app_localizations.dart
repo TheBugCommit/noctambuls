@@ -1040,6 +1040,12 @@ abstract class AppLocalizations {
   /// **'Hora fi'**
   String get endTimeLabel;
 
+  /// No description provided for @changeDateLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Canvia la data'**
+  String get changeDateLabel;
+
   /// No description provided for @obsCardQuantityLabel.
   ///
   /// In ca, this message translates to:

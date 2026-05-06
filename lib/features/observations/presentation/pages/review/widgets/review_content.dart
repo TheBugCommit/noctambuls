@@ -107,7 +107,7 @@ class ReviewContent extends StatelessWidget {
                           onPressed: () => context.push(
                             AppRoutes.observationForm,
                             extra: ObservationFormArgs(
-                              sessionId: session.id,
+                              session: session,
                               sessionBloc: context
                                   .read<SessionObservationBloc>(),
                             ),
@@ -139,7 +139,11 @@ class ReviewContent extends StatelessWidget {
                         final record = obsState.observations[index];
                         final bird = obsState.birdsMap[record.speciesId];
                         if (bird == null) return const SizedBox.shrink();
-                        return ObservationCard(record: record, bird: bird);
+                        return ObservationCard(
+                          record: record,
+                          bird: bird,
+                          session: session,
+                        );
                       },
                       childCount: obsState.observations.length,
                     ),

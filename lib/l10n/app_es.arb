@@ -197,6 +197,7 @@
     "timeRangeLabel": "Franja horaria",
     "startTimeLabel": "Hora inicio",
     "endTimeLabel": "Hora fin",
+    "changeDateLabel": "Cambiar fecha",
     "obsCardQuantityLabel": "x{value}",
     "@obsCardQuantityLabel": {
         "placeholders": {

@@ -38,10 +38,17 @@ final class SessionNavigatingToReview extends SessionLifecycleState {
 
 /// Active session in observation phase.
 final class SessionObserving extends ActiveSessionLifecycleState {
-  const SessionObserving({required super.session});
+  const SessionObserving({
+    required super.session,
+    this.selectedObservationDate,
+  });
+
+  /// User-selected global date for new observations (incidental only).
+  /// Null means "use the default" (session.startTime ?? now).
+  final DateTime? selectedObservationDate;
 
   @override
-  List<Object?> get props => [session];
+  List<Object?> get props => [session, selectedObservationDate];
 }
 
 /// Active session in review phase.

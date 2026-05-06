@@ -26,7 +26,7 @@ class DeleteSessionDialog extends StatelessWidget {
           label: l10n.delete,
           onPressed: () {
             context.pop();
-            context.read<SessionLifecycleBloc>().add(DeleteActiveSession());
+            context.read<SessionLifecycleBloc>().add(DeleteSession());
           },
         ),
       ],

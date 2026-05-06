@@ -123,8 +123,10 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           child: BlocProvider(
             create: (_) => sl<ObservationFormBloc>(),
             child: ObservationFormPage(
-              sessionId: args.sessionId,
+              session: args.session,
               sessionBloc: args.sessionBloc,
+              globalDate: args.globalDate,
+              onGlobalDateChanged: args.onGlobalDateChanged,
               existingRecord: args.existingRecord,
             ),
           ),

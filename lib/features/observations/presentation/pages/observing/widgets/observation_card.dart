@@ -13,6 +13,7 @@ import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_image.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_scientific_name.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
@@ -22,11 +23,13 @@ class ObservationCard extends StatelessWidget {
   const ObservationCard({
     required this.record,
     required this.bird,
+    required this.session,
     super.key,
   });
 
   final ObservationRecord record;
   final Bird bird;
+  final ObservationSession session;
 
   Future<void> _confirmAndDelete(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
@@ -51,7 +54,7 @@ class ObservationCard extends StatelessWidget {
       context.push(
         AppRoutes.observationForm,
         extra: ObservationFormArgs(
-          sessionId: record.sessionId,
+          session: session,
           sessionBloc: context.read<SessionObservationBloc>(),
           existingRecord: record,
         ),

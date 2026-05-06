@@ -4,14 +4,40 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
-enum _ObservingMenuOption { guide, delete }
+enum _ObservingMenuOption { guide, changeDate, delete }
 
 class PopupMenuObserving extends StatelessWidget {
-  const PopupMenuObserving({super.key});
+  const PopupMenuObserving({required this.session, super.key});
+
+  final ObservationSession session;
+
+  Future<void> _pickGlobalDate(BuildContext context) async {
+    final now = DateTime.now();
+    final lifecycleState =
+        context.read<SessionLifecycleBloc>().state as SessionObserving;
+    final current =
+        lifecycleState.selectedObservationDate ??
+        session.startTime ??
+        now;
+
+    final pickedDate = await showDatePicker(
+      context: context,
+      initialDate: current.isAfter(now) ? now : current,
+      firstDate: DateTime(2020),
+      lastDate: now,
+    );
+    if (!context.mounted || pickedDate == null) return;
+
+    context
+        .read<SessionLifecycleBloc>()
+        .add(ChangeObservationDate(pickedDate));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +53,8 @@ class PopupMenuObserving extends StatelessWidget {
         switch (result) {
           case _ObservingMenuOption.guide:
             context.go(AppRoutes.guide);
+          case _ObservingMenuOption.changeDate:
+            await _pickGlobalDate(context);
           case _ObservingMenuOption.delete:
             final isConfirmed = await AppSheet.showConfirm(
               context: context,
@@ -39,7 +67,7 @@ class PopupMenuObserving extends StatelessWidget {
             if (!context.mounted) return;
 
             if (isConfirmed == true) {
-              context.read<SessionLifecycleBloc>().add(DeleteActiveSession());
+              context.read<SessionLifecycleBloc>().add(DeleteSession());
             }
         }
       },
@@ -57,6 +85,23 @@ class PopupMenuObserving extends StatelessWidget {
             ],
           ),
         ),
+        if (session.canEditObservationDate)
+          PopupMenuItem<_ObservingMenuOption>(
+            value: _ObservingMenuOption.changeDate,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today_outlined,
+                  color: colorScheme.onSurface,
+                ),
+                const SizedBox(width: AppDimensions.sm),
+                Text(
+                  l10n.changeDateLabel,
+                  style: TextStyle(color: colorScheme.onSurface),
+                ),
+              ],
+            ),
+          ),
         PopupMenuItem<_ObservingMenuOption>(
           value: _ObservingMenuOption.delete,
           child: Row(
