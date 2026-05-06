@@ -1,7 +1,13 @@
 import 'package:noctambuls/core/database/user_database.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
+import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
+import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
+import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
+import 'package:noctambuls/features/observations/domain/enums/temperature_range.dart';
+import 'package:noctambuls/features/observations/domain/enums/visibility_level.dart';
+import 'package:noctambuls/features/observations/domain/enums/wind_level.dart';
 
 class ObservationSessionModel {
   const ObservationSessionModel({
@@ -13,9 +19,15 @@ class ObservationSessionModel {
     required this.createdAt,
     required this.updatedAt,
     required this.isDeleted,
+    this.temperature = TemperatureRange.belowZero,
+    this.wind = WindLevel.calm,
+    this.sky = SkyCondition.clear,
+    this.rain = RainLevel.none,
+    this.visibility = VisibilityLevel.poor,
+    this.moon = MoonPresence.absent,
     this.startTime,
     this.endTime,
-    this.weatherNotes,
+    this.listeningPoint,
     this.latitude,
     this.longitude,
   });
@@ -27,7 +39,13 @@ class ObservationSessionModel {
       sessionType: entity.sessionType,
       startTime: entity.startTime,
       endTime: entity.endTime,
-      weatherNotes: entity.weatherNotes,
+      temperature: entity.temperature,
+      wind: entity.wind,
+      sky: entity.sky,
+      rain: entity.rain,
+      visibility: entity.visibility,
+      moon: entity.moon,
+      listeningPoint: entity.listeningPoint,
       latitude: entity.latitude,
       longitude: entity.longitude,
       isLocked: entity.isLocked,
@@ -45,7 +63,13 @@ class ObservationSessionModel {
       sessionType: data.sessionType,
       startTime: data.startTime,
       endTime: data.endTime,
-      weatherNotes: data.weatherNotes,
+      temperature: data.temperature,
+      wind: data.wind,
+      sky: data.sky,
+      rain: data.rain,
+      visibility: data.visibility,
+      moon: data.moon,
+      listeningPoint: data.listeningPoint,
       latitude: data.latitude,
       longitude: data.longitude,
       isLocked: data.isLocked,
@@ -59,9 +83,15 @@ class ObservationSessionModel {
   final String id;
   final String annotatorId;
   final SessionType sessionType;
+  final TemperatureRange temperature;
+  final WindLevel wind;
+  final SkyCondition sky;
+  final RainLevel rain;
+  final VisibilityLevel visibility;
+  final MoonPresence moon;
+  final int? listeningPoint;
   final DateTime? startTime;
   final DateTime? endTime;
-  final String? weatherNotes;
   final double? latitude;
   final double? longitude;
   final bool isLocked;
@@ -77,7 +107,13 @@ class ObservationSessionModel {
       sessionType: sessionType,
       startTime: startTime,
       endTime: endTime,
-      weatherNotes: weatherNotes,
+      temperature: temperature,
+      wind: wind,
+      sky: sky,
+      rain: rain,
+      visibility: visibility,
+      moon: moon,
+      listeningPoint: listeningPoint,
       latitude: latitude,
       longitude: longitude,
       isLocked: isLocked,

@@ -1111,6 +1111,228 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Error carregant les sessions d\'observació'**
   String get errorLoadingObservationSessions;
+
+  /// No description provided for @reviewMeteoTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Meteorologia'**
+  String get reviewMeteoTitle;
+
+  /// No description provided for @meteoTemp.
+  ///
+  /// In ca, this message translates to:
+  /// **'Temperatura'**
+  String get meteoTemp;
+
+  /// No description provided for @meteoTempBelow0.
+  ///
+  /// In ca, this message translates to:
+  /// **'< 0°C'**
+  String get meteoTempBelow0;
+
+  /// No description provided for @meteoTemp0to10.
+  ///
+  /// In ca, this message translates to:
+  /// **'0–10°C'**
+  String get meteoTemp0to10;
+
+  /// No description provided for @meteoTemp10to20.
+  ///
+  /// In ca, this message translates to:
+  /// **'10–20°C'**
+  String get meteoTemp10to20;
+
+  /// No description provided for @meteoTemp20to30.
+  ///
+  /// In ca, this message translates to:
+  /// **'20–30°C'**
+  String get meteoTemp20to30;
+
+  /// No description provided for @meteoTempAbove30.
+  ///
+  /// In ca, this message translates to:
+  /// **'> 30°C'**
+  String get meteoTempAbove30;
+
+  /// No description provided for @meteoWind.
+  ///
+  /// In ca, this message translates to:
+  /// **'Vent'**
+  String get meteoWind;
+
+  /// No description provided for @meteoWindCalm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Calma'**
+  String get meteoWindCalm;
+
+  /// No description provided for @meteoWindBreeze.
+  ///
+  /// In ca, this message translates to:
+  /// **'Brisa'**
+  String get meteoWindBreeze;
+
+  /// No description provided for @meteoWindModerate.
+  ///
+  /// In ca, this message translates to:
+  /// **'Moderat'**
+  String get meteoWindModerate;
+
+  /// No description provided for @meteoSky.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cel'**
+  String get meteoSky;
+
+  /// No description provided for @meteoSkyClear.
+  ///
+  /// In ca, this message translates to:
+  /// **'Serè'**
+  String get meteoSkyClear;
+
+  /// No description provided for @meteoSkyPartlyCloudy.
+  ///
+  /// In ca, this message translates to:
+  /// **'Clarianes'**
+  String get meteoSkyPartlyCloudy;
+
+  /// No description provided for @meteoSkyOvercast.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cobert'**
+  String get meteoSkyOvercast;
+
+  /// No description provided for @meteoRain.
+  ///
+  /// In ca, this message translates to:
+  /// **'Pluja'**
+  String get meteoRain;
+
+  /// No description provided for @meteoRainAbsence.
+  ///
+  /// In ca, this message translates to:
+  /// **'Absència'**
+  String get meteoRainAbsence;
+
+  /// No description provided for @meteoRainDrizzle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Plovim'**
+  String get meteoRainDrizzle;
+
+  /// No description provided for @meteoRainStorm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tempesta'**
+  String get meteoRainStorm;
+
+  /// No description provided for @meteoVisibility.
+  ///
+  /// In ca, this message translates to:
+  /// **'Visibilitat'**
+  String get meteoVisibility;
+
+  /// No description provided for @meteoVisibilityPoor.
+  ///
+  /// In ca, this message translates to:
+  /// **'Pèssima'**
+  String get meteoVisibilityPoor;
+
+  /// No description provided for @meteoVisibilityFair.
+  ///
+  /// In ca, this message translates to:
+  /// **'Regular'**
+  String get meteoVisibilityFair;
+
+  /// No description provided for @meteoVisibilityGood.
+  ///
+  /// In ca, this message translates to:
+  /// **'Bona'**
+  String get meteoVisibilityGood;
+
+  /// No description provided for @meteoMoon.
+  ///
+  /// In ca, this message translates to:
+  /// **'Lluna'**
+  String get meteoMoon;
+
+  /// No description provided for @meteoMoonAbsence.
+  ///
+  /// In ca, this message translates to:
+  /// **'Absent'**
+  String get meteoMoonAbsence;
+
+  /// No description provided for @meteoMoonPresence.
+  ///
+  /// In ca, this message translates to:
+  /// **'Present'**
+  String get meteoMoonPresence;
+
+  /// No description provided for @listeningPointLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Punt d\'escolta'**
+  String get listeningPointLabel;
+
+  /// No description provided for @listeningPointHint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Número de punt'**
+  String get listeningPointHint;
+
+  /// No description provided for @reviewDeleteBtn.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel·lar sessió'**
+  String get reviewDeleteBtn;
+
+  /// No description provided for @reviewFinalizeBtn.
+  ///
+  /// In ca, this message translates to:
+  /// **'Finalitzar'**
+  String get reviewFinalizeBtn;
+
+  /// No description provided for @reviewAddObservationBtn.
+  ///
+  /// In ca, this message translates to:
+  /// **'Afegir'**
+  String get reviewAddObservationBtn;
+
+  /// No description provided for @reviewObservationsTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observacions'**
+  String get reviewObservationsTitle;
+
+  /// No description provided for @confirmFinalizeTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Finalitzar sessió?'**
+  String get confirmFinalizeTitle;
+
+  /// No description provided for @confirmFinalizeMessage.
+  ///
+  /// In ca, this message translates to:
+  /// **'Un cop finalitzada, la sessió no es podrà editar.'**
+  String get confirmFinalizeMessage;
+
+  /// No description provided for @confirmFinalizeConfirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Finalitzar'**
+  String get confirmFinalizeConfirm;
+
+  /// No description provided for @reviewRequiredFieldError.
+  ///
+  /// In ca, this message translates to:
+  /// **'Camp obligatori'**
+  String get reviewRequiredFieldError;
+
+  /// No description provided for @reviewErrorSaving.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error guardant la revisió'**
+  String get reviewErrorSaving;
 }
 
 class _AppLocalizationsDelegate

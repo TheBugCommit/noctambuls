@@ -4,14 +4,13 @@ import 'package:noctambuls/features/observations/domain/entities/observation_ses
 
 sealed class SessionLifecycleState extends Equatable {
   const SessionLifecycleState();
-}
-
-/// No active session exists.
-final class SessionLifecycleIdle extends SessionLifecycleState {
-  const SessionLifecycleIdle();
 
   @override
   List<Object?> get props => [];
+}
+
+final class SessionLifecycleIdle extends SessionLifecycleState {
+  const SessionLifecycleIdle();
 }
 
 /// Transition state for create, update or delete operations.

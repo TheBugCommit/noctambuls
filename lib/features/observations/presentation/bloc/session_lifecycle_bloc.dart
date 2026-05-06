@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
+import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/usecases/create_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
@@ -104,11 +105,16 @@ class SessionLifecycleBloc
     UpdateSessionProperties event,
     Emitter<SessionLifecycleState> emit,
   ) async {
-    if (state is! ActiveSessionLifecycleState) return;
-    final current = (state as ActiveSessionLifecycleState).session;
+    final current = event.session;
 
     final updated = current.copyWith(
-      weatherNotes: event.weatherNotes ?? current.weatherNotes,
+      temperature: event.temperature ?? current.temperature,
+      wind: event.wind ?? current.wind,
+      sky: event.sky ?? current.sky,
+      rain: event.rain ?? current.rain,
+      visibility: event.visibility ?? current.visibility,
+      moon: event.moon ?? current.moon,
+      listeningPoint: event.listeningPoint ?? current.listeningPoint,
       latitude: event.latitude ?? current.latitude,
       longitude: event.longitude ?? current.longitude,
       updatedAt: DateTime.now(),
@@ -134,11 +140,11 @@ class SessionLifecycleBloc
     final now = DateTime.now();
     final updated = current.copyWith(endTime: now, updatedAt: now);
 
-    emit(SessionNavigatingToReview(session: updated));
-
     final result = await updateSessionUseCase(updated);
     result.when(
-      success: (_) {},
+      success: (_) {
+        emit(SessionNavigatingToReview(session: updated));
+      },
       failure: (failure) {
         logger.failure(failure);
         emit(SessionLifecycleError(failure: failure));
@@ -172,7 +178,11 @@ class SessionLifecycleBloc
     if (state is! SessionReviewing) return;
     final current = (state as SessionReviewing).session;
 
-    final updated = current.copyWith(isLocked: true, updatedAt: DateTime.now());
+    final updated = current.copyWith(
+      isLocked: true,
+      syncStatus: SyncStatus.pending,
+      updatedAt: DateTime.now(),
+    );
 
     final result = await updateSessionUseCase(updated);
     result.when(

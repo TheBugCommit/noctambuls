@@ -15,6 +15,7 @@ import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.da
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
@@ -142,7 +143,10 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           );
         }
 
-        return ReviewPage(session: sessionToReview);
+        return BlocProvider(
+          create: (_) => sl<SessionReviewBloc>(param1: sessionToReview),
+          child: ReviewPage(session: sessionToReview),
+        );
       },
     ),
     GoRoute(

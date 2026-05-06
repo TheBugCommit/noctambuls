@@ -23,7 +23,31 @@ class SessionsTable extends Table with OfflineFirstMixin {
 
   DateTimeColumn get endTime => dateTime().nullable()();
 
-  TextColumn get weatherNotes => text().nullable()();
+  IntColumn get temperature => integer()
+      .map(const TemperatureRangeConverter())
+      .withDefault(const Constant(0))();
+
+  IntColumn get wind => integer()
+      .map(const WindLevelConverter())
+      .withDefault(const Constant(0))();
+
+  IntColumn get sky => integer()
+      .map(const SkyConditionConverter())
+      .withDefault(const Constant(0))();
+
+  IntColumn get rain => integer()
+      .map(const RainLevelConverter())
+      .withDefault(const Constant(0))();
+
+  IntColumn get visibility => integer()
+      .map(const VisibilityLevelConverter())
+      .withDefault(const Constant(0))();
+
+  IntColumn get moon => integer()
+      .map(const MoonPresenceConverter())
+      .withDefault(const Constant(0))();
+
+  IntColumn get listeningPoint => integer().nullable()();
 
   RealColumn get latitude => real().nullable()();
 

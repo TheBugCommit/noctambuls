@@ -105,15 +105,77 @@ class $SessionsTableTable extends SessionsTable
     type: DriftSqlType.dateTime,
     requiredDuringInsert: false,
   );
-  static const VerificationMeta _weatherNotesMeta = const VerificationMeta(
-    'weatherNotes',
+  @override
+  late final GeneratedColumnWithTypeConverter<TemperatureRange, int>
+  temperature = GeneratedColumn<int>(
+    'temperature',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  ).withConverter<TemperatureRange>($SessionsTableTable.$convertertemperature);
+  @override
+  late final GeneratedColumnWithTypeConverter<WindLevel, int> wind =
+      GeneratedColumn<int>(
+        'wind',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      ).withConverter<WindLevel>($SessionsTableTable.$converterwind);
+  @override
+  late final GeneratedColumnWithTypeConverter<SkyCondition, int> sky =
+      GeneratedColumn<int>(
+        'sky',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      ).withConverter<SkyCondition>($SessionsTableTable.$convertersky);
+  @override
+  late final GeneratedColumnWithTypeConverter<RainLevel, int> rain =
+      GeneratedColumn<int>(
+        'rain',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      ).withConverter<RainLevel>($SessionsTableTable.$converterrain);
+  @override
+  late final GeneratedColumnWithTypeConverter<VisibilityLevel, int> visibility =
+      GeneratedColumn<int>(
+        'visibility',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      ).withConverter<VisibilityLevel>(
+        $SessionsTableTable.$convertervisibility,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<MoonPresence, int> moon =
+      GeneratedColumn<int>(
+        'moon',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+        defaultValue: const Constant(0),
+      ).withConverter<MoonPresence>($SessionsTableTable.$convertermoon);
+  static const VerificationMeta _listeningPointMeta = const VerificationMeta(
+    'listeningPoint',
   );
   @override
-  late final GeneratedColumn<String> weatherNotes = GeneratedColumn<String>(
-    'weather_notes',
+  late final GeneratedColumn<int> listeningPoint = GeneratedColumn<int>(
+    'listening_point',
     aliasedName,
     true,
-    type: DriftSqlType.string,
+    type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
   static const VerificationMeta _latitudeMeta = const VerificationMeta(
@@ -163,7 +225,13 @@ class $SessionsTableTable extends SessionsTable
     sessionType,
     startTime,
     endTime,
-    weatherNotes,
+    temperature,
+    wind,
+    sky,
+    rain,
+    visibility,
+    moon,
+    listeningPoint,
     latitude,
     longitude,
     isLocked,
@@ -232,12 +300,12 @@ class $SessionsTableTable extends SessionsTable
         endTime.isAcceptableOrUnknown(data['end_time']!, _endTimeMeta),
       );
     }
-    if (data.containsKey('weather_notes')) {
+    if (data.containsKey('listening_point')) {
       context.handle(
-        _weatherNotesMeta,
-        weatherNotes.isAcceptableOrUnknown(
-          data['weather_notes']!,
-          _weatherNotesMeta,
+        _listeningPointMeta,
+        listeningPoint.isAcceptableOrUnknown(
+          data['listening_point']!,
+          _listeningPointMeta,
         ),
       );
     }
@@ -310,9 +378,45 @@ class $SessionsTableTable extends SessionsTable
         DriftSqlType.dateTime,
         data['${effectivePrefix}end_time'],
       ),
-      weatherNotes: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}weather_notes'],
+      temperature: $SessionsTableTable.$convertertemperature.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}temperature'],
+        )!,
+      ),
+      wind: $SessionsTableTable.$converterwind.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}wind'],
+        )!,
+      ),
+      sky: $SessionsTableTable.$convertersky.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}sky'],
+        )!,
+      ),
+      rain: $SessionsTableTable.$converterrain.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}rain'],
+        )!,
+      ),
+      visibility: $SessionsTableTable.$convertervisibility.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}visibility'],
+        )!,
+      ),
+      moon: $SessionsTableTable.$convertermoon.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}moon'],
+        )!,
+      ),
+      listeningPoint: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}listening_point'],
       ),
       latitude: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
@@ -338,6 +442,18 @@ class $SessionsTableTable extends SessionsTable
       const SyncStatusConverter();
   static JsonTypeConverter2<SessionType, int, int> $convertersessionType =
       const SessionTypeConverter();
+  static JsonTypeConverter2<TemperatureRange, int, int> $convertertemperature =
+      const TemperatureRangeConverter();
+  static JsonTypeConverter2<WindLevel, int, int> $converterwind =
+      const WindLevelConverter();
+  static JsonTypeConverter2<SkyCondition, int, int> $convertersky =
+      const SkyConditionConverter();
+  static JsonTypeConverter2<RainLevel, int, int> $converterrain =
+      const RainLevelConverter();
+  static JsonTypeConverter2<VisibilityLevel, int, int> $convertervisibility =
+      const VisibilityLevelConverter();
+  static JsonTypeConverter2<MoonPresence, int, int> $convertermoon =
+      const MoonPresenceConverter();
 }
 
 class SessionEntityData extends DataClass
@@ -351,7 +467,13 @@ class SessionEntityData extends DataClass
   final SessionType sessionType;
   final DateTime? startTime;
   final DateTime? endTime;
-  final String? weatherNotes;
+  final TemperatureRange temperature;
+  final WindLevel wind;
+  final SkyCondition sky;
+  final RainLevel rain;
+  final VisibilityLevel visibility;
+  final MoonPresence moon;
+  final int? listeningPoint;
   final double? latitude;
   final double? longitude;
   final bool isLocked;
@@ -365,7 +487,13 @@ class SessionEntityData extends DataClass
     required this.sessionType,
     this.startTime,
     this.endTime,
-    this.weatherNotes,
+    required this.temperature,
+    required this.wind,
+    required this.sky,
+    required this.rain,
+    required this.visibility,
+    required this.moon,
+    this.listeningPoint,
     this.latitude,
     this.longitude,
     required this.isLocked,
@@ -394,8 +522,36 @@ class SessionEntityData extends DataClass
     if (!nullToAbsent || endTime != null) {
       map['end_time'] = Variable<DateTime>(endTime);
     }
-    if (!nullToAbsent || weatherNotes != null) {
-      map['weather_notes'] = Variable<String>(weatherNotes);
+    {
+      map['temperature'] = Variable<int>(
+        $SessionsTableTable.$convertertemperature.toSql(temperature),
+      );
+    }
+    {
+      map['wind'] = Variable<int>(
+        $SessionsTableTable.$converterwind.toSql(wind),
+      );
+    }
+    {
+      map['sky'] = Variable<int>($SessionsTableTable.$convertersky.toSql(sky));
+    }
+    {
+      map['rain'] = Variable<int>(
+        $SessionsTableTable.$converterrain.toSql(rain),
+      );
+    }
+    {
+      map['visibility'] = Variable<int>(
+        $SessionsTableTable.$convertervisibility.toSql(visibility),
+      );
+    }
+    {
+      map['moon'] = Variable<int>(
+        $SessionsTableTable.$convertermoon.toSql(moon),
+      );
+    }
+    if (!nullToAbsent || listeningPoint != null) {
+      map['listening_point'] = Variable<int>(listeningPoint);
     }
     if (!nullToAbsent || latitude != null) {
       map['latitude'] = Variable<double>(latitude);
@@ -422,9 +578,15 @@ class SessionEntityData extends DataClass
       endTime: endTime == null && nullToAbsent
           ? const Value.absent()
           : Value(endTime),
-      weatherNotes: weatherNotes == null && nullToAbsent
+      temperature: Value(temperature),
+      wind: Value(wind),
+      sky: Value(sky),
+      rain: Value(rain),
+      visibility: Value(visibility),
+      moon: Value(moon),
+      listeningPoint: listeningPoint == null && nullToAbsent
           ? const Value.absent()
-          : Value(weatherNotes),
+          : Value(listeningPoint),
       latitude: latitude == null && nullToAbsent
           ? const Value.absent()
           : Value(latitude),
@@ -454,7 +616,25 @@ class SessionEntityData extends DataClass
       ),
       startTime: serializer.fromJson<DateTime?>(json['startTime']),
       endTime: serializer.fromJson<DateTime?>(json['endTime']),
-      weatherNotes: serializer.fromJson<String?>(json['weatherNotes']),
+      temperature: $SessionsTableTable.$convertertemperature.fromJson(
+        serializer.fromJson<int>(json['temperature']),
+      ),
+      wind: $SessionsTableTable.$converterwind.fromJson(
+        serializer.fromJson<int>(json['wind']),
+      ),
+      sky: $SessionsTableTable.$convertersky.fromJson(
+        serializer.fromJson<int>(json['sky']),
+      ),
+      rain: $SessionsTableTable.$converterrain.fromJson(
+        serializer.fromJson<int>(json['rain']),
+      ),
+      visibility: $SessionsTableTable.$convertervisibility.fromJson(
+        serializer.fromJson<int>(json['visibility']),
+      ),
+      moon: $SessionsTableTable.$convertermoon.fromJson(
+        serializer.fromJson<int>(json['moon']),
+      ),
+      listeningPoint: serializer.fromJson<int?>(json['listeningPoint']),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
       isLocked: serializer.fromJson<bool>(json['isLocked']),
@@ -477,7 +657,25 @@ class SessionEntityData extends DataClass
       ),
       'startTime': serializer.toJson<DateTime?>(startTime),
       'endTime': serializer.toJson<DateTime?>(endTime),
-      'weatherNotes': serializer.toJson<String?>(weatherNotes),
+      'temperature': serializer.toJson<int>(
+        $SessionsTableTable.$convertertemperature.toJson(temperature),
+      ),
+      'wind': serializer.toJson<int>(
+        $SessionsTableTable.$converterwind.toJson(wind),
+      ),
+      'sky': serializer.toJson<int>(
+        $SessionsTableTable.$convertersky.toJson(sky),
+      ),
+      'rain': serializer.toJson<int>(
+        $SessionsTableTable.$converterrain.toJson(rain),
+      ),
+      'visibility': serializer.toJson<int>(
+        $SessionsTableTable.$convertervisibility.toJson(visibility),
+      ),
+      'moon': serializer.toJson<int>(
+        $SessionsTableTable.$convertermoon.toJson(moon),
+      ),
+      'listeningPoint': serializer.toJson<int?>(listeningPoint),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
       'isLocked': serializer.toJson<bool>(isLocked),
@@ -494,7 +692,13 @@ class SessionEntityData extends DataClass
     SessionType? sessionType,
     Value<DateTime?> startTime = const Value.absent(),
     Value<DateTime?> endTime = const Value.absent(),
-    Value<String?> weatherNotes = const Value.absent(),
+    TemperatureRange? temperature,
+    WindLevel? wind,
+    SkyCondition? sky,
+    RainLevel? rain,
+    VisibilityLevel? visibility,
+    MoonPresence? moon,
+    Value<int?> listeningPoint = const Value.absent(),
     Value<double?> latitude = const Value.absent(),
     Value<double?> longitude = const Value.absent(),
     bool? isLocked,
@@ -508,7 +712,15 @@ class SessionEntityData extends DataClass
     sessionType: sessionType ?? this.sessionType,
     startTime: startTime.present ? startTime.value : this.startTime,
     endTime: endTime.present ? endTime.value : this.endTime,
-    weatherNotes: weatherNotes.present ? weatherNotes.value : this.weatherNotes,
+    temperature: temperature ?? this.temperature,
+    wind: wind ?? this.wind,
+    sky: sky ?? this.sky,
+    rain: rain ?? this.rain,
+    visibility: visibility ?? this.visibility,
+    moon: moon ?? this.moon,
+    listeningPoint: listeningPoint.present
+        ? listeningPoint.value
+        : this.listeningPoint,
     latitude: latitude.present ? latitude.value : this.latitude,
     longitude: longitude.present ? longitude.value : this.longitude,
     isLocked: isLocked ?? this.isLocked,
@@ -530,9 +742,19 @@ class SessionEntityData extends DataClass
           : this.sessionType,
       startTime: data.startTime.present ? data.startTime.value : this.startTime,
       endTime: data.endTime.present ? data.endTime.value : this.endTime,
-      weatherNotes: data.weatherNotes.present
-          ? data.weatherNotes.value
-          : this.weatherNotes,
+      temperature: data.temperature.present
+          ? data.temperature.value
+          : this.temperature,
+      wind: data.wind.present ? data.wind.value : this.wind,
+      sky: data.sky.present ? data.sky.value : this.sky,
+      rain: data.rain.present ? data.rain.value : this.rain,
+      visibility: data.visibility.present
+          ? data.visibility.value
+          : this.visibility,
+      moon: data.moon.present ? data.moon.value : this.moon,
+      listeningPoint: data.listeningPoint.present
+          ? data.listeningPoint.value
+          : this.listeningPoint,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
       isLocked: data.isLocked.present ? data.isLocked.value : this.isLocked,
@@ -551,7 +773,13 @@ class SessionEntityData extends DataClass
           ..write('sessionType: $sessionType, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
-          ..write('weatherNotes: $weatherNotes, ')
+          ..write('temperature: $temperature, ')
+          ..write('wind: $wind, ')
+          ..write('sky: $sky, ')
+          ..write('rain: $rain, ')
+          ..write('visibility: $visibility, ')
+          ..write('moon: $moon, ')
+          ..write('listeningPoint: $listeningPoint, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('isLocked: $isLocked')
@@ -570,7 +798,13 @@ class SessionEntityData extends DataClass
     sessionType,
     startTime,
     endTime,
-    weatherNotes,
+    temperature,
+    wind,
+    sky,
+    rain,
+    visibility,
+    moon,
+    listeningPoint,
     latitude,
     longitude,
     isLocked,
@@ -588,7 +822,13 @@ class SessionEntityData extends DataClass
           other.sessionType == this.sessionType &&
           other.startTime == this.startTime &&
           other.endTime == this.endTime &&
-          other.weatherNotes == this.weatherNotes &&
+          other.temperature == this.temperature &&
+          other.wind == this.wind &&
+          other.sky == this.sky &&
+          other.rain == this.rain &&
+          other.visibility == this.visibility &&
+          other.moon == this.moon &&
+          other.listeningPoint == this.listeningPoint &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
           other.isLocked == this.isLocked);
@@ -604,7 +844,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
   final Value<SessionType> sessionType;
   final Value<DateTime?> startTime;
   final Value<DateTime?> endTime;
-  final Value<String?> weatherNotes;
+  final Value<TemperatureRange> temperature;
+  final Value<WindLevel> wind;
+  final Value<SkyCondition> sky;
+  final Value<RainLevel> rain;
+  final Value<VisibilityLevel> visibility;
+  final Value<MoonPresence> moon;
+  final Value<int?> listeningPoint;
   final Value<double?> latitude;
   final Value<double?> longitude;
   final Value<bool> isLocked;
@@ -619,7 +865,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.sessionType = const Value.absent(),
     this.startTime = const Value.absent(),
     this.endTime = const Value.absent(),
-    this.weatherNotes = const Value.absent(),
+    this.temperature = const Value.absent(),
+    this.wind = const Value.absent(),
+    this.sky = const Value.absent(),
+    this.rain = const Value.absent(),
+    this.visibility = const Value.absent(),
+    this.moon = const Value.absent(),
+    this.listeningPoint = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     this.isLocked = const Value.absent(),
@@ -635,7 +887,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     required SessionType sessionType,
     this.startTime = const Value.absent(),
     this.endTime = const Value.absent(),
-    this.weatherNotes = const Value.absent(),
+    this.temperature = const Value.absent(),
+    this.wind = const Value.absent(),
+    this.sky = const Value.absent(),
+    this.rain = const Value.absent(),
+    this.visibility = const Value.absent(),
+    this.moon = const Value.absent(),
+    this.listeningPoint = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
     required bool isLocked,
@@ -658,7 +916,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Expression<int>? sessionType,
     Expression<DateTime>? startTime,
     Expression<DateTime>? endTime,
-    Expression<String>? weatherNotes,
+    Expression<int>? temperature,
+    Expression<int>? wind,
+    Expression<int>? sky,
+    Expression<int>? rain,
+    Expression<int>? visibility,
+    Expression<int>? moon,
+    Expression<int>? listeningPoint,
     Expression<double>? latitude,
     Expression<double>? longitude,
     Expression<bool>? isLocked,
@@ -674,7 +938,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       if (sessionType != null) 'session_type': sessionType,
       if (startTime != null) 'start_time': startTime,
       if (endTime != null) 'end_time': endTime,
-      if (weatherNotes != null) 'weather_notes': weatherNotes,
+      if (temperature != null) 'temperature': temperature,
+      if (wind != null) 'wind': wind,
+      if (sky != null) 'sky': sky,
+      if (rain != null) 'rain': rain,
+      if (visibility != null) 'visibility': visibility,
+      if (moon != null) 'moon': moon,
+      if (listeningPoint != null) 'listening_point': listeningPoint,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
       if (isLocked != null) 'is_locked': isLocked,
@@ -692,7 +962,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Value<SessionType>? sessionType,
     Value<DateTime?>? startTime,
     Value<DateTime?>? endTime,
-    Value<String?>? weatherNotes,
+    Value<TemperatureRange>? temperature,
+    Value<WindLevel>? wind,
+    Value<SkyCondition>? sky,
+    Value<RainLevel>? rain,
+    Value<VisibilityLevel>? visibility,
+    Value<MoonPresence>? moon,
+    Value<int?>? listeningPoint,
     Value<double?>? latitude,
     Value<double?>? longitude,
     Value<bool>? isLocked,
@@ -708,7 +984,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       sessionType: sessionType ?? this.sessionType,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
-      weatherNotes: weatherNotes ?? this.weatherNotes,
+      temperature: temperature ?? this.temperature,
+      wind: wind ?? this.wind,
+      sky: sky ?? this.sky,
+      rain: rain ?? this.rain,
+      visibility: visibility ?? this.visibility,
+      moon: moon ?? this.moon,
+      listeningPoint: listeningPoint ?? this.listeningPoint,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
       isLocked: isLocked ?? this.isLocked,
@@ -750,8 +1032,38 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     if (endTime.present) {
       map['end_time'] = Variable<DateTime>(endTime.value);
     }
-    if (weatherNotes.present) {
-      map['weather_notes'] = Variable<String>(weatherNotes.value);
+    if (temperature.present) {
+      map['temperature'] = Variable<int>(
+        $SessionsTableTable.$convertertemperature.toSql(temperature.value),
+      );
+    }
+    if (wind.present) {
+      map['wind'] = Variable<int>(
+        $SessionsTableTable.$converterwind.toSql(wind.value),
+      );
+    }
+    if (sky.present) {
+      map['sky'] = Variable<int>(
+        $SessionsTableTable.$convertersky.toSql(sky.value),
+      );
+    }
+    if (rain.present) {
+      map['rain'] = Variable<int>(
+        $SessionsTableTable.$converterrain.toSql(rain.value),
+      );
+    }
+    if (visibility.present) {
+      map['visibility'] = Variable<int>(
+        $SessionsTableTable.$convertervisibility.toSql(visibility.value),
+      );
+    }
+    if (moon.present) {
+      map['moon'] = Variable<int>(
+        $SessionsTableTable.$convertermoon.toSql(moon.value),
+      );
+    }
+    if (listeningPoint.present) {
+      map['listening_point'] = Variable<int>(listeningPoint.value);
     }
     if (latitude.present) {
       map['latitude'] = Variable<double>(latitude.value);
@@ -780,7 +1092,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
           ..write('sessionType: $sessionType, ')
           ..write('startTime: $startTime, ')
           ..write('endTime: $endTime, ')
-          ..write('weatherNotes: $weatherNotes, ')
+          ..write('temperature: $temperature, ')
+          ..write('wind: $wind, ')
+          ..write('sky: $sky, ')
+          ..write('rain: $rain, ')
+          ..write('visibility: $visibility, ')
+          ..write('moon: $moon, ')
+          ..write('listeningPoint: $listeningPoint, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
           ..write('isLocked: $isLocked, ')
@@ -2124,7 +2442,13 @@ typedef $$SessionsTableTableCreateCompanionBuilder =
       required SessionType sessionType,
       Value<DateTime?> startTime,
       Value<DateTime?> endTime,
-      Value<String?> weatherNotes,
+      Value<TemperatureRange> temperature,
+      Value<WindLevel> wind,
+      Value<SkyCondition> sky,
+      Value<RainLevel> rain,
+      Value<VisibilityLevel> visibility,
+      Value<MoonPresence> moon,
+      Value<int?> listeningPoint,
       Value<double?> latitude,
       Value<double?> longitude,
       required bool isLocked,
@@ -2141,7 +2465,13 @@ typedef $$SessionsTableTableUpdateCompanionBuilder =
       Value<SessionType> sessionType,
       Value<DateTime?> startTime,
       Value<DateTime?> endTime,
-      Value<String?> weatherNotes,
+      Value<TemperatureRange> temperature,
+      Value<WindLevel> wind,
+      Value<SkyCondition> sky,
+      Value<RainLevel> rain,
+      Value<VisibilityLevel> visibility,
+      Value<MoonPresence> moon,
+      Value<int?> listeningPoint,
       Value<double?> latitude,
       Value<double?> longitude,
       Value<bool> isLocked,
@@ -2241,8 +2571,44 @@ class $$SessionsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get weatherNotes => $composableBuilder(
-    column: $table.weatherNotes,
+  ColumnWithTypeConverterFilters<TemperatureRange, TemperatureRange, int>
+  get temperature => $composableBuilder(
+    column: $table.temperature,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<WindLevel, WindLevel, int> get wind =>
+      $composableBuilder(
+        column: $table.wind,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<SkyCondition, SkyCondition, int> get sky =>
+      $composableBuilder(
+        column: $table.sky,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<RainLevel, RainLevel, int> get rain =>
+      $composableBuilder(
+        column: $table.rain,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnWithTypeConverterFilters<VisibilityLevel, VisibilityLevel, int>
+  get visibility => $composableBuilder(
+    column: $table.visibility,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<MoonPresence, MoonPresence, int> get moon =>
+      $composableBuilder(
+        column: $table.moon,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
+  ColumnFilters<int> get listeningPoint => $composableBuilder(
+    column: $table.listeningPoint,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -2341,8 +2707,38 @@ class $$SessionsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<String> get weatherNotes => $composableBuilder(
-    column: $table.weatherNotes,
+  ColumnOrderings<int> get temperature => $composableBuilder(
+    column: $table.temperature,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get wind => $composableBuilder(
+    column: $table.wind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get sky => $composableBuilder(
+    column: $table.sky,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get rain => $composableBuilder(
+    column: $table.rain,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get visibility => $composableBuilder(
+    column: $table.visibility,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get moon => $composableBuilder(
+    column: $table.moon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get listeningPoint => $composableBuilder(
+    column: $table.listeningPoint,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -2406,8 +2802,32 @@ class $$SessionsTableTableAnnotationComposer
   GeneratedColumn<DateTime> get endTime =>
       $composableBuilder(column: $table.endTime, builder: (column) => column);
 
-  GeneratedColumn<String> get weatherNotes => $composableBuilder(
-    column: $table.weatherNotes,
+  GeneratedColumnWithTypeConverter<TemperatureRange, int> get temperature =>
+      $composableBuilder(
+        column: $table.temperature,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<WindLevel, int> get wind =>
+      $composableBuilder(column: $table.wind, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<SkyCondition, int> get sky =>
+      $composableBuilder(column: $table.sky, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<RainLevel, int> get rain =>
+      $composableBuilder(column: $table.rain, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<VisibilityLevel, int> get visibility =>
+      $composableBuilder(
+        column: $table.visibility,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<MoonPresence, int> get moon =>
+      $composableBuilder(column: $table.moon, builder: (column) => column);
+
+  GeneratedColumn<int> get listeningPoint => $composableBuilder(
+    column: $table.listeningPoint,
     builder: (column) => column,
   );
 
@@ -2484,7 +2904,13 @@ class $$SessionsTableTableTableManager
                 Value<SessionType> sessionType = const Value.absent(),
                 Value<DateTime?> startTime = const Value.absent(),
                 Value<DateTime?> endTime = const Value.absent(),
-                Value<String?> weatherNotes = const Value.absent(),
+                Value<TemperatureRange> temperature = const Value.absent(),
+                Value<WindLevel> wind = const Value.absent(),
+                Value<SkyCondition> sky = const Value.absent(),
+                Value<RainLevel> rain = const Value.absent(),
+                Value<VisibilityLevel> visibility = const Value.absent(),
+                Value<MoonPresence> moon = const Value.absent(),
+                Value<int?> listeningPoint = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
                 Value<bool> isLocked = const Value.absent(),
@@ -2499,7 +2925,13 @@ class $$SessionsTableTableTableManager
                 sessionType: sessionType,
                 startTime: startTime,
                 endTime: endTime,
-                weatherNotes: weatherNotes,
+                temperature: temperature,
+                wind: wind,
+                sky: sky,
+                rain: rain,
+                visibility: visibility,
+                moon: moon,
+                listeningPoint: listeningPoint,
                 latitude: latitude,
                 longitude: longitude,
                 isLocked: isLocked,
@@ -2516,7 +2948,13 @@ class $$SessionsTableTableTableManager
                 required SessionType sessionType,
                 Value<DateTime?> startTime = const Value.absent(),
                 Value<DateTime?> endTime = const Value.absent(),
-                Value<String?> weatherNotes = const Value.absent(),
+                Value<TemperatureRange> temperature = const Value.absent(),
+                Value<WindLevel> wind = const Value.absent(),
+                Value<SkyCondition> sky = const Value.absent(),
+                Value<RainLevel> rain = const Value.absent(),
+                Value<VisibilityLevel> visibility = const Value.absent(),
+                Value<MoonPresence> moon = const Value.absent(),
+                Value<int?> listeningPoint = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
                 required bool isLocked,
@@ -2531,7 +2969,13 @@ class $$SessionsTableTableTableManager
                 sessionType: sessionType,
                 startTime: startTime,
                 endTime: endTime,
-                weatherNotes: weatherNotes,
+                temperature: temperature,
+                wind: wind,
+                sky: sky,
+                rain: rain,
+                visibility: visibility,
+                moon: moon,
+                listeningPoint: listeningPoint,
                 latitude: latitude,
                 longitude: longitude,
                 isLocked: isLocked,

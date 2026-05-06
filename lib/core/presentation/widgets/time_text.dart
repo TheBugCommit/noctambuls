@@ -6,6 +6,7 @@ enum DateTimeFormatStyle {
   timeWithSeconds, // 14:30:45
   dateOnly, // 15/10/2023 (o 10/15/2023 als EUA)
   dateAndTime, // 15/10/2023 • 14:30
+  dateLong, // 28 mar 2026
 }
 
 class TimeText extends StatelessWidget {
@@ -13,6 +14,8 @@ class TimeText extends StatelessWidget {
     this.duration, {
     this.withSeconds = false,
     this.prefixText,
+    this.suffixText,
+
     this.style,
     super.key,
   }) : dateTime = null,
@@ -21,7 +24,9 @@ class TimeText extends StatelessWidget {
   const TimeText.dateTime(
     this.dateTime, {
     this.formatStyle = DateTimeFormatStyle.dateAndTime,
+    this.suffixText,
     this.prefixText,
+
     this.style,
     super.key,
   }) : duration = null,
@@ -32,6 +37,7 @@ class TimeText extends StatelessWidget {
   final bool withSeconds;
   final DateTimeFormatStyle? formatStyle;
   final String? prefixText;
+  final String? suffixText;
   final TextStyle? style;
 
   String _formatDuration(Duration d) {
@@ -63,6 +69,8 @@ class TimeText extends StatelessWidget {
         final dateStr = DateFormat.yMd(locale).format(dt);
         final timeStr = DateFormat.Hm(locale).format(dt);
         return '$dateStr • $timeStr';
+      case DateTimeFormatStyle.dateLong:
+        return DateFormat('dd MMM yyyy', locale).format(dt);
     }
   }
 
@@ -74,9 +82,12 @@ class TimeText extends StatelessWidget {
         ? _formatDuration(duration!)
         : _formatDateTime(context, dateTime!);
 
-    final finalText = prefixText != null
+    final textWithPrefix = prefixText != null
         ? '$prefixText$timeString'
         : timeString;
+    final finalText = suffixText != null
+        ? '$textWithPrefix$suffixText'
+        : textWithPrefix;
 
     return Text(
       finalText,

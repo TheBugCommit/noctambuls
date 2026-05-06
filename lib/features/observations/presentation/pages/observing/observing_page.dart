@@ -38,7 +38,7 @@ class ObservingPage extends StatelessWidget {
           curr is SessionNavigatingToReview || curr is SessionLifecycleIdle,
       listener: (context, state) {
         if (state is SessionNavigatingToReview) {
-          context.go(AppRoutes.review, extra: state.session);
+          context.pushReplacement(AppRoutes.review, extra: state.session);
         } else if (state is SessionLifecycleIdle) {
           if (ModalRoute.of(context)?.isCurrent == true) {
             context.pop();

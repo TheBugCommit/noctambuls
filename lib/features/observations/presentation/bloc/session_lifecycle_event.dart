@@ -1,6 +1,12 @@
 import 'package:equatable/equatable.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
+import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
+import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
+import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
+import 'package:noctambuls/features/observations/domain/enums/temperature_range.dart';
+import 'package:noctambuls/features/observations/domain/enums/visibility_level.dart';
+import 'package:noctambuls/features/observations/domain/enums/wind_level.dart';
 
 sealed class SessionLifecycleEvent extends Equatable {
   const SessionLifecycleEvent();
@@ -40,17 +46,41 @@ class StartNewSession extends SessionLifecycleEvent {
 /// Updates any session property event
 class UpdateSessionProperties extends SessionLifecycleEvent {
   const UpdateSessionProperties({
-    this.weatherNotes,
+    required this.session,
+    this.temperature,
+    this.wind,
+    this.sky,
+    this.rain,
+    this.visibility,
+    this.moon,
+    this.listeningPoint,
     this.latitude,
     this.longitude,
   });
 
-  final String? weatherNotes;
+  final ObservationSession session;
+  final TemperatureRange? temperature;
+  final WindLevel? wind;
+  final SkyCondition? sky;
+  final RainLevel? rain;
+  final VisibilityLevel? visibility;
+  final MoonPresence? moon;
+  final int? listeningPoint;
   final double? latitude;
   final double? longitude;
 
   @override
-  List<Object?> get props => [weatherNotes, latitude, longitude];
+  List<Object?> get props => [
+    temperature,
+    wind,
+    sky,
+    rain,
+    visibility,
+    moon,
+    listeningPoint,
+    latitude,
+    longitude,
+  ];
 }
 
 /// Transition event to SessionReviewing

@@ -1,6 +1,12 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
+import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
+import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
+import 'package:noctambuls/features/observations/domain/enums/temperature_range.dart';
+import 'package:noctambuls/features/observations/domain/enums/visibility_level.dart';
+import 'package:noctambuls/features/observations/domain/enums/wind_level.dart';
 
 class ObservationSession extends Equatable {
   const ObservationSession({
@@ -11,7 +17,13 @@ class ObservationSession extends Equatable {
     required this.updatedAt,
     this.startTime,
     this.endTime,
-    this.weatherNotes,
+    this.temperature = TemperatureRange.belowZero,
+    this.wind = WindLevel.calm,
+    this.sky = SkyCondition.clear,
+    this.rain = RainLevel.none,
+    this.visibility = VisibilityLevel.poor,
+    this.moon = MoonPresence.absent,
+    this.listeningPoint,
     this.latitude,
     this.longitude,
     this.isLocked = false,
@@ -24,7 +36,13 @@ class ObservationSession extends Equatable {
   final SessionType sessionType;
   final DateTime? startTime;
   final DateTime? endTime;
-  final String? weatherNotes;
+  final TemperatureRange temperature;
+  final WindLevel wind;
+  final SkyCondition sky;
+  final RainLevel rain;
+  final VisibilityLevel visibility;
+  final MoonPresence moon;
+  final int? listeningPoint;
   final double? latitude;
   final double? longitude;
   final bool isLocked;
@@ -44,7 +62,13 @@ class ObservationSession extends Equatable {
   ObservationSession copyWith({
     required DateTime updatedAt,
     Object? endTime = _absent,
-    Object? weatherNotes = _absent,
+    TemperatureRange? temperature,
+    WindLevel? wind,
+    SkyCondition? sky,
+    RainLevel? rain,
+    VisibilityLevel? visibility,
+    MoonPresence? moon,
+    Object? listeningPoint = _absent,
     Object? latitude = _absent,
     Object? longitude = _absent,
     bool? isLocked,
@@ -59,9 +83,15 @@ class ObservationSession extends Equatable {
       endTime: identical(endTime, _absent)
           ? this.endTime
           : endTime as DateTime?,
-      weatherNotes: identical(weatherNotes, _absent)
-          ? this.weatherNotes
-          : weatherNotes as String?,
+      temperature: temperature ?? this.temperature,
+      wind: wind ?? this.wind,
+      sky: sky ?? this.sky,
+      rain: rain ?? this.rain,
+      visibility: visibility ?? this.visibility,
+      moon: moon ?? this.moon,
+      listeningPoint: identical(listeningPoint, _absent)
+          ? this.listeningPoint
+          : listeningPoint as int?,
       latitude: identical(latitude, _absent)
           ? this.latitude
           : latitude as double?,
@@ -83,7 +113,13 @@ class ObservationSession extends Equatable {
     sessionType,
     startTime,
     endTime,
-    weatherNotes,
+    temperature,
+    wind,
+    sky,
+    rain,
+    visibility,
+    moon,
+    listeningPoint,
     latitude,
     longitude,
     isLocked,

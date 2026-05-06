@@ -548,4 +548,116 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get errorLoadingObservationSessions =>
       'Error carregant les sessions d\'observació';
+
+  @override
+  String get reviewMeteoTitle => 'Meteorologia';
+
+  @override
+  String get meteoTemp => 'Temperatura';
+
+  @override
+  String get meteoTempBelow0 => '< 0°C';
+
+  @override
+  String get meteoTemp0to10 => '0–10°C';
+
+  @override
+  String get meteoTemp10to20 => '10–20°C';
+
+  @override
+  String get meteoTemp20to30 => '20–30°C';
+
+  @override
+  String get meteoTempAbove30 => '> 30°C';
+
+  @override
+  String get meteoWind => 'Vent';
+
+  @override
+  String get meteoWindCalm => 'Calma';
+
+  @override
+  String get meteoWindBreeze => 'Brisa';
+
+  @override
+  String get meteoWindModerate => 'Moderat';
+
+  @override
+  String get meteoSky => 'Cel';
+
+  @override
+  String get meteoSkyClear => 'Serè';
+
+  @override
+  String get meteoSkyPartlyCloudy => 'Clarianes';
+
+  @override
+  String get meteoSkyOvercast => 'Cobert';
+
+  @override
+  String get meteoRain => 'Pluja';
+
+  @override
+  String get meteoRainAbsence => 'Absència';
+
+  @override
+  String get meteoRainDrizzle => 'Plovim';
+
+  @override
+  String get meteoRainStorm => 'Tempesta';
+
+  @override
+  String get meteoVisibility => 'Visibilitat';
+
+  @override
+  String get meteoVisibilityPoor => 'Pèssima';
+
+  @override
+  String get meteoVisibilityFair => 'Regular';
+
+  @override
+  String get meteoVisibilityGood => 'Bona';
+
+  @override
+  String get meteoMoon => 'Lluna';
+
+  @override
+  String get meteoMoonAbsence => 'Absent';
+
+  @override
+  String get meteoMoonPresence => 'Present';
+
+  @override
+  String get listeningPointLabel => 'Punt d\'escolta';
+
+  @override
+  String get listeningPointHint => 'Número de punt';
+
+  @override
+  String get reviewDeleteBtn => 'Cancel·lar sessió';
+
+  @override
+  String get reviewFinalizeBtn => 'Finalitzar';
+
+  @override
+  String get reviewAddObservationBtn => 'Afegir';
+
+  @override
+  String get reviewObservationsTitle => 'Observacions';
+
+  @override
+  String get confirmFinalizeTitle => 'Finalitzar sessió?';
+
+  @override
+  String get confirmFinalizeMessage =>
+      'Un cop finalitzada, la sessió no es podrà editar.';
+
+  @override
+  String get confirmFinalizeConfirm => 'Finalitzar';
+
+  @override
+  String get reviewRequiredFieldError => 'Camp obligatori';
+
+  @override
+  String get reviewErrorSaving => 'Error guardant la revisió';
 }
