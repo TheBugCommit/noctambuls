@@ -213,6 +213,20 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
+                    ObservationDateHeader(
+                      session: widget.session,
+                      startTime: _startTime,
+                      endTime: _endTime,
+                      onChanged: (start, end) {
+                        setState(() {
+                          _startTime = start;
+                          _endTime = end;
+                        });
+                      },
+                      onGlobalDateChanged: widget.onGlobalDateChanged,
+                    ),
+
+                    const SizedBox(height: AppDimensions.md),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -246,7 +260,6 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
                           _endTime = end;
                         });
                       },
-                      onGlobalDateChanged: widget.onGlobalDateChanged,
                     ),
                     const SizedBox(height: AppDimensions.md),
 

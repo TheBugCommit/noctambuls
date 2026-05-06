@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/presentation/widgets/time_text.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
-class DateTimeRangeSelectorField extends StatelessWidget {
-  const DateTimeRangeSelectorField({
+/// Date header shown at the top of the observation form.
+/// For incidental sessions the entire row is tappable to change the date.
+class ObservationDateHeader extends StatelessWidget {
+  const ObservationDateHeader({
     required this.session,
     required this.startTime,
     required this.endTime,
@@ -17,25 +20,9 @@ class DateTimeRangeSelectorField extends StatelessWidget {
   final DateTime startTime;
   final DateTime endTime;
   final void Function(DateTime start, DateTime end) onChanged;
-
-  /// Called when the user picks a new date for incidental sessions.
-  /// Propagates the change back to the global session date state.
   final void Function(DateTime)? onGlobalDateChanged;
 
-  String _formatDate(DateTime dt) {
-    final d = dt.day.toString().padLeft(2, '0');
-    final m = dt.month.toString().padLeft(2, '0');
-    final y = dt.year.toString();
-    return '$d/$m/$y';
-  }
-
-  String _formatTime(DateTime dt) {
-    final h = dt.hour.toString().padLeft(2, '0');
-    final min = dt.minute.toString().padLeft(2, '0');
-    return '$h:$min';
-  }
-
-  Future<void> _onDatePickedIncidental(BuildContext context) async {
+  Future<void> _onDatePicked(BuildContext context) async {
     final now = DateTime.now();
     final pickedDate = await showDatePicker(
       context: context,
@@ -67,6 +54,73 @@ class DateTimeRangeSelectorField extends StatelessWidget {
 
     onChanged(newStart, newEnd);
     onGlobalDateChanged?.call(pickedDate);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final canEdit = session.canEditObservationDate;
+
+    final dateStyle = theme.textTheme.headlineSmall?.copyWith(
+      fontWeight: FontWeight.bold,
+    );
+
+    if (!canEdit) {
+      return TimeText.dateTime(
+        startTime,
+        formatStyle: DateTimeFormatStyle.dateLong,
+        style: dateStyle,
+      );
+    }
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
+        onTap: () => _onDatePicked(context),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppDimensions.xs),
+          child: Row(
+            children: [
+              TimeText.dateTime(
+                startTime,
+                formatStyle: DateTimeFormatStyle.dateLong,
+                style: dateStyle,
+              ),
+              const Spacer(),
+              Icon(
+                Icons.calendar_today_outlined,
+                size: AppDimensions.iconMd,
+                color: colorScheme.primary,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Time range selector (start + end time cards).
+class DateTimeRangeSelectorField extends StatelessWidget {
+  const DateTimeRangeSelectorField({
+    required this.session,
+    required this.startTime,
+    required this.endTime,
+    required this.onChanged,
+    super.key,
+  });
+
+  final ObservationSession session;
+  final DateTime startTime;
+  final DateTime endTime;
+  final void Function(DateTime start, DateTime end) onChanged;
+
+  String _formatTime(DateTime dt) {
+    final h = dt.hour.toString().padLeft(2, '0');
+    final min = dt.minute.toString().padLeft(2, '0');
+    return '$h:$min';
   }
 
   Future<void> _onStartTimePicked(BuildContext context) async {
@@ -127,42 +181,12 @@ class DateTimeRangeSelectorField extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final canEditDate = session.canEditObservationDate;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (!canEditDate) ...[
-          Text(l10n.observationDateLabel, style: theme.textTheme.titleSmall),
-          const SizedBox(height: AppDimensions.xs),
-          DateTimeSelectionCard(
-            label: l10n.dayLabel,
-            value: _formatDate(startTime),
-            icon: Icons.calendar_today_outlined,
-            onTap: null,
-          ),
-          const SizedBox(height: AppDimensions.md),
-        ],
-
-        Row(
-          children: [
-            Text(l10n.timeRangeLabel, style: theme.textTheme.titleSmall),
-            if (canEditDate) ...[
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.calendar_today_outlined),
-                iconSize: AppDimensions.iconMd,
-                tooltip: l10n.changeDateLabel,
-                visualDensity: VisualDensity.compact,
-                padding: EdgeInsets.zero,
-                constraints: const BoxConstraints(),
-                onPressed: () => _onDatePickedIncidental(context),
-              ),
-            ],
-          ],
-        ),
+        Text(l10n.timeRangeLabel, style: theme.textTheme.titleSmall),
         const SizedBox(height: AppDimensions.xs),
-
         Row(
           children: [
             Expanded(
