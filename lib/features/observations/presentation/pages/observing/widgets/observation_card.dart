@@ -19,7 +19,7 @@ import 'package:noctambuls/features/observations/presentation/bloc/session_obser
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
-class ObservationCard extends StatelessWidget {
+class ObservationCard extends StatefulWidget {
   const ObservationCard({
     required this.record,
     required this.bird,
@@ -30,6 +30,50 @@ class ObservationCard extends StatelessWidget {
   final ObservationRecord record;
   final Bird bird;
   final ObservationSession session;
+
+  @override
+  State<ObservationCard> createState() => _ObservationCardState();
+}
+
+class _ObservationCardState extends State<ObservationCard>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController;
+  late final Animation<double> _sizeAnimation;
+  late final Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _sizeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeInOut,
+    );
+
+    _fadeAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: Curves.easeIn,
+    );
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _animateAndDelete() async {
+    await _animationController.reverse();
+    if (mounted) {
+      context.read<SessionObservationBloc>().add(
+        DeleteRecord(widget.record.id),
+      );
+    }
+  }
 
   Future<void> _confirmAndDelete(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
@@ -42,10 +86,10 @@ class ObservationCard extends StatelessWidget {
       isDestructive: true,
     );
 
-    if (!context.mounted) return;
+    if (!mounted) return;
 
     if (confirmed == true) {
-      context.read<SessionObservationBloc>().add(DeleteRecord(record.id));
+      await _animateAndDelete();
     }
   }
 
@@ -54,9 +98,9 @@ class ObservationCard extends StatelessWidget {
       context.push(
         AppRoutes.observationForm,
         extra: ObservationFormArgs(
-          session: session,
+          session: widget.session,
           sessionBloc: context.read<SessionObservationBloc>(),
-          existingRecord: record,
+          existingRecord: widget.record,
         ),
       ),
     );
@@ -66,50 +110,64 @@ class ObservationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
 
-    return Card(
-      margin: const EdgeInsets.only(bottom: AppDimensions.sm),
-      clipBehavior: Clip.antiAlias,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-      ),
-      elevation: 1,
-      child: Slidable(
-        key: ValueKey(record.id),
-        endActionPane: ActionPane(
-          motion: const DrawerMotion(),
-          extentRatio: 0.25,
-          children: [
-            CustomSlidableAction(
-              onPressed: (context) {
-                context.read<SessionObservationBloc>().add(
-                  DeleteRecord(record.id),
-                );
-              },
-              backgroundColor: colorScheme.errorContainer,
-              foregroundColor: colorScheme.onErrorContainer,
-              child: const Icon(
-                Icons.delete_outline,
-                size: AppDimensions.iconMd,
+    return SizeTransition(
+      sizeFactor: _sizeAnimation,
+      child: FadeTransition(
+        opacity: _fadeAnimation,
+        child: Card(
+          margin: const EdgeInsets.only(bottom: AppDimensions.sm),
+          clipBehavior: Clip.antiAlias,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+          ),
+          elevation: 1,
+          child: Slidable(
+            key: ValueKey(widget.record.id),
+            endActionPane: ActionPane(
+              motion: const DrawerMotion(),
+              extentRatio: 0.25,
+              dismissible: DismissiblePane(
+                onDismissed: () {
+                  context.read<SessionObservationBloc>().add(
+                    DeleteRecord(widget.record.id),
+                  );
+                },
               ),
-            ),
-          ],
-        ),
-        child: Material(
-          color: colorScheme.surfaceContainerLow,
-          child: InkWell(
-            onTap: () => _openEdit(context),
-            onLongPress: () => _confirmAndDelete(context),
-            child: Padding(
-              padding: const EdgeInsets.all(AppDimensions.sm),
-              child: Row(
-                children: [
-                  _BirdThumbnail(bird: bird),
-                  const SizedBox(width: AppDimensions.md),
-                  Expanded(
-                    child: _ObservationDetails(record: record, bird: bird),
+              children: [
+                CustomSlidableAction(
+                  onPressed: (context) {
+                    unawaited(_animateAndDelete());
+                  },
+                  backgroundColor: colorScheme.errorContainer,
+                  foregroundColor: colorScheme.onErrorContainer,
+                  child: const Icon(
+                    Icons.delete_outline,
+                    size: AppDimensions.iconMd,
                   ),
-                  _ObservationTrailing(record: record),
-                ],
+                ),
+              ],
+            ),
+            child: Material(
+              color: colorScheme.surfaceContainerLow,
+              child: InkWell(
+                onTap: () => _openEdit(context),
+                onLongPress: () => _confirmAndDelete(context),
+                child: Padding(
+                  padding: const EdgeInsets.all(AppDimensions.sm),
+                  child: Row(
+                    children: [
+                      _BirdThumbnail(bird: widget.bird),
+                      const SizedBox(width: AppDimensions.md),
+                      Expanded(
+                        child: _ObservationDetails(
+                          record: widget.record,
+                          bird: widget.bird,
+                        ),
+                      ),
+                      _ObservationTrailing(record: widget.record),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
