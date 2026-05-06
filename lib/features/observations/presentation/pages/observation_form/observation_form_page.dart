@@ -111,7 +111,13 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
       final min = widget.session.observationTimeMin;
       final max = widget.session.observationTimeMax ?? now;
       final base = widget.session.startTime ?? now;
-      var initial = DateTime(base.year, base.month, base.day, now.hour, now.minute);
+      var initial = DateTime(
+        base.year,
+        base.month,
+        base.day,
+        now.hour,
+        now.minute,
+      );
       if (initial.isAfter(max)) initial = max;
       if (min != null && initial.isBefore(min)) initial = min;
       _startTime = initial;
@@ -229,6 +235,7 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
                     const SizedBox(height: AppDimensions.md),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: SpeciesSelectorField(

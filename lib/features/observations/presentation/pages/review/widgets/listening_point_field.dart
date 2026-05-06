@@ -32,7 +32,7 @@ class ListeningPointField extends StatelessWidget {
         FilteringTextInputFormatter.digitsOnly,
         NumericalRangeFormatter(min: 1, max: 500),
       ],
-      errorText: hasError ? l10n.reviewRequiredFieldError : null,
+      errorText: hasError ? l10n.requiredFieldError : null,
       onFocusLost: onChanged,
     );
   }

@@ -674,7 +674,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get confirmFinalizeConfirm => 'Finalitzar';
 
   @override
-  String get reviewRequiredFieldError => 'Camp obligatori';
+  String get requiredFieldError => 'Camp obligatori';
 
   @override
   String get reviewErrorSaving => 'Error guardant la revisió';

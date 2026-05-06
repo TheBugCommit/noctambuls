@@ -263,7 +263,7 @@
     "confirmFinalizeTitle": "¿Finalizar sesión?",
     "confirmFinalizeMessage": "Una vez finalizada, la sesión no se podrá editar.",
     "confirmFinalizeConfirm": "Finalizar",
-    "reviewRequiredFieldError": "Campo obligatorio",
+    "requiredFieldError": "Campo obligatorio",
 
     "reviewErrorSaving": "Error guardando la revisión"
 

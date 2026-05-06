@@ -1352,11 +1352,11 @@ abstract class AppLocalizations {
   /// **'Finalitzar'**
   String get confirmFinalizeConfirm;
 
-  /// No description provided for @reviewRequiredFieldError.
+  /// No description provided for @requiredFieldError.
   ///
   /// In ca, this message translates to:
   /// **'Camp obligatori'**
-  String get reviewRequiredFieldError;
+  String get requiredFieldError;
 
   /// No description provided for @reviewErrorSaving.
   ///

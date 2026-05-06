@@ -47,6 +47,7 @@ class _ObservationCardState extends State<ObservationCard>
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 300),
+      value: 1,
     );
 
     _sizeAnimation = CurvedAnimation(

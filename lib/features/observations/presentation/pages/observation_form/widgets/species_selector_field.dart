@@ -25,7 +25,7 @@ class SpeciesSelectorField extends StatelessWidget {
       initialValue: selectedSpeciesId,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'Has de seleccionar una espècie.';
+          return l10n.requiredFieldError;
         }
         return null;
       },
@@ -45,7 +45,7 @@ class SpeciesSelectorField extends StatelessWidget {
                   color: formFieldState.hasError
                       ? theme.colorScheme.error
                       : Colors.transparent,
-                  width: formFieldState.hasError ? 1.5 : 0,
+                  width: 1.5,
                 ),
               ),
               child: AppDropdown<String>(
@@ -62,20 +62,24 @@ class SpeciesSelectorField extends StatelessWidget {
                 },
               ),
             ),
-            if (formFieldState.hasError)
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: AppDimensions.xs,
-                  left: AppDimensions.sm,
-                ),
-                child: Text(
-                  formFieldState.errorText!,
-                  style: TextStyle(
-                    color: theme.colorScheme.error,
-                    fontSize: theme.textTheme.labelMedium?.fontSize,
-                  ),
-                ),
-              ),
+            SizedBox(
+              height: AppDimensions.lg,
+              child: formFieldState.hasError
+                  ? Padding(
+                      padding: const EdgeInsets.only(
+                        top: AppDimensions.xs,
+                        left: AppDimensions.sm,
+                      ),
+                      child: Text(
+                        formFieldState.errorText!,
+                        style: TextStyle(
+                          color: theme.colorScheme.error,
+                          fontSize: theme.textTheme.labelMedium?.fontSize,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
           ],
         );
       },

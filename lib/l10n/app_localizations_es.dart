@@ -676,7 +676,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get confirmFinalizeConfirm => 'Finalizar';
 
   @override
-  String get reviewRequiredFieldError => 'Campo obligatorio';
+  String get requiredFieldError => 'Campo obligatorio';
 
   @override
   String get reviewErrorSaving => 'Error guardando la revisión';

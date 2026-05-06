@@ -268,7 +268,7 @@
     "confirmFinalizeTitle": "Finalitzar sessió?",
     "confirmFinalizeMessage": "Un cop finalitzada, la sessió no es podrà editar.",
     "confirmFinalizeConfirm": "Finalitzar",
-    "reviewRequiredFieldError": "Camp obligatori",
+    "requiredFieldError": "Camp obligatori",
 
     "reviewErrorSaving": "Error guardant la revisió"
 
