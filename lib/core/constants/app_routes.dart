@@ -1,6 +1,8 @@
 class AppRoutes {
   AppRoutes._();
 
+  static const String splash = '/splash';
+
   // Primary Routes
   static const String home = '/home';
   static const String guide = '/guide';

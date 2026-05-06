@@ -8,9 +8,9 @@ import 'package:noctambuls/core/presentation/navigation/auth_router_guard.dart';
 import 'package:noctambuls/core/presentation/navigation/go_router_refresh_stream.dart';
 import 'package:noctambuls/core/presentation/pages/main_navigation_screen.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signup/sign_up_page.dart';
+import 'package:noctambuls/features/auth/presentation/pages/splash/splash_page.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
@@ -29,17 +29,11 @@ final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
   navigatorKey: _rootNavigatorKey,
-  initialLocation: AppRoutes.signin,
+  initialLocation: AppRoutes.splash,
   refreshListenable: GoRouterRefreshStream(authBloc.stream),
   redirect: (context, state) {
-    if (authBloc.state is! AuthInitial && authBloc.state is! AuthLoading) {
-      FlutterNativeSplash.remove();
-    }
-
-    final authRedirect = AuthRouterGuard.redirect(state, authBloc.state);
-    if (authRedirect != null) return authRedirect;
-
-    return null;
+    FlutterNativeSplash.remove();
+    return AuthRouterGuard.redirect(state, authBloc.state);
   },
 
   routes: [
@@ -52,6 +46,11 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
       path: AppRoutes.signup,
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const SignUpPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.splash,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const SplashPage(),
     ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) {

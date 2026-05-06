@@ -6,8 +6,11 @@ class AuthRouterGuard {
   static String? redirect(GoRouterState state, AuthState authState) {
     final isOnSignIn = state.matchedLocation == AppRoutes.signin;
     final isOnSignUp = state.matchedLocation == AppRoutes.signup;
+    final isOnSplash = state.matchedLocation == AppRoutes.splash;
 
-    if (authState is AuthInitial || authState is AuthLoading) return null;
+    if (authState is AuthInitial || authState is AuthLoading) {
+      return isOnSplash ? null : AppRoutes.splash;
+    }
 
     if (authState is Unauthenticated || authState is AuthError) {
       if (isOnSignIn) return null;
@@ -20,7 +23,7 @@ class AuthRouterGuard {
     }
 
     if (authState is Authenticated) {
-      if (isOnSignIn || isOnSignUp) return AppRoutes.home;
+      if (isOnSignIn || isOnSignUp || isOnSplash) return AppRoutes.home;
     }
 
     return null;
