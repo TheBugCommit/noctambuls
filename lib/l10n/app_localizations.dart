@@ -851,7 +851,7 @@ abstract class AppLocalizations {
   /// No description provided for @timeRangeLabel.
   ///
   /// In ca, this message translates to:
-  /// **'Hora d\'observació'**
+  /// **'Franja horaria'**
   String get timeRangeLabel;
 
   /// No description provided for @quantityLabel.
@@ -1015,6 +1015,90 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'{orientation} {value}°'**
   String orientationValueLong(String orientation, String value);
+
+  /// No description provided for @observationDateLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Fecha de la observación'**
+  String get observationDateLabel;
+
+  /// No description provided for @dayLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Día'**
+  String get dayLabel;
+
+  /// No description provided for @startTimeLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Hora inicio'**
+  String get startTimeLabel;
+
+  /// No description provided for @endTimeLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Hora fin'**
+  String get endTimeLabel;
+
+  /// No description provided for @statusObserving.
+  ///
+  /// In ca, this message translates to:
+  /// **'En curs'**
+  String get statusObserving;
+
+  /// No description provided for @statusReviewing.
+  ///
+  /// In ca, this message translates to:
+  /// **'En revisió'**
+  String get statusReviewing;
+
+  /// No description provided for @statusDraft.
+  ///
+  /// In ca, this message translates to:
+  /// **'Esborrany'**
+  String get statusDraft;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In ca, this message translates to:
+  /// **'Pendent'**
+  String get statusPending;
+
+  /// No description provided for @statusSynced.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sincronitzat'**
+  String get statusSynced;
+
+  /// No description provided for @statusSyncError.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error de xarxa'**
+  String get statusSyncError;
+
+  /// No description provided for @stopAndReviewTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Finalitzar observació'**
+  String get stopAndReviewTitle;
+
+  /// No description provided for @stopAndReviewMessage.
+  ///
+  /// In ca, this message translates to:
+  /// **'Estàs segur que vols aturar el temps i passar a revisar les dades?'**
+  String get stopAndReviewMessage;
+
+  /// No description provided for @stopAndReviewConfirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Finalitzar'**
+  String get stopAndReviewConfirm;
+
+  /// No description provided for @sessionCardEndsAt.
+  ///
+  /// In ca, this message translates to:
+  /// **'Finalitzada a les '**
+  String get sessionCardEndsAt;
 }
 
 class _AppLocalizationsDelegate

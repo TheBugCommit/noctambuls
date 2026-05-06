@@ -33,8 +33,8 @@ class QrButton extends StatelessWidget {
       tooltip: l10n.profileShowQr,
       onPressed: () => _showQrSheet(context),
       style: IconButton.styleFrom(
-        backgroundColor: colorScheme.secondaryContainer,
-        foregroundColor: colorScheme.onSecondaryContainer,
+        backgroundColor: colorScheme.surface,
+        foregroundColor: colorScheme.onSurface,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
         ),

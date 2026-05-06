@@ -16,6 +16,7 @@ import 'package:noctambuls/features/observations/domain/usecases/watch_active_se
 import 'package:noctambuls/features/observations/domain/usecases/watch_all_sessions_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_language_usecase.dart';
@@ -69,6 +70,12 @@ void initObservationsFeature() {
         getBirdsUseCase: sl<GetBirdsUseCase>(),
         getLanguageUseCase: sl<GetLanguageUseCase>(),
         logger: sl<IAppLogger>(),
+      ),
+    )
+    ..registerFactory(
+      () => SessionListBloc(
+        watchAllSessionsUseCase: sl(),
+        logger: sl<IAppLogger>()
       ),
     );
 }

@@ -1,7 +1,7 @@
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
-extension ContactTypeL10n on ContactType {
+extension ContactTypeExtension on ContactType {
   String label(AppLocalizations l10n) {
     switch (this) {
       case ContactType.visual:

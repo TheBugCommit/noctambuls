@@ -85,10 +85,6 @@ class _ObservingContent extends StatelessWidget {
     }
   }
 
-  void _goToReview(BuildContext context) {
-    unawaited(context.push(AppRoutes.review));
-  }
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -151,6 +147,24 @@ class _ObservingContent extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future<void> _goToReview(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    final isConfirmed = await AppSheet.showConfirm(
+      context: context,
+      title: l10n.stopAndReviewTitle,
+      message: l10n.stopAndReviewMessage,
+      confirmText: l10n.stopAndReviewConfirm,
+      cancelText: l10n.cancel,
+    );
+
+    if (!context.mounted) return;
+
+    if (isConfirmed == true) {
+      context.read<SessionLifecycleBloc>().add(StopObservationPhase());
+    }
   }
 }
 

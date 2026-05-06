@@ -54,7 +54,10 @@ class _AppQuantitySelectorState extends State<AppQuantitySelector> {
         const SizedBox(height: AppDimensions.xs),
 
         Container(
-          height: AppDimensions.buttonHeightMd,
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppDimensions.sm,
+            vertical: 2,
+          ),
           decoration: BoxDecoration(
             color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
             borderRadius: BorderRadius.circular(AppDimensions.radiusMd),

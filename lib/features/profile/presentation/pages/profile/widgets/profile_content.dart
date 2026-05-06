@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_list_state.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/session_card.dart';
 import 'package:noctambuls/features/profile/domain/entities/user_profile.dart';
 import 'package:noctambuls/features/profile/presentation/pages/profile/widgets/profile_header.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
@@ -44,7 +49,7 @@ class ProfileContent extends StatelessWidget {
       },
       body: const TabBarView(
         children: [
-          _EmptyTabContent(),
+          _ObservingSessions(),
           _EmptyTabContent(),
         ],
       ),
@@ -80,6 +85,46 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   bool shouldRebuild(_SliverTabBarDelegate oldDelegate) {
     return tabBar != oldDelegate.tabBar ||
         backgroundColor != oldDelegate.backgroundColor;
+  }
+}
+
+class _ObservingSessions extends StatelessWidget {
+  const _ObservingSessions();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SessionListBloc, SessionListState>(
+      builder: (context, state) {
+        if (state is SessionListLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is SessionListLoaded) {
+          final sessions = state.sessions;
+
+          if (sessions.isEmpty) {
+            return const _EmptyTabContent();
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(AppDimensions.md),
+            itemCount: sessions.length,
+            itemBuilder: (context, index) {
+              final session = sessions[index];
+
+              return SessionCard(
+                session: session,
+                onTap: () {
+                  // Lògica de navegació
+                },
+              );
+            },
+          );
+        }
+
+        return const SizedBox.shrink();
+      },
+    );
   }
 }
 

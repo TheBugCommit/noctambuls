@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
+import 'package:noctambuls/core/presentation/widgets/time_text.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_common_name.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_image.dart';
@@ -15,7 +16,6 @@ import 'package:noctambuls/features/observations/domain/entities/observation_rec
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
-import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/time_text.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class ObservationTile extends StatelessWidget {
@@ -140,7 +140,10 @@ class _ObservationDetails extends StatelessWidget {
               color: colorScheme.secondary,
             ),
             const SizedBox(width: AppDimensions.xs),
-            TimeText(dateTime: record.startTime),
+            TimeText.dateTime(
+              record.startTime,
+              formatStyle: DateTimeFormatStyle.timeOnly,
+            ),
           ],
         ),
       ],

@@ -193,5 +193,24 @@
           "orientation": { "type": "String" },
           "value": { "type": "String" }
         }
-    }
+    },
+    "observationDateLabel": "Fecha de la observación",
+    "dayLabel": "Día",
+    "timeRangeLabel": "Franja horaria",
+    "startTimeLabel": "Hora inicio",
+    "endTimeLabel": "Hora fin",
+
+    "statusObserving": "En curs",
+    "statusReviewing": "En revisió",
+    "statusDraft": "Esborrany",
+    "statusPending": "Pendent",
+    "statusSynced": "Sincronitzat",
+    "statusSyncError": "Error de xarxa",
+
+    "stopAndReviewTitle": "Finalitzar observació",
+    "stopAndReviewMessage": "Estàs segur que vols aturar el temps i passar a revisar les dades?",
+    "stopAndReviewConfirm": "Finalitzar",
+
+    "sessionCardEndsAt": "Finalitzada a les "
+
 }

@@ -68,15 +68,16 @@ class HomePage extends StatelessWidget {
           _getRebuildGroup(prev) != _getRebuildGroup(curr),
       builder: (context, state) {
         return switch (state) {
-          SessionLifecycleIdle() || SessionLifecycleError() => _IdleScaffold(
+          SessionLifecycleIdle()
+          || SessionReviewing()
+          || SessionFinished()
+          || SessionLifecycleError() => _IdleScaffold(
             onTypeSelected: (type) => context.read<SessionLifecycleBloc>().add(
               StartNewSession(
                 sessionType: type,
                 annotatorId:
                     (context.read<AuthBloc>().state as Authenticated?)
-                        ?.user
-                        .id ??
-                    'unknown',
+                        ?.user.id ?? 'unknown',
               ),
             ),
           ),
@@ -85,8 +86,6 @@ class HomePage extends StatelessWidget {
             session: state.session,
             onResume: () => unawaited(context.push(AppRoutes.observing)),
           ),
-          SessionReviewing() => const _ReviewingScaffold(),
-          SessionFinished() => throw UnimplementedError(),
           // TODO(page): Implementar comporatament sessio finalitzada
         };
       },
@@ -183,41 +182,6 @@ class _ActiveScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return _BaseHomeLayout(
       child: ActiveSessionCard(session: session, onResume: onResume),
-    );
-  }
-}
-
-class _ReviewingScaffold extends StatelessWidget {
-  const _ReviewingScaffold();
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return _BaseHomeLayout(
-      child: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              Icons.fact_check_outlined,
-              size: AppDimensions.xxl * 1.5,
-              color: colorScheme.primary,
-            ),
-            const SizedBox(height: AppDimensions.lg),
-            Text(
-              l10n.sessionInReview,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(height: AppDimensions.xl),
-            AppButton.primary(
-              onPressed: () => unawaited(context.push(AppRoutes.review)),
-              label: l10n.continueReview,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

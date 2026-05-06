@@ -190,5 +190,24 @@
           "orientation": { "type": "String" },
           "value": { "type": "String" }
         }
-    }
+    },
+    "observationDateLabel": "Data de l'observació",
+    "dayLabel": "Dia",
+    "timeRangeLabel": "Franja horària",
+    "startTimeLabel": "Hora inici",
+    "endTimeLabel": "Hora fi",
+
+    "statusObserving": "En curso",
+    "statusReviewing": "En revisión",
+    "statusDraft": "Borrador",
+    "statusPending": "Pendiente",
+    "statusSynced": "Sincronizado",
+    "statusSyncError": "Error de red",
+
+    "stopAndReviewTitle": "Finalizar observación",
+    "stopAndReviewMessage": "¿Estás seguro de que quieres detener el tiempo y pasar a revisar los datos?",
+    "stopAndReviewConfirm": "Finalizar",
+
+    "sessionCardEndsAt": "Finalitzada a las "
+
 }

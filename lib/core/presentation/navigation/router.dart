@@ -11,6 +11,8 @@ import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signup/sign_up_page.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_list_event.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
@@ -101,7 +103,13 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.profile,
-              builder: (context, state) => const ProfilePage(),
+              builder: (context, state) {
+                return BlocProvider(
+                  create: (_) =>
+                      sl<SessionListBloc>()..add(WatchAllSessionsRequested()),
+                  child: const ProfilePage(),
+                );
+              },
             ),
           ],
         ),

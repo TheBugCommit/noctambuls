@@ -410,7 +410,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get selectSpecies => 'Selecciona una especie';
 
   @override
-  String get timeRangeLabel => 'Hora de observación';
+  String get timeRangeLabel => 'Franja horària';
 
   @override
   String get quantityLabel => 'Cantidad';
@@ -498,4 +498,47 @@ class AppLocalizationsEs extends AppLocalizations {
   String orientationValueLong(String orientation, String value) {
     return '$orientation $value°';
   }
+
+  @override
+  String get observationDateLabel => 'Data de l\'observació';
+
+  @override
+  String get dayLabel => 'Dia';
+
+  @override
+  String get startTimeLabel => 'Hora inici';
+
+  @override
+  String get endTimeLabel => 'Hora fi';
+
+  @override
+  String get statusObserving => 'En curso';
+
+  @override
+  String get statusReviewing => 'En revisión';
+
+  @override
+  String get statusDraft => 'Borrador';
+
+  @override
+  String get statusPending => 'Pendiente';
+
+  @override
+  String get statusSynced => 'Sincronizado';
+
+  @override
+  String get statusSyncError => 'Error de red';
+
+  @override
+  String get stopAndReviewTitle => 'Finalizar observación';
+
+  @override
+  String get stopAndReviewMessage =>
+      '¿Estás seguro de que quieres detener el tiempo y pasar a revisar los datos?';
+
+  @override
+  String get stopAndReviewConfirm => 'Finalizar';
+
+  @override
+  String get sessionCardEndsAt => 'Finalitzada a las ';
 }

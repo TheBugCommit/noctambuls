@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/presentation/widgets/time_text.dart';
 import 'package:noctambuls/features/observations/presentation/cubit/stopwatch_cubit.dart';
-import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/time_text.dart';
 
 class StopwatchDisplay extends StatelessWidget {
   const StopwatchDisplay({super.key});
@@ -20,7 +20,7 @@ class StopwatchDisplay extends StatelessWidget {
           color: theme.colorScheme.onSurfaceVariant,
         ),
         const SizedBox(width: AppDimensions.xs),
-        TimeText(duration: elapsed, withSeconds: true),
+        TimeText.duration(elapsed, withSeconds: true),
       ],
     );
   }
