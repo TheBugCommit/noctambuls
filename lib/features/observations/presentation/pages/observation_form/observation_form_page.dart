@@ -110,7 +110,8 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
     } else {
       final min = widget.session.observationTimeMin;
       final max = widget.session.observationTimeMax ?? now;
-      var initial = now;
+      final base = widget.session.startTime ?? now;
+      var initial = DateTime(base.year, base.month, base.day, now.hour, now.minute);
       if (initial.isAfter(max)) initial = max;
       if (min != null && initial.isBefore(min)) initial = min;
       _startTime = initial;

@@ -44,6 +44,8 @@ class ObservationRecord extends Equatable {
 
   ObservationRecord copyWith({
     required DateTime updatedAt,
+    DateTime? startTime,
+    DateTime? endTime,
     Object? notes = _absent,
     double? latitude,
     double? longitude,
@@ -59,8 +61,8 @@ class ObservationRecord extends Equatable {
       speciesId: speciesId,
       contactType: contactType,
       quantity: quantity ?? this.quantity,
-      startTime: startTime,
-      endTime: endTime,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
       notes: identical(notes, _absent) ? this.notes : notes as String?,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,

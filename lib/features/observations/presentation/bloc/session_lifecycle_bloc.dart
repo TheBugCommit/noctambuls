@@ -225,17 +225,39 @@ class SessionLifecycleBloc
     );
   }
 
-  void _onChangeObservationDate(
+  Future<void> _onChangeObservationDate(
     ChangeObservationDate event,
     Emitter<SessionLifecycleState> emit,
-  ) {
+  ) async {
     if (state is! SessionObserving) return;
     final current = state as SessionObserving;
     if (!current.session.canEditObservationDate) return;
-    emit(SessionObserving(
-      session: current.session,
-      selectedObservationDate: event.date,
-    ));
+
+    final d = event.date;
+    final oldStart = current.session.startTime;
+    final newStartTime = oldStart != null
+        ? DateTime(d.year, d.month, d.day, oldStart.hour, oldStart.minute)
+        : DateTime(d.year, d.month, d.day);
+
+    final now = DateTime.now();
+    final updatedSession = current.session.copyWith(
+      startTime: newStartTime,
+      updatedAt: now,
+    );
+
+    final result = await updateSessionUseCase(updatedSession);
+    result.when(
+      success: (_) {
+        emit(SessionObserving(
+          session: updatedSession,
+          selectedObservationDate: event.date,
+        ));
+      },
+      failure: (failure) {
+        logger.failure(failure);
+        emit(SessionLifecycleError(failure: failure));
+      },
+    );
   }
 
   void _onDismissError(

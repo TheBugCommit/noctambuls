@@ -31,6 +31,7 @@ class SessionObservationBloc
     on<AddRecord>(_onAddRecord);
     on<UpdateRecord>(_onUpdateRecord);
     on<DeleteRecord>(_onDeleteRecord);
+    on<UpdateAllObservationsDate>(_onUpdateAllObservationsDate);
   }
 
   final String sessionId;
@@ -119,6 +120,47 @@ class SessionObservationBloc
         emit(ObservationsError(failure: failure));
       },
     );
+  }
+
+  Future<void> _onUpdateAllObservationsDate(
+    UpdateAllObservationsDate event,
+    Emitter<SessionObservationState> emit,
+  ) async {
+    if (state is! ObservationsLoaded) return;
+    final observations = (state as ObservationsLoaded).observations;
+    final d = event.date;
+
+    for (final obs in observations) {
+      final now = DateTime.now();
+      var newStart = DateTime(
+        d.year,
+        d.month,
+        d.day,
+        obs.startTime.hour,
+        obs.startTime.minute,
+      );
+      var newEnd = DateTime(
+        d.year,
+        d.month,
+        d.day,
+        obs.endTime.hour,
+        obs.endTime.minute,
+      );
+
+      if (newStart.isAfter(now)) newStart = now;
+      if (newEnd.isAfter(now)) newEnd = newStart;
+
+      final updated = obs.copyWith(
+        startTime: newStart,
+        endTime: newEnd,
+        updatedAt: now,
+      );
+      final result = await updateObservationUseCase(updated);
+      result.when(
+        success: (_) {},
+        failure: logger.failure,
+      );
+    }
   }
 
   @override

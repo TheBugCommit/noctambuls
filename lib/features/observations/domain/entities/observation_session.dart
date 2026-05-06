@@ -57,7 +57,8 @@ class ObservationSession extends Equatable {
 
   bool get isFinished => isLocked && !isDeleted;
 
-  bool get canEditObservationDate => sessionType == SessionType.incidental;
+  bool get canEditObservationDate =>
+      sessionType == SessionType.incidental && isObserving;
 
   DateTime? get observationTimeMin =>
       (sessionType == SessionType.census || sessionType == SessionType.station)
@@ -73,6 +74,7 @@ class ObservationSession extends Equatable {
 
   ObservationSession copyWith({
     required DateTime updatedAt,
+    DateTime? startTime,
     Object? endTime = _absent,
     TemperatureRange? temperature,
     WindLevel? wind,
@@ -91,7 +93,7 @@ class ObservationSession extends Equatable {
       id: id,
       annotatorId: annotatorId,
       sessionType: sessionType,
-      startTime: startTime,
+      startTime: startTime ?? this.startTime,
       endTime: identical(endTime, _absent)
           ? this.endTime
           : endTime as DateTime?,

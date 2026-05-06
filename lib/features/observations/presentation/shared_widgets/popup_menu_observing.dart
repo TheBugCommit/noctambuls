@@ -8,6 +8,8 @@ import 'package:noctambuls/features/observations/domain/entities/observation_ses
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 enum _ObservingMenuOption { guide, changeDate, delete }
@@ -34,9 +36,10 @@ class PopupMenuObserving extends StatelessWidget {
     );
     if (!context.mounted || pickedDate == null) return;
 
+    context.read<SessionLifecycleBloc>().add(ChangeObservationDate(pickedDate));
     context
-        .read<SessionLifecycleBloc>()
-        .add(ChangeObservationDate(pickedDate));
+        .read<SessionObservationBloc>()
+        .add(UpdateAllObservationsDate(pickedDate));
   }
 
   @override

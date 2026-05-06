@@ -127,9 +127,10 @@ class _ObservingContent extends StatelessWidget {
     );
     if (!context.mounted || pickedDate == null) return;
 
+    context.read<SessionLifecycleBloc>().add(ChangeObservationDate(pickedDate));
     context
-        .read<SessionLifecycleBloc>()
-        .add(ChangeObservationDate(pickedDate));
+        .read<SessionObservationBloc>()
+        .add(UpdateAllObservationsDate(pickedDate));
   }
 
   void _openForm(BuildContext context) {
@@ -150,9 +151,14 @@ class _ObservingContent extends StatelessWidget {
           sessionBloc: context.read<SessionObservationBloc>(),
           globalDate: globalDate,
           onGlobalDateChanged: session.canEditObservationDate
-              ? (date) => context
-                  .read<SessionLifecycleBloc>()
-                  .add(ChangeObservationDate(date))
+              ? (date) {
+                  context
+                      .read<SessionLifecycleBloc>()
+                      .add(ChangeObservationDate(date));
+                  context
+                      .read<SessionObservationBloc>()
+                      .add(UpdateAllObservationsDate(date));
+                }
               : null,
         ),
       ),

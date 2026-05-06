@@ -50,3 +50,14 @@ class DeleteRecord extends SessionObservationEvent {
   @override
   List<Object?> get props => [recordId];
 }
+
+/// Updates the date of all current observations (incidental sessions only).
+/// Preserves each observation's time components (hour, minute).
+class UpdateAllObservationsDate extends SessionObservationEvent {
+  const UpdateAllObservationsDate(this.date);
+
+  final DateTime date;
+
+  @override
+  List<Object?> get props => [date];
+}
