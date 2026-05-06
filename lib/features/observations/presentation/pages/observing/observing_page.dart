@@ -35,22 +35,27 @@ class ObservingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<SessionLifecycleBloc, SessionLifecycleState>(
       listenWhen: (prev, curr) =>
-          prev is SessionObserving && curr is! SessionObserving,
+          curr is SessionNavigatingToReview || curr is SessionLifecycleIdle,
       listener: (context, state) {
-        switch (state) {
-          case SessionReviewing():
-            context.go(AppRoutes.review);
-          default:
-            context.go(AppRoutes.home);
+        if (state is SessionNavigatingToReview) {
+          context.go(AppRoutes.review, extra: state.session);
+        } else if (state is SessionLifecycleIdle) {
+          context.go(AppRoutes.home);
         }
       },
       buildWhen: (prev, curr) {
+        if (curr is! SessionObserving) return false;
         final prevId = prev is SessionObserving ? prev.session.id : null;
-        final currId = curr is SessionObserving ? curr.session.id : null;
-        return prevId != currId;
+        return prevId != curr.session.id;
       },
       builder: (context, state) {
-        if (state is! SessionObserving) return const SizedBox.shrink();
+        if (state is! SessionObserving) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        }
 
         return BlocProvider(
           create: (_) =>
@@ -85,6 +90,24 @@ class _ObservingContent extends StatelessWidget {
     }
   }
 
+  Future<void> _goToReview(BuildContext context) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    final isConfirmed = await AppSheet.showConfirm(
+      context: context,
+      title: l10n.stopAndReviewTitle,
+      message: l10n.stopAndReviewMessage,
+      confirmText: l10n.stopAndReviewConfirm,
+      cancelText: l10n.cancel,
+    );
+
+    if (!context.mounted) return;
+
+    if (isConfirmed == true) {
+      context.read<SessionLifecycleBloc>().add(StopObservationPhase());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -93,8 +116,15 @@ class _ObservingContent extends StatelessWidget {
       bloc,
     ) {
       final state = bloc.state;
-      return state is CatalogSyncFailure && state.isCatalogEmpty ||
-          state is CatalogSyncInProgress;
+
+      if (state is CatalogSyncFailure) {
+        return state.isCatalogEmpty;
+      }
+      if (state is CatalogSyncInProgress) {
+        return state.isCatalogEmpty;
+      }
+
+      return false;
     });
 
     return BlocProvider(
@@ -147,24 +177,6 @@ class _ObservingContent extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _goToReview(BuildContext context) async {
-    final l10n = AppLocalizations.of(context)!;
-
-    final isConfirmed = await AppSheet.showConfirm(
-      context: context,
-      title: l10n.stopAndReviewTitle,
-      message: l10n.stopAndReviewMessage,
-      confirmText: l10n.stopAndReviewConfirm,
-      cancelText: l10n.cancel,
-    );
-
-    if (!context.mounted) return;
-
-    if (isConfirmed == true) {
-      context.read<SessionLifecycleBloc>().add(StopObservationPhase());
-    }
   }
 }
 

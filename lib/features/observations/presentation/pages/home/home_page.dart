@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
-import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/taxus_app_bar.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
@@ -28,10 +27,13 @@ class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
   Type _getRebuildGroup(SessionLifecycleState state) => switch (state) {
-    SessionLifecycleIdle() || SessionLifecycleError() => SessionLifecycleIdle,
+    SessionLifecycleIdle() ||
+    SessionLifecycleError() ||
+    SessionNavigatingToReview() ||
+    SessionReviewing() ||
+    SessionFinished() => SessionLifecycleIdle,
     SessionLifecycleLoading() => SessionLifecycleLoading,
     SessionObserving() => SessionObserving,
-    SessionReviewing() || SessionFinished() => SessionReviewing,
   };
 
   @override
@@ -40,7 +42,6 @@ class HomePage extends StatelessWidget {
       listenWhen: (prev, curr) {
         if (curr is SessionLifecycleError) return true;
         if (curr is SessionObserving) return prev is! SessionObserving;
-        if (curr is SessionReviewing) return prev is! SessionReviewing;
         return false;
       },
       listener: (context, state) {
@@ -58,8 +59,6 @@ class HomePage extends StatelessWidget {
             context.read<SessionLifecycleBloc>().add(DismissError());
           case SessionObserving():
             unawaited(context.push(AppRoutes.observing));
-          case SessionReviewing():
-            unawaited(context.push(AppRoutes.review));
           default:
             break;
         }
@@ -68,16 +67,19 @@ class HomePage extends StatelessWidget {
           _getRebuildGroup(prev) != _getRebuildGroup(curr),
       builder: (context, state) {
         return switch (state) {
-          SessionLifecycleIdle()
-          || SessionReviewing()
-          || SessionFinished()
-          || SessionLifecycleError() => _IdleScaffold(
+          SessionLifecycleIdle() ||
+          SessionNavigatingToReview() ||
+          SessionReviewing() ||
+          SessionFinished() ||
+          SessionLifecycleError() => _IdleScaffold(
             onTypeSelected: (type) => context.read<SessionLifecycleBloc>().add(
               StartNewSession(
                 sessionType: type,
                 annotatorId:
                     (context.read<AuthBloc>().state as Authenticated?)
-                        ?.user.id ?? 'unknown',
+                        ?.user
+                        .id ??
+                    'unknown',
               ),
             ),
           ),
@@ -86,7 +88,6 @@ class HomePage extends StatelessWidget {
             session: state.session,
             onResume: () => unawaited(context.push(AppRoutes.observing)),
           ),
-          // TODO(page): Implementar comporatament sessio finalitzada
         };
       },
     );

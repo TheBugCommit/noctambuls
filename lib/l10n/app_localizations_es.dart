@@ -410,7 +410,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get selectSpecies => 'Selecciona una especie';
 
   @override
-  String get timeRangeLabel => 'Franja horària';
+  String get timeRangeLabel => 'Franja horaria';
 
   @override
   String get quantityLabel => 'Cantidad';
@@ -500,16 +500,16 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get observationDateLabel => 'Data de l\'observació';
+  String get observationDateLabel => 'Fecha de la observación';
 
   @override
-  String get dayLabel => 'Dia';
+  String get dayLabel => 'Día';
 
   @override
-  String get startTimeLabel => 'Hora inici';
+  String get startTimeLabel => 'Hora inicio';
 
   @override
-  String get endTimeLabel => 'Hora fi';
+  String get endTimeLabel => 'Hora fin';
 
   @override
   String get statusObserving => 'En curso';
@@ -541,4 +541,8 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get sessionCardEndsAt => 'Finalitzada a las ';
+
+  @override
+  String get errorLoadingObservationSessions =>
+      'Error cargando las sessiones de observación';
 }

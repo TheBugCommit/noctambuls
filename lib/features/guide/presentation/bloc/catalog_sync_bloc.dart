@@ -24,7 +24,8 @@ class CatalogSyncBloc extends Bloc<CatalogSyncEvent, CatalogSyncState> {
   ) async {
     if (state is CatalogSyncInProgress) return;
 
-    emit(const CatalogSyncInProgress());
+    final isEmpty = await checkIsCatalogEmptyUseCase();
+    emit(CatalogSyncInProgress(isCatalogEmpty: isEmpty));
 
     final result = await syncCatalogUseCase();
 

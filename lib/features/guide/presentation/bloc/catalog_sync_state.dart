@@ -13,7 +13,14 @@ final class CatalogSyncInitial extends CatalogSyncState {
 }
 
 final class CatalogSyncInProgress extends CatalogSyncState {
-  const CatalogSyncInProgress();
+  const CatalogSyncInProgress({
+    required this.isCatalogEmpty,
+  });
+
+  final bool isCatalogEmpty;
+
+  @override
+  List<Object?> get props => [isCatalogEmpty];
 }
 
 final class CatalogSyncSuccess extends CatalogSyncState {

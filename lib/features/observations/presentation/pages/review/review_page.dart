@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 // TODO(feature): Implementar el contingut de la pantalla de revisió:
@@ -15,6 +17,12 @@ class ReviewPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () {
+            context.go(AppRoutes.profile);
+          },
+        ),
         title: Text(l10n.reviewTitle),
         backgroundColor: colorScheme.surfaceContainer,
         elevation: 0,

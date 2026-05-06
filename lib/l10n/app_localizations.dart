@@ -851,7 +851,7 @@ abstract class AppLocalizations {
   /// No description provided for @timeRangeLabel.
   ///
   /// In ca, this message translates to:
-  /// **'Franja horaria'**
+  /// **'Franja horària'**
   String get timeRangeLabel;
 
   /// No description provided for @quantityLabel.
@@ -1019,25 +1019,25 @@ abstract class AppLocalizations {
   /// No description provided for @observationDateLabel.
   ///
   /// In ca, this message translates to:
-  /// **'Fecha de la observación'**
+  /// **'Data de l\'observació'**
   String get observationDateLabel;
 
   /// No description provided for @dayLabel.
   ///
   /// In ca, this message translates to:
-  /// **'Día'**
+  /// **'Dia'**
   String get dayLabel;
 
   /// No description provided for @startTimeLabel.
   ///
   /// In ca, this message translates to:
-  /// **'Hora inicio'**
+  /// **'Hora inici'**
   String get startTimeLabel;
 
   /// No description provided for @endTimeLabel.
   ///
   /// In ca, this message translates to:
-  /// **'Hora fin'**
+  /// **'Hora fi'**
   String get endTimeLabel;
 
   /// No description provided for @statusObserving.
@@ -1099,6 +1099,12 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Finalitzada a les '**
   String get sessionCardEndsAt;
+
+  /// No description provided for @errorLoadingObservationSessions.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error carregant les sessions d\'observació'**
+  String get errorLoadingObservationSessions;
 }
 
 class _AppLocalizationsDelegate

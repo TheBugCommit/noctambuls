@@ -194,11 +194,11 @@
           "value": { "type": "String" }
         }
     },
-    "observationDateLabel": "Fecha de la observación",
-    "dayLabel": "Día",
-    "timeRangeLabel": "Franja horaria",
-    "startTimeLabel": "Hora inicio",
-    "endTimeLabel": "Hora fin",
+    "observationDateLabel": "Data de l'observació",
+    "dayLabel": "Dia",
+    "timeRangeLabel": "Franja horària",
+    "startTimeLabel": "Hora inici",
+    "endTimeLabel": "Hora fi",
 
     "statusObserving": "En curs",
     "statusReviewing": "En revisió",
@@ -211,6 +211,7 @@
     "stopAndReviewMessage": "Estàs segur que vols aturar el temps i passar a revisar les dades?",
     "stopAndReviewConfirm": "Finalitzar",
 
-    "sessionCardEndsAt": "Finalitzada a les "
+    "sessionCardEndsAt": "Finalitzada a les ",
+    "errorLoadingObservationSessions": "Error carregant les sessions d'observació"
 
 }

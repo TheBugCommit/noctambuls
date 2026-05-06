@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_state.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/session_card.dart';
@@ -95,34 +96,72 @@ class _ObservingSessions extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<SessionListBloc, SessionListState>(
       builder: (context, state) {
-        if (state is SessionListLoading) {
-          return const Center(child: CircularProgressIndicator());
+        switch (state) {
+          case SessionListLoading():
+            return const Center(child: CircularProgressIndicator());
+          case SessionListLoaded():
+            return _SessionList(sessions: state.sessions);
+          case SessionListError():
+            return const _SessionListError();
         }
+      },
+    );
+  }
+}
 
-        if (state is SessionListLoaded) {
-          final sessions = state.sessions;
+class _SessionListError extends StatelessWidget {
+  const _SessionListError();
 
-          if (sessions.isEmpty) {
-            return const _EmptyTabContent();
-          }
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(AppDimensions.md),
-            itemCount: sessions.length,
-            itemBuilder: (context, index) {
-              final session = sessions[index];
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.error_outline,
+            size: AppDimensions.xxl,
+            color: theme.colorScheme.error,
+          ),
+          const SizedBox(height: AppDimensions.md),
+          Text(
+            l10n.errorLoadingObservationSessions,
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurface,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
-              return SessionCard(
-                session: session,
-                onTap: () {
-                  // Lògica de navegació
-                },
-              );
-            },
-          );
-        }
+class _SessionList extends StatelessWidget {
+  const _SessionList({required this.sessions});
 
-        return const SizedBox.shrink();
+  final List<ObservationSession> sessions;
+
+  @override
+  Widget build(BuildContext context) {
+    if (sessions.isEmpty) {
+      return const _EmptyTabContent();
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(AppDimensions.md),
+      itemCount: sessions.length,
+      itemBuilder: (context, index) {
+        final session = sessions[index];
+
+        return SessionCard(
+          session: session,
+          onTap: () {
+            // Lògica de navegació
+          },
+        );
       },
     );
   }

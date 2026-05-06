@@ -81,7 +81,12 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
   @override
   Future<ObservationSessionModel?> getActiveSession() async {
     final query = db.select(db.sessionsTable)
-      ..where((tbl) => tbl.isLocked.equals(false) & tbl.isDeleted.equals(false))
+      ..where(
+        (tbl) =>
+            tbl.endTime.isNull() &
+            tbl.isLocked.equals(false) &
+            tbl.isDeleted.equals(false),
+      )
       ..limit(1);
 
     final result = await query.getSingleOrNull();
@@ -91,7 +96,12 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
   @override
   Stream<ObservationSessionModel?> watchActiveSession() {
     final query = db.select(db.sessionsTable)
-      ..where((tbl) => tbl.isLocked.equals(false) & tbl.isDeleted.equals(false))
+      ..where(
+        (tbl) =>
+            tbl.endTime.isNull() &
+            tbl.isLocked.equals(false) &
+            tbl.isDeleted.equals(false),
+      )
       ..limit(1);
 
     return query.watchSingleOrNull().map(

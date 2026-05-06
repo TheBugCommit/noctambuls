@@ -28,6 +28,15 @@ sealed class ActiveSessionLifecycleState extends SessionLifecycleState {
   final ObservationSession session;
 }
 
+final class SessionNavigatingToReview extends SessionLifecycleState {
+  const SessionNavigatingToReview({required this.session});
+
+  final ObservationSession session;
+
+  @override
+  List<Object?> get props => [session];
+}
+
 /// Active session in observation phase.
 final class SessionObserving extends ActiveSessionLifecycleState {
   const SessionObserving({required super.session});

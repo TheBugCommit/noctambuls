@@ -134,6 +134,8 @@ class SessionLifecycleBloc
     final now = DateTime.now();
     final updated = current.copyWith(endTime: now, updatedAt: now);
 
+    emit(SessionNavigatingToReview(session: updated));
+
     final result = await updateSessionUseCase(updated);
     result.when(
       success: (_) {},
