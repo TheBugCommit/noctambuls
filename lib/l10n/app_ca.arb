@@ -194,6 +194,16 @@
           "value": { "type": "String" }
         }
     },
+    "compassManualMode": "Introduir manualment",
+    "compassDegreesHint": "Graus",
+    "compassDegreesFormat": "{value}° {orientation}",
+    "@compassDegreesFormat": {
+        "placeholders": {
+            "orientation": { "type": "String" },
+            "value": { "type": "String" }
+        }
+    },
+    "compassNoSensorFallback": "No s'ha detectat sensor. Ús manual requerit.",
     "observationDateLabel": "Data de l'observació",
     "dayLabel": "Dia",
     "timeRangeLabel": "Franja horària",

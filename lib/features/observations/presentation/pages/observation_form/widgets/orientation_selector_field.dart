@@ -33,12 +33,13 @@ class OrientationSelectorField extends StatelessWidget {
         return Column(
           children: [
             InkWell(
-              // Si vols, pots afegir un borderRadius aquí perquè l'efecte "ripple" en fer clic sigui arrodonit:
               borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
               onTap: () async {
                 final result = await showDialog<double>(
                   context: context,
-                  builder: (context) => const CompassDialog(),
+                  builder: (context) => CompassDialog(
+                    initialHeading: selectedBearing,
+                  ),
                 );
                 if (result != null) {
                   onChanged(result);

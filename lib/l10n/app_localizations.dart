@@ -1016,6 +1016,30 @@ abstract class AppLocalizations {
   /// **'{orientation} {value}°'**
   String orientationValueLong(String orientation, String value);
 
+  /// No description provided for @compassManualMode.
+  ///
+  /// In ca, this message translates to:
+  /// **'Introduir manualment'**
+  String get compassManualMode;
+
+  /// No description provided for @compassDegreesHint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Graus'**
+  String get compassDegreesHint;
+
+  /// No description provided for @compassDegreesFormat.
+  ///
+  /// In ca, this message translates to:
+  /// **'{value}° {orientation}'**
+  String compassDegreesFormat(String orientation, String value);
+
+  /// No description provided for @compassNoSensorFallback.
+  ///
+  /// In ca, this message translates to:
+  /// **'No s\'ha detectat sensor. Ús manual requerit.'**
+  String get compassNoSensorFallback;
+
   /// No description provided for @observationDateLabel.
   ///
   /// In ca, this message translates to:

@@ -498,6 +498,21 @@ class AppLocalizationsCa extends AppLocalizations {
   }
 
   @override
+  String get compassManualMode => 'Introduir manualment';
+
+  @override
+  String get compassDegreesHint => 'Graus';
+
+  @override
+  String compassDegreesFormat(String orientation, String value) {
+    return '$value° $orientation';
+  }
+
+  @override
+  String get compassNoSensorFallback =>
+      'No s\'ha detectat sensor. Ús manual requerit.';
+
+  @override
   String get observationDateLabel => 'Data de l\'observació';
 
   @override

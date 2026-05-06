@@ -500,6 +500,21 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
+  String get compassManualMode => 'Introducir manualmente';
+
+  @override
+  String get compassDegreesHint => 'Grados';
+
+  @override
+  String compassDegreesFormat(String orientation, String value) {
+    return '$value° $orientation';
+  }
+
+  @override
+  String get compassNoSensorFallback =>
+      'No se detectó sensor. Uso manual requerido.';
+
+  @override
   String get observationDateLabel => 'Fecha de la observación';
 
   @override
