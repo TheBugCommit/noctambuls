@@ -72,8 +72,6 @@ class ReviewContent extends StatelessWidget {
                   ReviewHeader(session: session),
                   const SizedBox(height: AppDimensions.xl),
 
-                  ReviewMeteoSection(session: session, isReadOnly: isReadOnly),
-
                   if (_needsListeningPoint) ...[
                     ListeningPointField(
                       controller: listeningPointController,
@@ -90,6 +88,8 @@ class ReviewContent extends StatelessWidget {
                     ),
                     const SizedBox(height: AppDimensions.md),
                   ],
+
+                  ReviewMeteoSection(session: session, isReadOnly: isReadOnly),
 
                   const Divider(height: AppDimensions.xxl),
 

@@ -17,7 +17,9 @@ class AppTextField extends StatelessWidget {
     this.maxLength,
     this.inputFormatters,
     this.validator,
+    this.errorText,
     this.onFieldSubmitted,
+    this.onFocusLost,
     this.maxLines = 1,
     this.minLines,
     super.key,
@@ -36,7 +38,9 @@ class AppTextField extends StatelessWidget {
   final int? maxLength;
   final List<TextInputFormatter>? inputFormatters;
   final String? Function(String?)? validator;
+  final String? errorText;
   final void Function(String)? onFieldSubmitted;
+  final void Function(String)? onFocusLost;
   final int? maxLines;
   final int? minLines;
 
@@ -45,7 +49,7 @@ class AppTextField extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
 
-    return TextFormField(
+    final field = TextFormField(
       controller: controller,
       enabled: enabled,
       obscureText: obscureText,
@@ -66,6 +70,7 @@ class AppTextField extends StatelessWidget {
       decoration: InputDecoration(
         labelText: label,
         hintText: hintText,
+        errorText: errorText,
         prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
         suffixIcon: suffixIcon,
         counterText: '',
@@ -99,6 +104,15 @@ class AppTextField extends StatelessWidget {
           ),
         ),
       ),
+    );
+
+    if (onFocusLost == null) return field;
+
+    return Focus(
+      onFocusChange: (hasFocus) {
+        if (!hasFocus) onFocusLost!(controller.text);
+      },
+      child: field,
     );
   }
 }
