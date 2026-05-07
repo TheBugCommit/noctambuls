@@ -8,11 +8,15 @@ class AuthRouterGuard {
     final isOnSignUp = state.matchedLocation == AppRoutes.signup;
     final isOnSplash = state.matchedLocation == AppRoutes.splash;
 
-    if (authState is AuthInitial || authState is AuthLoading) {
+    if (authState is AuthInitial) {
       return isOnSplash ? null : AppRoutes.splash;
     }
 
-    if (authState is Unauthenticated || authState is AuthError) {
+    if (authState is AuthLoading || authState is AuthError) {
+      return null;
+    }
+
+    if (authState is Unauthenticated) {
       if (isOnSignIn) return null;
       return AppRoutes.signin;
     }

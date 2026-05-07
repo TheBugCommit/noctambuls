@@ -153,6 +153,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       failure: (failure) {
         logger.failure(failure);
         emit(AuthError(failure: failure));
+        emit(currentState);
       },
     );
   }

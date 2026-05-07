@@ -18,8 +18,15 @@ import 'package:noctambuls/features/settings/presentation/utils/language_mapper.
 import 'package:noctambuls/features/settings/presentation/utils/theme_mapper.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
-class NoctambulsApp extends StatelessWidget {
+class NoctambulsApp extends StatefulWidget {
   const NoctambulsApp({super.key});
+
+  @override
+  State<NoctambulsApp> createState() => _NoctambulsAppState();
+}
+
+class _NoctambulsAppState extends State<NoctambulsApp> {
+  bool _hasInitializedSession = false;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +40,19 @@ class NoctambulsApp extends StatelessWidget {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is Authenticated) {
-          context.read<CatalogSyncBloc>().add(
-            const CatalogSyncEventRequest(showGlobalError: true),
-          );
-          context.read<ObservingSessionBloc>().add(WatchObservingSession());
-          context.read<ProfileBloc>().add(
-            ProfileLoadRequested(userId: state.user.id),
-          );
+          if (!_hasInitializedSession) {
+            _hasInitializedSession = true;
+
+            context.read<CatalogSyncBloc>().add(
+              const CatalogSyncEventRequest(showGlobalError: true),
+            );
+            context.read<ObservingSessionBloc>().add(WatchObservingSession());
+            context.read<ProfileBloc>().add(
+              ProfileLoadRequested(userId: state.user.id),
+            );
+          }
+        } else if (state is Unauthenticated) {
+          _hasInitializedSession = false;
         }
       },
       child: MaterialApp.router(
