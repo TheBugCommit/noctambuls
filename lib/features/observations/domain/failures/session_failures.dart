@@ -33,3 +33,17 @@ final class SessionNotFoundFailure extends SessionFailure {
   SessionNotFoundFailure withDebug(Object error, [StackTrace? stackTrace]) =>
       this;
 }
+
+final class ResumeSessionExpiredFailure extends SessionFailure {
+  const ResumeSessionExpiredFailure({
+    super.debugMessage = 'Cannot resume session after more than 1 hour',
+    super.statusCode = 409,
+    super.stackTrace,
+  });
+
+  @override
+  ResumeSessionExpiredFailure withDebug(
+    Object error, [
+    StackTrace? stackTrace,
+  ]) => this;
+}

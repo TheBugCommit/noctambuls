@@ -7,10 +7,14 @@ import 'package:noctambuls/features/observations/data/repositories/observation_r
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_observation_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/change_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/create_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/get_active_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/resume_observation_phase_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
@@ -51,6 +55,10 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => AddObservationUseCase(sl()))
     ..registerLazySingleton(() => UpdateObservationUseCase(sl()))
     ..registerLazySingleton(() => DeleteObservationUseCase(sl()))
+    ..registerLazySingleton(() => StopObservationPhaseUseCase(sl()))
+    ..registerLazySingleton(() => ResumeObservationPhaseUseCase(sl()))
+    ..registerLazySingleton(() => FinishAndLockSessionUseCase(sl()))
+    ..registerLazySingleton(() => ChangeObservationDateUseCase(sl()))
     // BLoC
     ..registerFactory(
       () => SessionLifecycleBloc(
@@ -58,6 +66,10 @@ void initObservationsFeature() {
         createSessionUseCase: sl(),
         updateSessionUseCase: sl(),
         deleteSessionUseCase: sl(),
+        stopObservationPhaseUseCase: sl(),
+        resumeObservationPhaseUseCase: sl(),
+        finishAndLockSessionUseCase: sl(),
+        changeObservationDateUseCase: sl(),
         logger: sl<IAppLogger>(),
       ),
     )

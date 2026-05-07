@@ -3,9 +3,8 @@ import 'package:noctambuls/features/observations/domain/entities/observation_ses
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
-
-import 'session_review_event.dart';
-import 'session_review_state.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_review_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_review_state.dart';
 
 class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
   SessionReviewBloc({
@@ -30,7 +29,6 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
 
     emit(SessionReviewEditing(session: currentSession, isSaving: true));
 
-    // 1. Apliquem els canvis localment
     final updatedSession = currentSession.copyWith(
       temperature: event.temperature ?? currentSession.temperature,
       wind: event.wind ?? currentSession.wind,
