@@ -11,6 +11,7 @@ import 'package:noctambuls/features/observations/domain/entities/observation_ses
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_observation_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
@@ -24,6 +25,9 @@ class MockAddObservationUseCase extends Mock implements AddObservationUseCase {}
 class MockDeleteObservationUseCase extends Mock
     implements DeleteObservationUseCase {}
 
+class MockUpdateObservationUseCase extends Mock
+    implements UpdateObservationUseCase {}
+
 class FakeObservationRecord extends Fake implements ObservationRecord {}
 
 class MockLogger extends Mock implements IAppLogger {}
@@ -31,6 +35,7 @@ class MockLogger extends Mock implements IAppLogger {}
 void main() {
   late MockWatchObservationsForSessionUseCase mockWatchObservations;
   late MockAddObservationUseCase mockAddObservation;
+  late MockUpdateObservationUseCase mockUpdateObservation;
   late MockDeleteObservationUseCase mockDeleteObservation;
   late MockLogger mockLogger;
 
@@ -64,6 +69,7 @@ void main() {
   setUp(() {
     mockWatchObservations = MockWatchObservationsForSessionUseCase();
     mockAddObservation = MockAddObservationUseCase();
+    mockUpdateObservation = MockUpdateObservationUseCase();
     mockDeleteObservation = MockDeleteObservationUseCase();
     mockLogger = MockLogger();
   });
@@ -72,6 +78,7 @@ void main() {
     sessionId: tSessionId,
     watchObservationsUseCase: mockWatchObservations,
     addObservationUseCase: mockAddObservation,
+    updateObservationUseCase: mockUpdateObservation,
     deleteObservationUseCase: mockDeleteObservation,
     logger: mockLogger,
   );

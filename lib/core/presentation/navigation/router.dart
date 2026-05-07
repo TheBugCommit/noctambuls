@@ -4,6 +4,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/share/share_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
 import 'package:noctambuls/core/presentation/navigation/auth_router_guard.dart';
 import 'package:noctambuls/core/presentation/navigation/go_router_refresh_stream.dart';
 import 'package:noctambuls/core/presentation/pages/main_navigation_screen.dart';
@@ -11,6 +14,8 @@ import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signup/sign_up_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/splash/splash_page.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
+import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
@@ -46,7 +51,12 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
     GoRoute(
       path: AppRoutes.signup,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const SignUpPage(),
+      builder: (context, state) {
+        return BlocProvider(
+          create: (context) => sl<UrlBloc>(),
+          child: const SignUpPage(),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.splash,
@@ -70,9 +80,29 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.guide,
-              builder: (context, state) => GuidePage(
-                blocBuilder: sl.call,
-              ),
+              builder: (context, state) {
+                final languageCode = Localizations.localeOf(
+                  context,
+                ).languageCode;
+
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create: (context) => sl<AudioBloc>(),
+                    ),
+                    BlocProvider(
+                      create: (context) => sl<UrlBloc>(),
+                    ),
+                    BlocProvider(
+                      create: (context) => sl<GuideBloc>()
+                        ..add(
+                          LoadBirds(languageCode: languageCode),
+                        ),
+                    ),
+                  ],
+                  child: const GuidePage(),
+                );
+              },
             ),
           ],
         ),
@@ -105,7 +135,15 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
     GoRoute(
       path: AppRoutes.settings,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const SettingsPage(),
+      builder: (context, state) {
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => sl<UrlBloc>()),
+            BlocProvider(create: (context) => sl<ShareBloc>()),
+          ],
+          child: const SettingsPage(),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.observing,

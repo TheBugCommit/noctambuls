@@ -23,26 +23,7 @@ import 'package:noctambuls/features/settings/presentation/utils/language_mapper.
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class GuidePage extends StatelessWidget {
-  const GuidePage({
-    required this.blocBuilder,
-    super.key,
-  });
-
-  final GuideBloc Function() blocBuilder;
-
-  @override
-  Widget build(BuildContext context) {
-    final languageCode = Localizations.localeOf(context).languageCode;
-
-    return BlocProvider(
-      create: (_) => blocBuilder()..add(LoadBirds(languageCode: languageCode)),
-      child: const _GuideView(),
-    );
-  }
-}
-
-class _GuideView extends StatelessWidget {
-  const _GuideView();
+  const GuidePage({super.key});
 
   Future<void> _showAudioWarningModal(
     BuildContext context,

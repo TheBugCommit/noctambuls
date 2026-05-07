@@ -8,14 +8,16 @@ import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
+import 'package:noctambuls/features/observations/domain/enums/temperature_range.dart';
+import 'package:noctambuls/features/observations/domain/enums/wind_level.dart';
 import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
 import 'package:noctambuls/features/observations/domain/usecases/create_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_state.dart';
 
 class MockWatchActiveSessionUseCase extends Mock
     implements WatchActiveSessionUseCase {}
@@ -79,7 +81,7 @@ void main() {
     mockLogger = MockLogger();
   });
 
-  SessionLifecycleBloc buildBloc() => SessionLifecycleBloc(
+  ObservingSessionBloc buildBloc() => ObservingSessionBloc(
     watchActiveSessionUseCase: mockWatchActiveSession,
     createSessionUseCase: mockCreateSession,
     updateSessionUseCase: mockUpdateSession,
@@ -89,7 +91,7 @@ void main() {
 
   // Idle state
   test("l'estat inicial hauria de ser SessionLifecycleIdle", () {
-    expect(buildBloc().state, const SessionLifecycleIdle());
+    expect(buildBloc().state, const ObservingSessionIdle());
   });
 
   // Watch session
@@ -99,7 +101,7 @@ void main() {
     setUp(() => sessionStream = StreamController<ObservationSession?>());
     tearDown(() => sessionStream.close());
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre SessionObserving quan l'stream emet una sessió"
       ' en observació',
       build: () {
@@ -109,13 +111,13 @@ void main() {
         return buildBloc();
       },
       act: (bloc) {
-        bloc.add(WatchSession());
+        bloc.add(WatchObservingSession());
         sessionStream.add(tObservingSession);
       },
-      expect: () => [SessionObserving(session: tObservingSession)],
+      expect: () => [ObservingSessionActive(session: tObservingSession)],
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre SessionReviewing quan l'stream emet una sessió"
       ' en revisió',
       build: () {
@@ -125,13 +127,13 @@ void main() {
         return buildBloc();
       },
       act: (bloc) {
-        bloc.add(WatchSession());
+        bloc.add(WatchObservingSession());
         sessionStream.add(tReviewingSession);
       },
       expect: () => [SessionReviewing(session: tReviewingSession)],
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre SessionFinished quan l'stream emet una sessió tancada",
       build: () {
         when(() => mockWatchActiveSession()).thenAnswer(
@@ -140,13 +142,13 @@ void main() {
         return buildBloc();
       },
       act: (bloc) {
-        bloc.add(WatchSession());
+        bloc.add(WatchObservingSession());
         sessionStream.add(tFinishedSession);
       },
       expect: () => [SessionFinished(session: tFinishedSession)],
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre SessionLifecycleIdle quan l'stream emet null",
       build: () {
         when(() => mockWatchActiveSession()).thenAnswer(
@@ -154,24 +156,24 @@ void main() {
         );
         return buildBloc();
       },
-      seed: () => SessionObserving(session: tObservingSession),
+      seed: () => ObservingSessionActive(session: tObservingSession),
       act: (bloc) {
-        bloc.add(WatchSession());
+        bloc.add(WatchObservingSession());
         sessionStream.add(null);
       },
-      expect: () => [const SessionLifecycleIdle()],
+      expect: () => [const ObservingSessionIdle()],
     );
   });
 
   // ─── StartNewSession ──────────────────────────────────────────────────────────
 
   group('StartNewSession', () {
-    const tEvent = StartNewSession(
+    const tEvent = StartObservingSession(
       sessionType: SessionType.census,
       annotatorId: 'user-1',
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre Loading i cridar createSession amb l'entitat construïda",
       build: () {
         when(
@@ -180,7 +182,7 @@ void main() {
         return buildBloc();
       },
       act: (bloc) => bloc.add(tEvent),
-      expect: () => [const SessionLifecycleLoading()],
+      expect: () => [const ObservingSessionLoading()],
       verify: (_) {
         final captured = verify(() => mockCreateSession(captureAny())).captured;
         final session = captured.first as ObservationSession;
@@ -191,16 +193,16 @@ void main() {
       },
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'ignorar l'event si ja hi ha una sessió activa",
       build: buildBloc,
-      seed: () => SessionObserving(session: tObservingSession),
+      seed: () => ObservingSessionActive(session: tObservingSession),
       act: (bloc) => bloc.add(tEvent),
-      expect: () => <SessionLifecycleState>[],
+      expect: () => <ObservingSessionState>[],
       verify: (_) => verifyNever(() => mockCreateSession(any())),
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre Error si ja existeix sessió activa a la BD",
       build: () {
         when(() => mockCreateSession(any())).thenAnswer(
@@ -210,14 +212,14 @@ void main() {
       },
       act: (bloc) => bloc.add(tEvent),
       expect: () => [
-        const SessionLifecycleLoading(),
-        const SessionLifecycleError(
+        const ObservingSessionLoading(),
+        const ObservingSessionError(
           failure: ActiveSessionAlreadyExistsFailure(),
         ),
       ],
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre Error(database) si createSession falla",
       build: () {
         when(() => mockCreateSession(any())).thenAnswer(
@@ -227,8 +229,8 @@ void main() {
       },
       act: (bloc) => bloc.add(tEvent),
       expect: () => [
-        const SessionLifecycleLoading(),
-        const SessionLifecycleError(failure: DatabaseFailure()),
+        const ObservingSessionLoading(),
+        const ObservingSessionError(failure: DatabaseFailure()),
       ],
     );
   });
@@ -236,27 +238,29 @@ void main() {
   // ─── UpdateSessionProperties ──────────────────────────────────────────────────
 
   group('UpdateSessionProperties', () {
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
-      'hauria de cridar updateSession amb les notes actualitzades',
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
+      'hauria de cridar updateSession amb la temperatura actualitzada',
       build: () {
         when(
           () => mockUpdateSession(any()),
         ).thenAnswer((_) async => const Ok(Unit.instance));
         return buildBloc();
       },
-      seed: () => SessionObserving(session: tObservingSession),
+      seed: () => ObservingSessionActive(session: tObservingSession),
       act: (bloc) => bloc.add(
-        const UpdateSessionProperties(weatherNotes: 'vent suau, assolellat'),
+        const UpdateObservingSessionLocation(
+          temperature: TemperatureRange.tenToTwenty,
+        ),
       ),
-      expect: () => <SessionLifecycleState>[],
+      expect: () => <ObservingSessionState>[],
       verify: (_) {
         final captured = verify(() => mockUpdateSession(captureAny())).captured;
         final updated = captured.first as ObservationSession;
-        expect(updated.weatherNotes, 'vent suau, assolellat');
+        expect(updated.temperature, TemperatureRange.tenToTwenty);
       },
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       'hauria de cridar updateSession amb les coordenades actualitzades',
       build: () {
         when(
@@ -264,11 +268,14 @@ void main() {
         ).thenAnswer((_) async => const Ok(Unit.instance));
         return buildBloc();
       },
-      seed: () => SessionObserving(session: tObservingSession),
+      seed: () => ObservingSessionActive(session: tObservingSession),
       act: (bloc) => bloc.add(
-        const UpdateSessionProperties(latitude: 41.3874, longitude: 2.1686),
+        const UpdateObservingSessionLocation(
+          latitude: 41.3874,
+          longitude: 2.1686,
+        ),
       ),
-      expect: () => <SessionLifecycleState>[],
+      expect: () => <ObservingSessionState>[],
       verify: (_) {
         final captured = verify(() => mockUpdateSession(captureAny())).captured;
         final updated = captured.first as ObservationSession;
@@ -277,13 +284,13 @@ void main() {
       },
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'ignorar l'event si no hi ha sessió activa",
       build: buildBloc,
       act: (bloc) => bloc.add(
-        const UpdateSessionProperties(weatherNotes: 'notes'),
+        const UpdateObservingSessionLocation(wind: WindLevel.breeze),
       ),
-      expect: () => <SessionLifecycleState>[],
+      expect: () => <ObservingSessionState>[],
       verify: (_) => verifyNever(() => mockUpdateSession(any())),
     );
   });
@@ -291,7 +298,7 @@ void main() {
   // ─── StopObservationPhase ─────────────────────────────────────────────────────
 
   group('StopObservationPhase', () {
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria de cridar updateSession quan l'estat és SessionObserving",
       build: () {
         when(
@@ -299,9 +306,9 @@ void main() {
         ).thenAnswer((_) async => const Ok(Unit.instance));
         return buildBloc();
       },
-      seed: () => SessionObserving(session: tObservingSession),
-      act: (bloc) => bloc.add(StopObservationPhase()),
-      expect: () => <SessionLifecycleState>[],
+      seed: () => ObservingSessionActive(session: tObservingSession),
+      act: (bloc) => bloc.add(StopObservingSession()),
+      expect: () => <ObservingSessionState>[],
       verify: (_) {
         final captured = verify(() => mockUpdateSession(captureAny())).captured;
         final updated = captured.first as ObservationSession;
@@ -309,16 +316,16 @@ void main() {
       },
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'ignorar l'event si l'estat no és SessionObserving",
       build: buildBloc,
       seed: () => SessionReviewing(session: tReviewingSession),
-      act: (bloc) => bloc.add(StopObservationPhase()),
-      expect: () => <SessionLifecycleState>[],
+      act: (bloc) => bloc.add(StopObservingSession()),
+      expect: () => <ObservingSessionState>[],
       verify: (_) => verifyNever(() => mockUpdateSession(any())),
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre Error(database) si updateSession falla",
       build: () {
         when(() => mockUpdateSession(any())).thenAnswer(
@@ -326,10 +333,10 @@ void main() {
         );
         return buildBloc();
       },
-      seed: () => SessionObserving(session: tObservingSession),
-      act: (bloc) => bloc.add(StopObservationPhase()),
+      seed: () => ObservingSessionActive(session: tObservingSession),
+      act: (bloc) => bloc.add(StopObservingSession()),
       expect: () => [
-        const SessionLifecycleError(failure: DatabaseFailure()),
+        const ObservingSessionError(failure: DatabaseFailure()),
       ],
     );
   });
@@ -337,7 +344,7 @@ void main() {
   // ─── FinishAndLockSession ─────────────────────────────────────────────────────
 
   group('FinishAndLockSession', () {
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       'hauria de cridar updateSession amb isLocked=true des de SessionReviewing',
       build: () {
         when(
@@ -347,7 +354,7 @@ void main() {
       },
       seed: () => SessionReviewing(session: tReviewingSession),
       act: (bloc) => bloc.add(FinishAndLockSession()),
-      expect: () => <SessionLifecycleState>[],
+      expect: () => <ObservingSessionState>[],
       verify: (_) {
         final captured = verify(() => mockUpdateSession(captureAny())).captured;
         final updated = captured.first as ObservationSession;
@@ -355,12 +362,12 @@ void main() {
       },
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'ignorar l'event si l'estat no és SessionReviewing",
       build: buildBloc,
-      seed: () => SessionObserving(session: tObservingSession),
+      seed: () => ObservingSessionActive(session: tObservingSession),
       act: (bloc) => bloc.add(FinishAndLockSession()),
-      expect: () => <SessionLifecycleState>[],
+      expect: () => <ObservingSessionState>[],
       verify: (_) => verifyNever(() => mockUpdateSession(any())),
     );
   });
@@ -368,7 +375,7 @@ void main() {
   // ─── DeleteActiveSession ──────────────────────────────────────────────────────
 
   group('DeleteActiveSession', () {
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre Loading i cridar deleteSession quan hi ha sessió activa",
       build: () {
         when(
@@ -376,18 +383,18 @@ void main() {
         ).thenAnswer((_) async => const Ok(Unit.instance));
         return buildBloc();
       },
-      seed: () => SessionObserving(session: tObservingSession),
-      act: (bloc) => bloc.add(DeleteActiveSession()),
-      expect: () => [const SessionLifecycleLoading()],
+      seed: () => ObservingSessionActive(session: tObservingSession),
+      act: (bloc) => bloc.add(DeleteObservingSession()),
+      expect: () => [const ObservingSessionLoading()],
       verify: (_) =>
           verify(() => mockDeleteSession(tObservingSession.id)).called(1),
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'ignorar l'event si no hi ha sessió activa",
       build: buildBloc,
-      act: (bloc) => bloc.add(DeleteActiveSession()),
-      expect: () => <SessionLifecycleState>[],
+      act: (bloc) => bloc.add(DeleteObservingSession()),
+      expect: () => <ObservingSessionState>[],
       verify: (_) => verifyNever(() => mockDeleteSession(any())),
     );
   });
@@ -395,19 +402,19 @@ void main() {
   // ─── DismissError ─────────────────────────────────────────────────────────────
 
   group('DismissError', () {
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'emetre Idle quan l'estat és SessionLifecycleError",
       build: buildBloc,
-      seed: () => const SessionLifecycleError(failure: UnknownFailure()),
-      act: (bloc) => bloc.add(DismissError()),
-      expect: () => [const SessionLifecycleIdle()],
+      seed: () => const ObservingSessionError(failure: UnknownFailure()),
+      act: (bloc) => bloc.add(DismissObservingError()),
+      expect: () => [const ObservingSessionIdle()],
     );
 
-    blocTest<SessionLifecycleBloc, SessionLifecycleState>(
+    blocTest<ObservingSessionBloc, ObservingSessionState>(
       "hauria d'ignorar l'event si l'estat no és Error",
       build: buildBloc,
-      act: (bloc) => bloc.add(DismissError()),
-      expect: () => <SessionLifecycleState>[],
+      act: (bloc) => bloc.add(DismissObservingError()),
+      expect: () => <ObservingSessionState>[],
     );
   });
 }
