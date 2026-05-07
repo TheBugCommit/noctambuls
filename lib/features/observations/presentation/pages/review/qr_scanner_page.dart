@@ -70,6 +70,7 @@ class _QrScannerPageState extends State<QrScannerPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(l10n.invalidQrCode),
+          behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
         ),
       );

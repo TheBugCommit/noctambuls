@@ -54,7 +54,10 @@ class HomePage extends StatelessWidget {
               _ => l10n.errorUnknown,
             };
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(message)),
+              SnackBar(
+                content: Text(message),
+                behavior: SnackBarBehavior.floating,
+              ),
             );
             context.read<ObservingSessionBloc>().add(DismissObservingError());
           case ObservingSessionActive():

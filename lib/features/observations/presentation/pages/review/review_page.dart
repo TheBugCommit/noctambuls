@@ -99,7 +99,10 @@ class _ReviewPageState extends State<ReviewPage> {
             case SessionReviewError():
               final l10n = AppLocalizations.of(context)!;
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.reviewErrorSaving)),
+                SnackBar(
+                  content: Text(l10n.reviewErrorSaving),
+                  behavior: SnackBarBehavior.floating,
+                ),
               );
             default:
           }

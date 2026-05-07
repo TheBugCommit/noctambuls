@@ -37,7 +37,10 @@ class ProfilePage extends StatelessWidget {
             listener: (context, state) {
               if (state is ProfileUpdateSuccess) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(l10n.profileEditSuccess)),
+                  SnackBar(
+                    content: Text(l10n.profileEditSuccess),
+                    behavior: SnackBarBehavior.floating,
+                  ),
                 );
               } else if (state is ProfileError) {
                 ScaffoldMessenger.of(context).showSnackBar(

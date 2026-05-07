@@ -114,6 +114,7 @@ class GuidePage extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(AppLocalizations.of(context)!.cantOpenLink),
+                  behavior: SnackBarBehavior.floating,
                 ),
               );
             }
@@ -126,6 +127,7 @@ class GuidePage extends StatelessWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(AppLocalizations.of(context)!.cantPlayAudio),
+                  behavior: SnackBarBehavior.floating,
                 ),
               );
             }

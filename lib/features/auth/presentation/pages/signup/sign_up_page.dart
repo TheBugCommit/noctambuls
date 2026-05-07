@@ -118,6 +118,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(message),
+                  behavior: SnackBarBehavior.floating,
                   backgroundColor: theme.colorScheme.error,
                 ),
               );

@@ -33,7 +33,10 @@ class SettingsPage extends StatelessWidget {
           listener: (context, state) {
             if (state is AuthError && state.failure is DeleteAccountFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.settingsDeleteAccountError)),
+                SnackBar(
+                  content: Text(l10n.settingsDeleteAccountError),
+                  behavior: SnackBarBehavior.floating,
+                ),
               );
             }
           },
@@ -42,7 +45,10 @@ class SettingsPage extends StatelessWidget {
           listener: (context, state) {
             if (state is UrlActionFailure) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(l10n.cantOpenLink)),
+                SnackBar(
+                  content: Text(l10n.cantOpenLink),
+                  behavior: SnackBarBehavior.floating,
+                ),
               );
             }
           },
