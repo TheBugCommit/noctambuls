@@ -6,7 +6,6 @@ import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/bottom_nav_bar.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
@@ -15,6 +14,7 @@ import 'package:noctambuls/features/observations/presentation/pages/observation_
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/empty_observations.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/observation_card.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/widgets/listening_point_field.dart';
+import 'package:noctambuls/features/observations/presentation/pages/review/widgets/participant_section.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/widgets/review_header.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/widgets/review_meteo_section.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
@@ -36,10 +36,6 @@ class ReviewContent extends StatelessWidget {
   final TextEditingController listeningPointController;
   final void Function(BuildContext) onDelete;
   final void Function(BuildContext) onFinalize;
-
-  bool get _needsListeningPoint =>
-      session.sessionType == SessionType.census ||
-      session.sessionType == SessionType.station;
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +66,10 @@ class ReviewContent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ReviewHeader(session: session),
-                  const SizedBox(height: AppDimensions.xl),
 
-                  if (_needsListeningPoint) ...[
+                  const Divider(height: AppDimensions.xxl),
+
+                  if (session.needsListeningPoint) ...[
                     ListeningPointField(
                       controller: listeningPointController,
                       isReadOnly: isReadOnly,
@@ -86,11 +83,26 @@ class ReviewContent extends StatelessWidget {
                         );
                       },
                     ),
-                    const SizedBox(height: AppDimensions.md),
+                    const Divider(height: AppDimensions.xxl),
                   ],
 
                   ReviewMeteoSection(session: session, isReadOnly: isReadOnly),
 
+                  const Divider(height: AppDimensions.xxl),
+                  ParticipantsSection(
+                    participants: session.participants,
+                    isReadOnly: isReadOnly,
+                    onAddParticipant: (code) {
+                      context.read<SessionReviewBloc>().add(
+                        ReviewAddParticipant(code),
+                      );
+                    },
+                    onRemoveParticipant: (code) {
+                      context.read<SessionReviewBloc>().add(
+                        ReviewRemoveParticipant(code),
+                      );
+                    },
+                  ),
                   const Divider(height: AppDimensions.xxl),
 
                   Row(

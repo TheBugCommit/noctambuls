@@ -680,4 +680,54 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get reviewErrorSaving => 'Error guardando la revisión';
+
+  @override
+  String get participantsTitle => 'Participantes';
+
+  @override
+  String get addParticipant => 'Añadir';
+
+  @override
+  String get noParticipantsAdded => 'No hay participantes añadidos.';
+
+  @override
+  String get participantAlreadyAdded => 'Este participante ya está añadido.';
+
+  @override
+  String get scannerTitle => 'Escanear Participante';
+
+  @override
+  String get invalidQrCode => 'Código QR no válido para esta app.';
+
+  @override
+  String get enterCodeManually => 'Introducir código manualmente';
+
+  @override
+  String get enterCodeTitle => 'Introducir Código';
+
+  @override
+  String get codeHint => '#OR-ABC-1234';
+
+  @override
+  String get emptyCodeError => 'Introduce un código.';
+
+  @override
+  String get invalidCodeFormat => 'Formato inválido. Ej: #OR-ABCD-1234';
+
+  @override
+  String get add => 'Añadir';
+
+  @override
+  String get scannerHelperText =>
+      'Escanea el QR de ornitólogo del perfil del participante';
+
+  @override
+  String get scannerHelpTitle => '¿Cómo añadir un participante?';
+
+  @override
+  String get scannerHelpMessage =>
+      'Pide al otro usuario que abra su perfil para mostrar su código QR y apunta con la cámara.\n\nSi la cámara no funciona o no detecta el código, puedes introducirlo manualmente pulsando el botón inferior.';
+
+  @override
+  String get understood => 'Entendido';
 }

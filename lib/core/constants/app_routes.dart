@@ -18,5 +18,6 @@ class AppRoutes {
   static const String observing = '/observing';
   static const String observationForm = '/observing/form';
   static const String review = '/review';
+  static const String qrScanner = '/review/qr-scanner';
   static const String profileEdit = '/profile/edit';
 }

@@ -50,6 +50,24 @@ class ReviewUpdateProperties extends SessionReviewEvent {
   ];
 }
 
+class ReviewAddParticipant extends SessionReviewEvent {
+  const ReviewAddParticipant(this.code);
+
+  final String code;
+
+  @override
+  List<Object?> get props => [code];
+}
+
+class ReviewRemoveParticipant extends SessionReviewEvent {
+  const ReviewRemoveParticipant(this.code);
+
+  final String code;
+
+  @override
+  List<Object?> get props => [code];
+}
+
 class ReviewFinalizeSession extends SessionReviewEvent {}
 
 class ReviewDeleteSession extends SessionReviewEvent {}

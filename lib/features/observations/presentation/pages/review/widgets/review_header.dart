@@ -30,19 +30,20 @@ class ReviewHeader extends StatelessWidget {
           ),
           const SizedBox(width: AppDimensions.md),
 
-          TimeText.dateTime(
-            session.startTime,
-            formatStyle: DateTimeFormatStyle.timeOnly,
-            style: timeStyle,
-          ),
+          if (!session.isIncidental) ...[
+            TimeText.dateTime(
+              session.startTime,
+              formatStyle: DateTimeFormatStyle.timeOnly,
+              style: timeStyle,
+            ),
+            Text(' – ', style: timeStyle),
 
-          Text(' – ', style: timeStyle),
-
-          TimeText.dateTime(
-            session.endTime,
-            formatStyle: DateTimeFormatStyle.timeOnly,
-            style: timeStyle,
-          ),
+            TimeText.dateTime(
+              session.endTime,
+              formatStyle: DateTimeFormatStyle.timeOnly,
+              style: timeStyle,
+            ),
+          ],
         ],
       ],
     );

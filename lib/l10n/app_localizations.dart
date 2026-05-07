@@ -1363,6 +1363,102 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Error guardant la revisió'**
   String get reviewErrorSaving;
+
+  /// No description provided for @participantsTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Participants'**
+  String get participantsTitle;
+
+  /// No description provided for @addParticipant.
+  ///
+  /// In ca, this message translates to:
+  /// **'Afegir'**
+  String get addParticipant;
+
+  /// No description provided for @noParticipantsAdded.
+  ///
+  /// In ca, this message translates to:
+  /// **'No hi ha participants afegits.'**
+  String get noParticipantsAdded;
+
+  /// No description provided for @participantAlreadyAdded.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aquest participant ja està afegit.'**
+  String get participantAlreadyAdded;
+
+  /// No description provided for @scannerTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Escanejar Participant'**
+  String get scannerTitle;
+
+  /// No description provided for @invalidQrCode.
+  ///
+  /// In ca, this message translates to:
+  /// **'Codi QR no vàlid per aquesta app.'**
+  String get invalidQrCode;
+
+  /// No description provided for @enterCodeManually.
+  ///
+  /// In ca, this message translates to:
+  /// **'Introduir codi manualment'**
+  String get enterCodeManually;
+
+  /// No description provided for @enterCodeTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Introduir Codi'**
+  String get enterCodeTitle;
+
+  /// No description provided for @codeHint.
+  ///
+  /// In ca, this message translates to:
+  /// **'#OR-ABC-1234'**
+  String get codeHint;
+
+  /// No description provided for @emptyCodeError.
+  ///
+  /// In ca, this message translates to:
+  /// **'Introdueix un codi.'**
+  String get emptyCodeError;
+
+  /// No description provided for @invalidCodeFormat.
+  ///
+  /// In ca, this message translates to:
+  /// **'Format invàlid. Ex: #OR-ABCD-1234'**
+  String get invalidCodeFormat;
+
+  /// No description provided for @add.
+  ///
+  /// In ca, this message translates to:
+  /// **'Afegir'**
+  String get add;
+
+  /// No description provided for @scannerHelperText.
+  ///
+  /// In ca, this message translates to:
+  /// **'Escaneja el QR d\'ornitòleg del perfil del participant'**
+  String get scannerHelperText;
+
+  /// No description provided for @scannerHelpTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Com afegir un participant?'**
+  String get scannerHelpTitle;
+
+  /// No description provided for @scannerHelpMessage.
+  ///
+  /// In ca, this message translates to:
+  /// **'Demana a l\'altre usuari que obri el seu perfil per mostrar el seu codi QR i apunta-hi amb la càmera. Si la càmera no funciona o no detecta el codi, pots introduir-lo manualment prement el botó inferior.'**
+  String get scannerHelpMessage;
+
+  /// No description provided for @understood.
+  ///
+  /// In ca, this message translates to:
+  /// **'Entesos'**
+  String get understood;
 }
 
 class _AppLocalizationsDelegate

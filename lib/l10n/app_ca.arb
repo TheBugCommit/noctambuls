@@ -270,6 +270,22 @@
     "confirmFinalizeConfirm": "Finalitzar",
     "requiredFieldError": "Camp obligatori",
 
-    "reviewErrorSaving": "Error guardant la revisió"
+    "reviewErrorSaving": "Error guardant la revisió",
 
+    "participantsTitle": "Participants",
+    "addParticipant": "Afegir",
+    "noParticipantsAdded": "No hi ha participants afegits.",
+    "participantAlreadyAdded": "Aquest participant ja està afegit.",
+    "scannerTitle": "Escanejar Participant",
+    "invalidQrCode": "Codi QR no vàlid per aquesta app.",
+    "enterCodeManually": "Introduir codi manualment",
+    "enterCodeTitle": "Introduir Codi",
+    "codeHint": "#OR-ABC-1234",
+    "emptyCodeError": "Introdueix un codi.",
+    "invalidCodeFormat": "Format invàlid. Ex: #OR-ABCD-1234",
+    "add": "Afegir",
+    "scannerHelperText": "Escaneja el QR d'ornitòleg del perfil del participant",
+    "scannerHelpTitle": "Com afegir un participant?",
+    "scannerHelpMessage": "Demana a l'altre usuari que obri el seu perfil per mostrar el seu codi QR i apunta-hi amb la càmera. Si la càmera no funciona o no detecta el codi, pots introduir-lo manualment prement el botó inferior.",
+    "understood": "Entesos"
 }

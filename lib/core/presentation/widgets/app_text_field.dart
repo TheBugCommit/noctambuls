@@ -22,6 +22,7 @@ class AppTextField extends StatelessWidget {
     this.onFocusLost,
     this.maxLines = 1,
     this.minLines,
+    this.autofocus = false,
     super.key,
   });
 
@@ -43,6 +44,7 @@ class AppTextField extends StatelessWidget {
   final void Function(String)? onFocusLost;
   final int? maxLines;
   final int? minLines;
+  final bool autofocus;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class AppTextField extends StatelessWidget {
     final field = TextFormField(
       controller: controller,
       enabled: enabled,
+      autofocus: autofocus,
       obscureText: obscureText,
       keyboardType: keyboardType,
       textInputAction: textInputAction,

@@ -25,6 +25,7 @@ import 'package:noctambuls/features/observations/presentation/pages/home/home_pa
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/observing_page.dart';
+import 'package:noctambuls/features/observations/presentation/pages/review/qr_scanner_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/review_page.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:noctambuls/features/profile/presentation/pages/edit_profile/edit_profile_page.dart';
@@ -188,6 +189,11 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           child: ReviewPage(session: sessionToReview),
         );
       },
+    ),
+    GoRoute(
+      path: AppRoutes.qrScanner,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => const QrScannerPage(),
     ),
     GoRoute(
       path: AppRoutes.profileEdit,

@@ -41,6 +41,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
     double? altitudeAccuracy,
     DateTime? positionTimestamp,
     LocationErrorType? locationError,
+    @Default([]) List<String> participants,
   }) = _ObservationSessionModel;
 
   factory ObservationSessionModel.fromEntity(ObservationSession entity) {
@@ -64,6 +65,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
       altitudeAccuracy: entity.location?.altitudeAccuracy,
       positionTimestamp: entity.location?.timestamp,
       locationError: entity.locationError,
+      participants: entity.participants,
       isLocked: entity.isLocked,
       syncStatus: entity.syncStatus,
       createdAt: entity.createdAt,
@@ -72,7 +74,10 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
     );
   }
 
-  factory ObservationSessionModel.fromData(SessionEntityData data) {
+  factory ObservationSessionModel.fromData(
+    SessionEntityData data, {
+    List<String> participants = const [],
+  }) {
     return ObservationSessionModel(
       id: data.id,
       annotatorId: data.annotatorId,
@@ -93,6 +98,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
       altitudeAccuracy: data.altitudeAccuracy,
       positionTimestamp: data.positionTimestamp,
       locationError: data.locationError,
+      participants: participants,
       isLocked: data.isLocked,
       syncStatus: data.syncStatus,
       createdAt: data.createdAt,
@@ -136,6 +142,7 @@ extension ObservationSessionModelX on ObservationSessionModel {
       listeningPoint: listeningPoint,
       location: geoPosition,
       locationError: locationError,
+      participants: participants,
       isLocked: isLocked,
       syncStatus: syncStatus,
       createdAt: createdAt,

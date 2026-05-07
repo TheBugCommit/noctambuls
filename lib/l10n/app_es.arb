@@ -265,6 +265,23 @@
     "confirmFinalizeConfirm": "Finalizar",
     "requiredFieldError": "Campo obligatorio",
 
-    "reviewErrorSaving": "Error guardando la revisión"
+    "reviewErrorSaving": "Error guardando la revisión",
+
+    "participantsTitle": "Participantes",
+    "addParticipant": "Añadir",
+    "noParticipantsAdded": "No hay participantes añadidos.",
+    "participantAlreadyAdded": "Este participante ya está añadido.",
+    "scannerTitle": "Escanear Participante",
+    "invalidQrCode": "Código QR no válido para esta app.",
+    "enterCodeManually": "Introducir código manualmente",
+    "enterCodeTitle": "Introducir Código",
+    "codeHint": "#OR-ABC-1234",
+    "emptyCodeError": "Introduce un código.",
+    "invalidCodeFormat": "Formato inválido. Ej: #OR-ABCD-1234",
+    "add": "Añadir",
+    "scannerHelperText": "Escanea el QR de ornitólogo del perfil del participante",
+    "scannerHelpTitle": "¿Cómo añadir un participante?",
+    "scannerHelpMessage": "Pide al otro usuario que abra su perfil para mostrar su código QR y apunta con la cámara.\n\nSi la cámara no funciona o no detecta el código, puedes introducirlo manualmente pulsando el botón inferior.",
+    "understood": "Entendido"
 
 }

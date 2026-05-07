@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/constants/app_deeplinks.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/presentation/widgets/app_bottom_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
@@ -67,7 +68,7 @@ class _QrBottomSheetContent extends StatelessWidget {
             ),
           ),
           child: QrImageView(
-            data: code,
+            data: AppDeepLinks.buildParticipantUri(code),
             size: AppDimensions.xxl * 4,
           ),
         ),

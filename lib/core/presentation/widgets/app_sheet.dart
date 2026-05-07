@@ -10,13 +10,16 @@ class AppSheet {
     required BuildContext context,
     required Widget child,
     bool isDismissible = true,
+    bool showDragHandle = true,
+    BoxConstraints? constraints,
   }) {
     return showModalBottomSheet<T>(
       context: context,
       isScrollControlled: true,
       isDismissible: isDismissible,
-      showDragHandle: true,
+      showDragHandle: showDragHandle,
       useSafeArea: true,
+      constraints: constraints,
       builder: (context) => child,
     );
   }

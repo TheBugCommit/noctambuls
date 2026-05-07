@@ -15,14 +15,21 @@ import 'package:noctambuls/features/observations/domain/enums/wind_level.dart';
 
 part 'user_database.g.dart';
 
-@DriftDatabase(tables: [SessionsTable, ObservationsTable, UserProfileTable])
+@DriftDatabase(
+  tables: [
+    SessionsTable,
+    ObservationsTable,
+    UserProfileTable,
+    SessionParticipantsTable,
+  ],
+)
 class UserDatabase extends _$UserDatabase {
   UserDatabase(super.e);
 
   UserDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -31,6 +38,9 @@ class UserDatabase extends _$UserDatabase {
       if (from < 4) {
         await m.deleteTable('sessions_table');
         await m.createTable(sessionsTable);
+      }
+      if (from < 5) {
+        await m.createTable(sessionParticipantsTable);
       }
     },
   );

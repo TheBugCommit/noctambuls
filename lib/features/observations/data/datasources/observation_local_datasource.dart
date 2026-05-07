@@ -39,12 +39,55 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
 
   @override
   Future<void> createSession(ObservationSessionModel session) async {
-    await db.into(db.sessionsTable).insert(_sessionCompanion(session));
+    await db.transaction(() async {
+      await db.into(db.sessionsTable).insert(_sessionCompanion(session));
+      final uniqueParticipants = session.participants.toSet();
+      if (uniqueParticipants.isNotEmpty) {
+        await db.batch((batch) {
+          batch.insertAll(
+            db.sessionParticipantsTable,
+            uniqueParticipants.map(
+              (code) => SessionParticipantsTableCompanion.insert(
+                sessionId: session.id,
+                ornithologistCode: code,
+              ),
+            ),
+            mode: InsertMode.insertOrIgnore,
+          );
+        });
+      }
+    });
   }
 
   @override
   Future<void> updateSession(ObservationSessionModel session) async {
-    await db.update(db.sessionsTable).replace(_sessionCompanion(session));
+    await db.transaction(() async {
+      await db
+          .update(db.sessionsTable)
+          .replace(
+            _sessionCompanion(session),
+          );
+
+      await (db.delete(
+        db.sessionParticipantsTable,
+      )..where((t) => t.sessionId.equals(session.id))).go();
+
+      final uniqueParticipants = session.participants.toSet();
+      if (uniqueParticipants.isNotEmpty) {
+        await db.batch((batch) {
+          batch.insertAll(
+            db.sessionParticipantsTable,
+            uniqueParticipants.map(
+              (code) => SessionParticipantsTableCompanion.insert(
+                sessionId: session.id,
+                ornithologistCode: code,
+              ),
+            ),
+            mode: InsertMode.insertOrIgnore,
+          );
+        });
+      }
+    });
   }
 
   @override
@@ -63,8 +106,18 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
   Future<ObservationSessionModel?> getSessionById(String id) async {
     final query = db.select(db.sessionsTable)
       ..where((tbl) => tbl.id.equals(id));
-    final result = await query.getSingleOrNull();
-    return result != null ? ObservationSessionModel.fromData(result) : null;
+    final sessionData = await query.getSingleOrNull();
+
+    if (sessionData == null) return null;
+
+    final participantsData = await (db.select(
+      db.sessionParticipantsTable,
+    )..where((t) => t.sessionId.equals(id))).get();
+
+    return ObservationSessionModel.fromData(
+      sessionData,
+      participants: participantsData.map((p) => p.ornithologistCode).toList(),
+    );
   }
 
   @override
@@ -73,9 +126,31 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       ..where((tbl) => tbl.isDeleted.equals(false))
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
 
-    return query.watch().map(
-      (rows) => rows.map(ObservationSessionModel.fromData).toList(),
-    );
+    return query.watch().asyncMap((sessions) async {
+      if (sessions.isEmpty) return [];
+
+      final sessionIds = sessions.map((s) => s.id).toList();
+
+      final participantsData = await (db.select(
+        db.sessionParticipantsTable,
+      )..where((t) => t.sessionId.isIn(sessionIds))).get();
+
+      final participantsMap = <String, List<String>>{};
+      for (final p in participantsData) {
+        participantsMap
+            .putIfAbsent(p.sessionId, () => [])
+            .add(p.ornithologistCode);
+      }
+
+      return sessions
+          .map(
+            (s) => ObservationSessionModel.fromData(
+              s,
+              participants: participantsMap[s.id] ?? [],
+            ),
+          )
+          .toList();
+    });
   }
 
   @override
@@ -89,8 +164,17 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       )
       ..limit(1);
 
-    final result = await query.getSingleOrNull();
-    return result != null ? ObservationSessionModel.fromData(result) : null;
+    final sessionData = await query.getSingleOrNull();
+    if (sessionData == null) return null;
+
+    final participantsData = await (db.select(
+      db.sessionParticipantsTable,
+    )..where((t) => t.sessionId.equals(sessionData.id))).get();
+
+    return ObservationSessionModel.fromData(
+      sessionData,
+      participants: participantsData.map((p) => p.ornithologistCode).toList(),
+    );
   }
 
   @override
@@ -104,9 +188,18 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       )
       ..limit(1);
 
-    return query.watchSingleOrNull().map(
-      (row) => row != null ? ObservationSessionModel.fromData(row) : null,
-    );
+    return query.watchSingleOrNull().asyncMap((sessionData) async {
+      if (sessionData == null) return null;
+
+      final participantsData = await (db.select(
+        db.sessionParticipantsTable,
+      )..where((t) => t.sessionId.equals(sessionData.id))).get();
+
+      return ObservationSessionModel.fromData(
+        sessionData,
+        participants: participantsData.map((p) => p.ornithologistCode).toList(),
+      );
+    });
   }
 
   @override

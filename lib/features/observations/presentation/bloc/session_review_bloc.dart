@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
+import 'package:noctambuls/features/observations/domain/usecases/add_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/remove_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_state.dart';
@@ -12,15 +14,21 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     required this.updateSessionUseCase,
     required this.deleteSessionUseCase,
     required this.finishAndLockSessionUseCase,
+    required this.addSessionParticipantUseCase,
+    required this.removeSessionParticipantUseCase,
   }) : super(SessionReviewEditing(session: initialSession)) {
     on<ReviewUpdateProperties>(_onUpdateProperties);
     on<ReviewFinalizeSession>(_onFinalizeSession);
     on<ReviewDeleteSession>(_onDeleteSession);
+    on<ReviewAddParticipant>(_onAddParticipant);
+    on<ReviewRemoveParticipant>(_onRemoveParticipant);
   }
 
   final UpdateSessionUseCase updateSessionUseCase;
   final DeleteSessionUseCase deleteSessionUseCase;
   final FinishAndLockSessionUseCase finishAndLockSessionUseCase;
+  final AddSessionParticipantUseCase addSessionParticipantUseCase;
+  final RemoveSessionParticipantUseCase removeSessionParticipantUseCase;
 
   Future<void> _onUpdateProperties(
     ReviewUpdateProperties event,
@@ -81,6 +89,56 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     result.when(
       success: (_) => emit(SessionReviewDeleted()),
       failure: (failure) => emit(SessionReviewError(failure)),
+    );
+  }
+
+  Future<void> _onAddParticipant(
+    ReviewAddParticipant event,
+    Emitter<SessionReviewState> emit,
+  ) async {
+    if (state is! SessionReviewEditing) return;
+    final currentSession = (state as SessionReviewEditing).session;
+
+    emit(SessionReviewEditing(session: currentSession, isSaving: true));
+
+    final result = await addSessionParticipantUseCase(
+      currentSession,
+      event.code,
+    );
+
+    result.when(
+      success: (updatedSession) {
+        emit(SessionReviewEditing(session: updatedSession));
+      },
+      failure: (failure) {
+        emit(SessionReviewError(failure));
+        emit(SessionReviewEditing(session: currentSession));
+      },
+    );
+  }
+
+  Future<void> _onRemoveParticipant(
+    ReviewRemoveParticipant event,
+    Emitter<SessionReviewState> emit,
+  ) async {
+    if (state is! SessionReviewEditing) return;
+    final currentSession = (state as SessionReviewEditing).session;
+
+    emit(SessionReviewEditing(session: currentSession, isSaving: true));
+
+    final result = await removeSessionParticipantUseCase(
+      currentSession,
+      event.code,
+    );
+
+    result.when(
+      success: (updatedSession) {
+        emit(SessionReviewEditing(session: updatedSession));
+      },
+      failure: (failure) {
+        emit(SessionReviewError(failure));
+        emit(SessionReviewEditing(session: currentSession));
+      },
     );
   }
 }

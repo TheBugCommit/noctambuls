@@ -99,6 +99,16 @@ class ObservationsTable extends Table with OfflineFirstMixin {
   Set<Column> get primaryKey => {id};
 }
 
+@DataClassName('SessionParticipantData')
+class SessionParticipantsTable extends Table {
+  TextColumn get sessionId => text().references(SessionsTable, #id)();
+
+  TextColumn get ornithologistCode => text()();
+
+  @override
+  Set<Column> get primaryKey => {sessionId, ornithologistCode};
+}
+
 @DataClassName('BirdEntityData')
 class BirdsTable extends Table {
   TextColumn get id => text()();

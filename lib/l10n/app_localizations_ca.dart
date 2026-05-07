@@ -678,4 +678,54 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get reviewErrorSaving => 'Error guardant la revisió';
+
+  @override
+  String get participantsTitle => 'Participants';
+
+  @override
+  String get addParticipant => 'Afegir';
+
+  @override
+  String get noParticipantsAdded => 'No hi ha participants afegits.';
+
+  @override
+  String get participantAlreadyAdded => 'Aquest participant ja està afegit.';
+
+  @override
+  String get scannerTitle => 'Escanejar Participant';
+
+  @override
+  String get invalidQrCode => 'Codi QR no vàlid per aquesta app.';
+
+  @override
+  String get enterCodeManually => 'Introduir codi manualment';
+
+  @override
+  String get enterCodeTitle => 'Introduir Codi';
+
+  @override
+  String get codeHint => '#OR-ABC-1234';
+
+  @override
+  String get emptyCodeError => 'Introdueix un codi.';
+
+  @override
+  String get invalidCodeFormat => 'Format invàlid. Ex: #OR-ABCD-1234';
+
+  @override
+  String get add => 'Afegir';
+
+  @override
+  String get scannerHelperText =>
+      'Escaneja el QR d\'ornitòleg del perfil del participant';
+
+  @override
+  String get scannerHelpTitle => 'Com afegir un participant?';
+
+  @override
+  String get scannerHelpMessage =>
+      'Demana a l\'altre usuari que obri el seu perfil per mostrar el seu codi QR i apunta-hi amb la càmera. Si la càmera no funciona o no detecta el codi, pots introduir-lo manualment prement el botó inferior.';
+
+  @override
+  String get understood => 'Entesos';
 }

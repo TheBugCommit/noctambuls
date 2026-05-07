@@ -64,6 +64,7 @@ dependencies:
   flutter_slidable: ^4.0.3
   latlong2: ^0.9.1
   flutter_map: ^8.3.0
+  mobile_scanner: ^7.2.0
 
 dev_dependencies:
   flutter_test:

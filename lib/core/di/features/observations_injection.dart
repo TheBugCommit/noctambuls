@@ -7,12 +7,14 @@ import 'package:noctambuls/features/observations/data/repositories/observation_r
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_observation_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/add_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/change_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/create_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/get_active_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/remove_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
@@ -59,6 +61,8 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => FinishAndLockSessionUseCase(sl()))
     ..registerLazySingleton(() => ChangeObservationDateUseCase(sl()))
     ..registerLazySingleton(() => UpdateAllObservationsDateUseCase(sl()))
+    ..registerLazySingleton(() => AddSessionParticipantUseCase(sl()))
+    ..registerLazySingleton(() => RemoveSessionParticipantUseCase(sl()))
     // BLoC
     ..registerFactory(
       () => ObservingSessionBloc(
@@ -101,6 +105,8 @@ void initObservationsFeature() {
         updateSessionUseCase: sl(),
         deleteSessionUseCase: sl(),
         finishAndLockSessionUseCase: sl(),
+        addSessionParticipantUseCase: sl(),
+        removeSessionParticipantUseCase: sl(),
         initialSession: session,
       ),
     );

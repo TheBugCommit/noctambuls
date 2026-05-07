@@ -28,6 +28,7 @@ class ObservationSession extends Equatable {
     this.listeningPoint,
     this.location,
     this.locationError,
+    this.participants = const [],
     this.isLocked = false,
     this.syncStatus = SyncStatus.draft,
     this.isDeleted = false,
@@ -52,6 +53,7 @@ class ObservationSession extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDeleted;
+  final List<String> participants;
 
   bool get isObserving => endTime == null && !isLocked && !isDeleted;
 
@@ -78,6 +80,8 @@ class ObservationSession extends Equatable {
   bool get needsLocation =>
       sessionType == SessionType.census || sessionType == SessionType.station;
 
+  bool get isIncidental => sessionType == SessionType.incidental;
+
   static const Object _absent = Object();
 
   ObservationSession copyWith({
@@ -96,6 +100,7 @@ class ObservationSession extends Equatable {
     bool? isLocked,
     SyncStatus? syncStatus,
     bool? isDeleted,
+    List<String>? participants,
   }) {
     return ObservationSession(
       id: id,
@@ -120,6 +125,7 @@ class ObservationSession extends Equatable {
       locationError: identical(locationError, _absent)
           ? this.locationError
           : locationError as LocationErrorType?,
+      participants: participants ?? this.participants,
       isLocked: isLocked ?? this.isLocked,
       syncStatus: syncStatus ?? this.syncStatus,
       createdAt: createdAt,
@@ -144,6 +150,7 @@ class ObservationSession extends Equatable {
     listeningPoint,
     location,
     locationError,
+    participants,
     isLocked,
     syncStatus,
     createdAt,
