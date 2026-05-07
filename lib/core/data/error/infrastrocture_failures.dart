@@ -108,3 +108,19 @@ final class NetworkFailure extends InfrastructureFailure {
         stackTrace: stackTrace,
       );
 }
+
+final class LocationFailure extends Failure {
+  const LocationFailure({
+    super.debugMessage = 'Error getting GPS location',
+    super.statusCode = 503,
+    super.stackTrace,
+  });
+
+  @override
+  LocationFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      LocationFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}
