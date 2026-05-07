@@ -10,7 +10,6 @@ import 'package:noctambuls/features/observations/domain/usecases/update_session_
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
-import 'package:uuid/uuid.dart';
 
 class SessionLifecycleBloc
     extends Bloc<SessionLifecycleEvent, SessionLifecycleState> {
@@ -79,7 +78,9 @@ class SessionLifecycleBloc
     final preservedDate = state is SessionObserving
         ? (state as SessionObserving).selectedObservationDate
         : null;
-    emit(_stateFromSession(event.session!, selectedObservationDate: preservedDate));
+    emit(
+      _stateFromSession(event.session!, selectedObservationDate: preservedDate),
+    );
   }
 
   Future<void> _onStartNewSession(
@@ -92,18 +93,12 @@ class SessionLifecycleBloc
     }
 
     emit(const SessionLifecycleLoading());
-    const uuid = Uuid();
-    final now = DateTime.now();
-    final session = ObservationSession(
-      id: uuid.v4(),
-      annotatorId: event.annotatorId,
-      sessionType: event.sessionType,
-      startTime: now,
-      createdAt: now,
-      updatedAt: now,
+
+    final result = await createSessionUseCase(
+      event.sessionType,
+      event.annotatorId,
     );
 
-    final result = await createSessionUseCase(session);
     result.when(
       success: (_) {},
       failure: (failure) {
@@ -248,10 +243,12 @@ class SessionLifecycleBloc
     final result = await updateSessionUseCase(updatedSession);
     result.when(
       success: (_) {
-        emit(SessionObserving(
-          session: updatedSession,
-          selectedObservationDate: event.date,
-        ));
+        emit(
+          SessionObserving(
+            session: updatedSession,
+            selectedObservationDate: event.date,
+          ),
+        );
       },
       failure: (failure) {
         logger.failure(failure);

@@ -76,10 +76,7 @@ class HomePage extends StatelessWidget {
               StartNewSession(
                 sessionType: type,
                 annotatorId:
-                    (context.read<AuthBloc>().state as Authenticated?)
-                        ?.user
-                        .id ??
-                    'unknown',
+                    (context.read<AuthBloc>().state as Authenticated).user.id,
               ),
             ),
           ),

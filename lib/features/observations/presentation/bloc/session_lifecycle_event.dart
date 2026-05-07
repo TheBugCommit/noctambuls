@@ -29,7 +29,6 @@ class SessionStreamUpdated extends SessionLifecycleEvent {
 }
 
 /// Crea una nova sessió del tipus indicat.
-/// La construcció de l'entitat (UUID, timestamps) es fa al BLoC.
 class StartNewSession extends SessionLifecycleEvent {
   const StartNewSession({
     required this.sessionType,

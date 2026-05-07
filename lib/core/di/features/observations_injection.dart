@@ -38,7 +38,12 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => WatchActiveSessionUseCase(sl()))
     ..registerLazySingleton(() => GetActiveSessionUseCase(sl()))
     ..registerLazySingleton(() => WatchAllSessionsUseCase(sl()))
-    ..registerLazySingleton(() => CreateSessionUseCase(sl()))
+    ..registerLazySingleton(
+      () => CreateSessionUseCase(
+        observationRepository: sl(),
+        locationService: sl(),
+      ),
+    )
     ..registerLazySingleton(() => UpdateSessionUseCase(sl()))
     ..registerLazySingleton(() => DeleteSessionUseCase(sl()))
     // Use Cases — observation
