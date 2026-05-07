@@ -10,7 +10,7 @@ import 'package:noctambuls/core/utils/app_bloc_observer.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/language_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/theme_bloc.dart';
@@ -37,7 +37,7 @@ void main() async {
         BlocProvider(create: (_) => di.sl<UrlBloc>()),
         BlocProvider(create: (_) => di.sl<AudioBloc>()),
         BlocProvider(
-          create: (_) => di.sl<SessionLifecycleBloc>(),
+          create: (_) => di.sl<ObservingSessionBloc>(),
         ),
         BlocProvider(
           create: (_) => di.sl<ProfileBloc>(),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class DeleteSessionDialog extends StatelessWidget {
@@ -26,7 +26,7 @@ class DeleteSessionDialog extends StatelessWidget {
           label: l10n.delete,
           onPressed: () {
             context.pop();
-            context.read<SessionLifecycleBloc>().add(DeleteSession());
+            context.read<ObservingSessionBloc>().add(DeleteObservingSession());
           },
         ),
       ],

@@ -14,9 +14,9 @@ import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.da
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/catalog_sync_requiered_view.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_state.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
@@ -33,25 +33,26 @@ class ObservingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SessionLifecycleBloc, SessionLifecycleState>(
+    return BlocConsumer<ObservingSessionBloc, ObservingSessionState>(
       listenWhen: (prev, curr) =>
-          curr is SessionNavigatingToReview || curr is SessionLifecycleIdle,
+          curr is ObservingSessionNavigatingToReview ||
+          curr is ObservingSessionIdle,
       listener: (context, state) {
-        if (state is SessionNavigatingToReview) {
+        if (state is ObservingSessionNavigatingToReview) {
           context.pushReplacement(AppRoutes.review, extra: state.session);
-        } else if (state is SessionLifecycleIdle) {
+        } else if (state is ObservingSessionIdle) {
           if (ModalRoute.of(context)?.isCurrent == true) {
             context.pop();
           }
         }
       },
       buildWhen: (prev, curr) {
-        if (curr is! SessionObserving) return false;
-        final prevId = prev is SessionObserving ? prev.session.id : null;
+        if (curr is! ObservingSessionActive) return false;
+        final prevId = prev is ObservingSessionActive ? prev.session.id : null;
         return prevId != curr.session.id;
       },
       builder: (context, state) {
-        if (state is! SessionObserving) {
+        if (state is! ObservingSessionActive) {
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),
@@ -88,7 +89,7 @@ class _ObservingContent extends StatelessWidget {
     if (!context.mounted) return;
 
     if (isConfirmed == true) {
-      context.read<SessionLifecycleBloc>().add(DeleteSession());
+      context.read<ObservingSessionBloc>().add(DeleteObservingSession());
     }
   }
 
@@ -106,18 +107,16 @@ class _ObservingContent extends StatelessWidget {
     if (!context.mounted) return;
 
     if (isConfirmed == true) {
-      context.read<SessionLifecycleBloc>().add(StopObservationPhase());
+      context.read<ObservingSessionBloc>().add(StopObservingSession());
     }
   }
 
   Future<void> _pickGlobalDate(BuildContext context) async {
     final now = DateTime.now();
     final lifecycleState =
-        context.read<SessionLifecycleBloc>().state as SessionObserving;
+        context.read<ObservingSessionBloc>().state as ObservingSessionActive;
     final current =
-        lifecycleState.selectedObservationDate ??
-        session.startTime ??
-        now;
+        lifecycleState.selectedObservationDate ?? session.startTime ?? now;
 
     final pickedDate = await showDatePicker(
       context: context,
@@ -127,21 +126,20 @@ class _ObservingContent extends StatelessWidget {
     );
     if (!context.mounted || pickedDate == null) return;
 
-    context.read<SessionLifecycleBloc>().add(ChangeObservationDate(pickedDate));
-    context
-        .read<SessionObservationBloc>()
-        .add(UpdateAllObservationsDate(pickedDate));
+    context.read<ObservingSessionBloc>().add(ChangeObservingDate(pickedDate));
+    context.read<SessionObservationBloc>().add(
+      UpdateAllObservationsDate(pickedDate),
+    );
   }
 
   void _openForm(BuildContext context) {
     final lifecycleState =
-        context.read<SessionLifecycleBloc>().state as SessionObserving;
-    final globalDate =
-        session.canEditObservationDate
-            ? (lifecycleState.selectedObservationDate ??
-                session.startTime ??
-                DateTime.now())
-            : null;
+        context.read<ObservingSessionBloc>().state as ObservingSessionActive;
+    final globalDate = session.canEditObservationDate
+        ? (lifecycleState.selectedObservationDate ??
+              session.startTime ??
+              DateTime.now())
+        : null;
 
     unawaited(
       context.push(
@@ -152,12 +150,12 @@ class _ObservingContent extends StatelessWidget {
           globalDate: globalDate,
           onGlobalDateChanged: session.canEditObservationDate
               ? (date) {
-                  context
-                      .read<SessionLifecycleBloc>()
-                      .add(ChangeObservationDate(date));
-                  context
-                      .read<SessionObservationBloc>()
-                      .add(UpdateAllObservationsDate(date));
+                  context.read<ObservingSessionBloc>().add(
+                    ChangeObservingDate(date),
+                  );
+                  context.read<SessionObservationBloc>().add(
+                    UpdateAllObservationsDate(date),
+                  );
                 }
               : null,
         ),

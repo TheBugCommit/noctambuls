@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_state.dart';
@@ -11,6 +11,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     required ObservationSession initialSession,
     required this.updateSessionUseCase,
     required this.deleteSessionUseCase,
+    required this.finishAndLockSessionUseCase,
   }) : super(SessionReviewEditing(session: initialSession)) {
     on<ReviewUpdateProperties>(_onUpdateProperties);
     on<ReviewFinalizeSession>(_onFinalizeSession);
@@ -19,6 +20,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
 
   final UpdateSessionUseCase updateSessionUseCase;
   final DeleteSessionUseCase deleteSessionUseCase;
+  final FinishAndLockSessionUseCase finishAndLockSessionUseCase;
 
   Future<void> _onUpdateProperties(
     ReviewUpdateProperties event,
@@ -60,13 +62,8 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     if (state is! SessionReviewEditing) return;
     final currentSession = (state as SessionReviewEditing).session;
 
-    final updatedSession = currentSession.copyWith(
-      isLocked: true,
-      syncStatus: SyncStatus.pending,
-      updatedAt: DateTime.now(),
-    );
+    final result = await finishAndLockSessionUseCase(currentSession);
 
-    final result = await updateSessionUseCase(updatedSession);
     result.when(
       success: (_) => emit(SessionReviewFinalized()),
       failure: (failure) => emit(SessionReviewError(failure)),

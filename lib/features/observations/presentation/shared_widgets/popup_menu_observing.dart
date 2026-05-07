@@ -5,9 +5,9 @@ import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_state.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
@@ -22,11 +22,9 @@ class PopupMenuObserving extends StatelessWidget {
   Future<void> _pickGlobalDate(BuildContext context) async {
     final now = DateTime.now();
     final lifecycleState =
-        context.read<SessionLifecycleBloc>().state as SessionObserving;
+        context.read<ObservingSessionBloc>().state as ObservingSessionActive;
     final current =
-        lifecycleState.selectedObservationDate ??
-        session.startTime ??
-        now;
+        lifecycleState.selectedObservationDate ?? session.startTime ?? now;
 
     final pickedDate = await showDatePicker(
       context: context,
@@ -36,10 +34,10 @@ class PopupMenuObserving extends StatelessWidget {
     );
     if (!context.mounted || pickedDate == null) return;
 
-    context.read<SessionLifecycleBloc>().add(ChangeObservationDate(pickedDate));
-    context
-        .read<SessionObservationBloc>()
-        .add(UpdateAllObservationsDate(pickedDate));
+    context.read<ObservingSessionBloc>().add(ChangeObservingDate(pickedDate));
+    context.read<SessionObservationBloc>().add(
+      UpdateAllObservationsDate(pickedDate),
+    );
   }
 
   @override
@@ -70,7 +68,9 @@ class PopupMenuObserving extends StatelessWidget {
             if (!context.mounted) return;
 
             if (isConfirmed == true) {
-              context.read<SessionLifecycleBloc>().add(DeleteSession());
+              context.read<ObservingSessionBloc>().add(
+                DeleteObservingSession(),
+              );
             }
         }
       },

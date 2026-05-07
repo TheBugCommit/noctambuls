@@ -15,9 +15,9 @@ import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.d
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_event.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_state.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_state.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/widgets/active_session_card.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/widgets/home_header.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/session_type_selector.dart';
@@ -26,27 +26,27 @@ import 'package:noctambuls/l10n/app_localizations.dart';
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  Type _getRebuildGroup(SessionLifecycleState state) => switch (state) {
-    SessionLifecycleIdle() ||
-    SessionLifecycleError() ||
-    SessionNavigatingToReview() ||
-    SessionReviewing() ||
-    SessionFinished() => SessionLifecycleIdle,
-    SessionLifecycleLoading() => SessionLifecycleLoading,
-    SessionObserving() => SessionObserving,
+  Type _getRebuildGroup(ObservingSessionState state) => switch (state) {
+    ObservingSessionIdle() ||
+    ObservingSessionError() ||
+    ObservingSessionNavigatingToReview() => ObservingSessionIdle,
+    ObservingSessionLoading() => ObservingSessionLoading,
+    ObservingSessionActive() => ObservingSessionActive,
   };
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SessionLifecycleBloc, SessionLifecycleState>(
+    return BlocConsumer<ObservingSessionBloc, ObservingSessionState>(
       listenWhen: (prev, curr) {
-        if (curr is SessionLifecycleError) return true;
-        if (curr is SessionObserving && prev is! SessionObserving) return true;
+        if (curr is ObservingSessionError) return true;
+        if (curr is ObservingSessionActive && prev is! ObservingSessionActive) {
+          return true;
+        }
         return false;
       },
       listener: (context, state) {
         switch (state) {
-          case SessionLifecycleError():
+          case ObservingSessionError():
             final l10n = AppLocalizations.of(context)!;
             final message = switch (state.failure) {
               ActiveSessionAlreadyExistsFailure() =>
@@ -56,8 +56,8 @@ class HomePage extends StatelessWidget {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(message)),
             );
-            context.read<SessionLifecycleBloc>().add(DismissError());
-          case SessionObserving():
+            context.read<ObservingSessionBloc>().add(DismissObservingError());
+          case ObservingSessionActive():
             unawaited(context.push(AppRoutes.observing));
           default:
             break;
@@ -67,21 +67,19 @@ class HomePage extends StatelessWidget {
           _getRebuildGroup(prev) != _getRebuildGroup(curr),
       builder: (context, state) {
         return switch (state) {
-          SessionLifecycleIdle() ||
-          SessionNavigatingToReview() ||
-          SessionReviewing() ||
-          SessionFinished() ||
-          SessionLifecycleError() => _IdleScaffold(
-            onTypeSelected: (type) => context.read<SessionLifecycleBloc>().add(
-              StartNewSession(
+          ObservingSessionIdle() ||
+          ObservingSessionNavigatingToReview() ||
+          ObservingSessionError() => _IdleScaffold(
+            onTypeSelected: (type) => context.read<ObservingSessionBloc>().add(
+              StartObservingSession(
                 sessionType: type,
                 annotatorId:
                     (context.read<AuthBloc>().state as Authenticated).user.id,
               ),
             ),
           ),
-          SessionLifecycleLoading() => const _LoadingScaffold(),
-          SessionObserving() => _ActiveScaffold(
+          ObservingSessionLoading() => const _LoadingScaffold(),
+          ObservingSessionActive() => _ActiveScaffold(
             session: state.session,
             onResume: () => unawaited(context.push(AppRoutes.observing)),
           ),

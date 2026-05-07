@@ -13,7 +13,6 @@ import 'package:noctambuls/features/observations/domain/usecases/delete_observat
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/get_active_session_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/resume_observation_phase_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
@@ -21,7 +20,7 @@ import 'package:noctambuls/features/observations/domain/usecases/update_session_
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_all_sessions_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_lifecycle_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
@@ -57,20 +56,17 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => UpdateObservationUseCase(sl()))
     ..registerLazySingleton(() => DeleteObservationUseCase(sl()))
     ..registerLazySingleton(() => StopObservationPhaseUseCase(sl()))
-    ..registerLazySingleton(() => ResumeObservationPhaseUseCase(sl()))
     ..registerLazySingleton(() => FinishAndLockSessionUseCase(sl()))
     ..registerLazySingleton(() => ChangeObservationDateUseCase(sl()))
     ..registerLazySingleton(() => UpdateAllObservationsDateUseCase(sl()))
     // BLoC
     ..registerFactory(
-      () => SessionLifecycleBloc(
+      () => ObservingSessionBloc(
         watchActiveSessionUseCase: sl(),
         createSessionUseCase: sl(),
         updateSessionUseCase: sl(),
         deleteSessionUseCase: sl(),
         stopObservationPhaseUseCase: sl(),
-        resumeObservationPhaseUseCase: sl(),
-        finishAndLockSessionUseCase: sl(),
         changeObservationDateUseCase: sl(),
         logger: sl<IAppLogger>(),
       ),
@@ -104,6 +100,7 @@ void initObservationsFeature() {
       (session, _) => SessionReviewBloc(
         updateSessionUseCase: sl(),
         deleteSessionUseCase: sl(),
+        finishAndLockSessionUseCase: sl(),
         initialSession: session,
       ),
     );
