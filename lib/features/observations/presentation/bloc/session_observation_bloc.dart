@@ -7,6 +7,7 @@ import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_observation_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
@@ -21,6 +22,7 @@ class SessionObservationBloc
     required this.watchObservationsUseCase,
     required this.addObservationUseCase,
     required this.updateObservationUseCase,
+    required this.updateAllObservationsDateUseCase,
     required this.deleteObservationUseCase,
     required this.getBirdsUseCase,
     required this.getLanguageUseCase,
@@ -39,6 +41,7 @@ class SessionObservationBloc
   final AddObservationUseCase addObservationUseCase;
   final UpdateObservationUseCase updateObservationUseCase;
   final DeleteObservationUseCase deleteObservationUseCase;
+  final UpdateAllObservationsDateUseCase updateAllObservationsDateUseCase;
   final IAppLogger logger;
   final GetBirdsUseCase getBirdsUseCase;
   final GetLanguageUseCase getLanguageUseCase;
@@ -128,39 +131,19 @@ class SessionObservationBloc
   ) async {
     if (state is! ObservationsLoaded) return;
     final observations = (state as ObservationsLoaded).observations;
-    final d = event.date;
 
-    for (final obs in observations) {
-      final now = DateTime.now();
-      var newStart = DateTime(
-        d.year,
-        d.month,
-        d.day,
-        obs.startTime.hour,
-        obs.startTime.minute,
-      );
-      var newEnd = DateTime(
-        d.year,
-        d.month,
-        d.day,
-        obs.endTime.hour,
-        obs.endTime.minute,
-      );
+    final result = await updateAllObservationsDateUseCase(
+      observations,
+      event.date,
+    );
 
-      if (newStart.isAfter(now)) newStart = now;
-      if (newEnd.isAfter(now)) newEnd = newStart;
-
-      final updated = obs.copyWith(
-        startTime: newStart,
-        endTime: newEnd,
-        updatedAt: now,
-      );
-      final result = await updateObservationUseCase(updated);
-      result.when(
-        success: (_) {},
-        failure: logger.failure,
-      );
-    }
+    result.when(
+      success: (_) {},
+      failure: (failure) {
+        logger.failure(failure);
+        emit(ObservationsError(failure: failure));
+      },
+    );
   }
 
   @override

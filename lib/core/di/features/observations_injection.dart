@@ -15,6 +15,7 @@ import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock
 import 'package:noctambuls/features/observations/domain/usecases/get_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/resume_observation_phase_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
@@ -59,6 +60,7 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => ResumeObservationPhaseUseCase(sl()))
     ..registerLazySingleton(() => FinishAndLockSessionUseCase(sl()))
     ..registerLazySingleton(() => ChangeObservationDateUseCase(sl()))
+    ..registerLazySingleton(() => UpdateAllObservationsDateUseCase(sl()))
     // BLoC
     ..registerFactory(
       () => SessionLifecycleBloc(
@@ -85,6 +87,7 @@ void initObservationsFeature() {
         watchObservationsUseCase: sl(),
         addObservationUseCase: sl(),
         updateObservationUseCase: sl(),
+        updateAllObservationsDateUseCase: sl(),
         deleteObservationUseCase: sl(),
         getBirdsUseCase: sl<GetBirdsUseCase>(),
         getLanguageUseCase: sl<GetLanguageUseCase>(),
