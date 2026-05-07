@@ -95,14 +95,17 @@ class _ReviewPageState extends State<ReviewPage> {
               curr is SessionReviewError;
         },
         listener: (context, state) {
-          if (state is SessionReviewFinalized ||
-              state is SessionReviewDeleted) {
-            context.go(AppRoutes.profile);
-          } else if (state is SessionReviewError) {
-            final l10n = AppLocalizations.of(context)!;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(l10n.reviewErrorSaving)),
-            );
+          switch (state) {
+            case SessionReviewDeleted():
+              context.go(AppRoutes.home);
+            case SessionReviewFinalized():
+              context.go(AppRoutes.profile);
+            case SessionReviewError():
+              final l10n = AppLocalizations.of(context)!;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(l10n.reviewErrorSaving)),
+              );
+            default:
           }
         },
         builder: (context, state) {
