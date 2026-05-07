@@ -1,6 +1,9 @@
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/domain/services/location_service.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
@@ -46,8 +49,7 @@ class CreateSessionUseCase {
     SessionType sessionType,
     String userId,
   ) async {
-    double? startLat;
-    double? startLng;
+    GeoPosition? lastLocation;
 
     if (sessionType == SessionType.census ||
         sessionType == SessionType.station) {
@@ -56,8 +58,7 @@ class CreateSessionUseCase {
       lastKnownResult.when(
         failure: (_) {},
         success: (pos) {
-          startLat = pos.latitude;
-          startLng = pos.longitude;
+          lastLocation = pos;
         },
       );
     }
@@ -68,9 +69,8 @@ class CreateSessionUseCase {
       id: const Uuid().v4(),
       annotatorId: userId,
       sessionType: sessionType,
+      location: lastLocation,
       startTime: now,
-      latitude: startLat,
-      longitude: startLng,
       createdAt: now,
       updatedAt: now,
     );
@@ -89,14 +89,28 @@ class CreateSessionUseCase {
     await freshResult.when(
       success: (pos) async {
         final updatedSession = session.copyWith(
-          latitude: pos.latitude,
-          longitude: pos.longitude,
+          location: pos,
           updatedAt: DateTime.now(),
         );
 
         await observationRepository.updateSession(updatedSession);
       },
-      failure: (failure) {},
+      failure: (failure) async {
+        var errorType = LocationErrorType.timeoutNoSignal;
+        if (failure is PermissionDeniedFailure) {
+          errorType = LocationErrorType.permissionDenied;
+        } else if (failure is GpsDisabledFailure) {
+          errorType = LocationErrorType.gpsDisabled;
+        }
+
+        final failedSession = session.copyWith(
+          location: session.location,
+          locationError: errorType,
+          updatedAt: DateTime.now(),
+        );
+
+        await observationRepository.updateSession(failedSession);
+      },
     );
   }
 }

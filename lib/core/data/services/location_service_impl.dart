@@ -15,10 +15,8 @@ class LocationServiceImpl extends LocationService {
   Future<Result<GeoPosition>> getLocation() async {
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      logger.warning('Location service disabled');
-      return const Err(
-        LocationFailure(debugMessage: 'Location service disabled'),
-      );
+      logger.warning('GPS disabled');
+      return const Err(GpsDisabledFailure());
     }
 
     var permission = await Permission.locationWhenInUse.status;
@@ -26,23 +24,13 @@ class LocationServiceImpl extends LocationService {
       permission = await Permission.locationWhenInUse.request();
       if (permission.isDenied) {
         logger.warning('Location permission denied');
-        return const Err(
-          LocationFailure(
-            debugMessage: 'Location permission denied',
-            statusCode: 511,
-          ),
-        );
+        return const Err(PermissionDeniedFailure());
       }
     }
 
     if (permission.isPermanentlyDenied) {
       logger.warning('Location permission permanently denied');
-      return const Err(
-        LocationFailure(
-          debugMessage: 'Location permission permanently denied',
-          statusCode: 511,
-        ),
-      );
+      return const Err(PermissionDeniedFailure());
     }
 
     try {
@@ -63,11 +51,7 @@ class LocationServiceImpl extends LocationService {
         ),
       );
     } catch (e, st) {
-      final failure = const LocationFailure(
-        debugMessage: 'Temporally location service error',
-        statusCode: 500,
-      ).withDebug(e, st);
-
+      final failure = const GpsDisabledFailure().withDebug(e, st);
       logger.failure(failure);
       return Err(failure);
     }
@@ -80,13 +64,7 @@ class LocationServiceImpl extends LocationService {
 
       if (position == null) {
         logger.warning('No last known location available');
-
-        return const Err(
-          LocationFailure(
-            debugMessage: 'No last known location available',
-            statusCode: 404,
-          ),
-        );
+        return const Err(GpsDisabledFailure());
       }
 
       return Ok(
@@ -100,13 +78,8 @@ class LocationServiceImpl extends LocationService {
         ),
       );
     } catch (e, st) {
-      final failure = const LocationFailure(
-        debugMessage: 'Error getting last known location',
-        statusCode: 500,
-      ).withDebug(e, st);
-
+      final failure = const GpsDisabledFailure().withDebug(e, st);
       logger.failure(failure);
-
       return Err(failure);
     }
   }

@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
 import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
@@ -24,8 +26,8 @@ class ObservationSession extends Equatable {
     this.visibility = VisibilityLevel.poor,
     this.moon = MoonPresence.absent,
     this.listeningPoint,
-    this.latitude,
-    this.longitude,
+    this.location,
+    this.locationError,
     this.isLocked = false,
     this.syncStatus = SyncStatus.draft,
     this.isDeleted = false,
@@ -43,8 +45,8 @@ class ObservationSession extends Equatable {
   final VisibilityLevel visibility;
   final MoonPresence moon;
   final int? listeningPoint;
-  final double? latitude;
-  final double? longitude;
+  final GeoPosition? location;
+  final LocationErrorType? locationError;
   final bool isLocked;
   final SyncStatus syncStatus;
   final DateTime createdAt;
@@ -62,13 +64,19 @@ class ObservationSession extends Equatable {
 
   DateTime? get observationTimeMin =>
       (sessionType == SessionType.census || sessionType == SessionType.station)
-          ? startTime
-          : null;
+      ? startTime
+      : null;
 
   DateTime? get observationTimeMax =>
       (sessionType == SessionType.census || sessionType == SessionType.station)
-          ? endTime
-          : null;
+      ? endTime
+      : null;
+
+  bool get needsListeningPoint =>
+      sessionType == SessionType.census || sessionType == SessionType.station;
+
+  bool get needsLocation =>
+      sessionType == SessionType.census || sessionType == SessionType.station;
 
   static const Object _absent = Object();
 
@@ -83,8 +91,8 @@ class ObservationSession extends Equatable {
     VisibilityLevel? visibility,
     MoonPresence? moon,
     Object? listeningPoint = _absent,
-    Object? latitude = _absent,
-    Object? longitude = _absent,
+    Object? location = _absent,
+    Object? locationError = _absent,
     bool? isLocked,
     SyncStatus? syncStatus,
     bool? isDeleted,
@@ -106,12 +114,12 @@ class ObservationSession extends Equatable {
       listeningPoint: identical(listeningPoint, _absent)
           ? this.listeningPoint
           : listeningPoint as int?,
-      latitude: identical(latitude, _absent)
-          ? this.latitude
-          : latitude as double?,
-      longitude: identical(longitude, _absent)
-          ? this.longitude
-          : longitude as double?,
+      location: identical(location, _absent)
+          ? this.location
+          : location as GeoPosition?,
+      locationError: identical(locationError, _absent)
+          ? this.locationError
+          : locationError as LocationErrorType?,
       isLocked: isLocked ?? this.isLocked,
       syncStatus: syncStatus ?? this.syncStatus,
       createdAt: createdAt,
@@ -134,8 +142,8 @@ class ObservationSession extends Equatable {
     visibility,
     moon,
     listeningPoint,
-    latitude,
-    longitude,
+    location,
+    locationError,
     isLocked,
     syncStatus,
     createdAt,

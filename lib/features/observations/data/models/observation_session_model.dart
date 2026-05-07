@@ -1,5 +1,8 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:noctambuls/core/database/user_database.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
 import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
@@ -9,28 +12,36 @@ import 'package:noctambuls/features/observations/domain/enums/temperature_range.
 import 'package:noctambuls/features/observations/domain/enums/visibility_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/wind_level.dart';
 
-class ObservationSessionModel {
-  const ObservationSessionModel({
-    required this.id,
-    required this.annotatorId,
-    required this.sessionType,
-    required this.isLocked,
-    required this.syncStatus,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.isDeleted,
-    this.temperature = TemperatureRange.belowZero,
-    this.wind = WindLevel.calm,
-    this.sky = SkyCondition.clear,
-    this.rain = RainLevel.none,
-    this.visibility = VisibilityLevel.poor,
-    this.moon = MoonPresence.absent,
-    this.startTime,
-    this.endTime,
-    this.listeningPoint,
-    this.latitude,
-    this.longitude,
-  });
+part 'observation_session_model.freezed.dart';
+
+@freezed
+abstract class ObservationSessionModel with _$ObservationSessionModel {
+  const factory ObservationSessionModel({
+    required String id,
+    required String annotatorId,
+    required SessionType sessionType,
+    required bool isLocked,
+    required SyncStatus syncStatus,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required bool isDeleted,
+    @Default(TemperatureRange.belowZero) TemperatureRange temperature,
+    @Default(WindLevel.calm) WindLevel wind,
+    @Default(SkyCondition.clear) SkyCondition sky,
+    @Default(RainLevel.none) RainLevel rain,
+    @Default(VisibilityLevel.poor) VisibilityLevel visibility,
+    @Default(MoonPresence.absent) MoonPresence moon,
+    DateTime? startTime,
+    DateTime? endTime,
+    int? listeningPoint,
+    double? latitude,
+    double? longitude,
+    double? accuracy,
+    double? altitude,
+    double? altitudeAccuracy,
+    DateTime? positionTimestamp,
+    LocationErrorType? locationError,
+  }) = _ObservationSessionModel;
 
   factory ObservationSessionModel.fromEntity(ObservationSession entity) {
     return ObservationSessionModel(
@@ -46,8 +57,13 @@ class ObservationSessionModel {
       visibility: entity.visibility,
       moon: entity.moon,
       listeningPoint: entity.listeningPoint,
-      latitude: entity.latitude,
-      longitude: entity.longitude,
+      latitude: entity.location?.latitude,
+      longitude: entity.location?.longitude,
+      accuracy: entity.location?.accuracy,
+      altitude: entity.location?.altitude,
+      altitudeAccuracy: entity.location?.altitudeAccuracy,
+      positionTimestamp: entity.location?.timestamp,
+      locationError: entity.locationError,
       isLocked: entity.isLocked,
       syncStatus: entity.syncStatus,
       createdAt: entity.createdAt,
@@ -72,6 +88,11 @@ class ObservationSessionModel {
       listeningPoint: data.listeningPoint,
       latitude: data.latitude,
       longitude: data.longitude,
+      accuracy: data.accuracy,
+      altitude: data.altitude,
+      altitudeAccuracy: data.altitudeAccuracy,
+      positionTimestamp: data.positionTimestamp,
+      locationError: data.locationError,
       isLocked: data.isLocked,
       syncStatus: data.syncStatus,
       createdAt: data.createdAt,
@@ -79,28 +100,27 @@ class ObservationSessionModel {
       isDeleted: data.isDeleted,
     );
   }
+}
 
-  final String id;
-  final String annotatorId;
-  final SessionType sessionType;
-  final TemperatureRange temperature;
-  final WindLevel wind;
-  final SkyCondition sky;
-  final RainLevel rain;
-  final VisibilityLevel visibility;
-  final MoonPresence moon;
-  final int? listeningPoint;
-  final DateTime? startTime;
-  final DateTime? endTime;
-  final double? latitude;
-  final double? longitude;
-  final bool isLocked;
-  final SyncStatus syncStatus;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool isDeleted;
-
+extension ObservationSessionModelX on ObservationSessionModel {
   ObservationSession toDomain() {
+    GeoPosition? geoPosition;
+    if (latitude != null &&
+        longitude != null &&
+        accuracy != null &&
+        altitude != null &&
+        altitudeAccuracy != null &&
+        positionTimestamp != null) {
+      geoPosition = GeoPosition(
+        latitude: latitude!,
+        longitude: longitude!,
+        accuracy: accuracy!,
+        altitude: altitude!,
+        altitudeAccuracy: altitudeAccuracy!,
+        timestamp: positionTimestamp!,
+      );
+    }
+
     return ObservationSession(
       id: id,
       annotatorId: annotatorId,
@@ -114,8 +134,8 @@ class ObservationSessionModel {
       visibility: visibility,
       moon: moon,
       listeningPoint: listeningPoint,
-      latitude: latitude,
-      longitude: longitude,
+      location: geoPosition,
+      locationError: locationError,
       isLocked: isLocked,
       syncStatus: syncStatus,
       createdAt: createdAt,

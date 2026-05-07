@@ -53,6 +53,17 @@ class SessionsTable extends Table with OfflineFirstMixin {
 
   RealColumn get longitude => real().nullable()();
 
+  RealColumn get accuracy => real().nullable()();
+
+  RealColumn get altitude => real().nullable()();
+
+  RealColumn get altitudeAccuracy => real().nullable()();
+
+  DateTimeColumn get positionTimestamp => dateTime().nullable()();
+
+  IntColumn get locationError =>
+      integer().map(const LocationErrorTypeConverter()).nullable()();
+
   BoolColumn get isLocked => boolean()();
 
   @override

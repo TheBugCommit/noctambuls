@@ -109,16 +109,32 @@ final class NetworkFailure extends InfrastructureFailure {
       );
 }
 
-final class LocationFailure extends Failure {
-  const LocationFailure({
-    super.debugMessage = 'Error getting GPS location',
-    super.statusCode = 503,
+final class GpsDisabledFailure extends InfrastructureFailure {
+  const GpsDisabledFailure({
+    super.debugMessage = 'Error GPS disabled',
+    super.statusCode = 500,
     super.stackTrace,
   });
 
   @override
-  LocationFailure withDebug(Object error, [StackTrace? stackTrace]) =>
-      LocationFailure(
+  GpsDisabledFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      GpsDisabledFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}
+
+final class PermissionDeniedFailure extends InfrastructureFailure {
+  const PermissionDeniedFailure({
+    super.debugMessage = 'Functionality permission denied',
+    super.statusCode = 401,
+    super.stackTrace,
+  });
+
+  @override
+  PermissionDeniedFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      PermissionDeniedFailure(
         debugMessage: error.toString(),
         statusCode: statusCode,
         stackTrace: stackTrace,

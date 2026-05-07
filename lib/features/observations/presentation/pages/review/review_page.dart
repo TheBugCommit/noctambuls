@@ -5,7 +5,6 @@ import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
@@ -63,10 +62,7 @@ class _ReviewPageState extends State<ReviewPage> {
   ) async {
     setState(() => _showValidationErrors = true);
 
-    final needsListeningPoint =
-        session.sessionType == SessionType.census ||
-        session.sessionType == SessionType.station;
-    if (needsListeningPoint && session.listeningPoint == null) return;
+    if (session.needsListeningPoint && session.listeningPoint == null) return;
 
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await AppSheet.showConfirm(

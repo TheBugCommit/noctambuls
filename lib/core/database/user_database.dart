@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:noctambuls/core/database/converters.dart';
 import 'package:noctambuls/core/database/tables.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
 import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';

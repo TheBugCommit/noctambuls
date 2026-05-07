@@ -200,6 +200,63 @@ class $SessionsTableTable extends SessionsTable
     type: DriftSqlType.double,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _accuracyMeta = const VerificationMeta(
+    'accuracy',
+  );
+  @override
+  late final GeneratedColumn<double> accuracy = GeneratedColumn<double>(
+    'accuracy',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _altitudeMeta = const VerificationMeta(
+    'altitude',
+  );
+  @override
+  late final GeneratedColumn<double> altitude = GeneratedColumn<double>(
+    'altitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _altitudeAccuracyMeta = const VerificationMeta(
+    'altitudeAccuracy',
+  );
+  @override
+  late final GeneratedColumn<double> altitudeAccuracy = GeneratedColumn<double>(
+    'altitude_accuracy',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _positionTimestampMeta = const VerificationMeta(
+    'positionTimestamp',
+  );
+  @override
+  late final GeneratedColumn<DateTime> positionTimestamp =
+      GeneratedColumn<DateTime>(
+        'position_timestamp',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<LocationErrorType?, int>
+  locationError =
+      GeneratedColumn<int>(
+        'location_error',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      ).withConverter<LocationErrorType?>(
+        $SessionsTableTable.$converterlocationErrorn,
+      );
   static const VerificationMeta _isLockedMeta = const VerificationMeta(
     'isLocked',
   );
@@ -234,6 +291,11 @@ class $SessionsTableTable extends SessionsTable
     listeningPoint,
     latitude,
     longitude,
+    accuracy,
+    altitude,
+    altitudeAccuracy,
+    positionTimestamp,
+    locationError,
     isLocked,
   ];
   @override
@@ -319,6 +381,36 @@ class $SessionsTableTable extends SessionsTable
       context.handle(
         _longitudeMeta,
         longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
+      );
+    }
+    if (data.containsKey('accuracy')) {
+      context.handle(
+        _accuracyMeta,
+        accuracy.isAcceptableOrUnknown(data['accuracy']!, _accuracyMeta),
+      );
+    }
+    if (data.containsKey('altitude')) {
+      context.handle(
+        _altitudeMeta,
+        altitude.isAcceptableOrUnknown(data['altitude']!, _altitudeMeta),
+      );
+    }
+    if (data.containsKey('altitude_accuracy')) {
+      context.handle(
+        _altitudeAccuracyMeta,
+        altitudeAccuracy.isAcceptableOrUnknown(
+          data['altitude_accuracy']!,
+          _altitudeAccuracyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('position_timestamp')) {
+      context.handle(
+        _positionTimestampMeta,
+        positionTimestamp.isAcceptableOrUnknown(
+          data['position_timestamp']!,
+          _positionTimestampMeta,
+        ),
       );
     }
     if (data.containsKey('is_locked')) {
@@ -426,6 +518,28 @@ class $SessionsTableTable extends SessionsTable
         DriftSqlType.double,
         data['${effectivePrefix}longitude'],
       ),
+      accuracy: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}accuracy'],
+      ),
+      altitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}altitude'],
+      ),
+      altitudeAccuracy: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}altitude_accuracy'],
+      ),
+      positionTimestamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}position_timestamp'],
+      ),
+      locationError: $SessionsTableTable.$converterlocationErrorn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}location_error'],
+        ),
+      ),
       isLocked: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_locked'],
@@ -454,6 +568,12 @@ class $SessionsTableTable extends SessionsTable
       const VisibilityLevelConverter();
   static JsonTypeConverter2<MoonPresence, int, int> $convertermoon =
       const MoonPresenceConverter();
+  static JsonTypeConverter2<LocationErrorType, int, int>
+  $converterlocationError = const LocationErrorTypeConverter();
+  static JsonTypeConverter2<LocationErrorType?, int?, int?>
+  $converterlocationErrorn = JsonTypeConverter2.asNullable(
+    $converterlocationError,
+  );
 }
 
 class SessionEntityData extends DataClass
@@ -476,6 +596,11 @@ class SessionEntityData extends DataClass
   final int? listeningPoint;
   final double? latitude;
   final double? longitude;
+  final double? accuracy;
+  final double? altitude;
+  final double? altitudeAccuracy;
+  final DateTime? positionTimestamp;
+  final LocationErrorType? locationError;
   final bool isLocked;
   const SessionEntityData({
     required this.id,
@@ -496,6 +621,11 @@ class SessionEntityData extends DataClass
     this.listeningPoint,
     this.latitude,
     this.longitude,
+    this.accuracy,
+    this.altitude,
+    this.altitudeAccuracy,
+    this.positionTimestamp,
+    this.locationError,
     required this.isLocked,
   });
   @override
@@ -559,6 +689,23 @@ class SessionEntityData extends DataClass
     if (!nullToAbsent || longitude != null) {
       map['longitude'] = Variable<double>(longitude);
     }
+    if (!nullToAbsent || accuracy != null) {
+      map['accuracy'] = Variable<double>(accuracy);
+    }
+    if (!nullToAbsent || altitude != null) {
+      map['altitude'] = Variable<double>(altitude);
+    }
+    if (!nullToAbsent || altitudeAccuracy != null) {
+      map['altitude_accuracy'] = Variable<double>(altitudeAccuracy);
+    }
+    if (!nullToAbsent || positionTimestamp != null) {
+      map['position_timestamp'] = Variable<DateTime>(positionTimestamp);
+    }
+    if (!nullToAbsent || locationError != null) {
+      map['location_error'] = Variable<int>(
+        $SessionsTableTable.$converterlocationErrorn.toSql(locationError),
+      );
+    }
     map['is_locked'] = Variable<bool>(isLocked);
     return map;
   }
@@ -593,6 +740,21 @@ class SessionEntityData extends DataClass
       longitude: longitude == null && nullToAbsent
           ? const Value.absent()
           : Value(longitude),
+      accuracy: accuracy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accuracy),
+      altitude: altitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(altitude),
+      altitudeAccuracy: altitudeAccuracy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(altitudeAccuracy),
+      positionTimestamp: positionTimestamp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(positionTimestamp),
+      locationError: locationError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationError),
       isLocked: Value(isLocked),
     );
   }
@@ -637,6 +799,15 @@ class SessionEntityData extends DataClass
       listeningPoint: serializer.fromJson<int?>(json['listeningPoint']),
       latitude: serializer.fromJson<double?>(json['latitude']),
       longitude: serializer.fromJson<double?>(json['longitude']),
+      accuracy: serializer.fromJson<double?>(json['accuracy']),
+      altitude: serializer.fromJson<double?>(json['altitude']),
+      altitudeAccuracy: serializer.fromJson<double?>(json['altitudeAccuracy']),
+      positionTimestamp: serializer.fromJson<DateTime?>(
+        json['positionTimestamp'],
+      ),
+      locationError: $SessionsTableTable.$converterlocationErrorn.fromJson(
+        serializer.fromJson<int?>(json['locationError']),
+      ),
       isLocked: serializer.fromJson<bool>(json['isLocked']),
     );
   }
@@ -678,6 +849,13 @@ class SessionEntityData extends DataClass
       'listeningPoint': serializer.toJson<int?>(listeningPoint),
       'latitude': serializer.toJson<double?>(latitude),
       'longitude': serializer.toJson<double?>(longitude),
+      'accuracy': serializer.toJson<double?>(accuracy),
+      'altitude': serializer.toJson<double?>(altitude),
+      'altitudeAccuracy': serializer.toJson<double?>(altitudeAccuracy),
+      'positionTimestamp': serializer.toJson<DateTime?>(positionTimestamp),
+      'locationError': serializer.toJson<int?>(
+        $SessionsTableTable.$converterlocationErrorn.toJson(locationError),
+      ),
       'isLocked': serializer.toJson<bool>(isLocked),
     };
   }
@@ -701,6 +879,11 @@ class SessionEntityData extends DataClass
     Value<int?> listeningPoint = const Value.absent(),
     Value<double?> latitude = const Value.absent(),
     Value<double?> longitude = const Value.absent(),
+    Value<double?> accuracy = const Value.absent(),
+    Value<double?> altitude = const Value.absent(),
+    Value<double?> altitudeAccuracy = const Value.absent(),
+    Value<DateTime?> positionTimestamp = const Value.absent(),
+    Value<LocationErrorType?> locationError = const Value.absent(),
     bool? isLocked,
   }) => SessionEntityData(
     id: id ?? this.id,
@@ -723,6 +906,17 @@ class SessionEntityData extends DataClass
         : this.listeningPoint,
     latitude: latitude.present ? latitude.value : this.latitude,
     longitude: longitude.present ? longitude.value : this.longitude,
+    accuracy: accuracy.present ? accuracy.value : this.accuracy,
+    altitude: altitude.present ? altitude.value : this.altitude,
+    altitudeAccuracy: altitudeAccuracy.present
+        ? altitudeAccuracy.value
+        : this.altitudeAccuracy,
+    positionTimestamp: positionTimestamp.present
+        ? positionTimestamp.value
+        : this.positionTimestamp,
+    locationError: locationError.present
+        ? locationError.value
+        : this.locationError,
     isLocked: isLocked ?? this.isLocked,
   );
   SessionEntityData copyWithCompanion(SessionsTableCompanion data) {
@@ -757,6 +951,17 @@ class SessionEntityData extends DataClass
           : this.listeningPoint,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
+      accuracy: data.accuracy.present ? data.accuracy.value : this.accuracy,
+      altitude: data.altitude.present ? data.altitude.value : this.altitude,
+      altitudeAccuracy: data.altitudeAccuracy.present
+          ? data.altitudeAccuracy.value
+          : this.altitudeAccuracy,
+      positionTimestamp: data.positionTimestamp.present
+          ? data.positionTimestamp.value
+          : this.positionTimestamp,
+      locationError: data.locationError.present
+          ? data.locationError.value
+          : this.locationError,
       isLocked: data.isLocked.present ? data.isLocked.value : this.isLocked,
     );
   }
@@ -782,13 +987,18 @@ class SessionEntityData extends DataClass
           ..write('listeningPoint: $listeningPoint, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('accuracy: $accuracy, ')
+          ..write('altitude: $altitude, ')
+          ..write('altitudeAccuracy: $altitudeAccuracy, ')
+          ..write('positionTimestamp: $positionTimestamp, ')
+          ..write('locationError: $locationError, ')
           ..write('isLocked: $isLocked')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     syncStatus,
     createdAt,
@@ -807,8 +1017,13 @@ class SessionEntityData extends DataClass
     listeningPoint,
     latitude,
     longitude,
+    accuracy,
+    altitude,
+    altitudeAccuracy,
+    positionTimestamp,
+    locationError,
     isLocked,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -831,6 +1046,11 @@ class SessionEntityData extends DataClass
           other.listeningPoint == this.listeningPoint &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
+          other.accuracy == this.accuracy &&
+          other.altitude == this.altitude &&
+          other.altitudeAccuracy == this.altitudeAccuracy &&
+          other.positionTimestamp == this.positionTimestamp &&
+          other.locationError == this.locationError &&
           other.isLocked == this.isLocked);
 }
 
@@ -853,6 +1073,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
   final Value<int?> listeningPoint;
   final Value<double?> latitude;
   final Value<double?> longitude;
+  final Value<double?> accuracy;
+  final Value<double?> altitude;
+  final Value<double?> altitudeAccuracy;
+  final Value<DateTime?> positionTimestamp;
+  final Value<LocationErrorType?> locationError;
   final Value<bool> isLocked;
   final Value<int> rowid;
   const SessionsTableCompanion({
@@ -874,6 +1099,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.listeningPoint = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
+    this.accuracy = const Value.absent(),
+    this.altitude = const Value.absent(),
+    this.altitudeAccuracy = const Value.absent(),
+    this.positionTimestamp = const Value.absent(),
+    this.locationError = const Value.absent(),
     this.isLocked = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -896,6 +1126,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.listeningPoint = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
+    this.accuracy = const Value.absent(),
+    this.altitude = const Value.absent(),
+    this.altitudeAccuracy = const Value.absent(),
+    this.positionTimestamp = const Value.absent(),
+    this.locationError = const Value.absent(),
     required bool isLocked,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -925,6 +1160,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Expression<int>? listeningPoint,
     Expression<double>? latitude,
     Expression<double>? longitude,
+    Expression<double>? accuracy,
+    Expression<double>? altitude,
+    Expression<double>? altitudeAccuracy,
+    Expression<DateTime>? positionTimestamp,
+    Expression<int>? locationError,
     Expression<bool>? isLocked,
     Expression<int>? rowid,
   }) {
@@ -947,6 +1187,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       if (listeningPoint != null) 'listening_point': listeningPoint,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
+      if (accuracy != null) 'accuracy': accuracy,
+      if (altitude != null) 'altitude': altitude,
+      if (altitudeAccuracy != null) 'altitude_accuracy': altitudeAccuracy,
+      if (positionTimestamp != null) 'position_timestamp': positionTimestamp,
+      if (locationError != null) 'location_error': locationError,
       if (isLocked != null) 'is_locked': isLocked,
       if (rowid != null) 'rowid': rowid,
     });
@@ -971,6 +1216,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Value<int?>? listeningPoint,
     Value<double?>? latitude,
     Value<double?>? longitude,
+    Value<double?>? accuracy,
+    Value<double?>? altitude,
+    Value<double?>? altitudeAccuracy,
+    Value<DateTime?>? positionTimestamp,
+    Value<LocationErrorType?>? locationError,
     Value<bool>? isLocked,
     Value<int>? rowid,
   }) {
@@ -993,6 +1243,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       listeningPoint: listeningPoint ?? this.listeningPoint,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      accuracy: accuracy ?? this.accuracy,
+      altitude: altitude ?? this.altitude,
+      altitudeAccuracy: altitudeAccuracy ?? this.altitudeAccuracy,
+      positionTimestamp: positionTimestamp ?? this.positionTimestamp,
+      locationError: locationError ?? this.locationError,
       isLocked: isLocked ?? this.isLocked,
       rowid: rowid ?? this.rowid,
     );
@@ -1071,6 +1326,23 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     if (longitude.present) {
       map['longitude'] = Variable<double>(longitude.value);
     }
+    if (accuracy.present) {
+      map['accuracy'] = Variable<double>(accuracy.value);
+    }
+    if (altitude.present) {
+      map['altitude'] = Variable<double>(altitude.value);
+    }
+    if (altitudeAccuracy.present) {
+      map['altitude_accuracy'] = Variable<double>(altitudeAccuracy.value);
+    }
+    if (positionTimestamp.present) {
+      map['position_timestamp'] = Variable<DateTime>(positionTimestamp.value);
+    }
+    if (locationError.present) {
+      map['location_error'] = Variable<int>(
+        $SessionsTableTable.$converterlocationErrorn.toSql(locationError.value),
+      );
+    }
     if (isLocked.present) {
       map['is_locked'] = Variable<bool>(isLocked.value);
     }
@@ -1101,6 +1373,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
           ..write('listeningPoint: $listeningPoint, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('accuracy: $accuracy, ')
+          ..write('altitude: $altitude, ')
+          ..write('altitudeAccuracy: $altitudeAccuracy, ')
+          ..write('positionTimestamp: $positionTimestamp, ')
+          ..write('locationError: $locationError, ')
           ..write('isLocked: $isLocked, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -2451,6 +2728,11 @@ typedef $$SessionsTableTableCreateCompanionBuilder =
       Value<int?> listeningPoint,
       Value<double?> latitude,
       Value<double?> longitude,
+      Value<double?> accuracy,
+      Value<double?> altitude,
+      Value<double?> altitudeAccuracy,
+      Value<DateTime?> positionTimestamp,
+      Value<LocationErrorType?> locationError,
       required bool isLocked,
       Value<int> rowid,
     });
@@ -2474,6 +2756,11 @@ typedef $$SessionsTableTableUpdateCompanionBuilder =
       Value<int?> listeningPoint,
       Value<double?> latitude,
       Value<double?> longitude,
+      Value<double?> accuracy,
+      Value<double?> altitude,
+      Value<double?> altitudeAccuracy,
+      Value<DateTime?> positionTimestamp,
+      Value<LocationErrorType?> locationError,
       Value<bool> isLocked,
       Value<int> rowid,
     });
@@ -2622,6 +2909,32 @@ class $$SessionsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<double> get accuracy => $composableBuilder(
+    column: $table.accuracy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get altitude => $composableBuilder(
+    column: $table.altitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get altitudeAccuracy => $composableBuilder(
+    column: $table.altitudeAccuracy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get positionTimestamp => $composableBuilder(
+    column: $table.positionTimestamp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<LocationErrorType?, LocationErrorType, int>
+  get locationError => $composableBuilder(
+    column: $table.locationError,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
   ColumnFilters<bool> get isLocked => $composableBuilder(
     column: $table.isLocked,
     builder: (column) => ColumnFilters(column),
@@ -2752,6 +3065,31 @@ class $$SessionsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get accuracy => $composableBuilder(
+    column: $table.accuracy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get altitude => $composableBuilder(
+    column: $table.altitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get altitudeAccuracy => $composableBuilder(
+    column: $table.altitudeAccuracy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get positionTimestamp => $composableBuilder(
+    column: $table.positionTimestamp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get locationError => $composableBuilder(
+    column: $table.locationError,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isLocked => $composableBuilder(
     column: $table.isLocked,
     builder: (column) => ColumnOrderings(column),
@@ -2837,6 +3175,28 @@ class $$SessionsTableTableAnnotationComposer
   GeneratedColumn<double> get longitude =>
       $composableBuilder(column: $table.longitude, builder: (column) => column);
 
+  GeneratedColumn<double> get accuracy =>
+      $composableBuilder(column: $table.accuracy, builder: (column) => column);
+
+  GeneratedColumn<double> get altitude =>
+      $composableBuilder(column: $table.altitude, builder: (column) => column);
+
+  GeneratedColumn<double> get altitudeAccuracy => $composableBuilder(
+    column: $table.altitudeAccuracy,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get positionTimestamp => $composableBuilder(
+    column: $table.positionTimestamp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<LocationErrorType?, int> get locationError =>
+      $composableBuilder(
+        column: $table.locationError,
+        builder: (column) => column,
+      );
+
   GeneratedColumn<bool> get isLocked =>
       $composableBuilder(column: $table.isLocked, builder: (column) => column);
 
@@ -2913,6 +3273,11 @@ class $$SessionsTableTableTableManager
                 Value<int?> listeningPoint = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
+                Value<double?> accuracy = const Value.absent(),
+                Value<double?> altitude = const Value.absent(),
+                Value<double?> altitudeAccuracy = const Value.absent(),
+                Value<DateTime?> positionTimestamp = const Value.absent(),
+                Value<LocationErrorType?> locationError = const Value.absent(),
                 Value<bool> isLocked = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion(
@@ -2934,6 +3299,11 @@ class $$SessionsTableTableTableManager
                 listeningPoint: listeningPoint,
                 latitude: latitude,
                 longitude: longitude,
+                accuracy: accuracy,
+                altitude: altitude,
+                altitudeAccuracy: altitudeAccuracy,
+                positionTimestamp: positionTimestamp,
+                locationError: locationError,
                 isLocked: isLocked,
                 rowid: rowid,
               ),
@@ -2957,6 +3327,11 @@ class $$SessionsTableTableTableManager
                 Value<int?> listeningPoint = const Value.absent(),
                 Value<double?> latitude = const Value.absent(),
                 Value<double?> longitude = const Value.absent(),
+                Value<double?> accuracy = const Value.absent(),
+                Value<double?> altitude = const Value.absent(),
+                Value<double?> altitudeAccuracy = const Value.absent(),
+                Value<DateTime?> positionTimestamp = const Value.absent(),
+                Value<LocationErrorType?> locationError = const Value.absent(),
                 required bool isLocked,
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion.insert(
@@ -2978,6 +3353,11 @@ class $$SessionsTableTableTableManager
                 listeningPoint: listeningPoint,
                 latitude: latitude,
                 longitude: longitude,
+                accuracy: accuracy,
+                altitude: altitude,
+                altitudeAccuracy: altitudeAccuracy,
+                positionTimestamp: positionTimestamp,
+                locationError: locationError,
                 isLocked: isLocked,
                 rowid: rowid,
               ),
