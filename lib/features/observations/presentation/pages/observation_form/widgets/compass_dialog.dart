@@ -7,13 +7,14 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/presentation/utils/numerical_range_formatter.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
+import 'package:noctambuls/core/presentation/widgets/app_dialog.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/classic_compass_dial.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class CompassDialog extends StatefulWidget {
-  final double? initialHeading;
-
   const CompassDialog({super.key, this.initialHeading});
+
+  final double? initialHeading;
 
   @override
   State<CompassDialog> createState() => _CompassDialogState();
@@ -97,107 +98,109 @@ class _CompassDialogState extends State<CompassDialog> {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
-    return AlertDialog(
-      title: Text(l10n.orientationTitle, textAlign: TextAlign.center),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ClassicCompassDial(
-              heading: _heading,
-              size: 220,
-            ),
+    return AppDialog(
+      title: l10n.orientationTitle,
 
-            const SizedBox(height: AppDimensions.xl),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ClassicCompassDial(
+            heading: _heading,
+            size: 220,
+          ),
 
-            if (_isManualMode)
-              TextField(
-                controller: _manualInputController,
-                keyboardType: const TextInputType.numberWithOptions(
-                  signed: true,
+          const SizedBox(height: AppDimensions.xl),
+
+          if (_isManualMode)
+            TextField(
+              controller: _manualInputController,
+              keyboardType: const TextInputType.numberWithOptions(
+                signed: true,
+              ),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp('^-?[0-9]*[.,]?[0-9]*'),
                 ),
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(
-                    RegExp('^-?[0-9]*[.,]?[0-9]*'),
-                  ),
-                  NumericalRangeFormatter(
-                    min: degrees * -1.0,
-                    max: degrees * 1.0,
-                  ),
-                ],
-                textAlign: TextAlign.center,
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
+                NumericalRangeFormatter(
+                  min: degrees * -1.0,
+                  max: degrees * 1.0,
                 ),
-                decoration: InputDecoration(
-                  labelText: l10n.compassDegreesHint,
-                  suffixText: l10n.compassDegreesFormat(
-                    _getCardinalDirection(_heading),
-                    '',
-                  ),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                  ),
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: AppDimensions.md,
-                    vertical: AppDimensions.sm,
-                  ),
-                ),
-                onChanged: _onManualInputChanged,
-              )
-            else
-              Text(
-                l10n.compassDegreesFormat(
+              ],
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.primary,
+              ),
+              decoration: InputDecoration(
+                labelText: l10n.compassDegreesHint,
+                suffixText: l10n.compassDegreesFormat(
                   _getCardinalDirection(_heading),
-                  _heading.toStringAsFixed(0),
+                  '',
                 ),
-                style: theme.textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.colorScheme.primary,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: AppDimensions.md,
+                  vertical: AppDimensions.sm,
                 ),
               ),
-
-            const SizedBox(height: AppDimensions.md),
-
-            if (_hasSensor)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    l10n.compassManualMode,
-                    style: theme.textTheme.bodyMedium,
-                  ),
-                  const SizedBox(width: AppDimensions.sm),
-                  Switch(
-                    value: _isManualMode,
-                    onChanged: (value) {
-                      setState(() {
-                        _isManualMode = value;
-                        if (value) {
-                          _manualInputController.text = _heading
-                              .toStringAsFixed(0);
-                        }
-                      });
-                    },
-                  ),
-                ],
-              )
-            else
-              Text(
-                l10n.compassNoSensorFallback,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: theme.colorScheme.error),
+              onChanged: _onManualInputChanged,
+            )
+          else
+            Text(
+              l10n.compassDegreesFormat(
+                _getCardinalDirection(_heading),
+                _heading.toStringAsFixed(0),
               ),
-
-            const SizedBox(height: AppDimensions.xl),
-
-            AppButton.primary(
-              onPressed: () => context.pop(_heading),
-              label: l10n.compassFixDirection,
+              style: theme.textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: theme.colorScheme.primary,
+              ),
             ),
-          ],
-        ),
+
+          const SizedBox(height: AppDimensions.md),
+
+          if (_hasSensor)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  l10n.compassManualMode,
+                  style: theme.textTheme.bodyMedium,
+                ),
+                const SizedBox(width: AppDimensions.sm),
+                Switch(
+                  value: _isManualMode,
+                  onChanged: (value) {
+                    setState(() {
+                      _isManualMode = value;
+                      if (value) {
+                        _manualInputController.text = _heading.toStringAsFixed(
+                          0,
+                        );
+                      }
+                    });
+                  },
+                ),
+              ],
+            )
+          else
+            Text(
+              l10n.compassNoSensorFallback,
+              textAlign: TextAlign.center,
+              style: TextStyle(color: theme.colorScheme.error),
+            ),
+        ],
+      ),
+      secondaryButton: TextButton(
+        onPressed: () => context.pop(),
+        child: Text(l10n.cancel),
+      ),
+
+      primaryButton: AppButton.primary(
+        onPressed: () => context.pop(_heading),
+        label: l10n.compassFixDirection,
       ),
     );
   }

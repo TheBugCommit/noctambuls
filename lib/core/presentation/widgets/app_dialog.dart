@@ -6,8 +6,8 @@ import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 class AppDialog extends StatelessWidget {
   const AppDialog({
     required this.title,
-    required this.message,
     required this.primaryButton,
+    required this.content,
     this.secondaryButton,
     this.icon,
     this.iconColor,
@@ -15,11 +15,23 @@ class AppDialog extends StatelessWidget {
   });
 
   final String title;
-  final String message;
   final Widget primaryButton;
+  final Widget content;
   final Widget? secondaryButton;
   final IconData? icon;
   final Color? iconColor;
+
+  static Widget _buildTextMessage(
+    BuildContext context,
+    String message,
+  ) {
+    return Text(
+      message,
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        color: Theme.of(context).colorScheme.onSurfaceVariant,
+      ),
+    );
+  }
 
   static Future<void> showInfo({
     required BuildContext context,
@@ -33,7 +45,7 @@ class AppDialog extends StatelessWidget {
       context: context,
       builder: (context) => AppDialog(
         title: title,
-        message: message,
+        content: _buildTextMessage(context, message),
         icon: icon,
         iconColor: iconColor,
         primaryButton: AppButton.primary(
@@ -58,7 +70,7 @@ class AppDialog extends StatelessWidget {
       context: context,
       builder: (context) => AppDialog(
         title: title,
-        message: message,
+        content: _buildTextMessage(context, message),
         icon: icon,
         iconColor: iconColor,
         secondaryButton: TextButton(
@@ -99,14 +111,7 @@ class AppDialog extends StatelessWidget {
         ),
       ),
 
-      content: SingleChildScrollView(
-        child: Text(
-          message,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-      ),
+      content: SingleChildScrollView(child: content),
 
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
