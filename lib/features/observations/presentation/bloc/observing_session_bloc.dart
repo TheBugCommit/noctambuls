@@ -6,6 +6,7 @@ import 'package:noctambuls/features/observations/domain/entities/observation_ses
 import 'package:noctambuls/features/observations/domain/usecases/change_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/create_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/retry_session_location_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
@@ -21,12 +22,14 @@ class ObservingSessionBloc
     required this.deleteSessionUseCase,
     required this.stopObservationPhaseUseCase,
     required this.changeObservationDateUseCase,
+    required this.retrySessionLocationUseCase,
     required this.logger,
   }) : super(const ObservingSessionIdle()) {
     on<WatchObservingSession>(_onWatchSession);
     on<ObservingSessionStreamUpdated>(_onSessionStreamUpdated);
     on<StartObservingSession>(_onStartNewSession);
     on<UpdateObservingSessionLocation>(_onUpdateSessionLocation);
+    on<RetryObservingSessionLocation>(_onRetryLocation);
     on<StopObservingSession>(_onStopObservationPhase);
     on<DeleteObservingSession>(_onDeleteSession);
     on<ChangeObservingDate>(_onChangeObservationDate);
@@ -39,6 +42,7 @@ class ObservingSessionBloc
   final DeleteSessionUseCase deleteSessionUseCase;
   final StopObservationPhaseUseCase stopObservationPhaseUseCase;
   final ChangeObservationDateUseCase changeObservationDateUseCase;
+  final RetrySessionLocationUseCase retrySessionLocationUseCase;
   final IAppLogger logger;
 
   StreamSubscription<ObservationSession?>? _sessionSubscription;
@@ -107,23 +111,38 @@ class ObservingSessionBloc
     );
   }
 
+  Future<void> _onRetryLocation(
+    RetryObservingSessionLocation event,
+    Emitter<ObservingSessionState> emit,
+  ) async {
+    if (state is! ObservingSessionActive) return;
+    final current = (state as ObservingSessionActive).session;
+
+    await retrySessionLocationUseCase(current);
+  }
+
   Future<void> _onUpdateSessionLocation(
     UpdateObservingSessionLocation event,
     Emitter<ObservingSessionState> emit,
   ) async {
-    if (state is! ActiveObservingState) return;
-    //TODO: implementar
-    /*final current = (state as ActiveSessionLifecycleState).session;
+    if (state is! ObservingSessionActive) return;
+    final currentSession = (state as ObservingSessionActive).session;
 
-    final result = await updateSessionUseCase(updated);
+    final updatedSession = currentSession.copyWith(
+      location: event.geoPosition,
+      locationError: null,
+      updatedAt: DateTime.now(),
+    );
+
+    final result = await updateSessionUseCase(updatedSession);
 
     result.when(
       success: (_) {},
       failure: (failure) {
         logger.failure(failure);
-        emit(SessionLifecycleError(failure: failure));
+        emit(ObservingSessionError(failure: failure));
       },
-    );*/
+    );
   }
 
   Future<void> _onStopObservationPhase(

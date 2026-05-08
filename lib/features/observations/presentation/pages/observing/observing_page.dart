@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
@@ -14,6 +15,7 @@ import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.da
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/catalog_sync_requiered_view.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_state.dart';
@@ -25,18 +27,59 @@ import 'package:noctambuls/features/observations/presentation/pages/observation_
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/empty_observations.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/observation_card.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/stopwatch_display.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/animated_pulsed_location.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/location_permissions_dialog.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/popup_menu_observing.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
-class ObservingPage extends StatelessWidget {
+class ObservingPage extends StatefulWidget {
   const ObservingPage({super.key});
+
+  @override
+  State<ObservingPage> createState() => _ObservingPageState();
+}
+
+class _ObservingPageState extends State<ObservingPage>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      final bloc = context.read<ObservingSessionBloc>();
+      final currentState = bloc.state;
+
+      if (currentState is ObservingSessionActive &&
+          currentState.session.locationError != null) {
+        bloc.add(RetryObservingSessionLocation());
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<ObservingSessionBloc, ObservingSessionState>(
-      listenWhen: (prev, curr) =>
-          curr is ObservingSessionNavigatingToReview ||
-          curr is ObservingSessionIdle,
+      listenWhen: (prev, curr) {
+        if (curr is ObservingSessionNavigatingToReview ||
+            curr is ObservingSessionIdle) {
+          return true;
+        }
+        if (prev is ObservingSessionActive && curr is ObservingSessionActive) {
+          return prev.session.locationError != curr.session.locationError &&
+              curr.session.locationError != null;
+        }
+        return false;
+      },
       listener: (context, state) {
         if (state is ObservingSessionNavigatingToReview) {
           context.pushReplacement(AppRoutes.review, extra: state.session);
@@ -45,11 +88,25 @@ class ObservingPage extends StatelessWidget {
             context.pop();
           }
         }
+        // 3. NOU: Llancem el diàleg si estem actius i tenim error
+        else if (state is ObservingSessionActive &&
+            state.session.locationError != null) {
+          final error = state.session.locationError!;
+          if (error == LocationErrorType.permissionDenied ||
+              error == LocationErrorType.gpsDisabled) {
+            unawaited(
+              LocationPermissionsDialog.showLocationErrorDialog(context, error),
+            );
+          }
+        }
       },
       buildWhen: (prev, curr) {
-        if (curr is! ObservingSessionActive) return false;
-        final prevId = prev is ObservingSessionActive ? prev.session.id : null;
-        return prevId != curr.session.id;
+        if (prev.runtimeType != curr.runtimeType) return true;
+        if (prev is ObservingSessionActive && curr is ObservingSessionActive) {
+          return prev.session != curr.session ||
+              prev.selectedObservationDate != curr.selectedObservationDate;
+        }
+        return false;
       },
       builder: (context, state) {
         if (state is! ObservingSessionActive) {
@@ -182,58 +239,84 @@ class _ObservingContent extends StatelessWidget {
       return false;
     });
 
-    return BlocProvider(
-      create: (_) => StopwatchCubit(
-        startTime: session.startTime ?? DateTime.now(),
+    final Widget content = Scaffold(
+      appBar: AppBar(
+        leading: BackButton(onPressed: () => context.pop()),
+        title: session.isIncidental
+            ? Text(l10n.observingTitle)
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(l10n.observingTitle),
+                  const StopwatchDisplay(),
+                ],
+              ),
+        actions: [
+          if (!session.isIncidental)
+            AnimatedPulseLocation(
+              session: session,
+              onPressed: () async {
+                final result = await context.push<GeoPosition>(
+                  AppRoutes.mapPicker,
+                  extra: session.location,
+                );
+
+                if (context.mounted && result != null) {
+                  context.read<ObservingSessionBloc>().add(
+                    UpdateObservingSessionLocation(geoPosition: result),
+                  );
+                }
+              },
+            ),
+          PopupMenuObserving(session: session),
+        ],
       ),
-      child: Scaffold(
-        appBar: AppBar(
-          leading: BackButton(onPressed: () => context.pop()),
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(l10n.observingTitle),
-              const StopwatchDisplay(),
-            ],
-          ),
-          actions: [PopupMenuObserving(session: session)],
-        ),
-        body: SafeArea(
-          child: showCatalogRequiredView
-              ? const CatalogSyncRequiredView()
-              : _ObservationListBody(session: session),
-        ),
-        floatingActionButton: AppButtonFab.large(
-          onPressed: () => _openForm(context),
-          icon: Icons.add,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        bottomNavigationBar: BottomNavBar(
-          child: Row(
-            children: [
-              AppButton.destructiveSoft(
-                icon: Icons.delete_outline,
-                onPressed: () => _confirmDelete(context),
-              ),
-              if (session.canEditObservationDate) ...[
-                const SizedBox(width: AppDimensions.sm),
-                IconButton(
-                  icon: const Icon(Icons.calendar_today_outlined),
-                  tooltip: l10n.changeDateLabel,
-                  onPressed: () => _pickGlobalDate(context),
-                ),
-              ],
-              const Spacer(),
-              AppButton(
-                label: l10n.stopAndReview,
-                icon: Icons.stop_circle_outlined,
-                onPressed: () => _goToReview(context),
+      body: SafeArea(
+        child: showCatalogRequiredView
+            ? const CatalogSyncRequiredView()
+            : _ObservationListBody(session: session),
+      ),
+      floatingActionButton: AppButtonFab.large(
+        onPressed: () => _openForm(context),
+        icon: Icons.add,
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      bottomNavigationBar: BottomNavBar(
+        child: Row(
+          children: [
+            AppButton.destructiveSoft(
+              icon: Icons.delete_outline,
+              onPressed: () => _confirmDelete(context),
+            ),
+            if (session.canEditObservationDate) ...[
+              const SizedBox(width: AppDimensions.sm),
+              IconButton(
+                icon: const Icon(Icons.calendar_today_outlined),
+                tooltip: l10n.changeDateLabel,
+                onPressed: () => _pickGlobalDate(context),
               ),
             ],
-          ),
+            const Spacer(),
+            AppButton(
+              label: l10n.stopAndReview,
+              icon: Icons.stop_circle_outlined,
+              onPressed: () => _goToReview(context),
+            ),
+          ],
         ),
       ),
     );
+
+    if (!session.isIncidental) {
+      return BlocProvider(
+        create: (_) => StopwatchCubit(
+          startTime: session.startTime ?? DateTime.now(),
+        ),
+        child: content,
+      );
+    }
+
+    return content;
   }
 }
 

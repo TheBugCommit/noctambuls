@@ -66,3 +66,5 @@ class ChangeObservingDate extends ObservingSessionEvent {
 }
 
 class DismissObservingError extends ObservingSessionEvent {}
+
+class RetryObservingSessionLocation extends ObservingSessionEvent {}
