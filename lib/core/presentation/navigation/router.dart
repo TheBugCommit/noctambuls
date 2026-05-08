@@ -4,7 +4,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/phone_settings/phone_settings_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/share/share_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
 import 'package:noctambuls/core/presentation/navigation/auth_router_guard.dart';
@@ -22,6 +24,7 @@ import 'package:noctambuls/features/observations/presentation/bloc/session_list_
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
+import 'package:noctambuls/features/observations/presentation/pages/map_picker/map_picker_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/observing_page.dart';
@@ -149,7 +152,12 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
     GoRoute(
       path: AppRoutes.observing,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const ObservingPage(),
+      builder: (context, state) {
+        return BlocProvider(
+          create: (context) => sl<PhoneSettingsBloc>(),
+          child: const ObservingPage(),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.observationForm,
@@ -184,8 +192,13 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           );
         }
 
-        return BlocProvider(
-          create: (_) => sl<SessionReviewBloc>(param1: sessionToReview),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => sl<SessionReviewBloc>(param1: sessionToReview),
+            ),
+            BlocProvider(create: (_) => sl<PhoneSettingsBloc>()),
+          ],
           child: ReviewPage(session: sessionToReview),
         );
       },
@@ -194,6 +207,13 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
       path: AppRoutes.qrScanner,
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) => const QrScannerPage(),
+    ),
+    GoRoute(
+      path: AppRoutes.mapPicker,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) => MapPickerPage(
+        initialLocation: state.extra as GeoPosition?,
+      ),
     ),
     GoRoute(
       path: AppRoutes.profileEdit,
