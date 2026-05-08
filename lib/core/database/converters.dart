@@ -1,4 +1,5 @@
 import 'package:drift/drift.dart';
+import 'package:noctambuls/core/domain/enums/location_source.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
@@ -229,4 +230,24 @@ class LocationErrorTypeConverter extends TypeConverter<LocationErrorType, int>
 
   @override
   int toJson(LocationErrorType value) => toSql(value);
+}
+
+class LocationSourceConverter extends TypeConverter<LocationSource, int>
+    with JsonTypeConverter2<LocationSource, int, int> {
+  const LocationSourceConverter();
+
+  @override
+  LocationSource fromSql(int fromDb) => LocationSource.values.firstWhere(
+    (e) => e.value == fromDb,
+    orElse: () => LocationSource.values.first,
+  );
+
+  @override
+  int toSql(LocationSource value) => value.value;
+
+  @override
+  LocationSource fromJson(int json) => fromSql(json);
+
+  @override
+  int toJson(LocationSource value) => toSql(value);
 }

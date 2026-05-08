@@ -1,28 +1,35 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:noctambuls/core/database/user_database.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
+import 'package:noctambuls/core/domain/enums/location_source.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
 
-class ObservationRecordModel {
-  const ObservationRecordModel({
-    required this.id,
-    required this.sessionId,
-    required this.speciesId,
-    required this.contactType,
-    required this.quantity,
-    required this.startTime,
-    required this.endTime,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.bearing,
-    required this.latitude,
-    required this.longitude,
-    this.notes,
-    this.validationStatus = ValidationStatus.pending,
-    this.syncStatus = SyncStatus.draft,
-    this.isDeleted = false,
-  });
+part 'observation_record_model.freezed.dart';
+
+@freezed
+abstract class ObservationRecordModel with _$ObservationRecordModel {
+  const factory ObservationRecordModel({
+    required String id,
+    required String sessionId,
+    required String speciesId,
+    required ContactType contactType,
+    required int quantity,
+    required DateTime startTime,
+    required DateTime endTime,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required double bearing,
+    String? notes,
+    GeoPosition? location,
+    LocationErrorType? locationError,
+    @Default(ValidationStatus.pending) ValidationStatus validationStatus,
+    @Default(SyncStatus.draft) SyncStatus syncStatus,
+    @Default(false) bool isDeleted,
+  }) = _ObservationRecordModel;
 
   factory ObservationRecordModel.fromEntity(ObservationRecord entity) {
     return ObservationRecordModel(
@@ -34,8 +41,8 @@ class ObservationRecordModel {
       startTime: entity.startTime,
       endTime: entity.endTime,
       notes: entity.notes,
-      latitude: entity.latitude,
-      longitude: entity.longitude,
+      location: entity.location,
+      locationError: entity.locationError,
       bearing: entity.bearing,
       validationStatus: entity.validationStatus,
       syncStatus: entity.syncStatus,
@@ -46,6 +53,19 @@ class ObservationRecordModel {
   }
 
   factory ObservationRecordModel.fromData(ObservationEntityData data) {
+    GeoPosition? location;
+    if (data.latitude != null && data.longitude != null) {
+      location = GeoPosition(
+        latitude: data.latitude!,
+        longitude: data.longitude!,
+        accuracy: data.accuracy ?? 0.0,
+        altitude: data.altitude ?? 0.0,
+        altitudeAccuracy: data.altitudeAccuracy ?? 0.0,
+        timestamp: data.positionTimestamp ?? data.createdAt,
+        locationSource: data.locationSource ?? LocationSource.gps,
+      );
+    }
+
     return ObservationRecordModel(
       id: data.id,
       sessionId: data.sessionId,
@@ -55,8 +75,8 @@ class ObservationRecordModel {
       startTime: data.startTime,
       endTime: data.endTime,
       notes: data.notes,
-      latitude: data.latitude,
-      longitude: data.longitude,
+      location: location,
+      locationError: data.locationError,
       bearing: data.bearing,
       validationStatus: data.validationStatus,
       syncStatus: data.syncStatus,
@@ -65,24 +85,9 @@ class ObservationRecordModel {
       isDeleted: data.isDeleted,
     );
   }
+}
 
-  final String id;
-  final String sessionId;
-  final String speciesId;
-  final ContactType contactType;
-  final int quantity;
-  final DateTime startTime;
-  final DateTime endTime;
-  final String? notes;
-  final double latitude;
-  final double longitude;
-  final double bearing;
-  final ValidationStatus validationStatus;
-  final SyncStatus syncStatus;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool isDeleted;
-
+extension ObservationRecordModelX on ObservationRecordModel {
   ObservationRecord toDomain() {
     return ObservationRecord(
       id: id,
@@ -93,8 +98,8 @@ class ObservationRecordModel {
       startTime: startTime,
       endTime: endTime,
       notes: notes,
-      latitude: latitude,
-      longitude: longitude,
+      location: location,
+      locationError: locationError,
       bearing: bearing,
       validationStatus: validationStatus,
       syncStatus: syncStatus,

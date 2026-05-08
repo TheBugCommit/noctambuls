@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
 
@@ -14,8 +16,8 @@ class ObservationRecord extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     required this.bearing,
-    required this.latitude,
-    required this.longitude,
+    this.location,
+    this.locationError,
     this.quantity = 1,
     this.notes,
     this.validationStatus = ValidationStatus.pending,
@@ -31,8 +33,8 @@ class ObservationRecord extends Equatable {
   final DateTime startTime;
   final DateTime endTime;
   final String? notes;
-  final double latitude;
-  final double longitude;
+  final GeoPosition? location;
+  final LocationErrorType? locationError;
   final double bearing;
   final ValidationStatus validationStatus;
   final SyncStatus syncStatus;
@@ -47,8 +49,8 @@ class ObservationRecord extends Equatable {
     DateTime? startTime,
     DateTime? endTime,
     Object? notes = _absent,
-    double? latitude,
-    double? longitude,
+    Object? location = _absent,
+    Object? locationError = _absent,
     double? bearing,
     int? quantity,
     ValidationStatus? validationStatus,
@@ -64,8 +66,12 @@ class ObservationRecord extends Equatable {
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
       notes: identical(notes, _absent) ? this.notes : notes as String?,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
+      location: identical(location, _absent)
+          ? this.location
+          : location as GeoPosition?,
+      locationError: identical(locationError, _absent)
+          ? this.locationError
+          : locationError as LocationErrorType?,
       bearing: bearing ?? this.bearing,
       validationStatus: validationStatus ?? this.validationStatus,
       syncStatus: syncStatus ?? this.syncStatus,
@@ -85,8 +91,8 @@ class ObservationRecord extends Equatable {
     startTime,
     endTime,
     notes,
-    latitude,
-    longitude,
+    location,
+    locationError,
     bearing,
     validationStatus,
     syncStatus,

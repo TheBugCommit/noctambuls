@@ -257,6 +257,18 @@ class $SessionsTableTable extends SessionsTable
       ).withConverter<LocationErrorType?>(
         $SessionsTableTable.$converterlocationErrorn,
       );
+  @override
+  late final GeneratedColumnWithTypeConverter<LocationSource?, int>
+  locationSource =
+      GeneratedColumn<int>(
+        'location_source',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      ).withConverter<LocationSource?>(
+        $SessionsTableTable.$converterlocationSourcen,
+      );
   static const VerificationMeta _isLockedMeta = const VerificationMeta(
     'isLocked',
   );
@@ -296,6 +308,7 @@ class $SessionsTableTable extends SessionsTable
     altitudeAccuracy,
     positionTimestamp,
     locationError,
+    locationSource,
     isLocked,
   ];
   @override
@@ -540,6 +553,12 @@ class $SessionsTableTable extends SessionsTable
           data['${effectivePrefix}location_error'],
         ),
       ),
+      locationSource: $SessionsTableTable.$converterlocationSourcen.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}location_source'],
+        ),
+      ),
       isLocked: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}is_locked'],
@@ -574,6 +593,12 @@ class $SessionsTableTable extends SessionsTable
   $converterlocationErrorn = JsonTypeConverter2.asNullable(
     $converterlocationError,
   );
+  static JsonTypeConverter2<LocationSource, int, int> $converterlocationSource =
+      const LocationSourceConverter();
+  static JsonTypeConverter2<LocationSource?, int?, int?>
+  $converterlocationSourcen = JsonTypeConverter2.asNullable(
+    $converterlocationSource,
+  );
 }
 
 class SessionEntityData extends DataClass
@@ -601,6 +626,7 @@ class SessionEntityData extends DataClass
   final double? altitudeAccuracy;
   final DateTime? positionTimestamp;
   final LocationErrorType? locationError;
+  final LocationSource? locationSource;
   final bool isLocked;
   const SessionEntityData({
     required this.id,
@@ -626,6 +652,7 @@ class SessionEntityData extends DataClass
     this.altitudeAccuracy,
     this.positionTimestamp,
     this.locationError,
+    this.locationSource,
     required this.isLocked,
   });
   @override
@@ -706,6 +733,11 @@ class SessionEntityData extends DataClass
         $SessionsTableTable.$converterlocationErrorn.toSql(locationError),
       );
     }
+    if (!nullToAbsent || locationSource != null) {
+      map['location_source'] = Variable<int>(
+        $SessionsTableTable.$converterlocationSourcen.toSql(locationSource),
+      );
+    }
     map['is_locked'] = Variable<bool>(isLocked);
     return map;
   }
@@ -755,6 +787,9 @@ class SessionEntityData extends DataClass
       locationError: locationError == null && nullToAbsent
           ? const Value.absent()
           : Value(locationError),
+      locationSource: locationSource == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationSource),
       isLocked: Value(isLocked),
     );
   }
@@ -808,6 +843,9 @@ class SessionEntityData extends DataClass
       locationError: $SessionsTableTable.$converterlocationErrorn.fromJson(
         serializer.fromJson<int?>(json['locationError']),
       ),
+      locationSource: $SessionsTableTable.$converterlocationSourcen.fromJson(
+        serializer.fromJson<int?>(json['locationSource']),
+      ),
       isLocked: serializer.fromJson<bool>(json['isLocked']),
     );
   }
@@ -856,6 +894,9 @@ class SessionEntityData extends DataClass
       'locationError': serializer.toJson<int?>(
         $SessionsTableTable.$converterlocationErrorn.toJson(locationError),
       ),
+      'locationSource': serializer.toJson<int?>(
+        $SessionsTableTable.$converterlocationSourcen.toJson(locationSource),
+      ),
       'isLocked': serializer.toJson<bool>(isLocked),
     };
   }
@@ -884,6 +925,7 @@ class SessionEntityData extends DataClass
     Value<double?> altitudeAccuracy = const Value.absent(),
     Value<DateTime?> positionTimestamp = const Value.absent(),
     Value<LocationErrorType?> locationError = const Value.absent(),
+    Value<LocationSource?> locationSource = const Value.absent(),
     bool? isLocked,
   }) => SessionEntityData(
     id: id ?? this.id,
@@ -917,6 +959,9 @@ class SessionEntityData extends DataClass
     locationError: locationError.present
         ? locationError.value
         : this.locationError,
+    locationSource: locationSource.present
+        ? locationSource.value
+        : this.locationSource,
     isLocked: isLocked ?? this.isLocked,
   );
   SessionEntityData copyWithCompanion(SessionsTableCompanion data) {
@@ -962,6 +1007,9 @@ class SessionEntityData extends DataClass
       locationError: data.locationError.present
           ? data.locationError.value
           : this.locationError,
+      locationSource: data.locationSource.present
+          ? data.locationSource.value
+          : this.locationSource,
       isLocked: data.isLocked.present ? data.isLocked.value : this.isLocked,
     );
   }
@@ -992,6 +1040,7 @@ class SessionEntityData extends DataClass
           ..write('altitudeAccuracy: $altitudeAccuracy, ')
           ..write('positionTimestamp: $positionTimestamp, ')
           ..write('locationError: $locationError, ')
+          ..write('locationSource: $locationSource, ')
           ..write('isLocked: $isLocked')
           ..write(')'))
         .toString();
@@ -1022,6 +1071,7 @@ class SessionEntityData extends DataClass
     altitudeAccuracy,
     positionTimestamp,
     locationError,
+    locationSource,
     isLocked,
   ]);
   @override
@@ -1051,6 +1101,7 @@ class SessionEntityData extends DataClass
           other.altitudeAccuracy == this.altitudeAccuracy &&
           other.positionTimestamp == this.positionTimestamp &&
           other.locationError == this.locationError &&
+          other.locationSource == this.locationSource &&
           other.isLocked == this.isLocked);
 }
 
@@ -1078,6 +1129,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
   final Value<double?> altitudeAccuracy;
   final Value<DateTime?> positionTimestamp;
   final Value<LocationErrorType?> locationError;
+  final Value<LocationSource?> locationSource;
   final Value<bool> isLocked;
   final Value<int> rowid;
   const SessionsTableCompanion({
@@ -1104,6 +1156,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.altitudeAccuracy = const Value.absent(),
     this.positionTimestamp = const Value.absent(),
     this.locationError = const Value.absent(),
+    this.locationSource = const Value.absent(),
     this.isLocked = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -1131,6 +1184,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.altitudeAccuracy = const Value.absent(),
     this.positionTimestamp = const Value.absent(),
     this.locationError = const Value.absent(),
+    this.locationSource = const Value.absent(),
     required bool isLocked,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -1165,6 +1219,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Expression<double>? altitudeAccuracy,
     Expression<DateTime>? positionTimestamp,
     Expression<int>? locationError,
+    Expression<int>? locationSource,
     Expression<bool>? isLocked,
     Expression<int>? rowid,
   }) {
@@ -1192,6 +1247,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       if (altitudeAccuracy != null) 'altitude_accuracy': altitudeAccuracy,
       if (positionTimestamp != null) 'position_timestamp': positionTimestamp,
       if (locationError != null) 'location_error': locationError,
+      if (locationSource != null) 'location_source': locationSource,
       if (isLocked != null) 'is_locked': isLocked,
       if (rowid != null) 'rowid': rowid,
     });
@@ -1221,6 +1277,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Value<double?>? altitudeAccuracy,
     Value<DateTime?>? positionTimestamp,
     Value<LocationErrorType?>? locationError,
+    Value<LocationSource?>? locationSource,
     Value<bool>? isLocked,
     Value<int>? rowid,
   }) {
@@ -1248,6 +1305,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       altitudeAccuracy: altitudeAccuracy ?? this.altitudeAccuracy,
       positionTimestamp: positionTimestamp ?? this.positionTimestamp,
       locationError: locationError ?? this.locationError,
+      locationSource: locationSource ?? this.locationSource,
       isLocked: isLocked ?? this.isLocked,
       rowid: rowid ?? this.rowid,
     );
@@ -1343,6 +1401,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
         $SessionsTableTable.$converterlocationErrorn.toSql(locationError.value),
       );
     }
+    if (locationSource.present) {
+      map['location_source'] = Variable<int>(
+        $SessionsTableTable.$converterlocationSourcen.toSql(
+          locationSource.value,
+        ),
+      );
+    }
     if (isLocked.present) {
       map['is_locked'] = Variable<bool>(isLocked.value);
     }
@@ -1378,6 +1443,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
           ..write('altitudeAccuracy: $altitudeAccuracy, ')
           ..write('positionTimestamp: $positionTimestamp, ')
           ..write('locationError: $locationError, ')
+          ..write('locationSource: $locationSource, ')
           ..write('isLocked: $isLocked, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -1530,9 +1596,9 @@ class $ObservationsTableTable extends ObservationsTable
   late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
     'latitude',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.double,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
   static const VerificationMeta _longitudeMeta = const VerificationMeta(
     'longitude',
@@ -1541,10 +1607,79 @@ class $ObservationsTableTable extends ObservationsTable
   late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
     'longitude',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.double,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
   );
+  static const VerificationMeta _accuracyMeta = const VerificationMeta(
+    'accuracy',
+  );
+  @override
+  late final GeneratedColumn<double> accuracy = GeneratedColumn<double>(
+    'accuracy',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _altitudeMeta = const VerificationMeta(
+    'altitude',
+  );
+  @override
+  late final GeneratedColumn<double> altitude = GeneratedColumn<double>(
+    'altitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _altitudeAccuracyMeta = const VerificationMeta(
+    'altitudeAccuracy',
+  );
+  @override
+  late final GeneratedColumn<double> altitudeAccuracy = GeneratedColumn<double>(
+    'altitude_accuracy',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _positionTimestampMeta = const VerificationMeta(
+    'positionTimestamp',
+  );
+  @override
+  late final GeneratedColumn<DateTime> positionTimestamp =
+      GeneratedColumn<DateTime>(
+        'position_timestamp',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<LocationErrorType?, int>
+  locationError =
+      GeneratedColumn<int>(
+        'location_error',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      ).withConverter<LocationErrorType?>(
+        $ObservationsTableTable.$converterlocationErrorn,
+      );
+  @override
+  late final GeneratedColumnWithTypeConverter<LocationSource?, int>
+  locationSource =
+      GeneratedColumn<int>(
+        'location_source',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      ).withConverter<LocationSource?>(
+        $ObservationsTableTable.$converterlocationSourcen,
+      );
   static const VerificationMeta _bearingMeta = const VerificationMeta(
     'bearing',
   );
@@ -1584,6 +1719,12 @@ class $ObservationsTableTable extends ObservationsTable
     notes,
     latitude,
     longitude,
+    accuracy,
+    altitude,
+    altitudeAccuracy,
+    positionTimestamp,
+    locationError,
+    locationSource,
     bearing,
     validationStatus,
   ];
@@ -1679,16 +1820,42 @@ class $ObservationsTableTable extends ObservationsTable
         _latitudeMeta,
         latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta),
       );
-    } else if (isInserting) {
-      context.missing(_latitudeMeta);
     }
     if (data.containsKey('longitude')) {
       context.handle(
         _longitudeMeta,
         longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
       );
-    } else if (isInserting) {
-      context.missing(_longitudeMeta);
+    }
+    if (data.containsKey('accuracy')) {
+      context.handle(
+        _accuracyMeta,
+        accuracy.isAcceptableOrUnknown(data['accuracy']!, _accuracyMeta),
+      );
+    }
+    if (data.containsKey('altitude')) {
+      context.handle(
+        _altitudeMeta,
+        altitude.isAcceptableOrUnknown(data['altitude']!, _altitudeMeta),
+      );
+    }
+    if (data.containsKey('altitude_accuracy')) {
+      context.handle(
+        _altitudeAccuracyMeta,
+        altitudeAccuracy.isAcceptableOrUnknown(
+          data['altitude_accuracy']!,
+          _altitudeAccuracyMeta,
+        ),
+      );
+    }
+    if (data.containsKey('position_timestamp')) {
+      context.handle(
+        _positionTimestampMeta,
+        positionTimestamp.isAcceptableOrUnknown(
+          data['position_timestamp']!,
+          _positionTimestampMeta,
+        ),
+      );
     }
     if (data.containsKey('bearing')) {
       context.handle(
@@ -1762,11 +1929,39 @@ class $ObservationsTableTable extends ObservationsTable
       latitude: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}latitude'],
-      )!,
+      ),
       longitude: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}longitude'],
-      )!,
+      ),
+      accuracy: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}accuracy'],
+      ),
+      altitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}altitude'],
+      ),
+      altitudeAccuracy: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}altitude_accuracy'],
+      ),
+      positionTimestamp: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}position_timestamp'],
+      ),
+      locationError: $ObservationsTableTable.$converterlocationErrorn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}location_error'],
+        ),
+      ),
+      locationSource: $ObservationsTableTable.$converterlocationSourcen.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}location_source'],
+        ),
+      ),
       bearing: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}bearing'],
@@ -1790,6 +1985,18 @@ class $ObservationsTableTable extends ObservationsTable
       const SyncStatusConverter();
   static JsonTypeConverter2<ContactType, int, int> $convertercontactType =
       const ContactTypeConverter();
+  static JsonTypeConverter2<LocationErrorType, int, int>
+  $converterlocationError = const LocationErrorTypeConverter();
+  static JsonTypeConverter2<LocationErrorType?, int?, int?>
+  $converterlocationErrorn = JsonTypeConverter2.asNullable(
+    $converterlocationError,
+  );
+  static JsonTypeConverter2<LocationSource, int, int> $converterlocationSource =
+      const LocationSourceConverter();
+  static JsonTypeConverter2<LocationSource?, int?, int?>
+  $converterlocationSourcen = JsonTypeConverter2.asNullable(
+    $converterlocationSource,
+  );
   static JsonTypeConverter2<ValidationStatus, int, int>
   $convertervalidationStatus = const ValidationStatusConverter();
 }
@@ -1808,8 +2015,14 @@ class ObservationEntityData extends DataClass
   final DateTime startTime;
   final DateTime endTime;
   final String? notes;
-  final double latitude;
-  final double longitude;
+  final double? latitude;
+  final double? longitude;
+  final double? accuracy;
+  final double? altitude;
+  final double? altitudeAccuracy;
+  final DateTime? positionTimestamp;
+  final LocationErrorType? locationError;
+  final LocationSource? locationSource;
   final double bearing;
   final ValidationStatus validationStatus;
   const ObservationEntityData({
@@ -1825,8 +2038,14 @@ class ObservationEntityData extends DataClass
     required this.startTime,
     required this.endTime,
     this.notes,
-    required this.latitude,
-    required this.longitude,
+    this.latitude,
+    this.longitude,
+    this.accuracy,
+    this.altitude,
+    this.altitudeAccuracy,
+    this.positionTimestamp,
+    this.locationError,
+    this.locationSource,
     required this.bearing,
     required this.validationStatus,
   });
@@ -1855,8 +2074,34 @@ class ObservationEntityData extends DataClass
     if (!nullToAbsent || notes != null) {
       map['notes'] = Variable<String>(notes);
     }
-    map['latitude'] = Variable<double>(latitude);
-    map['longitude'] = Variable<double>(longitude);
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double>(longitude);
+    }
+    if (!nullToAbsent || accuracy != null) {
+      map['accuracy'] = Variable<double>(accuracy);
+    }
+    if (!nullToAbsent || altitude != null) {
+      map['altitude'] = Variable<double>(altitude);
+    }
+    if (!nullToAbsent || altitudeAccuracy != null) {
+      map['altitude_accuracy'] = Variable<double>(altitudeAccuracy);
+    }
+    if (!nullToAbsent || positionTimestamp != null) {
+      map['position_timestamp'] = Variable<DateTime>(positionTimestamp);
+    }
+    if (!nullToAbsent || locationError != null) {
+      map['location_error'] = Variable<int>(
+        $ObservationsTableTable.$converterlocationErrorn.toSql(locationError),
+      );
+    }
+    if (!nullToAbsent || locationSource != null) {
+      map['location_source'] = Variable<int>(
+        $ObservationsTableTable.$converterlocationSourcen.toSql(locationSource),
+      );
+    }
     map['bearing'] = Variable<double>(bearing);
     {
       map['validation_status'] = Variable<int>(
@@ -1884,8 +2129,30 @@ class ObservationEntityData extends DataClass
       notes: notes == null && nullToAbsent
           ? const Value.absent()
           : Value(notes),
-      latitude: Value(latitude),
-      longitude: Value(longitude),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
+      accuracy: accuracy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accuracy),
+      altitude: altitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(altitude),
+      altitudeAccuracy: altitudeAccuracy == null && nullToAbsent
+          ? const Value.absent()
+          : Value(altitudeAccuracy),
+      positionTimestamp: positionTimestamp == null && nullToAbsent
+          ? const Value.absent()
+          : Value(positionTimestamp),
+      locationError: locationError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationError),
+      locationSource: locationSource == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationSource),
       bearing: Value(bearing),
       validationStatus: Value(validationStatus),
     );
@@ -1913,8 +2180,19 @@ class ObservationEntityData extends DataClass
       startTime: serializer.fromJson<DateTime>(json['startTime']),
       endTime: serializer.fromJson<DateTime>(json['endTime']),
       notes: serializer.fromJson<String?>(json['notes']),
-      latitude: serializer.fromJson<double>(json['latitude']),
-      longitude: serializer.fromJson<double>(json['longitude']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
+      accuracy: serializer.fromJson<double?>(json['accuracy']),
+      altitude: serializer.fromJson<double?>(json['altitude']),
+      altitudeAccuracy: serializer.fromJson<double?>(json['altitudeAccuracy']),
+      positionTimestamp: serializer.fromJson<DateTime?>(
+        json['positionTimestamp'],
+      ),
+      locationError: $ObservationsTableTable.$converterlocationErrorn.fromJson(
+        serializer.fromJson<int?>(json['locationError']),
+      ),
+      locationSource: $ObservationsTableTable.$converterlocationSourcen
+          .fromJson(serializer.fromJson<int?>(json['locationSource'])),
       bearing: serializer.fromJson<double>(json['bearing']),
       validationStatus: $ObservationsTableTable.$convertervalidationStatus
           .fromJson(serializer.fromJson<int>(json['validationStatus'])),
@@ -1940,8 +2218,20 @@ class ObservationEntityData extends DataClass
       'startTime': serializer.toJson<DateTime>(startTime),
       'endTime': serializer.toJson<DateTime>(endTime),
       'notes': serializer.toJson<String?>(notes),
-      'latitude': serializer.toJson<double>(latitude),
-      'longitude': serializer.toJson<double>(longitude),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
+      'accuracy': serializer.toJson<double?>(accuracy),
+      'altitude': serializer.toJson<double?>(altitude),
+      'altitudeAccuracy': serializer.toJson<double?>(altitudeAccuracy),
+      'positionTimestamp': serializer.toJson<DateTime?>(positionTimestamp),
+      'locationError': serializer.toJson<int?>(
+        $ObservationsTableTable.$converterlocationErrorn.toJson(locationError),
+      ),
+      'locationSource': serializer.toJson<int?>(
+        $ObservationsTableTable.$converterlocationSourcen.toJson(
+          locationSource,
+        ),
+      ),
       'bearing': serializer.toJson<double>(bearing),
       'validationStatus': serializer.toJson<int>(
         $ObservationsTableTable.$convertervalidationStatus.toJson(
@@ -1964,8 +2254,14 @@ class ObservationEntityData extends DataClass
     DateTime? startTime,
     DateTime? endTime,
     Value<String?> notes = const Value.absent(),
-    double? latitude,
-    double? longitude,
+    Value<double?> latitude = const Value.absent(),
+    Value<double?> longitude = const Value.absent(),
+    Value<double?> accuracy = const Value.absent(),
+    Value<double?> altitude = const Value.absent(),
+    Value<double?> altitudeAccuracy = const Value.absent(),
+    Value<DateTime?> positionTimestamp = const Value.absent(),
+    Value<LocationErrorType?> locationError = const Value.absent(),
+    Value<LocationSource?> locationSource = const Value.absent(),
     double? bearing,
     ValidationStatus? validationStatus,
   }) => ObservationEntityData(
@@ -1981,8 +2277,22 @@ class ObservationEntityData extends DataClass
     startTime: startTime ?? this.startTime,
     endTime: endTime ?? this.endTime,
     notes: notes.present ? notes.value : this.notes,
-    latitude: latitude ?? this.latitude,
-    longitude: longitude ?? this.longitude,
+    latitude: latitude.present ? latitude.value : this.latitude,
+    longitude: longitude.present ? longitude.value : this.longitude,
+    accuracy: accuracy.present ? accuracy.value : this.accuracy,
+    altitude: altitude.present ? altitude.value : this.altitude,
+    altitudeAccuracy: altitudeAccuracy.present
+        ? altitudeAccuracy.value
+        : this.altitudeAccuracy,
+    positionTimestamp: positionTimestamp.present
+        ? positionTimestamp.value
+        : this.positionTimestamp,
+    locationError: locationError.present
+        ? locationError.value
+        : this.locationError,
+    locationSource: locationSource.present
+        ? locationSource.value
+        : this.locationSource,
     bearing: bearing ?? this.bearing,
     validationStatus: validationStatus ?? this.validationStatus,
   );
@@ -2006,6 +2316,20 @@ class ObservationEntityData extends DataClass
       notes: data.notes.present ? data.notes.value : this.notes,
       latitude: data.latitude.present ? data.latitude.value : this.latitude,
       longitude: data.longitude.present ? data.longitude.value : this.longitude,
+      accuracy: data.accuracy.present ? data.accuracy.value : this.accuracy,
+      altitude: data.altitude.present ? data.altitude.value : this.altitude,
+      altitudeAccuracy: data.altitudeAccuracy.present
+          ? data.altitudeAccuracy.value
+          : this.altitudeAccuracy,
+      positionTimestamp: data.positionTimestamp.present
+          ? data.positionTimestamp.value
+          : this.positionTimestamp,
+      locationError: data.locationError.present
+          ? data.locationError.value
+          : this.locationError,
+      locationSource: data.locationSource.present
+          ? data.locationSource.value
+          : this.locationSource,
       bearing: data.bearing.present ? data.bearing.value : this.bearing,
       validationStatus: data.validationStatus.present
           ? data.validationStatus.value
@@ -2030,6 +2354,12 @@ class ObservationEntityData extends DataClass
           ..write('notes: $notes, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('accuracy: $accuracy, ')
+          ..write('altitude: $altitude, ')
+          ..write('altitudeAccuracy: $altitudeAccuracy, ')
+          ..write('positionTimestamp: $positionTimestamp, ')
+          ..write('locationError: $locationError, ')
+          ..write('locationSource: $locationSource, ')
           ..write('bearing: $bearing, ')
           ..write('validationStatus: $validationStatus')
           ..write(')'))
@@ -2037,7 +2367,7 @@ class ObservationEntityData extends DataClass
   }
 
   @override
-  int get hashCode => Object.hash(
+  int get hashCode => Object.hashAll([
     id,
     syncStatus,
     createdAt,
@@ -2052,9 +2382,15 @@ class ObservationEntityData extends DataClass
     notes,
     latitude,
     longitude,
+    accuracy,
+    altitude,
+    altitudeAccuracy,
+    positionTimestamp,
+    locationError,
+    locationSource,
     bearing,
     validationStatus,
-  );
+  ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -2073,6 +2409,12 @@ class ObservationEntityData extends DataClass
           other.notes == this.notes &&
           other.latitude == this.latitude &&
           other.longitude == this.longitude &&
+          other.accuracy == this.accuracy &&
+          other.altitude == this.altitude &&
+          other.altitudeAccuracy == this.altitudeAccuracy &&
+          other.positionTimestamp == this.positionTimestamp &&
+          other.locationError == this.locationError &&
+          other.locationSource == this.locationSource &&
           other.bearing == this.bearing &&
           other.validationStatus == this.validationStatus);
 }
@@ -2091,8 +2433,14 @@ class ObservationsTableCompanion
   final Value<DateTime> startTime;
   final Value<DateTime> endTime;
   final Value<String?> notes;
-  final Value<double> latitude;
-  final Value<double> longitude;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
+  final Value<double?> accuracy;
+  final Value<double?> altitude;
+  final Value<double?> altitudeAccuracy;
+  final Value<DateTime?> positionTimestamp;
+  final Value<LocationErrorType?> locationError;
+  final Value<LocationSource?> locationSource;
   final Value<double> bearing;
   final Value<ValidationStatus> validationStatus;
   final Value<int> rowid;
@@ -2111,6 +2459,12 @@ class ObservationsTableCompanion
     this.notes = const Value.absent(),
     this.latitude = const Value.absent(),
     this.longitude = const Value.absent(),
+    this.accuracy = const Value.absent(),
+    this.altitude = const Value.absent(),
+    this.altitudeAccuracy = const Value.absent(),
+    this.positionTimestamp = const Value.absent(),
+    this.locationError = const Value.absent(),
+    this.locationSource = const Value.absent(),
     this.bearing = const Value.absent(),
     this.validationStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -2128,8 +2482,14 @@ class ObservationsTableCompanion
     required DateTime startTime,
     required DateTime endTime,
     this.notes = const Value.absent(),
-    required double latitude,
-    required double longitude,
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.accuracy = const Value.absent(),
+    this.altitude = const Value.absent(),
+    this.altitudeAccuracy = const Value.absent(),
+    this.positionTimestamp = const Value.absent(),
+    this.locationError = const Value.absent(),
+    this.locationSource = const Value.absent(),
     required double bearing,
     required ValidationStatus validationStatus,
     this.rowid = const Value.absent(),
@@ -2144,8 +2504,6 @@ class ObservationsTableCompanion
        quantity = Value(quantity),
        startTime = Value(startTime),
        endTime = Value(endTime),
-       latitude = Value(latitude),
-       longitude = Value(longitude),
        bearing = Value(bearing),
        validationStatus = Value(validationStatus);
   static Insertable<ObservationEntityData> custom({
@@ -2163,6 +2521,12 @@ class ObservationsTableCompanion
     Expression<String>? notes,
     Expression<double>? latitude,
     Expression<double>? longitude,
+    Expression<double>? accuracy,
+    Expression<double>? altitude,
+    Expression<double>? altitudeAccuracy,
+    Expression<DateTime>? positionTimestamp,
+    Expression<int>? locationError,
+    Expression<int>? locationSource,
     Expression<double>? bearing,
     Expression<int>? validationStatus,
     Expression<int>? rowid,
@@ -2182,6 +2546,12 @@ class ObservationsTableCompanion
       if (notes != null) 'notes': notes,
       if (latitude != null) 'latitude': latitude,
       if (longitude != null) 'longitude': longitude,
+      if (accuracy != null) 'accuracy': accuracy,
+      if (altitude != null) 'altitude': altitude,
+      if (altitudeAccuracy != null) 'altitude_accuracy': altitudeAccuracy,
+      if (positionTimestamp != null) 'position_timestamp': positionTimestamp,
+      if (locationError != null) 'location_error': locationError,
+      if (locationSource != null) 'location_source': locationSource,
       if (bearing != null) 'bearing': bearing,
       if (validationStatus != null) 'validation_status': validationStatus,
       if (rowid != null) 'rowid': rowid,
@@ -2201,8 +2571,14 @@ class ObservationsTableCompanion
     Value<DateTime>? startTime,
     Value<DateTime>? endTime,
     Value<String?>? notes,
-    Value<double>? latitude,
-    Value<double>? longitude,
+    Value<double?>? latitude,
+    Value<double?>? longitude,
+    Value<double?>? accuracy,
+    Value<double?>? altitude,
+    Value<double?>? altitudeAccuracy,
+    Value<DateTime?>? positionTimestamp,
+    Value<LocationErrorType?>? locationError,
+    Value<LocationSource?>? locationSource,
     Value<double>? bearing,
     Value<ValidationStatus>? validationStatus,
     Value<int>? rowid,
@@ -2222,6 +2598,12 @@ class ObservationsTableCompanion
       notes: notes ?? this.notes,
       latitude: latitude ?? this.latitude,
       longitude: longitude ?? this.longitude,
+      accuracy: accuracy ?? this.accuracy,
+      altitude: altitude ?? this.altitude,
+      altitudeAccuracy: altitudeAccuracy ?? this.altitudeAccuracy,
+      positionTimestamp: positionTimestamp ?? this.positionTimestamp,
+      locationError: locationError ?? this.locationError,
+      locationSource: locationSource ?? this.locationSource,
       bearing: bearing ?? this.bearing,
       validationStatus: validationStatus ?? this.validationStatus,
       rowid: rowid ?? this.rowid,
@@ -2277,6 +2659,32 @@ class ObservationsTableCompanion
     if (longitude.present) {
       map['longitude'] = Variable<double>(longitude.value);
     }
+    if (accuracy.present) {
+      map['accuracy'] = Variable<double>(accuracy.value);
+    }
+    if (altitude.present) {
+      map['altitude'] = Variable<double>(altitude.value);
+    }
+    if (altitudeAccuracy.present) {
+      map['altitude_accuracy'] = Variable<double>(altitudeAccuracy.value);
+    }
+    if (positionTimestamp.present) {
+      map['position_timestamp'] = Variable<DateTime>(positionTimestamp.value);
+    }
+    if (locationError.present) {
+      map['location_error'] = Variable<int>(
+        $ObservationsTableTable.$converterlocationErrorn.toSql(
+          locationError.value,
+        ),
+      );
+    }
+    if (locationSource.present) {
+      map['location_source'] = Variable<int>(
+        $ObservationsTableTable.$converterlocationSourcen.toSql(
+          locationSource.value,
+        ),
+      );
+    }
     if (bearing.present) {
       map['bearing'] = Variable<double>(bearing.value);
     }
@@ -2310,6 +2718,12 @@ class ObservationsTableCompanion
           ..write('notes: $notes, ')
           ..write('latitude: $latitude, ')
           ..write('longitude: $longitude, ')
+          ..write('accuracy: $accuracy, ')
+          ..write('altitude: $altitude, ')
+          ..write('altitudeAccuracy: $altitudeAccuracy, ')
+          ..write('positionTimestamp: $positionTimestamp, ')
+          ..write('locationError: $locationError, ')
+          ..write('locationSource: $locationSource, ')
           ..write('bearing: $bearing, ')
           ..write('validationStatus: $validationStatus, ')
           ..write('rowid: $rowid')
@@ -2972,6 +3386,7 @@ typedef $$SessionsTableTableCreateCompanionBuilder =
       Value<double?> altitudeAccuracy,
       Value<DateTime?> positionTimestamp,
       Value<LocationErrorType?> locationError,
+      Value<LocationSource?> locationSource,
       required bool isLocked,
       Value<int> rowid,
     });
@@ -3000,6 +3415,7 @@ typedef $$SessionsTableTableUpdateCompanionBuilder =
       Value<double?> altitudeAccuracy,
       Value<DateTime?> positionTimestamp,
       Value<LocationErrorType?> locationError,
+      Value<LocationSource?> locationSource,
       Value<bool> isLocked,
       Value<int> rowid,
     });
@@ -3202,6 +3618,12 @@ class $$SessionsTableTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
+  ColumnWithTypeConverterFilters<LocationSource?, LocationSource, int>
+  get locationSource => $composableBuilder(
+    column: $table.locationSource,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
   ColumnFilters<bool> get isLocked => $composableBuilder(
     column: $table.isLocked,
     builder: (column) => ColumnFilters(column),
@@ -3384,6 +3806,11 @@ class $$SessionsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<int> get locationSource => $composableBuilder(
+    column: $table.locationSource,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<bool> get isLocked => $composableBuilder(
     column: $table.isLocked,
     builder: (column) => ColumnOrderings(column),
@@ -3488,6 +3915,12 @@ class $$SessionsTableTableAnnotationComposer
   GeneratedColumnWithTypeConverter<LocationErrorType?, int> get locationError =>
       $composableBuilder(
         column: $table.locationError,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<LocationSource?, int> get locationSource =>
+      $composableBuilder(
+        column: $table.locationSource,
         builder: (column) => column,
       );
 
@@ -3602,6 +4035,7 @@ class $$SessionsTableTableTableManager
                 Value<double?> altitudeAccuracy = const Value.absent(),
                 Value<DateTime?> positionTimestamp = const Value.absent(),
                 Value<LocationErrorType?> locationError = const Value.absent(),
+                Value<LocationSource?> locationSource = const Value.absent(),
                 Value<bool> isLocked = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion(
@@ -3628,6 +4062,7 @@ class $$SessionsTableTableTableManager
                 altitudeAccuracy: altitudeAccuracy,
                 positionTimestamp: positionTimestamp,
                 locationError: locationError,
+                locationSource: locationSource,
                 isLocked: isLocked,
                 rowid: rowid,
               ),
@@ -3656,6 +4091,7 @@ class $$SessionsTableTableTableManager
                 Value<double?> altitudeAccuracy = const Value.absent(),
                 Value<DateTime?> positionTimestamp = const Value.absent(),
                 Value<LocationErrorType?> locationError = const Value.absent(),
+                Value<LocationSource?> locationSource = const Value.absent(),
                 required bool isLocked,
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion.insert(
@@ -3682,6 +4118,7 @@ class $$SessionsTableTableTableManager
                 altitudeAccuracy: altitudeAccuracy,
                 positionTimestamp: positionTimestamp,
                 locationError: locationError,
+                locationSource: locationSource,
                 isLocked: isLocked,
                 rowid: rowid,
               ),
@@ -3789,8 +4226,14 @@ typedef $$ObservationsTableTableCreateCompanionBuilder =
       required DateTime startTime,
       required DateTime endTime,
       Value<String?> notes,
-      required double latitude,
-      required double longitude,
+      Value<double?> latitude,
+      Value<double?> longitude,
+      Value<double?> accuracy,
+      Value<double?> altitude,
+      Value<double?> altitudeAccuracy,
+      Value<DateTime?> positionTimestamp,
+      Value<LocationErrorType?> locationError,
+      Value<LocationSource?> locationSource,
       required double bearing,
       required ValidationStatus validationStatus,
       Value<int> rowid,
@@ -3809,8 +4252,14 @@ typedef $$ObservationsTableTableUpdateCompanionBuilder =
       Value<DateTime> startTime,
       Value<DateTime> endTime,
       Value<String?> notes,
-      Value<double> latitude,
-      Value<double> longitude,
+      Value<double?> latitude,
+      Value<double?> longitude,
+      Value<double?> accuracy,
+      Value<double?> altitude,
+      Value<double?> altitudeAccuracy,
+      Value<DateTime?> positionTimestamp,
+      Value<LocationErrorType?> locationError,
+      Value<LocationSource?> locationSource,
       Value<double> bearing,
       Value<ValidationStatus> validationStatus,
       Value<int> rowid,
@@ -3928,6 +4377,38 @@ class $$ObservationsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<double> get accuracy => $composableBuilder(
+    column: $table.accuracy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get altitude => $composableBuilder(
+    column: $table.altitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get altitudeAccuracy => $composableBuilder(
+    column: $table.altitudeAccuracy,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get positionTimestamp => $composableBuilder(
+    column: $table.positionTimestamp,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<LocationErrorType?, LocationErrorType, int>
+  get locationError => $composableBuilder(
+    column: $table.locationError,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<LocationSource?, LocationSource, int>
+  get locationSource => $composableBuilder(
+    column: $table.locationSource,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
   ColumnFilters<double> get bearing => $composableBuilder(
     column: $table.bearing,
     builder: (column) => ColumnFilters(column),
@@ -4037,6 +4518,36 @@ class $$ObservationsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get accuracy => $composableBuilder(
+    column: $table.accuracy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get altitude => $composableBuilder(
+    column: $table.altitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get altitudeAccuracy => $composableBuilder(
+    column: $table.altitudeAccuracy,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get positionTimestamp => $composableBuilder(
+    column: $table.positionTimestamp,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get locationError => $composableBuilder(
+    column: $table.locationError,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get locationSource => $composableBuilder(
+    column: $table.locationSource,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get bearing => $composableBuilder(
     column: $table.bearing,
     builder: (column) => ColumnOrderings(column),
@@ -4125,6 +4636,34 @@ class $$ObservationsTableTableAnnotationComposer
   GeneratedColumn<double> get longitude =>
       $composableBuilder(column: $table.longitude, builder: (column) => column);
 
+  GeneratedColumn<double> get accuracy =>
+      $composableBuilder(column: $table.accuracy, builder: (column) => column);
+
+  GeneratedColumn<double> get altitude =>
+      $composableBuilder(column: $table.altitude, builder: (column) => column);
+
+  GeneratedColumn<double> get altitudeAccuracy => $composableBuilder(
+    column: $table.altitudeAccuracy,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get positionTimestamp => $composableBuilder(
+    column: $table.positionTimestamp,
+    builder: (column) => column,
+  );
+
+  GeneratedColumnWithTypeConverter<LocationErrorType?, int> get locationError =>
+      $composableBuilder(
+        column: $table.locationError,
+        builder: (column) => column,
+      );
+
+  GeneratedColumnWithTypeConverter<LocationSource?, int> get locationSource =>
+      $composableBuilder(
+        column: $table.locationSource,
+        builder: (column) => column,
+      );
+
   GeneratedColumn<double> get bearing =>
       $composableBuilder(column: $table.bearing, builder: (column) => column);
 
@@ -4203,8 +4742,14 @@ class $$ObservationsTableTableTableManager
                 Value<DateTime> startTime = const Value.absent(),
                 Value<DateTime> endTime = const Value.absent(),
                 Value<String?> notes = const Value.absent(),
-                Value<double> latitude = const Value.absent(),
-                Value<double> longitude = const Value.absent(),
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
+                Value<double?> accuracy = const Value.absent(),
+                Value<double?> altitude = const Value.absent(),
+                Value<double?> altitudeAccuracy = const Value.absent(),
+                Value<DateTime?> positionTimestamp = const Value.absent(),
+                Value<LocationErrorType?> locationError = const Value.absent(),
+                Value<LocationSource?> locationSource = const Value.absent(),
                 Value<double> bearing = const Value.absent(),
                 Value<ValidationStatus> validationStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -4223,6 +4768,12 @@ class $$ObservationsTableTableTableManager
                 notes: notes,
                 latitude: latitude,
                 longitude: longitude,
+                accuracy: accuracy,
+                altitude: altitude,
+                altitudeAccuracy: altitudeAccuracy,
+                positionTimestamp: positionTimestamp,
+                locationError: locationError,
+                locationSource: locationSource,
                 bearing: bearing,
                 validationStatus: validationStatus,
                 rowid: rowid,
@@ -4241,8 +4792,14 @@ class $$ObservationsTableTableTableManager
                 required DateTime startTime,
                 required DateTime endTime,
                 Value<String?> notes = const Value.absent(),
-                required double latitude,
-                required double longitude,
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
+                Value<double?> accuracy = const Value.absent(),
+                Value<double?> altitude = const Value.absent(),
+                Value<double?> altitudeAccuracy = const Value.absent(),
+                Value<DateTime?> positionTimestamp = const Value.absent(),
+                Value<LocationErrorType?> locationError = const Value.absent(),
+                Value<LocationSource?> locationSource = const Value.absent(),
                 required double bearing,
                 required ValidationStatus validationStatus,
                 Value<int> rowid = const Value.absent(),
@@ -4261,6 +4818,12 @@ class $$ObservationsTableTableTableManager
                 notes: notes,
                 latitude: latitude,
                 longitude: longitude,
+                accuracy: accuracy,
+                altitude: altitude,
+                altitudeAccuracy: altitudeAccuracy,
+                positionTimestamp: positionTimestamp,
+                locationError: locationError,
+                locationSource: locationSource,
                 bearing: bearing,
                 validationStatus: validationStatus,
                 rowid: rowid,

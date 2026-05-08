@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:noctambuls/core/database/converters.dart';
 import 'package:noctambuls/core/database/tables.dart';
+import 'package:noctambuls/core/domain/enums/location_source.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
@@ -29,7 +30,7 @@ class UserDatabase extends _$UserDatabase {
   UserDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -41,6 +42,12 @@ class UserDatabase extends _$UserDatabase {
       }
       if (from < 5) {
         await m.createTable(sessionParticipantsTable);
+      }
+      if (from < 8) {
+        await m.deleteTable('sessions_table');
+        await m.createTable(sessionsTable);
+        await m.deleteTable('observations_table');
+        await m.createTable(observationsTable);
       }
     },
   );

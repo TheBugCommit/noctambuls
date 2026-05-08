@@ -1,6 +1,7 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
+import 'package:noctambuls/core/domain/enums/location_source.dart';
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/domain/services/location_service.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
@@ -22,14 +23,17 @@ class LocationServiceImpl extends LocationService {
     var permission = await Permission.locationWhenInUse.status;
     if (permission.isDenied) {
       permission = await Permission.locationWhenInUse.request();
-      if (permission.isDenied) {
-        logger.warning('Location permission denied');
-        return const Err(PermissionDeniedFailure());
-      }
     }
 
     if (permission.isPermanentlyDenied) {
-      logger.warning('Location permission permanently denied');
+      logger.warning(
+        'Location permission permanently denied. Opening app settings.',
+      );
+      return const Err(PermissionDeniedFailure());
+    }
+
+    if (permission.isDenied) {
+      logger.warning('Location permission denied');
       return const Err(PermissionDeniedFailure());
     }
 
@@ -48,6 +52,7 @@ class LocationServiceImpl extends LocationService {
           altitude: position.altitude,
           altitudeAccuracy: position.altitudeAccuracy,
           timestamp: position.timestamp,
+          locationSource: LocationSource.gps,
         ),
       );
     } catch (e, st) {
@@ -75,6 +80,7 @@ class LocationServiceImpl extends LocationService {
           altitude: position.altitude,
           altitudeAccuracy: position.altitudeAccuracy,
           timestamp: position.timestamp,
+          locationSource: LocationSource.gps,
         ),
       );
     } catch (e, st) {

@@ -64,6 +64,9 @@ class SessionsTable extends Table with OfflineFirstMixin {
   IntColumn get locationError =>
       integer().map(const LocationErrorTypeConverter()).nullable()();
 
+  IntColumn get locationSource =>
+      integer().map(const LocationSourceConverter()).nullable()();
+
   BoolColumn get isLocked => boolean()();
 
   @override
@@ -86,9 +89,23 @@ class ObservationsTable extends Table with OfflineFirstMixin {
 
   TextColumn get notes => text().nullable()();
 
-  RealColumn get latitude => real()();
+  RealColumn get latitude => real().nullable()();
 
-  RealColumn get longitude => real()();
+  RealColumn get longitude => real().nullable()();
+
+  RealColumn get accuracy => real().nullable()();
+
+  RealColumn get altitude => real().nullable()();
+
+  RealColumn get altitudeAccuracy => real().nullable()();
+
+  DateTimeColumn get positionTimestamp => dateTime().nullable()();
+
+  IntColumn get locationError =>
+      integer().map(const LocationErrorTypeConverter()).nullable()();
+
+  IntColumn get locationSource =>
+      integer().map(const LocationSourceConverter()).nullable()();
 
   RealColumn get bearing => real()();
 

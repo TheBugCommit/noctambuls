@@ -1,6 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:noctambuls/core/database/user_database.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
+import 'package:noctambuls/core/domain/enums/location_source.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
@@ -34,12 +35,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
     DateTime? startTime,
     DateTime? endTime,
     int? listeningPoint,
-    double? latitude,
-    double? longitude,
-    double? accuracy,
-    double? altitude,
-    double? altitudeAccuracy,
-    DateTime? positionTimestamp,
+    GeoPosition? location,
     LocationErrorType? locationError,
     @Default([]) List<String> participants,
   }) = _ObservationSessionModel;
@@ -58,12 +54,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
       visibility: entity.visibility,
       moon: entity.moon,
       listeningPoint: entity.listeningPoint,
-      latitude: entity.location?.latitude,
-      longitude: entity.location?.longitude,
-      accuracy: entity.location?.accuracy,
-      altitude: entity.location?.altitude,
-      altitudeAccuracy: entity.location?.altitudeAccuracy,
-      positionTimestamp: entity.location?.timestamp,
+      location: entity.location,
       locationError: entity.locationError,
       participants: entity.participants,
       isLocked: entity.isLocked,
@@ -78,6 +69,19 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
     SessionEntityData data, {
     List<String> participants = const [],
   }) {
+    GeoPosition? location;
+    if (data.latitude != null && data.longitude != null) {
+      location = GeoPosition(
+        latitude: data.latitude!,
+        longitude: data.longitude!,
+        accuracy: data.accuracy ?? 0.0,
+        altitude: data.altitude ?? 0.0,
+        altitudeAccuracy: data.altitudeAccuracy ?? 0.0,
+        timestamp: data.positionTimestamp ?? data.createdAt,
+        locationSource: data.locationSource ?? LocationSource.gps,
+      );
+    }
+
     return ObservationSessionModel(
       id: data.id,
       annotatorId: data.annotatorId,
@@ -91,12 +95,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
       visibility: data.visibility,
       moon: data.moon,
       listeningPoint: data.listeningPoint,
-      latitude: data.latitude,
-      longitude: data.longitude,
-      accuracy: data.accuracy,
-      altitude: data.altitude,
-      altitudeAccuracy: data.altitudeAccuracy,
-      positionTimestamp: data.positionTimestamp,
+      location: location,
       locationError: data.locationError,
       participants: participants,
       isLocked: data.isLocked,
@@ -110,23 +109,6 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
 
 extension ObservationSessionModelX on ObservationSessionModel {
   ObservationSession toDomain() {
-    GeoPosition? geoPosition;
-    if (latitude != null &&
-        longitude != null &&
-        accuracy != null &&
-        altitude != null &&
-        altitudeAccuracy != null &&
-        positionTimestamp != null) {
-      geoPosition = GeoPosition(
-        latitude: latitude!,
-        longitude: longitude!,
-        accuracy: accuracy!,
-        altitude: altitude!,
-        altitudeAccuracy: altitudeAccuracy!,
-        timestamp: positionTimestamp!,
-      );
-    }
-
     return ObservationSession(
       id: id,
       annotatorId: annotatorId,
@@ -140,7 +122,7 @@ extension ObservationSessionModelX on ObservationSessionModel {
       visibility: visibility,
       moon: moon,
       listeningPoint: listeningPoint,
-      location: geoPosition,
+      location: location,
       locationError: locationError,
       participants: participants,
       isLocked: isLocked,

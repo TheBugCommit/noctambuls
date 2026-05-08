@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/core/domain/enums/location_source.dart';
 
 class GeoPosition extends Equatable {
   const GeoPosition({
@@ -8,6 +9,7 @@ class GeoPosition extends Equatable {
     required this.altitude,
     required this.altitudeAccuracy,
     required this.timestamp,
+    required this.locationSource,
   });
 
   final double latitude;
@@ -16,6 +18,7 @@ class GeoPosition extends Equatable {
   final double altitude;
   final double altitudeAccuracy;
   final DateTime timestamp;
+  final LocationSource locationSource;
 
   @override
   List<Object?> get props => [
@@ -25,5 +28,6 @@ class GeoPosition extends Equatable {
     altitude,
     altitudeAccuracy,
     timestamp,
+    locationSource,
   ];
 }
