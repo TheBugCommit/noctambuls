@@ -292,6 +292,12 @@
     "locationPermissionTitle": "Permiso de ubicación necesario",
     "locationPermissionContent": "Noctámbulos necesita acceso a la ubicación para guardar la posición exacta de las observaciones de aves y de las sesiones de censo.\n\nHas denegado el permiso de forma permanente. Para continuar, abre la configuración del dispositivo y habilita el permiso de ubicación para la aplicación.",
     "actionLater": "Ahora no",
-    "actionOpenSettings": "Abrir configuración"
+    "actionOpenSettings": "Abrir configuración",
+
+    "mapPickerTitle": "Seleccionar ubicación",
+    "mapPickerConfirm": "Confirmar ubicación",
+    "mapPickerSelectPoint": "Mantén pulsado para colocar el marcador",
+    "mapPickerHelpTitle": "Cómo usar el mapa",
+    "mapPickerHelpContent": "Mantén pulsado en cualquier punto del mapa para colocar el marcador. Puedes usar el botón de la diana para centrar el mapa en tu ubicación actual."
 
 }

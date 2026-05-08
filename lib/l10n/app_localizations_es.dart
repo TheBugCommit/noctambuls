@@ -759,4 +759,20 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get actionOpenSettings => 'Abrir configuración';
+
+  @override
+  String get mapPickerTitle => 'Seleccionar ubicación';
+
+  @override
+  String get mapPickerConfirm => 'Confirmar ubicación';
+
+  @override
+  String get mapPickerSelectPoint => 'Mantén pulsado para colocar el marcador';
+
+  @override
+  String get mapPickerHelpTitle => 'Cómo usar el mapa';
+
+  @override
+  String get mapPickerHelpContent =>
+      'Mantén pulsado en cualquier punto del mapa para colocar el marcador. Puedes usar el botón de la diana para centrar el mapa en tu ubicación actual.';
 }

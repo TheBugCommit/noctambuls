@@ -211,9 +211,14 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
     GoRoute(
       path: AppRoutes.mapPicker,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => MapPickerPage(
-        initialLocation: state.extra as GeoPosition?,
-      ),
+      builder: (context, state) {
+        return BlocProvider(
+          create: (_) => sl<UrlBloc>(),
+          child: MapPickerPage(
+            initialLocation: state.extra as GeoPosition?,
+          ),
+        );
+      },
     ),
     GoRoute(
       path: AppRoutes.profileEdit,

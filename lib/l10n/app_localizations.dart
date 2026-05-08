@@ -1513,6 +1513,36 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Obrir configuració'**
   String get actionOpenSettings;
+
+  /// No description provided for @mapPickerTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Seleccionar ubicació'**
+  String get mapPickerTitle;
+
+  /// No description provided for @mapPickerConfirm.
+  ///
+  /// In ca, this message translates to:
+  /// **'Confirmar ubicació'**
+  String get mapPickerConfirm;
+
+  /// No description provided for @mapPickerSelectPoint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Mantén premut per col·locar el marcador'**
+  String get mapPickerSelectPoint;
+
+  /// No description provided for @mapPickerHelpTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Com utilitzar el mapa'**
+  String get mapPickerHelpTitle;
+
+  /// No description provided for @mapPickerHelpContent.
+  ///
+  /// In ca, this message translates to:
+  /// **'Mantén premut a qualsevol punt del mapa per col·locar el marcador. Pots utilitzar el botó de la diana per centrar el mapa a la teva posició actual.'**
+  String get mapPickerHelpContent;
 }
 
 class _AppLocalizationsDelegate

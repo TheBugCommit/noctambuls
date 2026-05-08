@@ -87,9 +87,7 @@ class _ObservingPageState extends State<ObservingPage>
           if (ModalRoute.of(context)?.isCurrent == true) {
             context.pop();
           }
-        }
-        // 3. NOU: Llancem el diàleg si estem actius i tenim error
-        else if (state is ObservingSessionActive &&
+        } else if (state is ObservingSessionActive &&
             state.session.locationError != null) {
           final error = state.session.locationError!;
           if (error == LocationErrorType.permissionDenied ||

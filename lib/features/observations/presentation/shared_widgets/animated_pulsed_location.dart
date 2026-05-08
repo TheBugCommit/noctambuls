@@ -99,7 +99,7 @@ class _AnimatedPulseLocationState extends State<AnimatedPulseLocation>
     if (!_locationIsGPS) {
       return IconButton(
         icon: const Icon(Icons.location_on),
-        color: Colors.orange,
+        color: colorScheme.primary,
         onPressed: widget.onPressed,
         tooltip: l10n.locationManualTooltip,
       );

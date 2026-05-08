@@ -9,6 +9,7 @@ class AppButtonFab extends StatelessWidget {
   const AppButtonFab._({
     required this.onPressed,
     required this.icon,
+    this.heroTag,
     this.label,
     this.style = AppButtonFabStyle.primary,
     this.size = AppButtonFabSize.md,
@@ -17,32 +18,38 @@ class AppButtonFab extends StatelessWidget {
   factory AppButtonFab.small({
     required VoidCallback? onPressed,
     required IconData icon,
+    Object? heroTag,
     AppButtonFabStyle style = AppButtonFabStyle.primary,
   }) => AppButtonFab._(
     onPressed: onPressed,
     icon: icon,
     style: style,
+    heroTag: heroTag,
     size: AppButtonFabSize.sm,
   );
 
   factory AppButtonFab.regular({
     required VoidCallback? onPressed,
     required IconData icon,
+    Object? heroTag,
     AppButtonFabStyle style = AppButtonFabStyle.primary,
   }) => AppButtonFab._(
     onPressed: onPressed,
     icon: icon,
+    heroTag: heroTag,
     style: style,
   );
 
   factory AppButtonFab.large({
     required VoidCallback? onPressed,
     required IconData icon,
+    Object? heroTag,
     AppButtonFabStyle style = AppButtonFabStyle.primary,
   }) => AppButtonFab._(
     onPressed: onPressed,
     icon: icon,
     style: style,
+    heroTag: heroTag,
     size: AppButtonFabSize.lg,
   );
 
@@ -50,11 +57,13 @@ class AppButtonFab extends StatelessWidget {
     required VoidCallback? onPressed,
     required IconData icon,
     required String label,
+    Object? heroTag,
     AppButtonFabStyle style = AppButtonFabStyle.primary,
   }) => AppButtonFab._(
     onPressed: onPressed,
     icon: icon,
     label: label,
+    heroTag: heroTag,
     style: style,
   );
 
@@ -63,6 +72,7 @@ class AppButtonFab extends StatelessWidget {
   final String? label;
   final AppButtonFabStyle style;
   final AppButtonFabSize size;
+  final Object? heroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +99,7 @@ class AppButtonFab extends StatelessWidget {
 
     final iconSize = switch (size) {
       AppButtonFabSize.sm => AppDimensions.iconSm,
-      AppButtonFabSize.md => AppDimensions.iconMd,
+      AppButtonFabSize.md => AppDimensions.iconLg,
       AppButtonFabSize.lg => AppDimensions.iconXl,
     };
 
@@ -106,6 +116,7 @@ class AppButtonFab extends StatelessWidget {
     if (label != null) {
       return FloatingActionButton.extended(
         onPressed: onPressed,
+        heroTag: heroTag,
         backgroundColor: bgColor,
         foregroundColor: fgColor,
         shape: shape,
@@ -117,6 +128,7 @@ class AppButtonFab extends StatelessWidget {
     return switch (size) {
       AppButtonFabSize.sm => FloatingActionButton.small(
         onPressed: onPressed,
+        heroTag: heroTag,
         backgroundColor: bgColor,
         foregroundColor: fgColor,
         shape: shape,
@@ -128,6 +140,7 @@ class AppButtonFab extends StatelessWidget {
         height: AppDimensions.buttonHeightXl,
         child: FloatingActionButton(
           onPressed: onPressed,
+          heroTag: heroTag,
           backgroundColor: bgColor,
           foregroundColor: fgColor,
           shape: shape,
@@ -137,6 +150,7 @@ class AppButtonFab extends StatelessWidget {
 
       _ => FloatingActionButton(
         onPressed: onPressed,
+        heroTag: heroTag,
         backgroundColor: bgColor,
         foregroundColor: fgColor,
         shape: shape,

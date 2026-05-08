@@ -297,5 +297,11 @@
     "locationPermissionTitle": "Permís d'ubicació necessari",
     "locationPermissionContent": "Noctàmbuls necessita accés a la ubicació per guardar la posició exacta de les observacions d'ocells i de les sessions de cens.\n\nHas denegat el permís de manera permanent. Per continuar, obre la configuració del dispositiu i habilita el permís d'ubicació per a l'aplicació.",
     "actionLater": "Ara no",
-    "actionOpenSettings": "Obrir configuració"
+    "actionOpenSettings": "Obrir configuració",
+
+    "mapPickerTitle": "Seleccionar ubicació",
+    "mapPickerConfirm": "Confirmar ubicació",
+    "mapPickerSelectPoint": "Mantén premut per col·locar el marcador",
+    "mapPickerHelpTitle": "Com utilitzar el mapa",
+    "mapPickerHelpContent": "Mantén premut a qualsevol punt del mapa per col·locar el marcador. Pots utilitzar el botó de la diana per centrar el mapa a la teva posició actual."
 }

@@ -19,5 +19,6 @@ class AppRoutes {
   static const String observationForm = '/observing/form';
   static const String review = '/review';
   static const String qrScanner = '/review/qr-scanner';
+  static const String mapPicker = '/map-picker';
   static const String profileEdit = '/profile/edit';
 }
