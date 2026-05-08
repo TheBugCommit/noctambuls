@@ -39,7 +39,7 @@ class _AnimatedPulseLocationState extends State<AnimatedPulseLocation>
     _controller.addStatusListener((status) async {
       if (status == AnimationStatus.completed) {
         _controller.reset();
-        await Future<Duration>.delayed(const Duration(seconds: 4));
+        await Future<void>.delayed(const Duration(seconds: 4));
         if (!_isDisposed && _shouldAnimate()) {
           unawaited(_controller.forward());
         }
@@ -99,7 +99,7 @@ class _AnimatedPulseLocationState extends State<AnimatedPulseLocation>
     if (!_locationIsGPS) {
       return IconButton(
         icon: const Icon(Icons.location_on),
-        color: colorScheme.tertiary,
+        color: Colors.orange,
         onPressed: widget.onPressed,
         tooltip: l10n.locationManualTooltip,
       );
