@@ -294,6 +294,18 @@
     "actionLater": "Ahora no",
     "actionOpenSettings": "Abrir configuración",
 
+    "observationLocationTitle": "Ubicación de la observación",
+    "observationAtLocationToggle": "Estoy en el lugar exacto del ave",
+    "locationWaitingGps": "Esperando señal GPS...",
+    "locationMapRequired": "Falta marcar el punto en el mapa",
+    "locationModifyMap": "Modificar en el mapa",
+    "locationOpenMap": "Abrir el mapa",
+    "locationErrorPermission": "Permisos de GPS denegados. Actívalos en ajustes o usa el mapa.",
+    "locationErrorDisabled": "El GPS está apagado. Actívalo o usa el mapa.",
+    "locationErrorTimeout": "Sin señal GPS. Selecciona la ubicación manualmente en el mapa.",
+    "permissionsRequired": "Permisos necesarios",
+    "gpsDisabled": "GPS desactivado",
+
     "mapPickerTitle": "Seleccionar ubicación",
     "mapPickerConfirm": "Confirmar ubicación",
     "mapPickerSelectPoint": "Mantén pulsado para colocar el marcador",

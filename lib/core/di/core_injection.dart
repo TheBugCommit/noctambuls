@@ -13,6 +13,7 @@ import 'package:noctambuls/core/domain/services/share_service.dart';
 import 'package:noctambuls/core/domain/usecases/audio/listen_audio_state_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/audio/preload_audio_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/audio/toggle_audio_usecase.dart';
+import 'package:noctambuls/core/domain/usecases/location/capture_location_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/phone_settings/open_app_settings_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/phone_settings/open_phone_location_settings_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/share/share_text_usecase.dart';
@@ -51,6 +52,7 @@ void initCore() {
     ..registerLazySingleton(() => PreloadAudioUseCase(sl()))
     ..registerLazySingleton(() => OpenAppSettingsUseCase(sl()))
     ..registerLazySingleton(() => OpenPhoneLocationSettingsUseCase(sl()))
+    ..registerLazySingleton(() => CaptureLocationUseCase(locationService: sl()))
     ..registerFactory(
       () => UrlBloc(openUrlUseCase: sl(), logger: sl<IAppLogger>()),
     )

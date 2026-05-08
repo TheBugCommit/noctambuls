@@ -16,6 +16,7 @@ import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock
 import 'package:noctambuls/features/observations/domain/usecases/get_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/remove_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/retry_session_location_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/save_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
@@ -64,6 +65,7 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => UpdateAllObservationsDateUseCase(sl()))
     ..registerLazySingleton(() => AddSessionParticipantUseCase(sl()))
     ..registerLazySingleton(() => RemoveSessionParticipantUseCase(sl()))
+    ..registerLazySingleton(() => SaveObservationUseCase(sl()))
     ..registerLazySingleton(
       () =>
           RetrySessionLocationUseCase(locationService: sl(), repository: sl()),
@@ -84,6 +86,8 @@ void initObservationsFeature() {
     ..registerFactory(
       () => ObservationFormBloc(
         getBirdsUseCase: sl<GetBirdsUseCase>(),
+        saveObservationUseCase: sl(),
+        captureLocationUseCase: sl(),
         logger: sl<IAppLogger>(),
       ),
     )

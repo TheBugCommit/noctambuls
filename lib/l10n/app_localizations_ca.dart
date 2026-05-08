@@ -759,6 +759,42 @@ class AppLocalizationsCa extends AppLocalizations {
   String get actionOpenSettings => 'Obrir configuració';
 
   @override
+  String get observationLocationTitle => 'Ubicació de l\'observació';
+
+  @override
+  String get observationAtLocationToggle => 'Sóc al lloc exacte de l\'ocell';
+
+  @override
+  String get locationWaitingGps => 'Esperant senyal GPS...';
+
+  @override
+  String get locationMapRequired => 'Falta marcar el punt al mapa';
+
+  @override
+  String get locationModifyMap => 'Modificar al mapa';
+
+  @override
+  String get locationOpenMap => 'Obrir el mapa';
+
+  @override
+  String get locationErrorPermission =>
+      'Permisos de GPS denegats. Activa\'ls als ajustos o usa el mapa.';
+
+  @override
+  String get locationErrorDisabled =>
+      'El GPS està apagat. Activa\'l o usa el mapa.';
+
+  @override
+  String get locationErrorTimeout =>
+      'Sense senyal GPS. Selecciona la ubicació manualment al mapa.';
+
+  @override
+  String get permissionsRequired => 'Permisos necessaris';
+
+  @override
+  String get gpsDisabled => 'GPS desactivat';
+
+  @override
   String get mapPickerTitle => 'Seleccionar ubicació';
 
   @override

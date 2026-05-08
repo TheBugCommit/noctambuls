@@ -761,6 +761,42 @@ class AppLocalizationsEs extends AppLocalizations {
   String get actionOpenSettings => 'Abrir configuración';
 
   @override
+  String get observationLocationTitle => 'Ubicación de la observación';
+
+  @override
+  String get observationAtLocationToggle => 'Estoy en el lugar exacto del ave';
+
+  @override
+  String get locationWaitingGps => 'Esperando señal GPS...';
+
+  @override
+  String get locationMapRequired => 'Falta marcar el punto en el mapa';
+
+  @override
+  String get locationModifyMap => 'Modificar en el mapa';
+
+  @override
+  String get locationOpenMap => 'Abrir el mapa';
+
+  @override
+  String get locationErrorPermission =>
+      'Permisos de GPS denegados. Actívalos en ajustes o usa el mapa.';
+
+  @override
+  String get locationErrorDisabled =>
+      'El GPS está apagado. Actívalo o usa el mapa.';
+
+  @override
+  String get locationErrorTimeout =>
+      'Sin señal GPS. Selecciona la ubicación manualmente en el mapa.';
+
+  @override
+  String get permissionsRequired => 'Permisos necesarios';
+
+  @override
+  String get gpsDisabled => 'GPS desactivado';
+
+  @override
   String get mapPickerTitle => 'Seleccionar ubicación';
 
   @override

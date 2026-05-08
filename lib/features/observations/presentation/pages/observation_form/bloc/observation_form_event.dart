@@ -1,7 +1,8 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 
 sealed class ObservationFormEvent extends Equatable {
   const ObservationFormEvent();
@@ -11,31 +12,47 @@ sealed class ObservationFormEvent extends Equatable {
 }
 
 final class LoadFormDataRequested extends ObservationFormEvent {
-  const LoadFormDataRequested(this.langCode);
+  const LoadFormDataRequested({required this.langCode, this.existingLocation});
 
   final String langCode;
+  final GeoPosition? existingLocation;
 
   @override
-  List<Object?> get props => [langCode];
+  List<Object?> get props => [langCode, existingLocation];
+}
+
+final class CaptureLocationRequested extends ObservationFormEvent {
+  const CaptureLocationRequested();
+}
+
+final class LocationManuallySelected extends ObservationFormEvent {
+  const LocationManuallySelected(this.position);
+
+  final GeoPosition position;
+
+  @override
+  List<Object?> get props => [position];
+}
+
+final class ClearLocationRequested extends ObservationFormEvent {
+  const ClearLocationRequested();
 }
 
 final class SaveObservationRequested extends ObservationFormEvent {
   const SaveObservationRequested({
-    required this.sessionBloc,
     required this.sessionId,
     required this.speciesId,
     required this.contactType,
     required this.quantity,
     required this.bearing,
-    required this.latitude,
-    required this.longitude,
     required this.startTime,
     required this.endTime,
+    this.location,
+    this.locationError,
     this.notes,
     this.existingRecord,
   });
 
-  final SessionObservationBloc sessionBloc;
   final String sessionId;
   final String speciesId;
   final ContactType contactType;
@@ -43,8 +60,8 @@ final class SaveObservationRequested extends ObservationFormEvent {
   final double bearing;
   final String? notes;
   final ObservationRecord? existingRecord;
-  final double latitude;
-  final double longitude;
+  final GeoPosition? location;
+  final LocationErrorType? locationError;
   final DateTime startTime;
   final DateTime endTime;
 
@@ -57,8 +74,8 @@ final class SaveObservationRequested extends ObservationFormEvent {
     notes,
     bearing,
     existingRecord,
-    latitude,
-    longitude,
+    location,
+    locationError,
     startTime,
     endTime,
   ];

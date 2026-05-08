@@ -100,7 +100,6 @@ class _ObservationCardState extends State<ObservationCard>
         AppRoutes.observationForm,
         extra: ObservationFormArgs(
           session: widget.session,
-          sessionBloc: context.read<SessionObservationBloc>(),
           existingRecord: widget.record,
         ),
       ),

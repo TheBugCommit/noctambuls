@@ -1,22 +1,28 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
+import 'package:noctambuls/core/constants/app_routes.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/app_quantity_selector.dart';
-import 'package:noctambuls/features/guide/domain/entities/bird.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_event.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_state.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/contact_type_selector_field.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/date_time_range_selector.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/location_selector_card.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/notes_field.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/orientation_selector_field.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/widgets/species_selector_field.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/location_auto_capture_mixin.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/location_permissions_dialog.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/language_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
@@ -24,14 +30,12 @@ import 'package:noctambuls/l10n/app_localizations.dart';
 class ObservationFormArgs {
   const ObservationFormArgs({
     required this.session,
-    required this.sessionBloc,
     this.globalDate,
     this.onGlobalDateChanged,
     this.existingRecord,
   });
 
   final ObservationSession session;
-  final SessionObservationBloc sessionBloc;
 
   /// Pre-selected date for new observations (incidental sessions only).
   final DateTime? globalDate;
@@ -45,7 +49,6 @@ class ObservationFormArgs {
 class ObservationFormPage extends StatefulWidget {
   const ObservationFormPage({
     required this.session,
-    required this.sessionBloc,
     this.globalDate,
     this.onGlobalDateChanged,
     this.existingRecord,
@@ -53,7 +56,6 @@ class ObservationFormPage extends StatefulWidget {
   });
 
   final ObservationSession session;
-  final SessionObservationBloc sessionBloc;
   final DateTime? globalDate;
   final void Function(DateTime)? onGlobalDateChanged;
   final ObservationRecord? existingRecord;
@@ -62,7 +64,8 @@ class ObservationFormPage extends StatefulWidget {
   State<ObservationFormPage> createState() => _ObservationFormPageState();
 }
 
-class _ObservationFormPageState extends State<ObservationFormPage> {
+class _ObservationFormPageState extends State<ObservationFormPage>
+    with WidgetsBindingObserver, LocationAutoCaptureMixin {
   final _formKey = GlobalKey<FormState>();
 
   late TextEditingController _notesController;
@@ -72,8 +75,31 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
   late DateTime _endTime;
   double? _selectedBearing;
   String? _selectedSpeciesId;
-  double? _latitude;
-  double? _longitude;
+
+  // Location state (incidental sessions only)
+  bool _isAtLocation = false;
+  bool _pendingInitialCapture = false;
+
+  @override
+  bool get shouldRetryLocationCapture {
+    final state = context.read<ObservationFormBloc>().state;
+    if (state is ObservationFormReady) {
+      return _isAtLocation && state.geoPosition == null;
+    }
+    return false;
+  }
+
+  @override
+  Future<void> onResumedLocationCapture() async {
+    context.read<ObservationFormBloc>().add(const CaptureLocationRequested());
+  }
+
+  @override
+  void dispose() {
+    _notesController.dispose();
+    _quantityController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -90,8 +116,11 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
     _selectedContactType =
         widget.existingRecord?.contactType ?? ContactType.auditive;
     _selectedBearing = widget.existingRecord?.bearing;
-    _latitude = widget.existingRecord?.latitude;
-    _longitude = widget.existingRecord?.longitude;
+    _isAtLocation = widget.existingRecord?.location != null;
+    if (widget.existingRecord == null && widget.session.isIncidental) {
+      _isAtLocation = true;
+      _pendingInitialCapture = true;
+    }
 
     if (widget.existingRecord != null) {
       _startTime = widget.existingRecord!.startTime;
@@ -130,19 +159,32 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
           .state
           .appLanguage
           .toLanguageCode;
-      context.read<ObservationFormBloc>().add(LoadFormDataRequested(langCode));
+
+      context.read<ObservationFormBloc>().add(
+        LoadFormDataRequested(
+          langCode: langCode,
+          existingLocation: widget.existingRecord?.location,
+        ),
+      );
     });
   }
 
-  @override
-  void dispose() {
-    _notesController.dispose();
-    _quantityController.dispose();
-    super.dispose();
+  Future<void> _openMapPicker(GeoPosition? currentPos) async {
+    final result = await context.push<GeoPosition>(
+      AppRoutes.mapPicker,
+      extra: currentPos,
+    );
+    if (!mounted || result == null) return;
+
+    setState(() => _isAtLocation = false);
+    context.read<ObservationFormBloc>().add(LocationManuallySelected(result));
   }
 
   void _onSave() {
     if (_formKey.currentState!.validate()) {
+      final state = context.read<ObservationFormBloc>().state;
+      if (state is! ObservationFormReady) return;
+
       context.read<ObservationFormBloc>().add(
         SaveObservationRequested(
           sessionId: widget.session.id,
@@ -153,13 +195,11 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
               ? _notesController.text
               : null,
           bearing: _selectedBearing!,
-          latitude: _latitude ?? 0.0,
-          //TODO: CAMBIAR ES PER TEST
-          longitude: _longitude ?? 0.0,
+          location: state.geoPosition,
+          locationError: state.locationError,
           startTime: _startTime,
           endTime: _endTime,
           existingRecord: widget.existingRecord,
-          sessionBloc: widget.sessionBloc,
         ),
       );
     }
@@ -189,27 +229,54 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
       ),
       resizeToAvoidBottomInset: true,
       body: BlocConsumer<ObservationFormBloc, ObservationFormState>(
-        listenWhen: (previous, current) =>
+        listenWhen: (prev, current) =>
             current is ObservationFormSuccess ||
-            current is ObservationFormError,
+            current is ObservationFormError ||
+            current is ObservationLocationShowErrorDialog ||
+            (prev is ObservationFormLoading && current is ObservationFormReady),
         listener: (context, state) {
-          if (state is ObservationFormSuccess) {
+          if (state is ObservationFormReady && _pendingInitialCapture) {
+            _pendingInitialCapture = false;
+            context.read<ObservationFormBloc>().add(
+              const CaptureLocationRequested(),
+            );
+          }
+
+          if (state is ObservationLocationShowErrorDialog) {
+            if (state.errorType == LocationErrorType.permissionDenied ||
+                state.errorType == LocationErrorType.gpsDisabled) {
+              unawaited(
+                LocationPermissionsDialog.showLocationErrorDialog(
+                  context,
+                  state.errorType,
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(l10n.locationErrorTimeout),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+            }
+          } else if (state is ObservationFormSuccess) {
             context.pop();
           } else if (state is ObservationFormError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(l10n.errorSavingObservation),
+                behavior: SnackBarBehavior.floating,
               ),
             );
           }
         },
+        buildWhen: (prev, current) =>
+            current is ObservationFormReady ||
+            current is ObservationFormLoading,
         builder: (context, state) {
-          if (state is ObservationFormLoading ||
-              state is ObservationFormInitial) {
+          if (state is! ObservationFormReady) {
             return const Center(child: CircularProgressIndicator());
           }
-
-          final birds = state is ObservationFormReady ? state.birds : <Bird>[];
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(AppDimensions.lg),
@@ -231,15 +298,39 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
                       },
                       onGlobalDateChanged: widget.onGlobalDateChanged,
                     ),
+                    const SizedBox(height: AppDimensions.lg),
 
-                    const SizedBox(height: AppDimensions.md),
+                    if (widget.session.isIncidental) ...[
+                      LocationSelectorCard(
+                        isAtLocation: _isAtLocation,
+                        location: state.geoPosition,
+                        locationError: state.isCapturingLocation
+                            ? null
+                            : state.locationError,
+                        onToggleChange: (value) {
+                          setState(() => _isAtLocation = value);
+                          if (value) {
+                            context.read<ObservationFormBloc>().add(
+                              const CaptureLocationRequested(),
+                            );
+                          } else {
+                            context.read<ObservationFormBloc>().add(
+                              const ClearLocationRequested(),
+                            );
+                          }
+                        },
+                        onOpenMap: () => _openMapPicker(state.geoPosition),
+                      ),
+                      const SizedBox(height: AppDimensions.md),
+                    ],
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Expanded(
                           child: SpeciesSelectorField(
-                            birds: birds,
+                            birds: state.birds,
                             selectedSpeciesId: _selectedSpeciesId,
                             onChanged: (value) =>
                                 setState(() => _selectedSpeciesId = value),
@@ -282,8 +373,8 @@ class _ObservationFormPageState extends State<ObservationFormPage> {
                       onChanged: (value) =>
                           setState(() => _selectedBearing = value),
                     ),
-
                     const SizedBox(height: AppDimensions.md),
+
                     NotesField(controller: _notesController),
                     const SizedBox(height: AppDimensions.xl),
                   ],

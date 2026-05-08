@@ -167,11 +167,13 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
 
         return MaterialPage(
           fullscreenDialog: true,
-          child: BlocProvider(
-            create: (_) => sl<ObservationFormBloc>(),
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (_) => sl<ObservationFormBloc>()),
+              BlocProvider(create: (_) => sl<PhoneSettingsBloc>()),
+            ],
             child: ObservationFormPage(
               session: args.session,
-              sessionBloc: args.sessionBloc,
               globalDate: args.globalDate,
               onGlobalDateChanged: args.onGlobalDateChanged,
               existingRecord: args.existingRecord,

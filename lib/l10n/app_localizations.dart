@@ -1514,6 +1514,72 @@ abstract class AppLocalizations {
   /// **'Obrir configuració'**
   String get actionOpenSettings;
 
+  /// No description provided for @observationLocationTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació de l\'observació'**
+  String get observationLocationTitle;
+
+  /// No description provided for @observationAtLocationToggle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sóc al lloc exacte de l\'ocell'**
+  String get observationAtLocationToggle;
+
+  /// No description provided for @locationWaitingGps.
+  ///
+  /// In ca, this message translates to:
+  /// **'Esperant senyal GPS...'**
+  String get locationWaitingGps;
+
+  /// No description provided for @locationMapRequired.
+  ///
+  /// In ca, this message translates to:
+  /// **'Falta marcar el punt al mapa'**
+  String get locationMapRequired;
+
+  /// No description provided for @locationModifyMap.
+  ///
+  /// In ca, this message translates to:
+  /// **'Modificar al mapa'**
+  String get locationModifyMap;
+
+  /// No description provided for @locationOpenMap.
+  ///
+  /// In ca, this message translates to:
+  /// **'Obrir el mapa'**
+  String get locationOpenMap;
+
+  /// No description provided for @locationErrorPermission.
+  ///
+  /// In ca, this message translates to:
+  /// **'Permisos de GPS denegats. Activa\'ls als ajustos o usa el mapa.'**
+  String get locationErrorPermission;
+
+  /// No description provided for @locationErrorDisabled.
+  ///
+  /// In ca, this message translates to:
+  /// **'El GPS està apagat. Activa\'l o usa el mapa.'**
+  String get locationErrorDisabled;
+
+  /// No description provided for @locationErrorTimeout.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sense senyal GPS. Selecciona la ubicació manualment al mapa.'**
+  String get locationErrorTimeout;
+
+  /// No description provided for @permissionsRequired.
+  ///
+  /// In ca, this message translates to:
+  /// **'Permisos necessaris'**
+  String get permissionsRequired;
+
+  /// No description provided for @gpsDisabled.
+  ///
+  /// In ca, this message translates to:
+  /// **'GPS desactivat'**
+  String get gpsDisabled;
+
   /// No description provided for @mapPickerTitle.
   ///
   /// In ca, this message translates to:

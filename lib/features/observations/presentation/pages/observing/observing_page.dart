@@ -28,6 +28,7 @@ import 'package:noctambuls/features/observations/presentation/pages/observing/wi
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/observation_card.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/stopwatch_display.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/animated_pulsed_location.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/location_auto_capture_mixin.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/location_permissions_dialog.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/popup_menu_observing.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
@@ -40,30 +41,23 @@ class ObservingPage extends StatefulWidget {
 }
 
 class _ObservingPageState extends State<ObservingPage>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, LocationAutoCaptureMixin {
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
+  bool get shouldRetryLocationCapture {
+    final currentState = context.read<ObservingSessionBloc>().state;
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      final bloc = context.read<ObservingSessionBloc>();
-      final currentState = bloc.state;
-
-      if (currentState is ObservingSessionActive &&
-          currentState.session.locationError != null) {
-        bloc.add(RetryObservingSessionLocation());
-      }
+    if (currentState is ObservingSessionActive) {
+      return currentState.session.location == null &&
+          currentState.session.locationError != null;
     }
+    return false;
+  }
+
+  @override
+  Future<void> onResumedLocationCapture() async {
+    context.read<ObservingSessionBloc>().add(
+      RetryObservingSessionLocation(),
+    );
   }
 
   @override
@@ -201,7 +195,6 @@ class _ObservingContent extends StatelessWidget {
         AppRoutes.observationForm,
         extra: ObservationFormArgs(
           session: session,
-          sessionBloc: context.read<SessionObservationBloc>(),
           globalDate: globalDate,
           onGlobalDateChanged: session.canEditObservationDate
               ? (date) {

@@ -299,6 +299,18 @@
     "actionLater": "Ara no",
     "actionOpenSettings": "Obrir configuració",
 
+    "observationLocationTitle": "Ubicació de l'observació",
+    "observationAtLocationToggle": "Sóc al lloc exacte de l'ocell",
+    "locationWaitingGps": "Esperant senyal GPS...",
+    "locationMapRequired": "Falta marcar el punt al mapa",
+    "locationModifyMap": "Modificar al mapa",
+    "locationOpenMap": "Obrir el mapa",
+    "locationErrorPermission": "Permisos de GPS denegats. Activa'ls als ajustos o usa el mapa.",
+    "locationErrorDisabled": "El GPS està apagat. Activa'l o usa el mapa.",
+    "locationErrorTimeout": "Sense senyal GPS. Selecciona la ubicació manualment al mapa.",
+    "permissionsRequired": "Permisos necessaris",
+    "gpsDisabled": "GPS desactivat",
+
     "mapPickerTitle": "Seleccionar ubicació",
     "mapPickerConfirm": "Confirmar ubicació",
     "mapPickerSelectPoint": "Mantén premut per col·locar el marcador",
