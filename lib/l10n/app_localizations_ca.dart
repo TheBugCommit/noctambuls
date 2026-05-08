@@ -730,6 +730,15 @@ class AppLocalizationsCa extends AppLocalizations {
   String get understood => 'Entesos';
 
   @override
+  String get locationErrorTooltip => 'Error de GPS';
+
+  @override
+  String get locationManualTooltip => 'Ubicació Manual';
+
+  @override
+  String get locationAutoTooltip => 'Ubicació Automàtica (GPS)';
+
+  @override
   String get locationGpsOffTitle => 'Activa la ubicació del dispositiu';
 
   @override

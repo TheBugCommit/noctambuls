@@ -289,6 +289,9 @@
     "scannerHelpMessage": "Demana a l'altre usuari que obri el seu perfil per mostrar el seu codi QR i apunta-hi amb la càmera. Si la càmera no funciona o no detecta el codi, pots introduir-lo manualment prement el botó inferior.",
     "understood": "Entesos",
 
+    "locationErrorTooltip": "Error de GPS",
+    "locationManualTooltip": "Ubicació Manual",
+    "locationAutoTooltip": "Ubicació Automàtica (GPS)",
     "locationGpsOffTitle": "Activa la ubicació del dispositiu",
     "locationGpsOffContent": "La ubicació del dispositiu està desactivada. Per poder registrar coordenades precises a les observacions i sessions, activa el GPS des de la configuració del telèfon i torna a intentar-ho.",
     "locationPermissionTitle": "Permís d'ubicació necessari",

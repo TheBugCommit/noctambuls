@@ -1460,6 +1460,24 @@ abstract class AppLocalizations {
   /// **'Entesos'**
   String get understood;
 
+  /// No description provided for @locationErrorTooltip.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error de GPS'**
+  String get locationErrorTooltip;
+
+  /// No description provided for @locationManualTooltip.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació Manual'**
+  String get locationManualTooltip;
+
+  /// No description provided for @locationAutoTooltip.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació Automàtica (GPS)'**
+  String get locationAutoTooltip;
+
   /// No description provided for @locationGpsOffTitle.
   ///
   /// In ca, this message translates to:

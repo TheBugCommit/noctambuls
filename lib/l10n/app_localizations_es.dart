@@ -732,6 +732,15 @@ class AppLocalizationsEs extends AppLocalizations {
   String get understood => 'Entendido';
 
   @override
+  String get locationErrorTooltip => 'Error de GPS';
+
+  @override
+  String get locationManualTooltip => 'Ubicación Manual';
+
+  @override
+  String get locationAutoTooltip => 'Ubicación Automática (GPS)';
+
+  @override
   String get locationGpsOffTitle => 'Activa la ubicación del dispositivo';
 
   @override
