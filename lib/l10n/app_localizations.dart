@@ -1459,6 +1459,42 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Entesos'**
   String get understood;
+
+  /// No description provided for @locationGpsOffTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Activa la ubicació del dispositiu'**
+  String get locationGpsOffTitle;
+
+  /// No description provided for @locationGpsOffContent.
+  ///
+  /// In ca, this message translates to:
+  /// **'La ubicació del dispositiu està desactivada. Per poder registrar coordenades precises a les observacions i sessions, activa el GPS des de la configuració del telèfon i torna a intentar-ho.'**
+  String get locationGpsOffContent;
+
+  /// No description provided for @locationPermissionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Permís d\'ubicació necessari'**
+  String get locationPermissionTitle;
+
+  /// No description provided for @locationPermissionContent.
+  ///
+  /// In ca, this message translates to:
+  /// **'Noctàmbuls necessita accés a la ubicació per guardar la posició exacta de les observacions d\'ocells i de les sessions de cens.\n\nHas denegat el permís de manera permanent. Per continuar, obre la configuració del dispositiu i habilita el permís d\'ubicació per a l\'aplicació.'**
+  String get locationPermissionContent;
+
+  /// No description provided for @actionLater.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ara no'**
+  String get actionLater;
+
+  /// No description provided for @actionOpenSettings.
+  ///
+  /// In ca, this message translates to:
+  /// **'Obrir configuració'**
+  String get actionOpenSettings;
 }
 
 class _AppLocalizationsDelegate

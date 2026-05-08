@@ -730,4 +730,24 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get understood => 'Entendido';
+
+  @override
+  String get locationGpsOffTitle => 'Activa la ubicación del dispositivo';
+
+  @override
+  String get locationGpsOffContent =>
+      'La ubicación del dispositivo está desactivada. Para poder registrar coordenadas precisas en las observaciones y sesiones, activa el GPS desde la configuración del teléfono y vuelve a intentarlo.';
+
+  @override
+  String get locationPermissionTitle => 'Permiso de ubicación necesario';
+
+  @override
+  String get locationPermissionContent =>
+      'Noctámbulos necesita acceso a la ubicación para guardar la posición exacta de las observaciones de aves y de las sesiones de censo.\n\nHas denegado el permiso de forma permanente. Para continuar, abre la configuración del dispositivo y habilita el permiso de ubicación para la aplicación.';
+
+  @override
+  String get actionLater => 'Ahora no';
+
+  @override
+  String get actionOpenSettings => 'Abrir configuración';
 }

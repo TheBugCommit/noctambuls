@@ -728,4 +728,24 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get understood => 'Entesos';
+
+  @override
+  String get locationGpsOffTitle => 'Activa la ubicació del dispositiu';
+
+  @override
+  String get locationGpsOffContent =>
+      'La ubicació del dispositiu està desactivada. Per poder registrar coordenades precises a les observacions i sessions, activa el GPS des de la configuració del telèfon i torna a intentar-ho.';
+
+  @override
+  String get locationPermissionTitle => 'Permís d\'ubicació necessari';
+
+  @override
+  String get locationPermissionContent =>
+      'Noctàmbuls necessita accés a la ubicació per guardar la posició exacta de les observacions d\'ocells i de les sessions de cens.\n\nHas denegat el permís de manera permanent. Per continuar, obre la configuració del dispositiu i habilita el permís d\'ubicació per a l\'aplicació.';
+
+  @override
+  String get actionLater => 'Ara no';
+
+  @override
+  String get actionOpenSettings => 'Obrir configuració';
 }

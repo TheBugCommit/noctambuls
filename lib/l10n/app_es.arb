@@ -282,6 +282,13 @@
     "scannerHelperText": "Escanea el QR de ornitólogo del perfil del participante",
     "scannerHelpTitle": "¿Cómo añadir un participante?",
     "scannerHelpMessage": "Pide al otro usuario que abra su perfil para mostrar su código QR y apunta con la cámara.\n\nSi la cámara no funciona o no detecta el código, puedes introducirlo manualmente pulsando el botón inferior.",
-    "understood": "Entendido"
+    "understood": "Entendido",
+
+    "locationGpsOffTitle": "Activa la ubicación del dispositivo",
+    "locationGpsOffContent": "La ubicación del dispositivo está desactivada. Para poder registrar coordenadas precisas en las observaciones y sesiones, activa el GPS desde la configuración del teléfono y vuelve a intentarlo.",
+    "locationPermissionTitle": "Permiso de ubicación necesario",
+    "locationPermissionContent": "Noctámbulos necesita acceso a la ubicación para guardar la posición exacta de las observaciones de aves y de las sesiones de censo.\n\nHas denegado el permiso de forma permanente. Para continuar, abre la configuración del dispositivo y habilita el permiso de ubicación para la aplicación.",
+    "actionLater": "Ahora no",
+    "actionOpenSettings": "Abrir configuración"
 
 }
