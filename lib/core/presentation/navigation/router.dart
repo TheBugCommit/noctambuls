@@ -6,6 +6,7 @@ import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/phone_settings/phone_settings_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/share/share_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
@@ -22,6 +23,8 @@ import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.da
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/map_picker/map_picker_page.dart';
@@ -200,6 +203,12 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
               create: (_) => sl<SessionReviewBloc>(param1: sessionToReview),
             ),
             BlocProvider(create: (_) => sl<PhoneSettingsBloc>()),
+            BlocProvider(create: (_) => sl<ConnectivityBloc>()),
+            BlocProvider(
+              create: (_) =>
+                  sl<SessionObservationBloc>(param1: sessionToReview.id)
+                    ..add(WatchObservations()),
+            ),
           ],
           child: ReviewPage(session: sessionToReview),
         );

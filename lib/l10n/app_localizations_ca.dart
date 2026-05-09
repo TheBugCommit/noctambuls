@@ -680,6 +680,40 @@ class AppLocalizationsCa extends AppLocalizations {
   String get reviewErrorSaving => 'Error guardant la revisió';
 
   @override
+  String get reviewLocationIncidentalTitle => 'Ubicació de les observacions';
+
+  @override
+  String get reviewLocationSessionTitle => 'Ubicació de la sessió';
+
+  @override
+  String get reviewLocationRequiredError =>
+      'Cal establir la ubicació de la sessió per finalitzar.';
+
+  @override
+  String get reviewLocationModify => 'Modificar sessió';
+
+  @override
+  String get reviewLocationMissing => 'Sense ubicació';
+
+  @override
+  String get reviewLocationIncidentalMissingDesc =>
+      'Afegeix ubicacions editant cadascuna de les observacions del llistat inferior.';
+
+  @override
+  String get reviewLocationSessionMissingDesc =>
+      'La sessió no té coordenades registrades.';
+
+  @override
+  String get reviewLocationSetMap => 'Establir al Mapa';
+
+  @override
+  String get reviewLocationNoInternet => 'Sense connexió';
+
+  @override
+  String get reviewLocationNoInternetDesc =>
+      'El mapa de previsualització requereix internet. Tot i això, les coordenades guardades als registres són segures.';
+
+  @override
   String get participantsTitle => 'Participants';
 
   @override

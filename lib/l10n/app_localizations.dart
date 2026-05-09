@@ -1364,6 +1364,66 @@ abstract class AppLocalizations {
   /// **'Error guardant la revisió'**
   String get reviewErrorSaving;
 
+  /// No description provided for @reviewLocationIncidentalTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació de les observacions'**
+  String get reviewLocationIncidentalTitle;
+
+  /// No description provided for @reviewLocationSessionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació de la sessió'**
+  String get reviewLocationSessionTitle;
+
+  /// No description provided for @reviewLocationRequiredError.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cal establir la ubicació de la sessió per finalitzar.'**
+  String get reviewLocationRequiredError;
+
+  /// No description provided for @reviewLocationModify.
+  ///
+  /// In ca, this message translates to:
+  /// **'Modificar sessió'**
+  String get reviewLocationModify;
+
+  /// No description provided for @reviewLocationMissing.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sense ubicació'**
+  String get reviewLocationMissing;
+
+  /// No description provided for @reviewLocationIncidentalMissingDesc.
+  ///
+  /// In ca, this message translates to:
+  /// **'Afegeix ubicacions editant cadascuna de les observacions del llistat inferior.'**
+  String get reviewLocationIncidentalMissingDesc;
+
+  /// No description provided for @reviewLocationSessionMissingDesc.
+  ///
+  /// In ca, this message translates to:
+  /// **'La sessió no té coordenades registrades.'**
+  String get reviewLocationSessionMissingDesc;
+
+  /// No description provided for @reviewLocationSetMap.
+  ///
+  /// In ca, this message translates to:
+  /// **'Establir al Mapa'**
+  String get reviewLocationSetMap;
+
+  /// No description provided for @reviewLocationNoInternet.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sense connexió'**
+  String get reviewLocationNoInternet;
+
+  /// No description provided for @reviewLocationNoInternetDesc.
+  ///
+  /// In ca, this message translates to:
+  /// **'El mapa de previsualització requereix internet. Tot i això, les coordenades guardades als registres són segures.'**
+  String get reviewLocationNoInternetDesc;
+
   /// No description provided for @participantsTitle.
   ///
   /// In ca, this message translates to:

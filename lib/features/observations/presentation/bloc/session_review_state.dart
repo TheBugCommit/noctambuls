@@ -10,13 +10,48 @@ sealed class SessionReviewState extends Equatable {
 }
 
 final class SessionReviewEditing extends SessionReviewState {
-  const SessionReviewEditing({required this.session, this.isSaving = false});
+  const SessionReviewEditing({
+    required this.session,
+    this.isSaving = false,
+    this.missingObservationLocationIds = const {},
+    this.showSessionLocationError = false,
+    this.showListeningPointError = false,
+  });
 
   final ObservationSession session;
   final bool isSaving;
 
+  final Set<String> missingObservationLocationIds;
+  final bool showSessionLocationError;
+  final bool showListeningPointError;
+
+  SessionReviewEditing copyWith({
+    ObservationSession? session,
+    bool? isSaving,
+    Set<String>? missingObservationLocationIds,
+    bool? showSessionLocationError,
+    bool? showListeningPointError,
+  }) {
+    return SessionReviewEditing(
+      session: session ?? this.session,
+      isSaving: isSaving ?? this.isSaving,
+      missingObservationLocationIds:
+          missingObservationLocationIds ?? this.missingObservationLocationIds,
+      showSessionLocationError:
+          showSessionLocationError ?? this.showSessionLocationError,
+      showListeningPointError:
+          showListeningPointError ?? this.showListeningPointError,
+    );
+  }
+
   @override
-  List<Object?> get props => [session, isSaving];
+  List<Object?> get props => [
+    session,
+    isSaving,
+    missingObservationLocationIds,
+    showSessionLocationError,
+    showListeningPointError,
+  ];
 }
 
 final class SessionReviewFinalized extends SessionReviewState {}

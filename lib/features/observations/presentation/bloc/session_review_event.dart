@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/core/domain/entities/geo_position.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
 import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
@@ -22,8 +24,7 @@ class ReviewUpdateProperties extends SessionReviewEvent {
     this.visibility,
     this.moon,
     this.listeningPoint,
-    this.latitude,
-    this.longitude,
+    this.location,
   });
 
   final TemperatureRange? temperature;
@@ -33,8 +34,7 @@ class ReviewUpdateProperties extends SessionReviewEvent {
   final VisibilityLevel? visibility;
   final MoonPresence? moon;
   final int? listeningPoint;
-  final double? latitude;
-  final double? longitude;
+  final GeoPosition? location;
 
   @override
   List<Object?> get props => [
@@ -45,8 +45,7 @@ class ReviewUpdateProperties extends SessionReviewEvent {
     visibility,
     moon,
     listeningPoint,
-    latitude,
-    longitude,
+    location,
   ];
 }
 
@@ -68,6 +67,13 @@ class ReviewRemoveParticipant extends SessionReviewEvent {
   List<Object?> get props => [code];
 }
 
-class ReviewFinalizeSession extends SessionReviewEvent {}
+class ReviewFinalizeSession extends SessionReviewEvent {
+  const ReviewFinalizeSession(this.observations);
+
+  final List<ObservationRecord> observations;
+
+  @override
+  List<Object?> get props => [observations];
+}
 
 class ReviewDeleteSession extends SessionReviewEvent {}

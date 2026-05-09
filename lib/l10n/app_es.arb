@@ -266,6 +266,16 @@
     "requiredFieldError": "Campo obligatorio",
 
     "reviewErrorSaving": "Error guardando la revisión",
+    "reviewLocationIncidentalTitle": "Ubicación de las observaciones",
+    "reviewLocationSessionTitle": "Ubicación de la sesión",
+    "reviewLocationRequiredError": "Es necesario establecer la ubicación de la sesión para finalizar.",
+    "reviewLocationModify": "Modificar sesión",
+    "reviewLocationMissing": "Sin ubicación",
+    "reviewLocationIncidentalMissingDesc": "Añade ubicaciones editando cada una de las observaciones del listado inferior.",
+    "reviewLocationSessionMissingDesc": "La sesión no tiene coordenadas registradas.",
+    "reviewLocationSetMap": "Establecer en el Mapa",
+    "reviewLocationNoInternet": "Sin conexión",
+    "reviewLocationNoInternetDesc": "El mapa de previsualización requiere internet. Aún así, las coordenadas guardadas son seguras.",
 
     "participantsTitle": "Participantes",
     "addParticipant": "Añadir",

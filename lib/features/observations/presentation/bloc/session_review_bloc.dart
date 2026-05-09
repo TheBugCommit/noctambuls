@@ -1,10 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
+import 'package:noctambuls/features/observations/domain/failures/validation_failures.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/remove_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/validate_session_finalization_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_state.dart';
 
@@ -16,6 +18,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     required this.finishAndLockSessionUseCase,
     required this.addSessionParticipantUseCase,
     required this.removeSessionParticipantUseCase,
+    required this.validateSessionFinalizationUseCase,
   }) : super(SessionReviewEditing(session: initialSession)) {
     on<ReviewUpdateProperties>(_onUpdateProperties);
     on<ReviewFinalizeSession>(_onFinalizeSession);
@@ -29,6 +32,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
   final FinishAndLockSessionUseCase finishAndLockSessionUseCase;
   final AddSessionParticipantUseCase addSessionParticipantUseCase;
   final RemoveSessionParticipantUseCase removeSessionParticipantUseCase;
+  final ValidateSessionFinalizationUseCase validateSessionFinalizationUseCase;
 
   Future<void> _onUpdateProperties(
     ReviewUpdateProperties event,
@@ -47,6 +51,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
       visibility: event.visibility ?? currentSession.visibility,
       moon: event.moon ?? currentSession.moon,
       listeningPoint: event.listeningPoint ?? currentSession.listeningPoint,
+      location: event.location ?? currentSession.location,
       updatedAt: DateTime.now(),
     );
 
@@ -68,9 +73,36 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     Emitter<SessionReviewState> emit,
   ) async {
     if (state is! SessionReviewEditing) return;
-    final currentSession = (state as SessionReviewEditing).session;
+    final currentState = state as SessionReviewEditing;
 
-    final result = await finishAndLockSessionUseCase(currentSession);
+    var hasValidationErrors = false;
+    validateSessionFinalizationUseCase(
+      session: currentState.session,
+      observations: event.observations,
+    ).when(
+      success: (_) {
+        hasValidationErrors = false;
+      },
+      failure: (failure) {
+        hasValidationErrors = true;
+        if (failure is SessionValidationFailure) {
+          emit(
+            currentState.copyWith(
+              showSessionLocationError: failure.missingSessionLocation,
+              missingObservationLocationIds:
+                  failure.missingObservationLocationIds,
+              showListeningPointError: failure.missingListeningPoint,
+            ),
+          );
+        }
+      },
+    );
+
+    if (hasValidationErrors) {
+      return;
+    }
+
+    final result = await finishAndLockSessionUseCase(currentState.session);
 
     result.when(
       success: (_) => emit(SessionReviewFinalized()),

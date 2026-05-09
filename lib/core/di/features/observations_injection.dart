@@ -21,6 +21,7 @@ import 'package:noctambuls/features/observations/domain/usecases/stop_observatio
 import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/validate_session_finalization_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_all_sessions_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
@@ -66,6 +67,7 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => AddSessionParticipantUseCase(sl()))
     ..registerLazySingleton(() => RemoveSessionParticipantUseCase(sl()))
     ..registerLazySingleton(() => SaveObservationUseCase(sl()))
+    ..registerLazySingleton(ValidateSessionFinalizationUseCase.new)
     ..registerLazySingleton(
       () =>
           RetrySessionLocationUseCase(locationService: sl(), repository: sl()),
@@ -117,6 +119,7 @@ void initObservationsFeature() {
         finishAndLockSessionUseCase: sl(),
         addSessionParticipantUseCase: sl(),
         removeSessionParticipantUseCase: sl(),
+        validateSessionFinalizationUseCase: sl(),
         initialSession: session,
       ),
     );

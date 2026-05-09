@@ -271,6 +271,17 @@
     "requiredFieldError": "Camp obligatori",
 
     "reviewErrorSaving": "Error guardant la revisió",
+    "reviewLocationIncidentalTitle": "Ubicació de les observacions",
+    "reviewLocationSessionTitle": "Ubicació de la sessió",
+    "reviewLocationRequiredError": "Cal establir la ubicació de la sessió per finalitzar.",
+    "reviewLocationModify": "Modificar sessió",
+    "reviewLocationMissing": "Sense ubicació",
+    "reviewLocationIncidentalMissingDesc": "Afegeix ubicacions editant cadascuna de les observacions del llistat inferior.",
+    "reviewLocationSessionMissingDesc": "La sessió no té coordenades registrades.",
+    "reviewLocationSetMap": "Establir al Mapa",
+    "reviewLocationNoInternet": "Sense connexió",
+    "reviewLocationNoInternetDesc": "El mapa de previsualització requereix internet. Tot i això, les coordenades guardades als registres són segures.",
+
 
     "participantsTitle": "Participants",
     "addParticipant": "Afegir",

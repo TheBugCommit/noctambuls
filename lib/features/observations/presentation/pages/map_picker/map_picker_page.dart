@@ -133,7 +133,7 @@ class _MapPickerPageState extends State<MapPickerPage> {
                 preferBelow: false,
                 child: Icon(
                   Icons.location_on,
-                  color: theme.colorScheme.error,
+                  color: Colors.redAccent,
                   size: AppDimensions.xxl,
                   shadows: [
                     Shadow(

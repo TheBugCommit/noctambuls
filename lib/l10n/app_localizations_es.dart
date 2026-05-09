@@ -682,6 +682,40 @@ class AppLocalizationsEs extends AppLocalizations {
   String get reviewErrorSaving => 'Error guardando la revisión';
 
   @override
+  String get reviewLocationIncidentalTitle => 'Ubicación de las observaciones';
+
+  @override
+  String get reviewLocationSessionTitle => 'Ubicación de la sesión';
+
+  @override
+  String get reviewLocationRequiredError =>
+      'Es necesario establecer la ubicación de la sesión para finalizar.';
+
+  @override
+  String get reviewLocationModify => 'Modificar sesión';
+
+  @override
+  String get reviewLocationMissing => 'Sin ubicación';
+
+  @override
+  String get reviewLocationIncidentalMissingDesc =>
+      'Añade ubicaciones editando cada una de las observaciones del listado inferior.';
+
+  @override
+  String get reviewLocationSessionMissingDesc =>
+      'La sesión no tiene coordenadas registradas.';
+
+  @override
+  String get reviewLocationSetMap => 'Establecer en el Mapa';
+
+  @override
+  String get reviewLocationNoInternet => 'Sin conexión';
+
+  @override
+  String get reviewLocationNoInternetDesc =>
+      'El mapa de previsualización requiere internet. Aún así, las coordenadas guardadas son seguras.';
+
+  @override
   String get participantsTitle => 'Participantes';
 
   @override

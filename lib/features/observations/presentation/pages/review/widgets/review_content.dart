@@ -17,14 +17,17 @@ import 'package:noctambuls/features/observations/presentation/pages/review/widge
 import 'package:noctambuls/features/observations/presentation/pages/review/widgets/participant_section.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/widgets/review_header.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/widgets/review_meteo_section.dart';
+import 'package:noctambuls/features/observations/presentation/pages/review/widgets/session_location_section.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class ReviewContent extends StatelessWidget {
   const ReviewContent({
     required this.session,
     required this.isReadOnly,
-    required this.showValidationErrors,
+    required this.showSessionLocationError,
+    required this.missingLocationIds,
     required this.listeningPointController,
+    required this.showListeningPointError,
     required this.onDelete,
     required this.onFinalize,
     super.key,
@@ -32,8 +35,10 @@ class ReviewContent extends StatelessWidget {
 
   final ObservationSession session;
   final bool isReadOnly;
-  final bool showValidationErrors;
+  final Set<String> missingLocationIds;
   final TextEditingController listeningPointController;
+  final bool showSessionLocationError;
+  final bool showListeningPointError;
   final void Function(BuildContext) onDelete;
   final void Function(BuildContext) onFinalize;
 
@@ -69,13 +74,20 @@ class ReviewContent extends StatelessWidget {
 
                   const Divider(height: AppDimensions.xxl),
 
+                  // Localització de sessió per a cens/estació
+                  if (!isReadOnly) ...[
+                    SessionLocationSection(
+                      session: session,
+                      showError: showSessionLocationError,
+                    ),
+                    const Divider(height: AppDimensions.xxl),
+                  ],
+
                   if (session.needsListeningPoint) ...[
                     ListeningPointField(
                       controller: listeningPointController,
                       isReadOnly: isReadOnly,
-                      hasError:
-                          showValidationErrors &&
-                          session.listeningPoint == null,
+                      hasError: showListeningPointError,
                       onChanged: (val) {
                         final parsed = int.tryParse(val);
                         context.read<SessionReviewBloc>().add(
@@ -120,8 +132,6 @@ class ReviewContent extends StatelessWidget {
                             AppRoutes.observationForm,
                             extra: ObservationFormArgs(
                               session: session,
-                              sessionBloc: context
-                                  .read<SessionObservationBloc>(),
                             ),
                           ),
                           icon: const Icon(Icons.add),
@@ -129,6 +139,38 @@ class ReviewContent extends StatelessWidget {
                         ),
                     ],
                   ),
+
+                  // Avís de localitzacions pendents (incidental)
+                  if (session.isIncidental &&
+                      missingLocationIds.isNotEmpty) ...[
+                    const SizedBox(height: AppDimensions.sm),
+                    Container(
+                      padding: const EdgeInsets.all(AppDimensions.sm),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.errorContainer,
+                        borderRadius: BorderRadius.circular(
+                          AppDimensions.radiusSm,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.warning_amber_rounded,
+                            color: theme.colorScheme.error,
+                          ),
+                          const SizedBox(width: AppDimensions.sm),
+                          Expanded(
+                            child: Text(
+                              'Cal afegir la ubicació a les observacions marcades en vermell.',
+                              style: TextStyle(
+                                color: theme.colorScheme.onErrorContainer,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: AppDimensions.md),
                 ],
               ),
@@ -151,10 +193,16 @@ class ReviewContent extends StatelessWidget {
                         final record = obsState.observations[index];
                         final bird = obsState.birdsMap[record.speciesId];
                         if (bird == null) return const SizedBox.shrink();
-                        return ObservationCard(
-                          record: record,
-                          bird: bird,
-                          session: session,
+                        final isMissingLocation = missingLocationIds.contains(
+                          record.id,
+                        );
+                        return _ObservationCardWithError(
+                          showError: isMissingLocation,
+                          child: ObservationCard(
+                            record: record,
+                            bird: bird,
+                            session: session,
+                          ),
                         );
                       },
                       childCount: obsState.observations.length,
@@ -189,6 +237,43 @@ class ReviewContent extends StatelessWidget {
                 ],
               ),
             ),
+    );
+  }
+}
+
+class _ObservationCardWithError extends StatelessWidget {
+  const _ObservationCardWithError({
+    required this.child,
+    required this.showError,
+  });
+
+  final Widget child;
+  final bool showError;
+
+  @override
+  Widget build(BuildContext context) {
+    if (!showError) return child;
+
+    return Stack(
+      children: [
+        child,
+        Positioned(
+          top: 4,
+          right: 4,
+          child: Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.errorContainer,
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              Icons.location_off,
+              size: 16,
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
