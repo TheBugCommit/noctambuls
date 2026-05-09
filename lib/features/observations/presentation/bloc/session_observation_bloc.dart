@@ -5,10 +5,8 @@ import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/guide/domain/entities/bird.dart';
 import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
-import 'package:noctambuls/features/observations/domain/usecases/add_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
@@ -20,8 +18,6 @@ class SessionObservationBloc
   SessionObservationBloc({
     required this.sessionId,
     required this.watchObservationsUseCase,
-    required this.addObservationUseCase,
-    required this.updateObservationUseCase,
     required this.updateAllObservationsDateUseCase,
     required this.deleteObservationUseCase,
     required this.getBirdsUseCase,
@@ -30,16 +26,12 @@ class SessionObservationBloc
   }) : super(const ObservationsInitial()) {
     on<WatchObservations>(_onWatchObservations);
     on<ObservationsStreamUpdated>(_onObservationsStreamUpdated);
-    on<AddRecord>(_onAddRecord);
-    on<UpdateRecord>(_onUpdateRecord);
     on<DeleteRecord>(_onDeleteRecord);
     on<UpdateAllObservationsDate>(_onUpdateAllObservationsDate);
   }
 
   final String sessionId;
   final WatchObservationsForSessionUseCase watchObservationsUseCase;
-  final AddObservationUseCase addObservationUseCase;
-  final UpdateObservationUseCase updateObservationUseCase;
   final DeleteObservationUseCase deleteObservationUseCase;
   final UpdateAllObservationsDateUseCase updateAllObservationsDateUseCase;
   final IAppLogger logger;
@@ -80,34 +72,6 @@ class SessionObservationBloc
         observations: event.observations,
         birdsMap: _birdsMap,
       ),
-    );
-  }
-
-  Future<void> _onAddRecord(
-    AddRecord event,
-    Emitter<SessionObservationState> emit,
-  ) async {
-    final result = await addObservationUseCase(event.record);
-    result.when(
-      success: (_) {},
-      failure: (failure) {
-        logger.failure(failure);
-        emit(ObservationsError(failure: failure));
-      },
-    );
-  }
-
-  Future<void> _onUpdateRecord(
-    UpdateRecord event,
-    Emitter<SessionObservationState> emit,
-  ) async {
-    final result = await updateObservationUseCase(event.record);
-    result.when(
-      success: (_) {},
-      failure: (failure) {
-        logger.failure(failure);
-        emit(ObservationsError(failure: failure));
-      },
     );
   }
 

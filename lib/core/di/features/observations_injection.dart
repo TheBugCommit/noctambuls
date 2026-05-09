@@ -6,7 +6,6 @@ import 'package:noctambuls/features/observations/data/datasources/observation_lo
 import 'package:noctambuls/features/observations/data/repositories/observation_repository_impl.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
-import 'package:noctambuls/features/observations/domain/usecases/add_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/change_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/create_session_usecase.dart';
@@ -18,7 +17,6 @@ import 'package:noctambuls/features/observations/domain/usecases/remove_session_
 import 'package:noctambuls/features/observations/domain/usecases/save_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/validate_session_finalization_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
@@ -56,8 +54,6 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => DeleteSessionUseCase(sl()))
     // Use Cases — observation
     ..registerLazySingleton(() => WatchObservationsForSessionUseCase(sl()))
-    ..registerLazySingleton(() => AddObservationUseCase(sl()))
-    ..registerLazySingleton(() => UpdateObservationUseCase(sl()))
     ..registerLazySingleton(() => DeleteObservationUseCase(sl()))
     ..registerLazySingleton(() => StopObservationPhaseUseCase(sl()))
     ..registerLazySingleton(() => FinishAndLockSessionUseCase(sl()))
@@ -90,8 +86,6 @@ void initObservationsFeature() {
       (sessionId, _) => SessionObservationBloc(
         sessionId: sessionId,
         watchObservationsUseCase: sl(),
-        addObservationUseCase: sl(),
-        updateObservationUseCase: sl(),
         updateAllObservationsDateUseCase: sl(),
         deleteObservationUseCase: sl(),
         getBirdsUseCase: sl<GetBirdsUseCase>(),

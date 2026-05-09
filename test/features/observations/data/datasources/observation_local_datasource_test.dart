@@ -6,6 +6,7 @@ import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/features/observations/data/datasources/observation_local_datasource.dart';
 import 'package:noctambuls/features/observations/data/models/observation_record_model.dart';
 import 'package:noctambuls/features/observations/data/models/observation_session_model.dart';
+import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 
@@ -43,7 +44,8 @@ void main() {
     id: 'obs-1',
     sessionId: 'sess-1',
     speciesId: 'bubo_bubo',
-    contactType: 'auditory',
+    contactType: ContactType.auditive,
+    bearing: 0.0,
     quantity: 1,
     startTime: DateTime(2023),
     endTime: DateTime(2023),

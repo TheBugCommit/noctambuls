@@ -6,16 +6,21 @@ import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
+import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
+import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_observation_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
+import 'package:noctambuls/features/settings/domain/usecases/get_language_usecase.dart';
+import 'package:noctambuls/features/settings/domain/entities/app_language.dart';
 
 class MockWatchObservationsForSessionUseCase extends Mock
     implements WatchObservationsForSessionUseCase {}
@@ -28,6 +33,13 @@ class MockDeleteObservationUseCase extends Mock
 class MockUpdateObservationUseCase extends Mock
     implements UpdateObservationUseCase {}
 
+class MockUpdateAllObservationsDateUseCase extends Mock
+    implements UpdateAllObservationsDateUseCase {}
+
+class MockGetBirdsUseCase extends Mock implements GetBirdsUseCase {}
+
+class MockGetLanguageUseCase extends Mock implements GetLanguageUseCase {}
+
 class FakeObservationRecord extends Fake implements ObservationRecord {}
 
 class MockLogger extends Mock implements IAppLogger {}
@@ -37,6 +49,9 @@ void main() {
   late MockAddObservationUseCase mockAddObservation;
   late MockUpdateObservationUseCase mockUpdateObservation;
   late MockDeleteObservationUseCase mockDeleteObservation;
+  late MockUpdateAllObservationsDateUseCase mockUpdateAllObservationsDate;
+  late MockGetBirdsUseCase mockGetBirds;
+  late MockGetLanguageUseCase mockGetLanguage;
   late MockLogger mockLogger;
 
   const tSessionId = 'sess-1';
@@ -53,7 +68,8 @@ void main() {
     id: 'obs-1',
     sessionId: tSessionId,
     speciesId: 'parus_major',
-    contactType: 'visual',
+    contactType: ContactType.visual,
+    bearing: 0.0,
     startTime: DateTime(2024),
     endTime: DateTime(2024),
     createdAt: DateTime(2024),
@@ -62,7 +78,6 @@ void main() {
 
   setUpAll(() {
     registerFallbackValue(FakeObservationRecord());
-    // Suppress unused variable warning for tSession in tests
     expect(tSession.id, tSessionId);
   });
 
@@ -71,7 +86,13 @@ void main() {
     mockAddObservation = MockAddObservationUseCase();
     mockUpdateObservation = MockUpdateObservationUseCase();
     mockDeleteObservation = MockDeleteObservationUseCase();
+    mockUpdateAllObservationsDate = MockUpdateAllObservationsDateUseCase();
+    mockGetBirds = MockGetBirdsUseCase();
+    mockGetLanguage = MockGetLanguageUseCase();
     mockLogger = MockLogger();
+
+    when(() => mockGetLanguage()).thenReturn(AppLanguage.catalan);
+    when(() => mockGetBirds(any())).thenAnswer((_) async => const Ok([]));
   });
 
   SessionObservationBloc buildBloc() => SessionObservationBloc(
@@ -79,7 +100,10 @@ void main() {
     watchObservationsUseCase: mockWatchObservations,
     addObservationUseCase: mockAddObservation,
     updateObservationUseCase: mockUpdateObservation,
+    updateAllObservationsDateUseCase: mockUpdateAllObservationsDate,
     deleteObservationUseCase: mockDeleteObservation,
+    getBirdsUseCase: mockGetBirds,
+    getLanguageUseCase: mockGetLanguage,
     logger: mockLogger,
   );
 
@@ -110,7 +134,7 @@ void main() {
         obsStream.add([tRecord]);
       },
       expect: () => [
-        ObservationsLoaded([tRecord]),
+        ObservationsLoaded(observations: [tRecord], birdsMap: const {}),
       ],
       verify: (_) => verify(() => mockWatchObservations(tSessionId)).called(1),
     );
@@ -127,7 +151,9 @@ void main() {
         bloc.add(WatchObservations());
         obsStream.add([]);
       },
-      expect: () => [const ObservationsLoaded([])],
+      expect: () => [
+        const ObservationsLoaded(observations: [], birdsMap: {}),
+      ],
     );
   });
 

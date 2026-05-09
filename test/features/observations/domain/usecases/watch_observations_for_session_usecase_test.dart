@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
+import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
 
@@ -21,7 +22,8 @@ void main() {
       id: 'obs-1',
       sessionId: 'sess-1',
       speciesId: 'parus_major',
-      contactType: 'visual',
+      contactType: ContactType.visual,
+      bearing: 0.0,
       startTime: now,
       endTime: now,
       createdAt: now,
@@ -31,7 +33,8 @@ void main() {
       id: 'obs-2',
       sessionId: 'sess-1',
       speciesId: 'turdus_merula',
-      contactType: 'auditory',
+      contactType: ContactType.auditive,
+      bearing: 0.0,
       startTime: now,
       endTime: now,
       createdAt: now,
