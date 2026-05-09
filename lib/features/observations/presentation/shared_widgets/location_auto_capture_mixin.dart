@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 mixin LocationAutoCaptureMixin<T extends StatefulWidget>
     on State<T>, WidgetsBindingObserver {
@@ -8,14 +9,27 @@ mixin LocationAutoCaptureMixin<T extends StatefulWidget>
 
   Future<void> onResumedLocationCapture();
 
+  StreamSubscription<ServiceStatus>? _serviceStatusSubscription;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    _serviceStatusSubscription = Geolocator.getServiceStatusStream().listen(
+      (status) {
+        if (status == ServiceStatus.enabled) {
+          if (mounted && shouldRetryLocationCapture) {
+            unawaited(onResumedLocationCapture());
+          }
+        }
+      },
+    );
   }
 
   @override
   void dispose() {
+    unawaited(_serviceStatusSubscription?.cancel());
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }

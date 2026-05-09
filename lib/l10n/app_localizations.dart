@@ -1640,6 +1640,18 @@ abstract class AppLocalizations {
   /// **'GPS desactivat'**
   String get gpsDisabled;
 
+  /// No description provided for @locationManualTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació manual'**
+  String get locationManualTitle;
+
+  /// No description provided for @locationAutoTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ubicació automàtica'**
+  String get locationAutoTitle;
+
   /// No description provided for @mapPickerTitle.
   ///
   /// In ca, this message translates to:

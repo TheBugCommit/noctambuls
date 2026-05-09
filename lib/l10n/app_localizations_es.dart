@@ -831,6 +831,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get gpsDisabled => 'GPS desactivado';
 
   @override
+  String get locationManualTitle => 'Ubicación manual';
+
+  @override
+  String get locationAutoTitle => 'Ubicación automática';
+
+  @override
   String get mapPickerTitle => 'Seleccionar ubicación';
 
   @override

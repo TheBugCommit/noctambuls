@@ -1,9 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
-import 'package:noctambuls/core/domain/usecases/location/capture_location_usecase.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart';
-import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/usecases/save_observation_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_event.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_state.dart';
@@ -13,19 +10,17 @@ class ObservationFormBloc
   ObservationFormBloc({
     required this.getBirdsUseCase,
     required this.saveObservationUseCase,
-    required this.captureLocationUseCase,
     required this.logger,
   }) : super(const ObservationFormInitial()) {
     on<LoadFormDataRequested>(_onLoadFormData);
-    on<CaptureLocationRequested>(_onCaptureLocation);
-    on<LocationManuallySelected>(_onLocationManuallySelected);
+    on<FormLocationUpdated>(_onFormLocationUpdated);
+    on<FormLocationErrorOccurred>(_onFormLocationErrorOccurred);
     on<ClearLocationRequested>(_onClearLocationRequested);
     on<SaveObservationRequested>(_onSaveObservation);
   }
 
   final GetBirdsUseCase getBirdsUseCase;
   final SaveObservationUseCase saveObservationUseCase;
-  final CaptureLocationUseCase captureLocationUseCase;
   final IAppLogger logger;
 
   Future<void> _onLoadFormData(
@@ -33,7 +28,6 @@ class ObservationFormBloc
     Emitter<ObservationFormState> emit,
   ) async {
     emit(const ObservationFormLoading());
-
     final result = await getBirdsUseCase(event.langCode);
 
     result.when(
@@ -52,50 +46,8 @@ class ObservationFormBloc
     );
   }
 
-  Future<void> _onCaptureLocation(
-    CaptureLocationRequested event,
-    Emitter<ObservationFormState> emit,
-  ) async {
-    final currentState = state;
-    if (currentState is! ObservationFormReady) return;
-
-    emit(currentState.copyWith(isCapturingLocation: true, clearError: true));
-
-    final result = await captureLocationUseCase();
-
-    result.when(
-      success: (position) {
-        emit(
-          currentState.copyWith(
-            isCapturingLocation: false,
-            geoPosition: position,
-            clearError: true,
-          ),
-        );
-      },
-      failure: (failure) {
-        var errorType = LocationErrorType.timeoutNoSignal;
-        if (failure is PermissionDeniedFailure) {
-          errorType = LocationErrorType.permissionDenied;
-        } else if (failure is GpsDisabledFailure) {
-          errorType = LocationErrorType.gpsDisabled;
-        }
-
-        emit(ObservationLocationShowErrorDialog(errorType));
-
-        emit(
-          currentState.copyWith(
-            isCapturingLocation: false,
-            locationError: errorType,
-            clearLocation: true,
-          ),
-        );
-      },
-    );
-  }
-
-  void _onLocationManuallySelected(
-    LocationManuallySelected event,
+  void _onFormLocationUpdated(
+    FormLocationUpdated event,
     Emitter<ObservationFormState> emit,
   ) {
     if (state is ObservationFormReady) {
@@ -103,6 +55,20 @@ class ObservationFormBloc
         (state as ObservationFormReady).copyWith(
           geoPosition: event.position,
           clearError: true,
+        ),
+      );
+    }
+  }
+
+  void _onFormLocationErrorOccurred(
+    FormLocationErrorOccurred event,
+    Emitter<ObservationFormState> emit,
+  ) {
+    if (state is ObservationFormReady) {
+      emit(
+        (state as ObservationFormReady).copyWith(
+          locationError: event.error,
+          clearLocation: true,
         ),
       );
     }
@@ -127,7 +93,6 @@ class ObservationFormBloc
     Emitter<ObservationFormState> emit,
   ) async {
     emit(const ObservationFormLoading());
-
     final result = await saveObservationUseCase(
       sessionId: event.sessionId,
       speciesId: event.speciesId,
@@ -143,9 +108,7 @@ class ObservationFormBloc
     );
 
     result.when(
-      success: (_) {
-        emit(const ObservationFormSuccess());
-      },
+      success: (_) => emit(const ObservationFormSuccess()),
       failure: (failure) {
         logger.failure(failure);
         emit(ObservationFormError(failure: failure));

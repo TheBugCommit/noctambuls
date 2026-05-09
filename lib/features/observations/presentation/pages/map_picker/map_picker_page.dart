@@ -1,16 +1,23 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
-import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/domain/enums/location_source.dart';
-import 'package:noctambuls/core/domain/services/location_service.dart';
+import 'package:noctambuls/core/domain/error/failure.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_event.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_state.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
 import 'package:noctambuls/core/presentation/widgets/app_map_view.dart';
+import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/location_auto_capture_mixin.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/location_permissions_dialog.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class MapPickerPage extends StatefulWidget {
@@ -22,75 +29,110 @@ class MapPickerPage extends StatefulWidget {
   State<MapPickerPage> createState() => _MapPickerPageState();
 }
 
-class _MapPickerPageState extends State<MapPickerPage> {
+class _MapPickerPageState extends State<MapPickerPage>
+    with WidgetsBindingObserver, LocationAutoCaptureMixin {
   final MapController _mapController = MapController();
+  late final LocationBloc _locationBloc;
 
-  LatLng? _selectedPoint;
+  @override
+  bool get shouldRetryLocationCapture => !_isManual;
+
+  // 2. Acció: Què fem en tornar a l'app? Tornem a demanar la ubicació!
+  @override
+  Future<void> onResumedLocationCapture() async {
+    // Això farà que el LocationBloc torni a provar, ara que ja hi ha permisos!
+    context.read<LocationBloc>().add(LocationRequested());
+  }
+
+  GeoPosition? _selectedLocation;
   LatLng? _userLocation;
+
+  bool get _isManual =>
+      _selectedLocation?.locationSource == LocationSource.manual;
 
   @override
   void initState() {
     super.initState();
+
+    _locationBloc = context.read<LocationBloc>();
+
     if (widget.initialLocation != null) {
-      _selectedPoint = LatLng(
-        widget.initialLocation!.latitude,
-        widget.initialLocation!.longitude,
-      );
+      _selectedLocation = widget.initialLocation;
     }
 
-    unawaited(_fetchUserLocation());
-  }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
 
-  Future<void> _fetchUserLocation() async {
-    final result = await sl<LocationService>().getLocation();
-    if (!mounted) return;
-
-    result.when(
-      success: (pos) {
+      final locState = context.read<LocationBloc>().state;
+      if (locState is LocationLoadSuccess) {
+        final pt = LatLng(
+          locState.position.latitude,
+          locState.position.longitude,
+        );
         setState(() {
-          _userLocation = LatLng(pos.latitude, pos.longitude);
-          _selectedPoint ??= _userLocation;
+          _userLocation = pt;
+          if (!_isManual) _selectedLocation = locState.position;
         });
-      },
-      failure: (_) {},
-    );
-  }
+      }
 
-  void _onConfirm() {
-    if (_selectedPoint == null) return;
-
-    final isGps =
-        _userLocation != null &&
-        _selectedPoint!.latitude == _userLocation!.latitude &&
-        _selectedPoint!.longitude == _userLocation!.longitude;
-
-    context.pop(
-      GeoPosition(
-        latitude: _selectedPoint!.latitude,
-        longitude: _selectedPoint!.longitude,
-        accuracy: 0,
-        altitude: 0,
-        altitudeAccuracy: 0,
-        timestamp: DateTime.now(),
-        locationSource: isGps ? LocationSource.gps : LocationSource.manual,
-      ),
-    );
-  }
-
-  void _resetToGps() {
-    if (_userLocation == null) return;
-
-    setState(() {
-      _selectedPoint = _userLocation;
+      context.read<LocationBloc>().add(LocationTrackingStarted());
     });
-
-    _mapController.move(_userLocation!, 16.0);
   }
 
   @override
   void dispose() {
+    _locationBloc.add(LocationTrackingStopped());
     _mapController.dispose();
     super.dispose();
+  }
+
+  LocationErrorType _mapFailureToType(Failure failure) {
+    if (failure is PermissionDeniedFailure) {
+      return LocationErrorType.permissionDenied;
+    }
+    return LocationErrorType.gpsDisabled;
+  }
+
+  void _resetToGps() {
+    setState(() {
+      if (_userLocation != null) {
+        _selectedLocation = GeoPosition(
+          latitude: _userLocation!.latitude,
+          longitude: _userLocation!.longitude,
+          accuracy: 0,
+          altitude: 0,
+          altitudeAccuracy: 0,
+          timestamp: DateTime.now(),
+          locationSource: LocationSource.gps,
+        );
+        _mapController.move(_userLocation!, 16);
+      } else {
+        _selectedLocation = null;
+      }
+    });
+
+    context.read<LocationBloc>().add(LocationTrackingStarted());
+  }
+
+  void _onMapLongPress(TapPosition tapPosition, LatLng point) {
+    setState(() {
+      _selectedLocation = GeoPosition(
+        latitude: point.latitude,
+        longitude: point.longitude,
+        accuracy: 0,
+        altitude: 0,
+        altitudeAccuracy: 0,
+        timestamp: DateTime.now(),
+        locationSource: LocationSource.manual,
+      );
+    });
+  }
+
+  void _onConfirm() {
+    if (_selectedLocation == null) return;
+    context.pop(
+      _selectedLocation,
+    );
   }
 
   @override
@@ -98,83 +140,155 @@ class _MapPickerPageState extends State<MapPickerPage> {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    final canReset = _userLocation != null && _selectedPoint != _userLocation;
+    final selectedLatLng = _selectedLocation != null
+        ? LatLng(_selectedLocation!.latitude, _selectedLocation!.longitude)
+        : null;
 
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        title: Text(l10n.mapPickerTitle),
-        backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.8),
-        elevation: 0,
-      ),
-      body: AppMapView(
-        mapController: _mapController,
-        initialCenter: _selectedPoint,
-        initialZoom: _selectedPoint != null ? 16.0 : 8.0,
-        userLocation: _userLocation,
-        onLongPress: (tapPosition, point) {
+    return BlocListener<LocationBloc, LocationState>(
+      listener: (context, state) {
+        if (state is LocationLoadSuccess) {
+          final point = LatLng(
+            state.position.latitude,
+            state.position.longitude,
+          );
+
           setState(() {
-            _selectedPoint = point;
-          });
-        },
-        markers: [
-          if (_selectedPoint != null)
-            Marker(
-              point: _selectedPoint!,
-              width: AppDimensions.xxl,
-              height: AppDimensions.xxl,
-              rotate: true,
-              alignment: Alignment.topCenter,
-              child: Tooltip(
-                message:
-                    '${_selectedPoint!.latitude.toStringAsFixed(5)},'
-                    ' ${_selectedPoint!.longitude.toStringAsFixed(5)}',
-                triggerMode: TooltipTriggerMode.tap,
-                preferBelow: false,
-                child: Icon(
-                  Icons.location_on,
-                  color: Colors.redAccent,
-                  size: AppDimensions.xxl,
-                  shadows: [
-                    Shadow(
-                      color: Colors.black.withValues(alpha: 0.3),
-                      blurRadius: AppDimensions.sm,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-        ],
-        bottomAction: Align(
-          alignment: Alignment.bottomCenter,
-          child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.only(bottom: AppDimensions.xxl),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (canReset) ...[
-                    AppButtonFab.small(
-                      heroTag: 'reset_to_gps',
-                      icon: Icons.restore,
-                      style: AppButtonFabStyle.secondary,
-                      onPressed: _resetToGps,
-                    ),
-                    const SizedBox(width: AppDimensions.md),
-                  ],
+            _userLocation = point;
 
-                  AppButtonFab.extended(
-                    heroTag: 'map_picker_confirm_btn',
-                    onPressed: _selectedPoint == null ? null : _onConfirm,
-                    icon: Icons.check_circle,
-                    label: l10n.mapPickerConfirm,
-                    style: _selectedPoint == null
-                        ? AppButtonFabStyle.surface
-                        : AppButtonFabStyle.primary,
-                  ),
-                ],
+            if (!_isManual) {
+              _selectedLocation = state.position;
+              _mapController.move(point, 16);
+            }
+          });
+        } else if (state is LocationLoadFailure) {
+          if (state.failure is PermissionDeniedFailure ||
+              state.failure is GpsDisabledFailure) {
+            unawaited(
+              LocationPermissionsDialog.showLocationErrorDialog(
+                context,
+                _mapFailureToType(state.failure),
               ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.locationErrorTimeout),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          }
+        }
+      },
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: AppBar(
+          title: Text(l10n.mapPickerTitle),
+          backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.8),
+          elevation: 0,
+        ),
+        body: BlocBuilder<LocationBloc, LocationState>(
+          builder: (context, state) {
+            final isLoading = state is LocationLoadInProgress && !_isManual;
+
+            return Stack(
+              children: [
+                AbsorbPointer(
+                  absorbing: isLoading,
+                  child: AppMapView(
+                    mapController: _mapController,
+                    initialCenter: selectedLatLng ?? _userLocation,
+                    initialZoom: selectedLatLng != null ? 16.0 : 8.0,
+                    userLocation: _userLocation,
+                    onLongPress: _onMapLongPress,
+                    markers: [
+                      if (selectedLatLng != null)
+                        Marker(
+                          point: selectedLatLng,
+                          width: AppDimensions.xxl,
+                          height: AppDimensions.xxl,
+                          rotate: true,
+                          alignment: Alignment.topCenter,
+                          child: Icon(
+                            Icons.location_on,
+                            color: Colors.redAccent,
+                            size: AppDimensions.xxl,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: AppDimensions.sm,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                    bottomAction: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: AppDimensions.xxl,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              AppButtonFab.small(
+                                heroTag: 'reset_to_gps',
+                                icon: Icons.my_location,
+                                style: _isManual
+                                    ? AppButtonFabStyle.secondary
+                                    : AppButtonFabStyle.surface,
+                                onPressed: _isManual ? _resetToGps : null,
+                              ),
+                              const SizedBox(width: AppDimensions.md),
+
+                              AppButtonFab.extended(
+                                heroTag: 'map_picker_confirm_btn',
+                                onPressed: _selectedLocation == null
+                                    ? null
+                                    : _onConfirm,
+                                icon: Icons.check_circle,
+                                label: l10n.mapPickerConfirm,
+                                style: _selectedLocation == null
+                                    ? AppButtonFabStyle.surface
+                                    : AppButtonFabStyle.primary,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                if (isLoading) Positioned.fill(child: _LoadingOverlay()),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadingOverlay extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return ColoredBox(
+      color: Colors.black.withValues(alpha: 0.3),
+      child: Center(
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.all(AppDimensions.md),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(height: AppDimensions.md),
+                Text(l10n.locationWaitingGps),
+              ],
             ),
           ),
         ),

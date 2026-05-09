@@ -17,6 +17,7 @@ import 'package:noctambuls/core/domain/usecases/audio/preload_audio_usecase.dart
 import 'package:noctambuls/core/domain/usecases/audio/toggle_audio_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/connectivity/check_internet_connection_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/location/capture_location_usecase.dart';
+import 'package:noctambuls/core/domain/usecases/location/watch_location_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/phone_settings/open_app_settings_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/phone_settings/open_phone_location_settings_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/share/share_text_usecase.dart';
@@ -25,6 +26,7 @@ import 'package:noctambuls/core/domain/usecases/url/open_url_usecase.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/phone_settings/phone_settings_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/share/share_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
@@ -59,6 +61,7 @@ void initCore() {
     ..registerLazySingleton(() => OpenPhoneLocationSettingsUseCase(sl()))
     ..registerLazySingleton(() => CaptureLocationUseCase(locationService: sl()))
     ..registerLazySingleton(() => CheckInternetConnectionUseCase(sl()))
+    ..registerLazySingleton(() => WatchLocationUseCase(sl()))
     ..registerFactory(
       () => UrlBloc(openUrlUseCase: sl(), logger: sl<IAppLogger>()),
     )
@@ -82,5 +85,8 @@ void initCore() {
     )
     ..registerFactory(
       () => ConnectivityBloc(checkInternetConnectionUseCase: sl()),
+    )
+    ..registerFactory(
+      () => LocationBloc(getLocation: sl(), watchLocationStream: sl()),
     );
 }

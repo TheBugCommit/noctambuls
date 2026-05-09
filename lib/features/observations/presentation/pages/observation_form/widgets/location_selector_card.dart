@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
+import 'package:noctambuls/core/domain/enums/location_source.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
@@ -12,6 +13,7 @@ class LocationSelectorCard extends StatelessWidget {
     required this.onOpenMap,
     this.location,
     this.locationError,
+    this.isLoading = false,
     this.isReadOnly = false,
     super.key,
   });
@@ -22,6 +24,7 @@ class LocationSelectorCard extends StatelessWidget {
   final GeoPosition? location;
   final LocationErrorType? locationError;
   final bool isReadOnly;
+  final bool isLoading;
 
   String _getErrorMessage(AppLocalizations l10n, LocationErrorType error) {
     return switch (error) {
@@ -35,8 +38,11 @@ class LocationSelectorCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+
+    // Variables derivades de l'estat i l'entitat de domini
+    final isManual = location?.locationSource == LocationSource.manual;
     final hasCoordinates = location != null;
-    final hasError = isAtLocation && locationError != null;
+    final hasError = isAtLocation && locationError != null && !isLoading;
 
     return Container(
       decoration: BoxDecoration(
@@ -108,27 +114,37 @@ class LocationSelectorCard extends StatelessWidget {
             ),
             child: Row(
               children: [
+                // Icona canviant segons Loading / Manual / GPS
                 Icon(
-                  hasCoordinates
-                      ? Icons.check_circle
+                  isLoading
+                      ? Icons.satellite_alt_outlined
+                      : hasCoordinates
+                      ? (isManual
+                            ? Icons.pin_drop_outlined
+                            : Icons.check_circle)
                       : Icons.satellite_alt_outlined,
-                  color: hasCoordinates
+                  color: (hasCoordinates && !isLoading)
                       ? theme.colorScheme.primary
                       : theme.colorScheme.onSurfaceVariant,
                 ),
                 const SizedBox(width: AppDimensions.sm),
                 Expanded(
                   child: Text(
-                    hasCoordinates
-                        ? '${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}'
+                    // Text canviant segons l'estat i l'origen
+                    isLoading
+                        ? l10n.locationWaitingGps
+                        : hasCoordinates
+                        ? (isManual
+                              ? 'Ubicació manual: ${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}'
+                              : '${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}')
                         : (isAtLocation
                               ? l10n.locationWaitingGps
                               : l10n.locationMapRequired),
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: hasCoordinates
+                      color: (hasCoordinates && !isLoading)
                           ? theme.colorScheme.primary
                           : theme.colorScheme.onSurfaceVariant,
-                      fontWeight: hasCoordinates
+                      fontWeight: (hasCoordinates && !isLoading)
                           ? FontWeight.bold
                           : FontWeight.normal,
                     ),

@@ -5,7 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
+import 'package:noctambuls/core/domain/enums/location_source.dart';
+import 'package:noctambuls/core/domain/error/failure.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_event.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_state.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/app_quantity_selector.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
@@ -91,7 +97,17 @@ class _ObservationFormPageState extends State<ObservationFormPage>
 
   @override
   Future<void> onResumedLocationCapture() async {
-    context.read<ObservationFormBloc>().add(const CaptureLocationRequested());
+    context.read<LocationBloc>().add(LocationRequested());
+  }
+
+  LocationErrorType _mapFailureToType(Failure failure) {
+    if (failure is PermissionDeniedFailure) {
+      return LocationErrorType.permissionDenied;
+    } else if (failure is GpsDisabledFailure) {
+      return LocationErrorType.gpsDisabled;
+    } else {
+      return LocationErrorType.timeoutNoSignal;
+    }
   }
 
   @override
@@ -116,7 +132,14 @@ class _ObservationFormPageState extends State<ObservationFormPage>
     _selectedContactType =
         widget.existingRecord?.contactType ?? ContactType.auditive;
     _selectedBearing = widget.existingRecord?.bearing;
-    _isAtLocation = widget.existingRecord?.location != null;
+
+    final existingLoc = widget.existingRecord?.location;
+    if (existingLoc != null) {
+      _isAtLocation = existingLoc.locationSource == LocationSource.gps;
+    } else {
+      _isAtLocation = false;
+    }
+
     if (widget.existingRecord == null && widget.session.isIncidental) {
       _isAtLocation = true;
       _pendingInitialCapture = true;
@@ -177,7 +200,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
     if (!mounted || result == null) return;
 
     setState(() => _isAtLocation = false);
-    context.read<ObservationFormBloc>().add(LocationManuallySelected(result));
+    context.read<ObservationFormBloc>().add(FormLocationUpdated(result));
   }
 
   void _onSave() {
@@ -228,161 +251,180 @@ class _ObservationFormPageState extends State<ObservationFormPage>
         ],
       ),
       resizeToAvoidBottomInset: true,
-      body: BlocConsumer<ObservationFormBloc, ObservationFormState>(
-        listenWhen: (prev, current) =>
-            current is ObservationFormSuccess ||
-            current is ObservationFormError ||
-            current is ObservationLocationShowErrorDialog ||
-            (prev is ObservationFormLoading && current is ObservationFormReady),
-        listener: (context, state) {
-          if (state is ObservationFormReady && _pendingInitialCapture) {
-            _pendingInitialCapture = false;
-            context.read<ObservationFormBloc>().add(
-              const CaptureLocationRequested(),
-            );
-          }
+      body: MultiBlocListener(
+        listeners: [
+          BlocListener<LocationBloc, LocationState>(
+            listener: (context, state) {
+              if (!_isAtLocation) return;
 
-          if (state is ObservationLocationShowErrorDialog) {
-            if (state.errorType == LocationErrorType.permissionDenied ||
-                state.errorType == LocationErrorType.gpsDisabled) {
-              unawaited(
-                LocationPermissionsDialog.showLocationErrorDialog(
-                  context,
-                  state.errorType,
-                ),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(l10n.locationErrorTimeout),
-                  behavior: SnackBarBehavior.floating,
-                ),
-              );
-            }
-          } else if (state is ObservationFormSuccess) {
-            context.pop();
-          } else if (state is ObservationFormError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.errorSavingObservation),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          }
-        },
-        buildWhen: (prev, current) =>
-            current is ObservationFormReady ||
-            current is ObservationFormLoading,
-        builder: (context, state) {
-          if (state is! ObservationFormReady) {
-            return const Center(child: CircularProgressIndicator());
-          }
+              if (state is LocationLoadSuccess) {
+                context.read<ObservationFormBloc>().add(
+                  FormLocationUpdated(state.position),
+                );
+              } else if (state is LocationLoadFailure) {
+                final errorType = _mapFailureToType(state.failure);
+                context.read<ObservationFormBloc>().add(
+                  FormLocationErrorOccurred(errorType),
+                );
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(AppDimensions.lg),
-            child: Form(
-              key: _formKey,
-              child: SafeArea(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    ObservationDateHeader(
-                      session: widget.session,
-                      startTime: _startTime,
-                      endTime: _endTime,
-                      onChanged: (start, end) {
-                        setState(() {
-                          _startTime = start;
-                          _endTime = end;
-                        });
-                      },
-                      onGlobalDateChanged: widget.onGlobalDateChanged,
+                if (errorType == LocationErrorType.permissionDenied ||
+                    errorType == LocationErrorType.gpsDisabled) {
+                  unawaited(
+                    LocationPermissionsDialog.showLocationErrorDialog(
+                      context,
+                      errorType,
                     ),
-                    const SizedBox(height: AppDimensions.lg),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(l10n.locationErrorTimeout),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              }
+            },
+          ),
+          BlocListener<ObservationFormBloc, ObservationFormState>(
+            listenWhen: (prev, current) =>
+                current is ObservationFormSuccess ||
+                current is ObservationFormError ||
+                (prev is ObservationFormLoading &&
+                    current is ObservationFormReady),
+            listener: (context, state) {
+              if (state is ObservationFormReady && _pendingInitialCapture) {
+                _pendingInitialCapture = false;
+                context.read<LocationBloc>().add(LocationRequested());
+              } else if (state is ObservationFormSuccess) {
+                context.pop();
+              } else if (state is ObservationFormError) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(l10n.errorSavingObservation),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              }
+            },
+          ),
+        ],
+        child: BlocBuilder<ObservationFormBloc, ObservationFormState>(
+          buildWhen: (prev, current) =>
+              current is ObservationFormReady ||
+              current is ObservationFormLoading,
+          builder: (context, state) {
+            if (state is! ObservationFormReady) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-                    if (widget.session.isIncidental) ...[
-                      LocationSelectorCard(
-                        isAtLocation: _isAtLocation,
-                        location: state.geoPosition,
-                        locationError: state.isCapturingLocation
-                            ? null
-                            : state.locationError,
-                        onToggleChange: (value) {
-                          setState(() => _isAtLocation = value);
-                          if (value) {
-                            context.read<ObservationFormBloc>().add(
-                              const CaptureLocationRequested(),
-                            );
-                          } else {
-                            context.read<ObservationFormBloc>().add(
-                              const ClearLocationRequested(),
-                            );
-                          }
+            final isLocLoading =
+                context.watch<LocationBloc>().state is LocationLoadInProgress;
+            return SingleChildScrollView(
+              padding: const EdgeInsets.all(AppDimensions.lg),
+              child: Form(
+                key: _formKey,
+                child: SafeArea(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      ObservationDateHeader(
+                        session: widget.session,
+                        startTime: _startTime,
+                        endTime: _endTime,
+                        onChanged: (start, end) {
+                          setState(() {
+                            _startTime = start;
+                            _endTime = end;
+                          });
                         },
-                        onOpenMap: () => _openMapPicker(state.geoPosition),
+                        onGlobalDateChanged: widget.onGlobalDateChanged,
+                      ),
+                      const SizedBox(height: AppDimensions.lg),
+
+                      if (widget.session.isIncidental) ...[
+                        LocationSelectorCard(
+                          isAtLocation: _isAtLocation,
+                          location: state.geoPosition,
+                          locationError: state.locationError,
+                          isLoading: isLocLoading,
+                          onToggleChange: (value) {
+                            setState(() => _isAtLocation = value);
+                            if (value) {
+                              context.read<LocationBloc>().add(
+                                LocationRequested(),
+                              );
+                            } else {
+                              context.read<ObservationFormBloc>().add(
+                                const ClearLocationRequested(),
+                              );
+                            }
+                          },
+                          onOpenMap: () => _openMapPicker(state.geoPosition),
+                        ),
+                        const SizedBox(height: AppDimensions.md),
+                      ],
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: SpeciesSelectorField(
+                              birds: state.birds,
+                              selectedSpeciesId: _selectedSpeciesId,
+                              onChanged: (value) =>
+                                  setState(() => _selectedSpeciesId = value),
+                            ),
+                          ),
+                          const SizedBox(width: AppDimensions.md),
+                          Expanded(
+                            child: AppQuantitySelector(
+                              controller: _quantityController,
+                              label: l10n.quantityLabel,
+                              minValue: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: AppDimensions.md),
+                      DateTimeRangeSelectorField(
+                        session: widget.session,
+                        startTime: _startTime,
+                        endTime: _endTime,
+                        onChanged: (start, end) {
+                          setState(() {
+                            _startTime = start;
+                            _endTime = end;
+                          });
+                        },
                       ),
                       const SizedBox(height: AppDimensions.md),
+
+                      ContactTypeSelectorField(
+                        selectedContactType: _selectedContactType,
+                        onChanged: (value) =>
+                            setState(() => _selectedContactType = value),
+                      ),
+                      const SizedBox(height: AppDimensions.md),
+
+                      OrientationSelectorField(
+                        selectedBearing: _selectedBearing,
+                        onChanged: (value) =>
+                            setState(() => _selectedBearing = value),
+                      ),
+                      const SizedBox(height: AppDimensions.md),
+
+                      NotesField(controller: _notesController),
+                      const SizedBox(height: AppDimensions.xl),
                     ],
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: SpeciesSelectorField(
-                            birds: state.birds,
-                            selectedSpeciesId: _selectedSpeciesId,
-                            onChanged: (value) =>
-                                setState(() => _selectedSpeciesId = value),
-                          ),
-                        ),
-                        const SizedBox(width: AppDimensions.md),
-                        Expanded(
-                          child: AppQuantitySelector(
-                            controller: _quantityController,
-                            label: l10n.quantityLabel,
-                            minValue: 1,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: AppDimensions.md),
-                    DateTimeRangeSelectorField(
-                      session: widget.session,
-                      startTime: _startTime,
-                      endTime: _endTime,
-                      onChanged: (start, end) {
-                        setState(() {
-                          _startTime = start;
-                          _endTime = end;
-                        });
-                      },
-                    ),
-                    const SizedBox(height: AppDimensions.md),
-
-                    ContactTypeSelectorField(
-                      selectedContactType: _selectedContactType,
-                      onChanged: (value) =>
-                          setState(() => _selectedContactType = value),
-                    ),
-                    const SizedBox(height: AppDimensions.md),
-
-                    OrientationSelectorField(
-                      selectedBearing: _selectedBearing,
-                      onChanged: (value) =>
-                          setState(() => _selectedBearing = value),
-                    ),
-                    const SizedBox(height: AppDimensions.md),
-
-                    NotesField(controller: _notesController),
-                    const SizedBox(height: AppDimensions.xl),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

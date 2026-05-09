@@ -21,17 +21,22 @@ final class LoadFormDataRequested extends ObservationFormEvent {
   List<Object?> get props => [langCode, existingLocation];
 }
 
-final class CaptureLocationRequested extends ObservationFormEvent {
-  const CaptureLocationRequested();
-}
-
-final class LocationManuallySelected extends ObservationFormEvent {
-  const LocationManuallySelected(this.position);
+final class FormLocationUpdated extends ObservationFormEvent {
+  const FormLocationUpdated(this.position);
 
   final GeoPosition position;
 
   @override
   List<Object?> get props => [position];
+}
+
+final class FormLocationErrorOccurred extends ObservationFormEvent {
+  const FormLocationErrorOccurred(this.error);
+
+  final LocationErrorType error;
+
+  @override
+  List<Object?> get props => [error];
 }
 
 final class ClearLocationRequested extends ObservationFormEvent {

@@ -5,8 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
-import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/data/error/infrastrocture_failures.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
+import 'package:noctambuls/core/domain/enums/location_source.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_event.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_state.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
@@ -25,9 +29,9 @@ import 'package:noctambuls/features/observations/presentation/bloc/session_obser
 import 'package:noctambuls/features/observations/presentation/cubit/stopwatch_cubit.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/empty_observations.dart';
+import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/location_status_bar.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/observation_card.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/stopwatch_display.dart';
-import 'package:noctambuls/features/observations/presentation/shared_widgets/animated_pulsed_location.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/location_auto_capture_mixin.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/location_permissions_dialog.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/popup_menu_observing.dart';
@@ -42,88 +46,167 @@ class ObservingPage extends StatefulWidget {
 
 class _ObservingPageState extends State<ObservingPage>
     with WidgetsBindingObserver, LocationAutoCaptureMixin {
+  late final LocationBloc _locationBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _locationBloc = context.read<LocationBloc>();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final state = context.read<ObservingSessionBloc>().state;
+      if (state is ObservingSessionActive) {
+        _manageGpsTracking(state.session);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _locationBloc.add(LocationTrackingStopped());
+    super.dispose();
+  }
+
   @override
   bool get shouldRetryLocationCapture {
-    final currentState = context.read<ObservingSessionBloc>().state;
+    final state = context.read<ObservingSessionBloc>().state;
+    if (state is! ObservingSessionActive) return false;
 
-    if (currentState is ObservingSessionActive) {
-      return currentState.session.location == null &&
-          currentState.session.locationError != null;
-    }
-    return false;
+    final session = state.session;
+    if (session.isIncidental) return false;
+    if (session.location?.locationSource == LocationSource.manual) return false;
+
+    return true;
   }
 
   @override
   Future<void> onResumedLocationCapture() async {
-    context.read<ObservingSessionBloc>().add(
-      RetryObservingSessionLocation(),
+    _locationBloc.add(LocationTrackingStarted());
+  }
+
+  void _manageGpsTracking(ObservationSession session) {
+    if (session.isIncidental) return;
+
+    if (session.location?.locationSource == LocationSource.manual) {
+      _locationBloc.add(LocationTrackingStopped());
+    } else {
+      _locationBloc.add(LocationTrackingStarted());
+    }
+  }
+
+  Future<void> _openMap(ObservationSession session) async {
+    final result = await context.push<GeoPosition>(
+      AppRoutes.mapPicker,
+      extra: session.location,
     );
+    if (!mounted || result == null) return;
+
+    context.read<ObservingSessionBloc>().add(
+      UpdateObservingSessionLocation(geoPosition: result),
+    );
+
+    if (result.locationSource == LocationSource.manual) {
+      _locationBloc.add(LocationTrackingStopped());
+    } else {
+      _locationBloc.add(LocationTrackingStarted());
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<ObservingSessionBloc, ObservingSessionState>(
-      listenWhen: (prev, curr) {
-        if (curr is ObservingSessionNavigatingToReview ||
-            curr is ObservingSessionIdle) {
-          return true;
-        }
-        if (prev is ObservingSessionActive && curr is ObservingSessionActive) {
-          return prev.session.locationError != curr.session.locationError &&
-              curr.session.locationError != null;
-        }
-        return false;
-      },
+    return BlocListener<LocationBloc, LocationState>(
+      listenWhen: (prev, curr) =>
+          curr is LocationLoadSuccess && curr.isTracking ||
+          curr is LocationLoadFailure,
       listener: (context, state) {
-        if (state is ObservingSessionNavigatingToReview) {
-          context.pushReplacement(AppRoutes.review, extra: state.session);
-        } else if (state is ObservingSessionIdle) {
-          if (ModalRoute.of(context)?.isCurrent == true) {
-            context.pop();
-          }
-        } else if (state is ObservingSessionActive &&
-            state.session.locationError != null) {
-          final error = state.session.locationError!;
-          if (error == LocationErrorType.permissionDenied ||
-              error == LocationErrorType.gpsDisabled) {
+        if (state is LocationLoadSuccess && state.isTracking) {
+          context.read<ObservingSessionBloc>().add(
+            UpdateObservingSessionLocation(geoPosition: state.position),
+          );
+        } else if (state is LocationLoadFailure) {
+          if (state.failure is PermissionDeniedFailure ||
+              state.failure is GpsDisabledFailure) {
+            final errorType = state.failure is PermissionDeniedFailure
+                ? LocationErrorType.permissionDenied
+                : LocationErrorType.gpsDisabled;
+
             unawaited(
-              LocationPermissionsDialog.showLocationErrorDialog(context, error),
+              LocationPermissionsDialog.showLocationErrorDialog(
+                context,
+                errorType,
+              ),
             );
           }
         }
       },
-      buildWhen: (prev, curr) {
-        if (prev.runtimeType != curr.runtimeType) return true;
-        if (prev is ObservingSessionActive && curr is ObservingSessionActive) {
-          return prev.session != curr.session ||
-              prev.selectedObservationDate != curr.selectedObservationDate;
-        }
-        return false;
-      },
-      builder: (context, state) {
-        if (state is! ObservingSessionActive) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        }
+      child: BlocConsumer<ObservingSessionBloc, ObservingSessionState>(
+        listenWhen: (prev, curr) {
+          if (curr is ObservingSessionNavigatingToReview ||
+              curr is ObservingSessionIdle) {
+            return true;
+          }
+          if (prev is ObservingSessionActive &&
+              curr is ObservingSessionActive) {
+            return prev.session.locationError != curr.session.locationError &&
+                curr.session.locationError != null;
+          }
+          return false;
+        },
+        listener: (context, state) {
+          if (state is ObservingSessionNavigatingToReview) {
+            context.pushReplacement(AppRoutes.review, extra: state.session);
+          } else if (state is ObservingSessionIdle) {
+            if (ModalRoute.of(context)?.isCurrent == true) {
+              context.pop();
+            }
+          } else if (state is ObservingSessionActive &&
+              state.session.locationError != null) {
+            final error = state.session.locationError!;
+            if (error == LocationErrorType.permissionDenied ||
+                error == LocationErrorType.gpsDisabled) {
+              unawaited(
+                LocationPermissionsDialog.showLocationErrorDialog(
+                  context,
+                  error,
+                ),
+              );
+            }
+          }
+        },
+        buildWhen: (prev, curr) {
+          if (prev.runtimeType != curr.runtimeType) return true;
+          if (prev is ObservingSessionActive &&
+              curr is ObservingSessionActive) {
+            return prev.session != curr.session ||
+                prev.selectedObservationDate != curr.selectedObservationDate;
+          }
+          return false;
+        },
+        builder: (context, state) {
+          if (state is! ObservingSessionActive) {
+            return const Scaffold(
+              body: Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
 
-        return BlocProvider(
-          create: (_) =>
-              sl<SessionObservationBloc>(param1: state.session.id)
-                ..add(WatchObservations()),
-          child: _ObservingContent(session: state.session),
-        );
-      },
+          return _ObservingContent(
+            session: state.session,
+            onOpenMap: () => _openMap(state.session),
+          );
+        },
+      ),
     );
   }
 }
 
 class _ObservingContent extends StatelessWidget {
-  const _ObservingContent({required this.session});
+  const _ObservingContent({required this.session, required this.onOpenMap});
 
   final ObservationSession session;
+  final VoidCallback onOpenMap;
 
   Future<void> _confirmDelete(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
@@ -242,30 +325,23 @@ class _ObservingContent extends StatelessWidget {
                   const StopwatchDisplay(),
                 ],
               ),
-        actions: [
-          if (!session.isIncidental)
-            AnimatedPulseLocation(
-              session: session,
-              onPressed: () async {
-                final result = await context.push<GeoPosition>(
-                  AppRoutes.mapPicker,
-                  extra: session.location,
-                );
-
-                if (context.mounted && result != null) {
-                  context.read<ObservingSessionBloc>().add(
-                    UpdateObservingSessionLocation(geoPosition: result),
-                  );
-                }
-              },
-            ),
-          PopupMenuObserving(session: session),
-        ],
+        actions: [PopupMenuObserving(session: session)],
       ),
       body: SafeArea(
-        child: showCatalogRequiredView
-            ? const CatalogSyncRequiredView()
-            : _ObservationListBody(session: session),
+        child: Column(
+          children: [
+            if (!session.isIncidental)
+              LocationStatusBar(
+                session: session,
+                onPressed: onOpenMap,
+              ),
+            Expanded(
+              child: showCatalogRequiredView
+                  ? const CatalogSyncRequiredView()
+                  : _ObservationListBody(session: session),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: AppButtonFab.large(
         onPressed: () => _openForm(context),

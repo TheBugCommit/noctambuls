@@ -61,7 +61,9 @@ class HomePage extends StatelessWidget {
             );
             context.read<ObservingSessionBloc>().add(DismissObservingError());
           case ObservingSessionActive():
-            unawaited(context.push(AppRoutes.observing));
+            unawaited(
+              context.push(AppRoutes.observing, extra: state.session),
+            );
           default:
             break;
         }
@@ -84,7 +86,9 @@ class HomePage extends StatelessWidget {
           ObservingSessionLoading() => const _LoadingScaffold(),
           ObservingSessionActive() => _ActiveScaffold(
             session: state.session,
-            onResume: () => unawaited(context.push(AppRoutes.observing)),
+            onResume: () => unawaited(
+              context.push(AppRoutes.observing, extra: state.session),
+            ),
           ),
         };
       },

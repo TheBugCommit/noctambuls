@@ -315,6 +315,8 @@
     "locationErrorTimeout": "Sin señal GPS. Selecciona la ubicación manualmente en el mapa.",
     "permissionsRequired": "Permisos necesarios",
     "gpsDisabled": "GPS desactivado",
+    "locationManualTitle": "Ubicación manual",
+    "locationAutoTitle": "Ubicación automática",
 
     "mapPickerTitle": "Seleccionar ubicación",
     "mapPickerConfirm": "Confirmar ubicación",

@@ -89,7 +89,6 @@ void initObservationsFeature() {
       () => ObservationFormBloc(
         getBirdsUseCase: sl<GetBirdsUseCase>(),
         saveObservationUseCase: sl(),
-        captureLocationUseCase: sl(),
         logger: sl<IAppLogger>(),
       ),
     )

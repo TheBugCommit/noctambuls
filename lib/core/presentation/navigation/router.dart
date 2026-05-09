@@ -7,6 +7,7 @@ import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/phone_settings/phone_settings_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/share/share_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
@@ -156,8 +157,26 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
       path: AppRoutes.observing,
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) {
-        return BlocProvider(
-          create: (context) => sl<PhoneSettingsBloc>(),
+        final session = state.extra as ObservationSession?;
+
+        if (session == null) {
+          return const Scaffold(
+            body: Center(child: Text("Error: No s'ha trobat la sessió actua")),
+          );
+        }
+
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) =>
+                  sl<SessionObservationBloc>(param1: session.id)
+                    ..add(WatchObservations()),
+            ),
+            BlocProvider(
+              create: (context) => sl<PhoneSettingsBloc>(),
+            ),
+            BlocProvider(create: (_) => sl<LocationBloc>()),
+          ],
           child: const ObservingPage(),
         );
       },
@@ -174,6 +193,7 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
             providers: [
               BlocProvider(create: (_) => sl<ObservationFormBloc>()),
               BlocProvider(create: (_) => sl<PhoneSettingsBloc>()),
+              BlocProvider(create: (_) => sl<LocationBloc>()),
             ],
             child: ObservationFormPage(
               session: args.session,
@@ -223,8 +243,14 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
       path: AppRoutes.mapPicker,
       parentNavigatorKey: _rootNavigatorKey,
       builder: (context, state) {
-        return BlocProvider(
-          create: (_) => sl<UrlBloc>(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => sl<UrlBloc>(),
+            ),
+            BlocProvider(create: (_) => sl<LocationBloc>()),
+            BlocProvider(create: (_) => sl<PhoneSettingsBloc>()),
+          ],
           child: MapPickerPage(
             initialLocation: state.extra as GeoPosition?,
           ),

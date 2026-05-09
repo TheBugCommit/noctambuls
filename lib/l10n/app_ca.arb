@@ -321,6 +321,8 @@
     "locationErrorTimeout": "Sense senyal GPS. Selecciona la ubicació manualment al mapa.",
     "permissionsRequired": "Permisos necessaris",
     "gpsDisabled": "GPS desactivat",
+    "locationManualTitle": "Ubicació manual",
+    "locationAutoTitle": "Ubicació automàtica",
 
     "mapPickerTitle": "Seleccionar ubicació",
     "mapPickerConfirm": "Confirmar ubicació",
