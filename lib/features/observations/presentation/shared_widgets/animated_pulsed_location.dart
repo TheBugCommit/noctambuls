@@ -106,7 +106,7 @@ class _AnimatedPulseLocationState extends State<AnimatedPulseLocation>
     if (isManual) {
       return IconButton(
         icon: const Icon(Icons.location_pin),
-        color: colorScheme.primary,
+        color: colorScheme.tertiary,
         onPressed: widget.onPressed,
         tooltip: l10n.locationManualTooltip,
       );
