@@ -43,7 +43,16 @@ class LocationSelectorCard extends StatelessWidget {
     final isManual = location?.locationSource == LocationSource.manual;
     final hasCoordinates = location != null;
     final hasError = isAtLocation && locationError != null && !isLoading;
-
+    final fgColor = (hasCoordinates && !isLoading)
+        ? isManual
+              ? theme.colorScheme.tertiary
+              : theme.colorScheme.primary
+        : theme.colorScheme.onSurfaceVariant;
+    final bgColor = hasCoordinates
+        ? isManual
+              ? theme.colorScheme.tertiaryContainer.withValues(alpha: 0.3)
+              : theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
+        : theme.colorScheme.surfaceContainerHighest;
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
@@ -107,43 +116,33 @@ class LocationSelectorCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppDimensions.sm),
             decoration: BoxDecoration(
-              color: hasCoordinates
-                  ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
-                  : theme.colorScheme.surfaceContainerHighest,
+              color: bgColor,
               borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
             ),
             child: Row(
               children: [
-                // Icona canviant segons Loading / Manual / GPS
                 Icon(
                   isLoading
                       ? Icons.satellite_alt_outlined
                       : hasCoordinates
-                      ? (isManual
-                            ? Icons.pin_drop_outlined
-                            : Icons.check_circle)
+                      ? (isManual ? Icons.location_pin : Icons.check_circle)
                       : Icons.satellite_alt_outlined,
-                  color: (hasCoordinates && !isLoading)
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.onSurfaceVariant,
+                  color: fgColor,
                 ),
                 const SizedBox(width: AppDimensions.sm),
                 Expanded(
                   child: Text(
-                    // Text canviant segons l'estat i l'origen
                     isLoading
                         ? l10n.locationWaitingGps
                         : hasCoordinates
                         ? (isManual
-                              ? 'Ubicació manual: ${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}'
+                              ? '${l10n.locationManualTitle} ${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}'
                               : '${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}')
                         : (isAtLocation
                               ? l10n.locationWaitingGps
                               : l10n.locationMapRequired),
                     style: theme.textTheme.bodyMedium?.copyWith(
-                      color: (hasCoordinates && !isLoading)
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurfaceVariant,
+                      color: fgColor,
                       fontWeight: (hasCoordinates && !isLoading)
                           ? FontWeight.bold
                           : FontWeight.normal,
