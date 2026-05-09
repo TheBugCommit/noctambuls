@@ -142,16 +142,8 @@ class _ObservingPageState extends State<ObservingPage>
       },
       child: BlocConsumer<ObservingSessionBloc, ObservingSessionState>(
         listenWhen: (prev, curr) {
-          if (curr is ObservingSessionNavigatingToReview ||
-              curr is ObservingSessionIdle) {
-            return true;
-          }
-          if (prev is ObservingSessionActive &&
-              curr is ObservingSessionActive) {
-            return prev.session.locationError != curr.session.locationError &&
-                curr.session.locationError != null;
-          }
-          return false;
+          return curr is ObservingSessionNavigatingToReview ||
+              curr is ObservingSessionIdle;
         },
         listener: (context, state) {
           if (state is ObservingSessionNavigatingToReview) {
@@ -159,18 +151,6 @@ class _ObservingPageState extends State<ObservingPage>
           } else if (state is ObservingSessionIdle) {
             if (ModalRoute.of(context)?.isCurrent == true) {
               context.pop();
-            }
-          } else if (state is ObservingSessionActive &&
-              state.session.locationError != null) {
-            final error = state.session.locationError!;
-            if (error == LocationErrorType.permissionDenied ||
-                error == LocationErrorType.gpsDisabled) {
-              unawaited(
-                LocationPermissionsDialog.showLocationErrorDialog(
-                  context,
-                  error,
-                ),
-              );
             }
           }
         },

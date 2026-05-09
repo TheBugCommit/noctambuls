@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/domain/enums/location_source.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/location/location_state.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -83,22 +86,26 @@ class _AnimatedPulseLocationState extends State<AnimatedPulseLocation>
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final hasError =
-        widget.session.locationError != null && widget.session.location == null;
+
     final l10n = AppLocalizations.of(context)!;
 
-    if (hasError) {
+    final locState = context.watch<LocationBloc>().state;
+    final isGpsFailing = locState is LocationLoadFailure;
+    final isManual =
+        widget.session.location?.locationSource == LocationSource.manual;
+
+    if (isGpsFailing && !isManual) {
       return IconButton(
         icon: const Icon(Icons.location_off),
         color: colorScheme.error,
         onPressed: widget.onPressed,
-        tooltip: l10n.locationErrorTooltip,
+        tooltip: l10n.locationErrorTimeout,
       );
     }
 
-    if (!_locationIsGPS) {
+    if (isManual) {
       return IconButton(
-        icon: const Icon(Icons.location_on),
+        icon: const Icon(Icons.location_pin),
         color: colorScheme.primary,
         onPressed: widget.onPressed,
         tooltip: l10n.locationManualTooltip,

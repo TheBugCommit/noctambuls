@@ -15,7 +15,6 @@ import 'package:noctambuls/features/observations/domain/usecases/delete_session_
 import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/get_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/remove_session_participant_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/retry_session_location_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/save_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
@@ -68,10 +67,6 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => RemoveSessionParticipantUseCase(sl()))
     ..registerLazySingleton(() => SaveObservationUseCase(sl()))
     ..registerLazySingleton(ValidateSessionFinalizationUseCase.new)
-    ..registerLazySingleton(
-      () =>
-          RetrySessionLocationUseCase(locationService: sl(), repository: sl()),
-    )
     // BLoC
     ..registerFactory(
       () => ObservingSessionBloc(
@@ -81,7 +76,6 @@ void initObservationsFeature() {
         deleteSessionUseCase: sl(),
         stopObservationPhaseUseCase: sl(),
         changeObservationDateUseCase: sl(),
-        retrySessionLocationUseCase: sl(),
         logger: sl<IAppLogger>(),
       ),
     )
