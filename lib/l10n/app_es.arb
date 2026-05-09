@@ -276,6 +276,7 @@
     "reviewLocationSetMap": "Establecer en el Mapa",
     "reviewLocationNoInternet": "Sin conexión",
     "reviewLocationNoInternetDesc": "El mapa de previsualización requiere internet. Aún así, las coordenadas guardadas son seguras.",
+    "reviewMissingLocationsIncidental": "Debes añadir la ubicación a las observaciones marcadas en rojo.",
 
     "participantsTitle": "Participantes",
     "addParticipant": "Añadir",

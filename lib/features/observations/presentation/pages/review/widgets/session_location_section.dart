@@ -10,6 +10,7 @@ import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_event.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_state.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
@@ -21,11 +22,13 @@ class SessionLocationSection extends StatefulWidget {
   const SessionLocationSection({
     required this.session,
     required this.showError,
+    required this.isReadOnly,
     super.key,
   });
 
   final ObservationSession session;
   final bool showError;
+  final bool isReadOnly;
 
   @override
   State<SessionLocationSection> createState() => _SessionLocationSectionState();
@@ -39,7 +42,7 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
   }
 
   Future<void> _openMapPicker(BuildContext context) async {
-    if (widget.session.isIncidental) return;
+    if (widget.session.isIncidental || widget.isReadOnly) return;
 
     final result = await context.push<GeoPosition>(
       AppRoutes.mapPicker,
@@ -47,8 +50,13 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
     );
     if (!context.mounted || result == null) return;
 
+    final obsState = context.read<SessionObservationBloc>().state;
+    final obs = obsState is ObservationsLoaded
+        ? obsState.observations
+        : <ObservationRecord>[];
+
     context.read<SessionReviewBloc>().add(
-      ReviewUpdateProperties(location: result),
+      ReviewUpdateProperties(location: result, observations: obs),
     );
   }
 
@@ -92,12 +100,7 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
                 );
               }
 
-              var hasConnection = false;
-              if (networkState is NetworkActionSuccess) {
-                hasConnection = true;
-              }
-
-              if (!hasConnection) {
+              if (networkState is! NetworkActionSuccess) {
                 return const _NoInternetPlaceholder();
               }
 
@@ -112,6 +115,7 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
                     return _MapPreview(
                       points: points,
                       isIncidental: widget.session.isIncidental,
+                      isReadOnly: widget.isReadOnly,
                       onTap: () => _openMapPicker(context),
                     );
                   }
@@ -119,6 +123,7 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
                   return _NoLocationPlaceholder(
                     hasError: hasError,
                     isIncidental: widget.session.isIncidental,
+                    isReadOnly: widget.isReadOnly,
                     onOpenMap: () => _openMapPicker(context),
                   );
                 },
@@ -164,16 +169,57 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
   }
 }
 
-class _MapPreview extends StatelessWidget {
+class _MapPreview extends StatefulWidget {
   const _MapPreview({
     required this.points,
     required this.isIncidental,
+    required this.isReadOnly,
     required this.onTap,
   });
 
   final List<LatLng> points;
   final bool isIncidental;
   final VoidCallback onTap;
+  final bool isReadOnly;
+
+  @override
+  State<_MapPreview> createState() => _MapPreviewState();
+}
+
+class _MapPreviewState extends State<_MapPreview> {
+  late final MapController _mapController;
+
+  @override
+  void initState() {
+    super.initState();
+    _mapController = MapController();
+  }
+
+  @override
+  void dispose() {
+    _mapController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant _MapPreview oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.points.length != oldWidget.points.length ||
+        (widget.points.isNotEmpty &&
+            oldWidget.points.isNotEmpty &&
+            widget.points.first != oldWidget.points.first)) {
+      if (widget.points.length > 1) {
+        _mapController.fitCamera(
+          CameraFit.bounds(
+            bounds: LatLngBounds.fromPoints(widget.points),
+            padding: const EdgeInsets.all(AppDimensions.xl),
+          ),
+        );
+      } else if (widget.points.isNotEmpty) {
+        _mapController.move(widget.points.first, 14);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,9 +227,9 @@ class _MapPreview extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     CameraFit? cameraFit;
-    if (points.length > 1) {
+    if (widget.points.length > 1) {
       cameraFit = CameraFit.bounds(
-        bounds: LatLngBounds.fromPoints(points),
+        bounds: LatLngBounds.fromPoints(widget.points),
         padding: const EdgeInsets.all(AppDimensions.xl),
       );
     }
@@ -194,8 +240,9 @@ class _MapPreview extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           FlutterMap(
+            mapController: _mapController,
             options: MapOptions(
-              initialCenter: points.first,
+              initialCenter: widget.points.first,
               initialZoom: 14,
               initialCameraFit: cameraFit,
               interactionOptions: const InteractionOptions(
@@ -208,7 +255,7 @@ class _MapPreview extends StatelessWidget {
                 userAgentPackageName: EnvConfig.packageName,
               ),
               MarkerLayer(
-                markers: points
+                markers: widget.points
                     .map(
                       (p) => Marker(
                         point: p,
@@ -226,11 +273,14 @@ class _MapPreview extends StatelessWidget {
             ],
           ),
 
-          if (!isIncidental) ...[
+          if (!widget.isIncidental && !widget.isReadOnly) ...[
             Positioned.fill(
               child: Material(
                 color: Colors.transparent,
-                child: InkWell(onTap: onTap, child: const SizedBox.shrink()),
+                child: InkWell(
+                  onTap: widget.onTap,
+                  child: const SizedBox.shrink(),
+                ),
               ),
             ),
             Positioned(
@@ -273,11 +323,13 @@ class _NoLocationPlaceholder extends StatelessWidget {
   const _NoLocationPlaceholder({
     required this.hasError,
     required this.isIncidental,
+    required this.isReadOnly,
     required this.onOpenMap,
   });
 
   final bool hasError;
   final bool isIncidental;
+  final bool isReadOnly;
   final VoidCallback onOpenMap;
 
   @override
@@ -311,7 +363,7 @@ class _NoLocationPlaceholder extends StatelessWidget {
             style: theme.textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
-          if (!isIncidental) ...[
+          if (!isReadOnly) ...[
             const SizedBox(height: AppDimensions.md),
             SizedBox(
               width: double.infinity,

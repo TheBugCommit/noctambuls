@@ -31,6 +31,16 @@ class _ReviewPageState extends State<ReviewPage> {
     _listeningPointController = TextEditingController(
       text: widget.session.listeningPoint?.toString() ?? '',
     );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final obsState = context.read<SessionObservationBloc>().state;
+      if (obsState is ObservationsLoaded) {
+        context.read<SessionReviewBloc>().add(
+          ReviewValidateData(obsState.observations),
+        );
+      }
+    });
   }
 
   @override
@@ -83,52 +93,69 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<SessionReviewBloc, SessionReviewState>(
-      listenWhen: (prev, curr) {
-        return curr is SessionReviewFinalized ||
-            curr is SessionReviewDeleted ||
-            curr is SessionReviewError;
-      },
-      listener: (context, state) {
-        switch (state) {
-          case SessionReviewDeleted():
-            context.go(AppRoutes.home);
-          case SessionReviewFinalized():
-            context.go(AppRoutes.profile);
-          case SessionReviewError():
-            final l10n = AppLocalizations.of(context)!;
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(l10n.reviewErrorSaving),
-                behavior: SnackBarBehavior.floating,
-              ),
-            );
-          default:
-        }
-      },
-      builder: (context, state) {
-        final isEditingState = state is SessionReviewEditing;
-        final session = isEditingState ? state.session : widget.session;
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<SessionObservationBloc, SessionObservationState>(
+          listener: (context, obsState) {
+            if (obsState is ObservationsLoaded) {
+              context.read<SessionReviewBloc>().add(
+                ReviewValidateData(obsState.observations),
+              );
+            }
+          },
+        ),
+        BlocListener<SessionReviewBloc, SessionReviewState>(
+          listenWhen: (prev, curr) {
+            return curr is SessionReviewFinalized ||
+                curr is SessionReviewDeleted ||
+                curr is SessionReviewError;
+          },
+          listener: (context, state) {
+            switch (state) {
+              case SessionReviewDeleted():
+                context.go(AppRoutes.home);
+              case SessionReviewFinalized():
+                context.go(AppRoutes.profile);
+              case SessionReviewError():
+                final l10n = AppLocalizations.of(context)!;
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(l10n.reviewErrorSaving),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+              default:
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<SessionReviewBloc, SessionReviewState>(
+        builder: (context, state) {
+          final isEditingState = state is SessionReviewEditing;
+          final session = isEditingState ? state.session : widget.session;
 
-        final showSessionLocError =
-            isEditingState && state.showSessionLocationError;
-        final missingLocationIds = isEditingState
-            ? state.missingObservationLocationIds
-            : const <String>{};
-        final showListeningPtError =
-            isEditingState && state.showListeningPointError;
+          final isValid = isEditingState && state.isValid;
+          final showSessionLocError =
+              isEditingState && state.showSessionLocationError;
+          final missingLocationIds = isEditingState
+              ? state.missingObservationLocationIds
+              : const <String>{};
+          final showListeningPtError =
+              isEditingState && state.showListeningPointError;
 
-        return ReviewContent(
-          session: session,
-          isReadOnly: session.isFinished,
-          showSessionLocationError: showSessionLocError,
-          showListeningPointError: showListeningPtError,
-          missingLocationIds: missingLocationIds,
-          listeningPointController: _listeningPointController,
-          onDelete: _onDelete,
-          onFinalize: (ctx) => _onFinalize(ctx, session),
-        );
-      },
+          return ReviewContent(
+            session: session,
+            isReadOnly: session.isFinished,
+            isValid: isValid,
+            showSessionLocationError: showSessionLocError,
+            showListeningPointError: showListeningPtError,
+            missingLocationIds: missingLocationIds,
+            listeningPointController: _listeningPointController,
+            onDelete: _onDelete,
+            onFinalize: (ctx) => _onFinalize(ctx, session),
+          );
+        },
+      ),
     );
   }
 }

@@ -25,6 +25,11 @@ final class SessionReviewEditing extends SessionReviewState {
   final bool showSessionLocationError;
   final bool showListeningPointError;
 
+  bool get isValid =>
+      !showSessionLocationError &&
+      !showListeningPointError &&
+      missingObservationLocationIds.isEmpty;
+
   SessionReviewEditing copyWith({
     ObservationSession? session,
     bool? isSaving,

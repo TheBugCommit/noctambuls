@@ -1424,6 +1424,12 @@ abstract class AppLocalizations {
   /// **'El mapa de previsualització requereix internet. Tot i això, les coordenades guardades als registres són segures.'**
   String get reviewLocationNoInternetDesc;
 
+  /// No description provided for @reviewMissingLocationsIncidental.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cal afegir la ubicació a les observacions marcades en vermell.'**
+  String get reviewMissingLocationsIncidental;
+
   /// No description provided for @participantsTitle.
   ///
   /// In ca, this message translates to:

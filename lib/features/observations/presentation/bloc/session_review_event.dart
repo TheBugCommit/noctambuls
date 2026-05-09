@@ -17,6 +17,7 @@ sealed class SessionReviewEvent extends Equatable {
 
 class ReviewUpdateProperties extends SessionReviewEvent {
   const ReviewUpdateProperties({
+    required this.observations,
     this.temperature,
     this.wind,
     this.sky,
@@ -35,6 +36,7 @@ class ReviewUpdateProperties extends SessionReviewEvent {
   final MoonPresence? moon;
   final int? listeningPoint;
   final GeoPosition? location;
+  final List<ObservationRecord> observations;
 
   @override
   List<Object?> get props => [
@@ -46,7 +48,17 @@ class ReviewUpdateProperties extends SessionReviewEvent {
     moon,
     listeningPoint,
     location,
+    observations,
   ];
+}
+
+class ReviewValidateData extends SessionReviewEvent {
+  const ReviewValidateData(this.observations);
+
+  final List<ObservationRecord> observations;
+
+  @override
+  List<Object?> get props => [observations];
 }
 
 class ReviewAddParticipant extends SessionReviewEvent {

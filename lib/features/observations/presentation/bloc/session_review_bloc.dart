@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/failures/validation_failures.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_session_participant_usecase.dart';
@@ -22,6 +23,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
   }) : super(SessionReviewEditing(session: initialSession)) {
     on<ReviewUpdateProperties>(_onUpdateProperties);
     on<ReviewFinalizeSession>(_onFinalizeSession);
+    on<ReviewValidateData>(_onValidateData);
     on<ReviewDeleteSession>(_onDeleteSession);
     on<ReviewAddParticipant>(_onAddParticipant);
     on<ReviewRemoveParticipant>(_onRemoveParticipant);
@@ -59,13 +61,27 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
 
     result.when(
       success: (_) {
-        emit(SessionReviewEditing(session: updatedSession, isSaving: false));
+        _runValidation(
+          updatedSession,
+          event.observations,
+          emit,
+          SessionReviewEditing(session: updatedSession, isSaving: false),
+        );
       },
       failure: (failure) {
         emit(SessionReviewError(failure));
         emit(SessionReviewEditing(session: currentSession, isSaving: false));
       },
     );
+  }
+
+  Future<void> _onValidateData(
+    ReviewValidateData event,
+    Emitter<SessionReviewState> emit,
+  ) async {
+    if (state is! SessionReviewEditing) return;
+    final current = state as SessionReviewEditing;
+    _runValidation(current.session, event.observations, emit, current);
   }
 
   Future<void> _onFinalizeSession(
@@ -75,32 +91,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     if (state is! SessionReviewEditing) return;
     final currentState = state as SessionReviewEditing;
 
-    var hasValidationErrors = false;
-    validateSessionFinalizationUseCase(
-      session: currentState.session,
-      observations: event.observations,
-    ).when(
-      success: (_) {
-        hasValidationErrors = false;
-      },
-      failure: (failure) {
-        hasValidationErrors = true;
-        if (failure is SessionValidationFailure) {
-          emit(
-            currentState.copyWith(
-              showSessionLocationError: failure.missingSessionLocation,
-              missingObservationLocationIds:
-                  failure.missingObservationLocationIds,
-              showListeningPointError: failure.missingListeningPoint,
-            ),
-          );
-        }
-      },
-    );
-
-    if (hasValidationErrors) {
-      return;
-    }
+    if (!currentState.isValid) return;
 
     final result = await finishAndLockSessionUseCase(currentState.session);
 
@@ -171,6 +162,40 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
         emit(SessionReviewError(failure));
         emit(SessionReviewEditing(session: currentSession));
       },
+    );
+  }
+
+  void _runValidation(
+    ObservationSession session,
+    List<ObservationRecord> observations,
+    Emitter<SessionReviewState> emit,
+    SessionReviewEditing currentState,
+  ) {
+    var hasSessionLocError = false;
+    var hasListeningPtError = false;
+    var missingLocIds = const <String>{};
+
+    validateSessionFinalizationUseCase(
+      session: session,
+      observations: observations,
+    ).when(
+      success: (_) {},
+      failure: (failure) {
+        if (failure is SessionValidationFailure) {
+          hasSessionLocError = failure.missingSessionLocation;
+          hasListeningPtError = failure.missingListeningPoint;
+          missingLocIds = failure.missingObservationLocationIds;
+        }
+      },
+    );
+
+    emit(
+      currentState.copyWith(
+        session: session,
+        showSessionLocationError: hasSessionLocError,
+        showListeningPointError: hasListeningPtError,
+        missingObservationLocationIds: missingLocIds,
+      ),
     );
   }
 }

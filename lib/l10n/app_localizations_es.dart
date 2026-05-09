@@ -716,6 +716,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'El mapa de previsualización requiere internet. Aún así, las coordenadas guardadas son seguras.';
 
   @override
+  String get reviewMissingLocationsIncidental =>
+      'Debes añadir la ubicación a las observaciones marcadas en rojo.';
+
+  @override
   String get participantsTitle => 'Participantes';
 
   @override

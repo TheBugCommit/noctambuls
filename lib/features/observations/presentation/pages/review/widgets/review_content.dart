@@ -5,6 +5,7 @@ import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/bottom_nav_bar.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
@@ -18,12 +19,14 @@ import 'package:noctambuls/features/observations/presentation/pages/review/widge
 import 'package:noctambuls/features/observations/presentation/pages/review/widgets/review_header.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/widgets/review_meteo_section.dart';
 import 'package:noctambuls/features/observations/presentation/pages/review/widgets/session_location_section.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/observation_card_with_error.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class ReviewContent extends StatelessWidget {
   const ReviewContent({
     required this.session,
     required this.isReadOnly,
+    required this.isValid,
     required this.showSessionLocationError,
     required this.missingLocationIds,
     required this.listeningPointController,
@@ -39,8 +42,14 @@ class ReviewContent extends StatelessWidget {
   final TextEditingController listeningPointController;
   final bool showSessionLocationError;
   final bool showListeningPointError;
+  final bool isValid;
   final void Function(BuildContext) onDelete;
   final void Function(BuildContext) onFinalize;
+
+  List<ObservationRecord> _getObservations(BuildContext context) {
+    final st = context.read<SessionObservationBloc>().state;
+    return st is ObservationsLoaded ? st.observations : [];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,15 +84,14 @@ class ReviewContent extends StatelessWidget {
                   const Divider(height: AppDimensions.xxl),
 
                   // Localització de sessió per a cens/estació
-                  if (!isReadOnly) ...[
-                    SessionLocationSection(
-                      session: session,
-                      showError: showSessionLocationError,
-                    ),
-                    const Divider(height: AppDimensions.xxl),
-                  ],
+                  SessionLocationSection(
+                    session: session,
+                    showError: showSessionLocationError,
+                    isReadOnly: isReadOnly,
+                  ),
 
                   if (session.needsListeningPoint) ...[
+                    const SizedBox(height: AppDimensions.md),
                     ListeningPointField(
                       controller: listeningPointController,
                       isReadOnly: isReadOnly,
@@ -91,12 +99,15 @@ class ReviewContent extends StatelessWidget {
                       onChanged: (val) {
                         final parsed = int.tryParse(val);
                         context.read<SessionReviewBloc>().add(
-                          ReviewUpdateProperties(listeningPoint: parsed),
+                          ReviewUpdateProperties(
+                            listeningPoint: parsed,
+                            observations: _getObservations(context),
+                          ),
                         );
                       },
                     ),
-                    const Divider(height: AppDimensions.xxl),
                   ],
+                  const Divider(height: AppDimensions.xxl),
 
                   ReviewMeteoSection(session: session, isReadOnly: isReadOnly),
 
@@ -161,7 +172,7 @@ class ReviewContent extends StatelessWidget {
                           const SizedBox(width: AppDimensions.sm),
                           Expanded(
                             child: Text(
-                              'Cal afegir la ubicació a les observacions marcades en vermell.',
+                              l10n.reviewMissingLocationsIncidental,
                               style: TextStyle(
                                 color: theme.colorScheme.onErrorContainer,
                               ),
@@ -196,7 +207,7 @@ class ReviewContent extends StatelessWidget {
                         final isMissingLocation = missingLocationIds.contains(
                           record.id,
                         );
-                        return _ObservationCardWithError(
+                        return ObservationCardWithError(
                           showError: isMissingLocation,
                           child: ObservationCard(
                             record: record,
@@ -232,48 +243,11 @@ class ReviewContent extends StatelessWidget {
                   AppButton(
                     label: l10n.reviewFinalizeBtn,
                     icon: Icons.send_outlined,
-                    onPressed: () => onFinalize(context),
+                    onPressed: isValid ? () => onFinalize(context) : null,
                   ),
                 ],
               ),
             ),
-    );
-  }
-}
-
-class _ObservationCardWithError extends StatelessWidget {
-  const _ObservationCardWithError({
-    required this.child,
-    required this.showError,
-  });
-
-  final Widget child;
-  final bool showError;
-
-  @override
-  Widget build(BuildContext context) {
-    if (!showError) return child;
-
-    return Stack(
-      children: [
-        child,
-        Positioned(
-          top: 4,
-          right: 4,
-          child: Container(
-            padding: const EdgeInsets.all(4),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.errorContainer,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.location_off,
-              size: 16,
-              color: Theme.of(context).colorScheme.error,
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

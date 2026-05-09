@@ -281,7 +281,7 @@
     "reviewLocationSetMap": "Establir al Mapa",
     "reviewLocationNoInternet": "Sense connexió",
     "reviewLocationNoInternetDesc": "El mapa de previsualització requereix internet. Tot i això, les coordenades guardades als registres són segures.",
-
+    "reviewMissingLocationsIncidental": "Cal afegir la ubicació a les observacions marcades en vermell.",
 
     "participantsTitle": "Participants",
     "addParticipant": "Afegir",

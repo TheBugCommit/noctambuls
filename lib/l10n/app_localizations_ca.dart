@@ -714,6 +714,10 @@ class AppLocalizationsCa extends AppLocalizations {
       'El mapa de previsualització requereix internet. Tot i això, les coordenades guardades als registres són segures.';
 
   @override
+  String get reviewMissingLocationsIncidental =>
+      'Cal afegir la ubicació a les observacions marcades en vermell.';
+
+  @override
   String get participantsTitle => 'Participants';
 
   @override

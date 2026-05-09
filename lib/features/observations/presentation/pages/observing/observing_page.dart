@@ -34,6 +34,7 @@ import 'package:noctambuls/features/observations/presentation/pages/observing/wi
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/stopwatch_display.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/location_auto_capture_mixin.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/location_permissions_dialog.dart';
+import 'package:noctambuls/features/observations/presentation/shared_widgets/observation_card_with_error.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/popup_menu_observing.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -386,6 +387,10 @@ class _ObservationListBody extends StatelessWidget {
             return const EmptyObservations();
           }
 
+          final missingLocationsCount = session.isIncidental
+              ? state.observations.where((o) => o.location == null).length
+              : 0;
+
           return ListView.builder(
             padding: const EdgeInsets.all(AppDimensions.md),
             itemCount: state.observations.length,
@@ -393,10 +398,16 @@ class _ObservationListBody extends StatelessWidget {
               final record = state.observations[index];
               final bird = state.birdsMap[record.speciesId];
 
-              return ObservationCard(
-                record: state.observations[index],
-                bird: bird!,
-                session: session,
+              final isMissingLocation =
+                  session.isIncidental && record.location == null;
+
+              return ObservationCardWithError(
+                showError: isMissingLocation,
+                child: ObservationCard(
+                  record: record,
+                  bird: bird!,
+                  session: session,
+                ),
               );
             },
           );
