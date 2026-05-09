@@ -9,6 +9,7 @@ class AppQuantitySelector extends StatefulWidget {
     required this.label,
     this.minValue = 1,
     this.maxValue = 20,
+    this.enabled = true,
     super.key,
   });
 
@@ -16,6 +17,7 @@ class AppQuantitySelector extends StatefulWidget {
   final String label;
   final int minValue;
   final int maxValue;
+  final bool enabled;
 
   @override
   State<AppQuantitySelector> createState() => _AppQuantitySelectorState();
@@ -49,71 +51,77 @@ class _AppQuantitySelectorState extends State<AppQuantitySelector> {
       children: [
         Text(
           widget.label,
-          style: theme.textTheme.titleSmall,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: widget.enabled ? null : colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: AppDimensions.xs),
 
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: AppDimensions.sm,
-            vertical: 2,
-          ),
-          decoration: BoxDecoration(
-            color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-            borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-            border: Border.all(
-              color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        Opacity(
+          opacity: widget.enabled ? 1.0 : 0.6,
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: AppDimensions.sm,
+              vertical: 2,
             ),
-          ),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: _decrement,
-                icon: const Icon(Icons.remove),
-                color: colorScheme.primary,
-                tooltip: l10n.reduceQuantityTooltip,
+            decoration: BoxDecoration(
+              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+              borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+              border: Border.all(
+                color: colorScheme.outlineVariant.withValues(alpha: 0.5),
               ),
-
-              Expanded(
-                child: TextFormField(
-                  controller: widget.controller,
-                  textAlign: TextAlign.center,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    isDense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                  onChanged: (value) {
-                    final intValue = int.tryParse(value);
-                    if (intValue != null) {
-                      if (intValue < widget.minValue) {
-                        widget.controller.text = widget.minValue.toString();
-                        widget.controller.selection = TextSelection.collapsed(
-                          offset: widget.controller.text.length,
-                        );
-                      } else if (intValue > widget.maxValue) {
-                        widget.controller.text = widget.maxValue.toString();
-                        widget.controller.selection = TextSelection.collapsed(
-                          offset: widget.controller.text.length,
-                        );
-                      }
-                    }
-                  },
+            ),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: widget.enabled ? _decrement : null,
+                  icon: const Icon(Icons.remove),
+                  color: colorScheme.primary,
+                  tooltip: l10n.reduceQuantityTooltip,
                 ),
-              ),
 
-              IconButton(
-                onPressed: _increment,
-                icon: const Icon(Icons.add),
-                color: colorScheme.primary,
-                tooltip: l10n.incrementQuantityTooltip,
-              ),
-            ],
+                Expanded(
+                  child: TextFormField(
+                    controller: widget.controller,
+                    enabled: widget.enabled,
+                    textAlign: TextAlign.center,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.zero,
+                    ),
+                    onChanged: (value) {
+                      final intValue = int.tryParse(value);
+                      if (intValue != null) {
+                        if (intValue < widget.minValue) {
+                          widget.controller.text = widget.minValue.toString();
+                          widget.controller.selection = TextSelection.collapsed(
+                            offset: widget.controller.text.length,
+                          );
+                        } else if (intValue > widget.maxValue) {
+                          widget.controller.text = widget.maxValue.toString();
+                          widget.controller.selection = TextSelection.collapsed(
+                            offset: widget.controller.text.length,
+                          );
+                        }
+                      }
+                    },
+                  ),
+                ),
+
+                IconButton(
+                  onPressed: widget.enabled ? _increment : null,
+                  icon: const Icon(Icons.add),
+                  color: colorScheme.primary,
+                  tooltip: l10n.incrementQuantityTooltip,
+                ),
+              ],
+            ),
           ),
         ),
       ],

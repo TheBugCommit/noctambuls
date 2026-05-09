@@ -6,10 +6,12 @@ import 'package:noctambuls/l10n/app_localizations.dart';
 class NotesField extends StatelessWidget {
   const NotesField({
     required this.controller,
+    this.enabled = true,
     super.key,
   });
 
   final TextEditingController controller;
+  final bool enabled;
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +35,7 @@ class NotesField extends StatelessWidget {
           textInputAction: TextInputAction.newline,
           maxLines: 50,
           minLines: 3,
+          enabled: enabled,
         ),
       ],
     );

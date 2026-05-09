@@ -8,11 +8,13 @@ class OrientationSelectorField extends StatelessWidget {
   const OrientationSelectorField({
     required this.selectedBearing,
     required this.onChanged,
+    this.isReadOnly = false,
     super.key,
   });
 
   final double? selectedBearing;
   final ValueChanged<double> onChanged;
+  final bool isReadOnly;
 
   String _getCardinalDirection(double bearing) {
     const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
@@ -32,62 +34,66 @@ class OrientationSelectorField extends StatelessWidget {
       builder: (formFieldState) {
         return Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                border: Border.all(
+            Opacity(
+              opacity: isReadOnly ? 0.6 : 1.0,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                  border: Border.all(
+                    color: formFieldState.hasError
+                        ? theme.colorScheme.error
+                        : Colors.transparent,
+                    width: 1.5,
+                  ),
                   color: formFieldState.hasError
-                      ? theme.colorScheme.error
+                      ? theme.colorScheme.errorContainer.withValues(alpha: 0.2)
                       : Colors.transparent,
-                  width: 1.5,
                 ),
-                color: formFieldState.hasError
-                    ? theme.colorScheme.errorContainer.withValues(alpha: 0.2)
-                    : Colors.transparent,
-              ),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-                onTap: () async {
-                  final result = await showDialog<double>(
-                    context: context,
-                    builder: (context) => CompassDialog(
-                      initialHeading: selectedBearing,
-                    ),
-                  );
-                  if (result != null) {
-                    onChanged(result);
-                    formFieldState.didChange(result);
-                  }
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(AppDimensions.sm),
-                  child: Column(
-                    children: [
-                      LiveCompassPreview(
-                        size: 130,
-                        fixedHeading: selectedBearing,
-                      ),
-                      const SizedBox(height: AppDimensions.md),
-
-                      Text(
-                        selectedBearing != null
-                            ? l10n.orientationValueLong(
-                                _getCardinalDirection(selectedBearing!),
-                                selectedBearing!.toStringAsFixed(0),
-                              )
-                            : l10n.orientationHint,
-                        style: theme.textTheme.bodyLarge?.copyWith(
-                          color: selectedBearing != null
-                              ? theme.colorScheme.onSurface
-                              : (formFieldState.hasError
-                                    ? theme.colorScheme.error
-                                    : theme.colorScheme.onSurfaceVariant),
-                          fontWeight: selectedBearing != null
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+                  onTap: isReadOnly
+                      ? null
+                      : () async {
+                          final result = await showDialog<double>(
+                            context: context,
+                            builder: (context) =>
+                                CompassDialog(initialHeading: selectedBearing),
+                          );
+                          if (result != null) {
+                            onChanged(result);
+                            formFieldState.didChange(result);
+                          }
+                        },
+                  child: Padding(
+                    padding: const EdgeInsets.all(AppDimensions.sm),
+                    child: Column(
+                      children: [
+                        LiveCompassPreview(
+                          size: 130,
+                          fixedHeading: selectedBearing,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: AppDimensions.md),
+
+                        Text(
+                          selectedBearing != null
+                              ? l10n.orientationValueLong(
+                                  _getCardinalDirection(selectedBearing!),
+                                  selectedBearing!.toStringAsFixed(0),
+                                )
+                              : l10n.orientationHint,
+                          style: theme.textTheme.bodyLarge?.copyWith(
+                            color: selectedBearing != null
+                                ? theme.colorScheme.onSurface
+                                : (formFieldState.hasError
+                                      ? theme.colorScheme.error
+                                      : theme.colorScheme.onSurfaceVariant),
+                            fontWeight: selectedBearing != null
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),

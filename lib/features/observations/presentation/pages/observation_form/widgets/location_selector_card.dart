@@ -53,121 +53,127 @@ class LocationSelectorCard extends StatelessWidget {
               ? theme.colorScheme.tertiaryContainer.withValues(alpha: 0.3)
               : theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
         : theme.colorScheme.surfaceContainerHighest;
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border.all(
-          color: hasError
-              ? theme.colorScheme.error
-              : theme.colorScheme.outlineVariant,
-        ),
-        borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-      ),
-      padding: const EdgeInsets.all(AppDimensions.md),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Icon(
-                Icons.location_on_outlined,
-                color: theme.colorScheme.primary,
-              ),
-              const SizedBox(width: AppDimensions.sm),
-              Text(
-                l10n.observationLocationTitle,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+    return Opacity(
+      opacity: isReadOnly ? 0.6 : 1.0,
+      child: Container(
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          border: Border.all(
+            color: hasError
+                ? theme.colorScheme.error
+                : theme.colorScheme.outlineVariant,
           ),
-          const SizedBox(height: AppDimensions.md),
-
-          if (!isReadOnly) ...[
+          borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
+        ),
+        padding: const EdgeInsets.all(AppDimensions.md),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    l10n.observationAtLocationToggle,
-                    style: theme.textTheme.bodyLarge,
-                  ),
-                ),
-                Switch.adaptive(
-                  value: isAtLocation,
-                  onChanged: onToggleChange,
-                  activeTrackColor: theme.colorScheme.primary,
-                ),
-              ],
-            ),
-            const SizedBox(height: AppDimensions.sm),
-          ],
-
-          if (hasError)
-            Padding(
-              padding: const EdgeInsets.only(bottom: AppDimensions.sm),
-              child: Text(
-                _getErrorMessage(l10n, locationError!),
-                style: TextStyle(color: theme.colorScheme.error, fontSize: 12),
-              ),
-            ),
-
-          Container(
-            padding: const EdgeInsets.all(AppDimensions.sm),
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
-            ),
-            child: Row(
               children: [
                 Icon(
-                  isLoading
-                      ? Icons.satellite_alt_outlined
-                      : hasCoordinates
-                      ? (isManual ? Icons.location_pin : Icons.check_circle)
-                      : Icons.satellite_alt_outlined,
-                  color: fgColor,
+                  Icons.location_on_outlined,
+                  color: theme.colorScheme.primary,
                 ),
                 const SizedBox(width: AppDimensions.sm),
-                Expanded(
-                  child: Text(
-                    isLoading
-                        ? l10n.locationWaitingGps
-                        : hasCoordinates
-                        ? (isManual
-                              ? '${l10n.locationManualTitle} ${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}'
-                              : '${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}')
-                        : (isAtLocation
-                              ? l10n.locationWaitingGps
-                              : l10n.locationMapRequired),
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: fgColor,
-                      fontWeight: (hasCoordinates && !isLoading)
-                          ? FontWeight.bold
-                          : FontWeight.normal,
-                    ),
+                Text(
+                  l10n.observationLocationTitle,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
-          ),
+            const SizedBox(height: AppDimensions.md),
 
-          if ((!isAtLocation || hasError) && !isReadOnly)
-            Padding(
-              padding: const EdgeInsets.only(top: AppDimensions.md),
-              child: SizedBox(
-                width: double.infinity,
-                child: AppButton.secondary(
-                  onPressed: onOpenMap,
-                  icon: Icons.map_outlined,
-                  label: hasCoordinates
-                      ? l10n.locationModifyMap
-                      : l10n.locationOpenMap,
+            if (!isReadOnly) ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      l10n.observationAtLocationToggle,
+                      style: theme.textTheme.bodyLarge,
+                    ),
+                  ),
+                  Switch.adaptive(
+                    value: isAtLocation,
+                    onChanged: onToggleChange,
+                    activeTrackColor: theme.colorScheme.primary,
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppDimensions.sm),
+            ],
+
+            if (hasError)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppDimensions.sm),
+                child: Text(
+                  _getErrorMessage(l10n, locationError!),
+                  style: TextStyle(
+                    color: theme.colorScheme.error,
+                    fontSize: 12,
+                  ),
                 ),
               ),
+
+            Container(
+              padding: const EdgeInsets.all(AppDimensions.sm),
+              decoration: BoxDecoration(
+                color: bgColor,
+                borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    isLoading
+                        ? Icons.satellite_alt_outlined
+                        : hasCoordinates
+                        ? (isManual ? Icons.location_pin : Icons.check_circle)
+                        : Icons.satellite_alt_outlined,
+                    color: fgColor,
+                  ),
+                  const SizedBox(width: AppDimensions.sm),
+                  Expanded(
+                    child: Text(
+                      isLoading
+                          ? l10n.locationWaitingGps
+                          : hasCoordinates
+                          ? (isManual
+                                ? '${l10n.locationManualTitle} ${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}'
+                                : '${location!.latitude.toStringAsFixed(5)}, ${location!.longitude.toStringAsFixed(5)}')
+                          : (isAtLocation
+                                ? l10n.locationWaitingGps
+                                : l10n.locationMapRequired),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: fgColor,
+                        fontWeight: (hasCoordinates && !isLoading)
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-        ],
+
+            if ((!isAtLocation || hasError) && !isReadOnly)
+              Padding(
+                padding: const EdgeInsets.only(top: AppDimensions.md),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: AppButton.secondary(
+                    onPressed: onOpenMap,
+                    icon: Icons.map_outlined,
+                    label: hasCoordinates
+                        ? l10n.locationModifyMap
+                        : l10n.locationOpenMap,
+                  ),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

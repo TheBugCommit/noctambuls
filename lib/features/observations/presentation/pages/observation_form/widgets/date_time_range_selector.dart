@@ -13,6 +13,7 @@ class ObservationDateHeader extends StatelessWidget {
     required this.endTime,
     required this.onChanged,
     this.onGlobalDateChanged,
+    this.isReadOnly = false,
     super.key,
   });
 
@@ -21,6 +22,7 @@ class ObservationDateHeader extends StatelessWidget {
   final DateTime endTime;
   final void Function(DateTime start, DateTime end) onChanged;
   final void Function(DateTime)? onGlobalDateChanged;
+  final bool isReadOnly;
 
   Future<void> _onDatePicked(BuildContext context) async {
     final now = DateTime.now();
@@ -78,7 +80,7 @@ class ObservationDateHeader extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(AppDimensions.radiusSm),
-        onTap: () => _onDatePicked(context),
+        onTap: isReadOnly ? null : () => _onDatePicked(context),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: AppDimensions.xs),
           child: Row(
@@ -109,6 +111,7 @@ class DateTimeRangeSelectorField extends StatelessWidget {
     required this.startTime,
     required this.endTime,
     required this.onChanged,
+    this.isReadOnly = false,
     super.key,
   });
 
@@ -116,6 +119,7 @@ class DateTimeRangeSelectorField extends StatelessWidget {
   final DateTime startTime;
   final DateTime endTime;
   final void Function(DateTime start, DateTime end) onChanged;
+  final bool isReadOnly;
 
   String _formatTime(DateTime dt) {
     final h = dt.hour.toString().padLeft(2, '0');
@@ -185,28 +189,36 @@ class DateTimeRangeSelectorField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(l10n.timeRangeLabel, style: theme.textTheme.titleSmall),
+        Text(
+          l10n.timeRangeLabel,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: isReadOnly ? theme.colorScheme.onSurfaceVariant : null,
+          ),
+        ),
         const SizedBox(height: AppDimensions.xs),
-        Row(
-          children: [
-            Expanded(
-              child: DateTimeSelectionCard(
-                label: l10n.startTimeLabel,
-                value: _formatTime(startTime),
-                icon: Icons.access_time,
-                onTap: () => _onStartTimePicked(context),
+        Opacity(
+          opacity: isReadOnly ? 0.6 : 1.0,
+          child: Row(
+            children: [
+              Expanded(
+                child: DateTimeSelectionCard(
+                  label: l10n.startTimeLabel,
+                  value: _formatTime(startTime),
+                  icon: Icons.access_time,
+                  onTap: isReadOnly ? null : () => _onStartTimePicked(context),
+                ),
               ),
-            ),
-            const SizedBox(width: AppDimensions.md),
-            Expanded(
-              child: DateTimeSelectionCard(
-                label: l10n.endTimeLabel,
-                value: _formatTime(endTime),
-                icon: Icons.access_time,
-                onTap: () => _onEndTimePicked(context),
+              const SizedBox(width: AppDimensions.md),
+              Expanded(
+                child: DateTimeSelectionCard(
+                  label: l10n.endTimeLabel,
+                  value: _formatTime(endTime),
+                  icon: Icons.access_time,
+                  onTap: isReadOnly ? null : () => _onEndTimePicked(context),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );

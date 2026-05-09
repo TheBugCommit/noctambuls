@@ -232,6 +232,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isEditing = widget.existingRecord != null;
+    final isReadOnly = widget.session.isFinished;
 
     return Scaffold(
       appBar: AppBar(
@@ -239,15 +240,16 @@ class _ObservationFormPageState extends State<ObservationFormPage>
           isEditing ? l10n.editObservationTitle : l10n.newObservationTitle,
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: AppDimensions.md),
-            child: AppButton.primary(
-              onPressed: _onSave,
-              label: l10n.saveObservation,
-              icon: Icons.save_outlined,
-              size: AppButtonSize.sm,
+          if (!isReadOnly)
+            Padding(
+              padding: const EdgeInsets.only(right: AppDimensions.md),
+              child: AppButton.primary(
+                onPressed: _onSave,
+                label: l10n.saveObservation,
+                icon: Icons.save_outlined,
+                size: AppButtonSize.sm,
+              ),
             ),
-          ),
         ],
       ),
       resizeToAvoidBottomInset: true,
@@ -332,13 +334,16 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                         session: widget.session,
                         startTime: _startTime,
                         endTime: _endTime,
+                        isReadOnly: isReadOnly,
                         onChanged: (start, end) {
                           setState(() {
                             _startTime = start;
                             _endTime = end;
                           });
                         },
-                        onGlobalDateChanged: widget.onGlobalDateChanged,
+                        onGlobalDateChanged: isReadOnly
+                            ? null
+                            : widget.onGlobalDateChanged,
                       ),
                       const SizedBox(height: AppDimensions.lg),
 
@@ -347,8 +352,10 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                           isAtLocation: _isAtLocation,
                           location: state.geoPosition,
                           locationError: state.locationError,
+                          isReadOnly: isReadOnly,
                           isLoading: isLocLoading,
                           onToggleChange: (value) {
+                            if (isReadOnly) return;
                             setState(() => _isAtLocation = value);
                             if (value) {
                               context.read<LocationBloc>().add(
@@ -373,8 +380,10 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                             child: SpeciesSelectorField(
                               birds: state.birds,
                               selectedSpeciesId: _selectedSpeciesId,
-                              onChanged: (value) =>
-                                  setState(() => _selectedSpeciesId = value),
+                              isReadOnly: isReadOnly,
+                              onChanged: (value) => setState(
+                                () => _selectedSpeciesId = value,
+                              ),
                             ),
                           ),
                           const SizedBox(width: AppDimensions.md),
@@ -383,6 +392,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                               controller: _quantityController,
                               label: l10n.quantityLabel,
                               minValue: 1,
+                              enabled: !isReadOnly,
                             ),
                           ),
                         ],
@@ -393,6 +403,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                         session: widget.session,
                         startTime: _startTime,
                         endTime: _endTime,
+                        isReadOnly: isReadOnly,
                         onChanged: (start, end) {
                           setState(() {
                             _startTime = start;
@@ -404,6 +415,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
 
                       ContactTypeSelectorField(
                         selectedContactType: _selectedContactType,
+                        isReadOnly: isReadOnly,
                         onChanged: (value) =>
                             setState(() => _selectedContactType = value),
                       ),
@@ -411,12 +423,16 @@ class _ObservationFormPageState extends State<ObservationFormPage>
 
                       OrientationSelectorField(
                         selectedBearing: _selectedBearing,
+                        isReadOnly: isReadOnly,
                         onChanged: (value) =>
                             setState(() => _selectedBearing = value),
                       ),
                       const SizedBox(height: AppDimensions.md),
 
-                      NotesField(controller: _notesController),
+                      NotesField(
+                        controller: _notesController,
+                        enabled: !isReadOnly,
+                      ),
                       const SizedBox(height: AppDimensions.xl),
                     ],
                   ),

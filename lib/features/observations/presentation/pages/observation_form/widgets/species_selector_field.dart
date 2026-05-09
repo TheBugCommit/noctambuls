@@ -9,12 +9,14 @@ class SpeciesSelectorField extends StatelessWidget {
     required this.birds,
     required this.selectedSpeciesId,
     required this.onChanged,
+    this.isReadOnly = false,
     super.key,
   });
 
   final List<Bird> birds;
   final String? selectedSpeciesId;
   final ValueChanged<String?> onChanged;
+  final bool isReadOnly;
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +37,9 @@ class SpeciesSelectorField extends StatelessWidget {
           children: [
             Text(
               l10n.selectSpecies,
-              style: Theme.of(context).textTheme.titleSmall,
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: isReadOnly ? theme.colorScheme.onSurfaceVariant : null,
+              ),
             ),
             const SizedBox(height: AppDimensions.xs),
             Container(
@@ -48,18 +52,24 @@ class SpeciesSelectorField extends StatelessWidget {
                   width: 1.5,
                 ),
               ),
-              child: AppDropdown<String>(
-                value: selectedSpeciesId,
-                items: birds.map((bird) {
-                  return DropdownMenuItem(
-                    value: bird.id,
-                    child: Text(bird.commonName),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  onChanged(value);
-                  formFieldState.didChange(value);
-                },
+              child: IgnorePointer(
+                ignoring: isReadOnly,
+                child: Opacity(
+                  opacity: isReadOnly ? 0.6 : 1.0,
+                  child: AppDropdown<String>(
+                    value: selectedSpeciesId,
+                    items: birds.map((bird) {
+                      return DropdownMenuItem(
+                        value: bird.id,
+                        child: Text(bird.commonName),
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      onChanged(value);
+                      formFieldState.didChange(value);
+                    },
+                  ),
+                ),
               ),
             ),
             SizedBox(

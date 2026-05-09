@@ -8,22 +8,27 @@ class ContactTypeSelectorField extends StatelessWidget {
   const ContactTypeSelectorField({
     required this.selectedContactType,
     required this.onChanged,
+    this.isReadOnly = false,
     super.key,
   });
 
   final ContactType selectedContactType;
   final ValueChanged<ContactType> onChanged;
+  final bool isReadOnly;
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           l10n.contactTypeLabel,
-          style: Theme.of(context).textTheme.titleSmall,
+          style: theme.textTheme.titleSmall?.copyWith(
+            color: isReadOnly ? theme.colorScheme.onSurfaceVariant : null,
+          ),
         ),
         const SizedBox(height: AppDimensions.xs),
         SizedBox(
@@ -42,9 +47,11 @@ class ContactTypeSelectorField extends StatelessWidget {
               ),
             ],
             selected: {selectedContactType},
-            onSelectionChanged: (newSelection) {
-              onChanged(newSelection.first);
-            },
+            onSelectionChanged: isReadOnly
+                ? null
+                : (newSelection) {
+                    onChanged(newSelection.first);
+                  },
           ),
         ),
       ],
