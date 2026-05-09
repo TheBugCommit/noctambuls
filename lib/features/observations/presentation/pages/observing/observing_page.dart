@@ -85,6 +85,11 @@ class _ObservingPageState extends State<ObservingPage>
     _locationBloc.add(LocationTrackingStarted());
   }
 
+  @override
+  Future<void> onPausedLocationCapture() async {
+    _locationBloc.add(LocationTrackingStopped());
+  }
+
   void _manageGpsTracking(ObservationSession session) {
     if (session.isIncidental) return;
 

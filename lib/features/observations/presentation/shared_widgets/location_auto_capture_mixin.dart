@@ -9,6 +9,8 @@ mixin LocationAutoCaptureMixin<T extends StatefulWidget>
 
   Future<void> onResumedLocationCapture();
 
+  Future<void> onPausedLocationCapture() async {}
+
   StreamSubscription<ServiceStatus>? _serviceStatusSubscription;
 
   @override
@@ -38,6 +40,10 @@ mixin LocationAutoCaptureMixin<T extends StatefulWidget>
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed && shouldRetryLocationCapture) {
       unawaited(onResumedLocationCapture());
+    } else if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.hidden) {
+      unawaited(onPausedLocationCapture());
     }
   }
 

@@ -37,11 +37,14 @@ class _MapPickerPageState extends State<MapPickerPage>
   @override
   bool get shouldRetryLocationCapture => !_isManual;
 
-  // 2. Acció: Què fem en tornar a l'app? Tornem a demanar la ubicació!
   @override
   Future<void> onResumedLocationCapture() async {
-    // Això farà que el LocationBloc torni a provar, ara que ja hi ha permisos!
     context.read<LocationBloc>().add(LocationRequested());
+  }
+
+  @override
+  Future<void> onPausedLocationCapture() async {
+    context.read<LocationBloc>().add(LocationTrackingStopped());
   }
 
   GeoPosition? _selectedLocation;
