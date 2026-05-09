@@ -209,12 +209,18 @@ class _MapPreviewState extends State<_MapPreview> {
             oldWidget.points.isNotEmpty &&
             widget.points.first != oldWidget.points.first)) {
       if (widget.points.length > 1) {
-        _mapController.fitCamera(
-          CameraFit.bounds(
-            bounds: LatLngBounds.fromPoints(widget.points),
-            padding: const EdgeInsets.all(AppDimensions.xl),
-          ),
-        );
+        final bounds = LatLngBounds.fromPoints(widget.points);
+        final isSinglePointArea = bounds.southWest == bounds.northEast;
+        if (!isSinglePointArea) {
+          _mapController.fitCamera(
+            CameraFit.bounds(
+              bounds: bounds,
+              padding: const EdgeInsets.all(AppDimensions.xl),
+            ),
+          );
+        } else {
+          _mapController.move(widget.points.first, 14);
+        }
       } else if (widget.points.isNotEmpty) {
         _mapController.move(widget.points.first, 14);
       }
@@ -227,9 +233,12 @@ class _MapPreviewState extends State<_MapPreview> {
     final l10n = AppLocalizations.of(context)!;
 
     CameraFit? cameraFit;
-    if (widget.points.length > 1) {
+    final bounds = LatLngBounds.fromPoints(widget.points);
+    final isSinglePointArea = bounds.southWest == bounds.northEast;
+
+    if (!isSinglePointArea) {
       cameraFit = CameraFit.bounds(
-        bounds: LatLngBounds.fromPoints(widget.points),
+        bounds: bounds,
         padding: const EdgeInsets.all(AppDimensions.xl),
       );
     }
@@ -363,7 +372,7 @@ class _NoLocationPlaceholder extends StatelessWidget {
             style: theme.textTheme.bodySmall,
             textAlign: TextAlign.center,
           ),
-          if (!isReadOnly) ...[
+          if (!isIncidental && !isReadOnly) ...[
             const SizedBox(height: AppDimensions.md),
             SizedBox(
               width: double.infinity,

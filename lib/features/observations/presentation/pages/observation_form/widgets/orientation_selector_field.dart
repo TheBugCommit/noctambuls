@@ -33,10 +33,19 @@ class OrientationSelectorField extends StatelessWidget {
           selectedBearing == null ? l10n.requiredFieldError : null,
       builder: (formFieldState) {
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Text(
+              l10n.orientationTitle,
+              style: theme.textTheme.titleSmall?.copyWith(
+                color: isReadOnly ? theme.colorScheme.onSurfaceVariant : null,
+              ),
+            ),
+            const SizedBox(height: AppDimensions.xs),
             Opacity(
               opacity: isReadOnly ? 0.6 : 1.0,
               child: Container(
+                width: double.infinity,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(AppDimensions.radiusMd),
                   border: Border.all(
