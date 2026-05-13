@@ -1,21 +1,25 @@
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
+import 'package:noctambuls/features/observations/domain/exceptions/session_exceptions.dart';
+import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
+import 'package:noctambuls/features/observations/domain/repositories/session_repository.dart';
 
 class StopObservationPhaseUseCase {
   StopObservationPhaseUseCase(this.repository);
 
-  final ObservationRepository repository;
+  final SessionRepository repository;
 
   Future<Result<ObservationSession>> call(ObservationSession session) async {
-    final now = DateTime.now();
-    final updated = session.copyWith(endTime: now, updatedAt: now);
+    try {
+      final updatedSession = session.finishSession();
+      final result = await repository.saveSession(updatedSession);
 
-    final result = await repository.updateSession(updated);
-
-    return result.when(
-      success: (_) => Ok(updated),
-      failure: Err.new,
-    );
+      return result.when(
+        success: (_) => Ok(updatedSession),
+        failure: Err.new,
+      );
+    } on SessionUpdateException catch (_) {
+      return const Err(SessionLockedFailure());
+    }
   }
 }

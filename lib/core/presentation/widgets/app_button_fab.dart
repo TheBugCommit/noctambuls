@@ -13,6 +13,7 @@ class AppButtonFab extends StatelessWidget {
     this.label,
     this.style = AppButtonFabStyle.primary,
     this.size = AppButtonFabSize.md,
+    this.isDisabled = false,
   });
 
   factory AppButtonFab.small({
@@ -20,12 +21,14 @@ class AppButtonFab extends StatelessWidget {
     required IconData icon,
     Object? heroTag,
     AppButtonFabStyle style = AppButtonFabStyle.primary,
+    bool isDisabled = false,
   }) => AppButtonFab._(
     onPressed: onPressed,
     icon: icon,
     style: style,
     heroTag: heroTag,
     size: AppButtonFabSize.sm,
+    isDisabled: isDisabled,
   );
 
   factory AppButtonFab.regular({
@@ -33,11 +36,13 @@ class AppButtonFab extends StatelessWidget {
     required IconData icon,
     Object? heroTag,
     AppButtonFabStyle style = AppButtonFabStyle.primary,
+    bool isDisabled = false,
   }) => AppButtonFab._(
     onPressed: onPressed,
     icon: icon,
     heroTag: heroTag,
     style: style,
+    isDisabled: isDisabled,
   );
 
   factory AppButtonFab.large({
@@ -45,12 +50,14 @@ class AppButtonFab extends StatelessWidget {
     required IconData icon,
     Object? heroTag,
     AppButtonFabStyle style = AppButtonFabStyle.primary,
+    bool isDisabled = false,
   }) => AppButtonFab._(
     onPressed: onPressed,
     icon: icon,
     style: style,
     heroTag: heroTag,
     size: AppButtonFabSize.lg,
+    isDisabled: isDisabled,
   );
 
   factory AppButtonFab.extended({
@@ -59,12 +66,14 @@ class AppButtonFab extends StatelessWidget {
     required String label,
     Object? heroTag,
     AppButtonFabStyle style = AppButtonFabStyle.primary,
+    bool isDisabled = false,
   }) => AppButtonFab._(
     onPressed: onPressed,
     icon: icon,
     label: label,
     heroTag: heroTag,
     style: style,
+    isDisabled: isDisabled,
   );
 
   final VoidCallback? onPressed;
@@ -73,10 +82,13 @@ class AppButtonFab extends StatelessWidget {
   final AppButtonFabStyle style;
   final AppButtonFabSize size;
   final Object? heroTag;
+  final bool isDisabled;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+
+    final reallyDisabled = isDisabled || onPressed == null;
 
     final (bgColor, fgColor) = switch (style) {
       AppButtonFabStyle.primary => (
@@ -97,6 +109,16 @@ class AppButtonFab extends StatelessWidget {
       ),
     };
 
+    final finalBgColor = reallyDisabled
+        ? colorScheme.onSurface.withValues(alpha: 0.12)
+        : bgColor;
+
+    final finalFgColor = reallyDisabled
+        ? colorScheme.onSurface.withValues(alpha: 0.38)
+        : fgColor;
+
+    final finalOnPressed = reallyDisabled ? null : onPressed;
+
     final iconSize = switch (size) {
       AppButtonFabSize.sm => AppDimensions.iconSm,
       AppButtonFabSize.md => AppDimensions.iconLg,
@@ -115,10 +137,11 @@ class AppButtonFab extends StatelessWidget {
 
     if (label != null) {
       return FloatingActionButton.extended(
-        onPressed: onPressed,
+        onPressed: finalOnPressed,
         heroTag: heroTag,
-        backgroundColor: bgColor,
-        foregroundColor: fgColor,
+        backgroundColor: finalBgColor,
+        foregroundColor: finalFgColor,
+        elevation: reallyDisabled ? 0 : null,
         shape: shape,
         icon: Icon(icon, size: iconSize),
         label: Text(label!),
@@ -127,10 +150,11 @@ class AppButtonFab extends StatelessWidget {
 
     return switch (size) {
       AppButtonFabSize.sm => FloatingActionButton.small(
-        onPressed: onPressed,
+        onPressed: finalOnPressed,
         heroTag: heroTag,
-        backgroundColor: bgColor,
-        foregroundColor: fgColor,
+        backgroundColor: finalBgColor,
+        foregroundColor: finalFgColor,
+        elevation: reallyDisabled ? 0 : null,
         shape: shape,
         child: Icon(icon, size: iconSize),
       ),
@@ -139,20 +163,22 @@ class AppButtonFab extends StatelessWidget {
         width: AppDimensions.buttonHeightXl,
         height: AppDimensions.buttonHeightXl,
         child: FloatingActionButton(
-          onPressed: onPressed,
+          onPressed: finalOnPressed,
           heroTag: heroTag,
-          backgroundColor: bgColor,
-          foregroundColor: fgColor,
+          backgroundColor: finalBgColor,
+          foregroundColor: finalFgColor,
+          elevation: reallyDisabled ? 0 : null,
           shape: shape,
           child: Icon(icon, size: iconSize),
         ),
       ),
 
       _ => FloatingActionButton(
-        onPressed: onPressed,
+        onPressed: finalOnPressed,
         heroTag: heroTag,
-        backgroundColor: bgColor,
-        foregroundColor: fgColor,
+        backgroundColor: finalBgColor,
+        foregroundColor: finalFgColor,
+        elevation: reallyDisabled ? 0 : null,
         shape: shape,
         child: Icon(icon, size: iconSize),
       ),

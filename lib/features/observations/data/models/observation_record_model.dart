@@ -5,8 +5,6 @@ import 'package:noctambuls/core/domain/enums/location_source.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
-import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
-import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
 
 part 'observation_record_model.freezed.dart';
 
@@ -26,8 +24,6 @@ abstract class ObservationRecordModel with _$ObservationRecordModel {
     String? notes,
     GeoPosition? location,
     LocationErrorType? locationError,
-    @Default(ValidationStatus.pending) ValidationStatus validationStatus,
-    @Default(SyncStatus.draft) SyncStatus syncStatus,
     @Default(false) bool isDeleted,
   }) = _ObservationRecordModel;
 
@@ -44,8 +40,6 @@ abstract class ObservationRecordModel with _$ObservationRecordModel {
       location: entity.location,
       locationError: entity.locationError,
       bearing: entity.bearing,
-      validationStatus: entity.validationStatus,
-      syncStatus: entity.syncStatus,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       isDeleted: entity.isDeleted,
@@ -78,8 +72,6 @@ abstract class ObservationRecordModel with _$ObservationRecordModel {
       location: location,
       locationError: data.locationError,
       bearing: data.bearing,
-      validationStatus: data.validationStatus,
-      syncStatus: data.syncStatus,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       isDeleted: data.isDeleted,
@@ -101,8 +93,6 @@ extension ObservationRecordModelX on ObservationRecordModel {
       location: location,
       locationError: locationError,
       bearing: bearing,
-      validationStatus: validationStatus,
-      syncStatus: syncStatus,
       createdAt: createdAt,
       updatedAt: updatedAt,
       isDeleted: isDeleted,

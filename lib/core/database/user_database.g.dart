@@ -18,15 +18,6 @@ class $SessionsTableTable extends SessionsTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  @override
-  late final GeneratedColumnWithTypeConverter<SyncStatus, int> syncStatus =
-      GeneratedColumn<int>(
-        'sync_status',
-        aliasedName,
-        false,
-        type: DriftSqlType.int,
-        requiredDuringInsert: true,
-      ).withConverter<SyncStatus>($SessionsTableTable.$convertersyncStatus);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -58,10 +49,11 @@ class $SessionsTableTable extends SessionsTable
     aliasedName,
     false,
     type: DriftSqlType.bool,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'CHECK ("is_deleted" IN (0, 1))',
     ),
+    defaultValue: const Constant(false),
   );
   static const VerificationMeta _annotatorIdMeta = const VerificationMeta(
     'annotatorId',
@@ -284,9 +276,17 @@ class $SessionsTableTable extends SessionsTable
     ),
   );
   @override
+  late final GeneratedColumnWithTypeConverter<SyncStatus, int> syncStatus =
+      GeneratedColumn<int>(
+        'sync_status',
+        aliasedName,
+        false,
+        type: DriftSqlType.int,
+        requiredDuringInsert: true,
+      ).withConverter<SyncStatus>($SessionsTableTable.$convertersyncStatus);
+  @override
   List<GeneratedColumn> get $columns => [
     id,
-    syncStatus,
     createdAt,
     updatedAt,
     isDeleted,
@@ -310,6 +310,7 @@ class $SessionsTableTable extends SessionsTable
     locationError,
     locationSource,
     isLocked,
+    syncStatus,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -349,8 +350,6 @@ class $SessionsTableTable extends SessionsTable
         _isDeletedMeta,
         isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta),
       );
-    } else if (isInserting) {
-      context.missing(_isDeletedMeta);
     }
     if (data.containsKey('annotator_id')) {
       context.handle(
@@ -447,12 +446,6 @@ class $SessionsTableTable extends SessionsTable
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
-      syncStatus: $SessionsTableTable.$convertersyncStatus.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.int,
-          data['${effectivePrefix}sync_status'],
-        )!,
-      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -563,6 +556,12 @@ class $SessionsTableTable extends SessionsTable
         DriftSqlType.bool,
         data['${effectivePrefix}is_locked'],
       )!,
+      syncStatus: $SessionsTableTable.$convertersyncStatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}sync_status'],
+        )!,
+      ),
     );
   }
 
@@ -571,8 +570,6 @@ class $SessionsTableTable extends SessionsTable
     return $SessionsTableTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
-      const SyncStatusConverter();
   static JsonTypeConverter2<SessionType, int, int> $convertersessionType =
       const SessionTypeConverter();
   static JsonTypeConverter2<TemperatureRange, int, int> $convertertemperature =
@@ -599,12 +596,13 @@ class $SessionsTableTable extends SessionsTable
   $converterlocationSourcen = JsonTypeConverter2.asNullable(
     $converterlocationSource,
   );
+  static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
+      const SyncStatusConverter();
 }
 
 class SessionEntityData extends DataClass
     implements Insertable<SessionEntityData> {
   final String id;
-  final SyncStatus syncStatus;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDeleted;
@@ -628,9 +626,9 @@ class SessionEntityData extends DataClass
   final LocationErrorType? locationError;
   final LocationSource? locationSource;
   final bool isLocked;
+  final SyncStatus syncStatus;
   const SessionEntityData({
     required this.id,
-    required this.syncStatus,
     required this.createdAt,
     required this.updatedAt,
     required this.isDeleted,
@@ -654,16 +652,12 @@ class SessionEntityData extends DataClass
     this.locationError,
     this.locationSource,
     required this.isLocked,
+    required this.syncStatus,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    {
-      map['sync_status'] = Variable<int>(
-        $SessionsTableTable.$convertersyncStatus.toSql(syncStatus),
-      );
-    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['is_deleted'] = Variable<bool>(isDeleted);
@@ -739,13 +733,17 @@ class SessionEntityData extends DataClass
       );
     }
     map['is_locked'] = Variable<bool>(isLocked);
+    {
+      map['sync_status'] = Variable<int>(
+        $SessionsTableTable.$convertersyncStatus.toSql(syncStatus),
+      );
+    }
     return map;
   }
 
   SessionsTableCompanion toCompanion(bool nullToAbsent) {
     return SessionsTableCompanion(
       id: Value(id),
-      syncStatus: Value(syncStatus),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       isDeleted: Value(isDeleted),
@@ -791,6 +789,7 @@ class SessionEntityData extends DataClass
           ? const Value.absent()
           : Value(locationSource),
       isLocked: Value(isLocked),
+      syncStatus: Value(syncStatus),
     );
   }
 
@@ -801,9 +800,6 @@ class SessionEntityData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return SessionEntityData(
       id: serializer.fromJson<String>(json['id']),
-      syncStatus: $SessionsTableTable.$convertersyncStatus.fromJson(
-        serializer.fromJson<int>(json['syncStatus']),
-      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       isDeleted: serializer.fromJson<bool>(json['isDeleted']),
@@ -847,6 +843,9 @@ class SessionEntityData extends DataClass
         serializer.fromJson<int?>(json['locationSource']),
       ),
       isLocked: serializer.fromJson<bool>(json['isLocked']),
+      syncStatus: $SessionsTableTable.$convertersyncStatus.fromJson(
+        serializer.fromJson<int>(json['syncStatus']),
+      ),
     );
   }
   @override
@@ -854,9 +853,6 @@ class SessionEntityData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'syncStatus': serializer.toJson<int>(
-        $SessionsTableTable.$convertersyncStatus.toJson(syncStatus),
-      ),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'isDeleted': serializer.toJson<bool>(isDeleted),
@@ -898,12 +894,14 @@ class SessionEntityData extends DataClass
         $SessionsTableTable.$converterlocationSourcen.toJson(locationSource),
       ),
       'isLocked': serializer.toJson<bool>(isLocked),
+      'syncStatus': serializer.toJson<int>(
+        $SessionsTableTable.$convertersyncStatus.toJson(syncStatus),
+      ),
     };
   }
 
   SessionEntityData copyWith({
     String? id,
-    SyncStatus? syncStatus,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isDeleted,
@@ -927,9 +925,9 @@ class SessionEntityData extends DataClass
     Value<LocationErrorType?> locationError = const Value.absent(),
     Value<LocationSource?> locationSource = const Value.absent(),
     bool? isLocked,
+    SyncStatus? syncStatus,
   }) => SessionEntityData(
     id: id ?? this.id,
-    syncStatus: syncStatus ?? this.syncStatus,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     isDeleted: isDeleted ?? this.isDeleted,
@@ -963,13 +961,11 @@ class SessionEntityData extends DataClass
         ? locationSource.value
         : this.locationSource,
     isLocked: isLocked ?? this.isLocked,
+    syncStatus: syncStatus ?? this.syncStatus,
   );
   SessionEntityData copyWithCompanion(SessionsTableCompanion data) {
     return SessionEntityData(
       id: data.id.present ? data.id.value : this.id,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
@@ -1011,6 +1007,9 @@ class SessionEntityData extends DataClass
           ? data.locationSource.value
           : this.locationSource,
       isLocked: data.isLocked.present ? data.isLocked.value : this.isLocked,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
     );
   }
 
@@ -1018,7 +1017,6 @@ class SessionEntityData extends DataClass
   String toString() {
     return (StringBuffer('SessionEntityData(')
           ..write('id: $id, ')
-          ..write('syncStatus: $syncStatus, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('isDeleted: $isDeleted, ')
@@ -1041,7 +1039,8 @@ class SessionEntityData extends DataClass
           ..write('positionTimestamp: $positionTimestamp, ')
           ..write('locationError: $locationError, ')
           ..write('locationSource: $locationSource, ')
-          ..write('isLocked: $isLocked')
+          ..write('isLocked: $isLocked, ')
+          ..write('syncStatus: $syncStatus')
           ..write(')'))
         .toString();
   }
@@ -1049,7 +1048,6 @@ class SessionEntityData extends DataClass
   @override
   int get hashCode => Object.hashAll([
     id,
-    syncStatus,
     createdAt,
     updatedAt,
     isDeleted,
@@ -1073,13 +1071,13 @@ class SessionEntityData extends DataClass
     locationError,
     locationSource,
     isLocked,
+    syncStatus,
   ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is SessionEntityData &&
           other.id == this.id &&
-          other.syncStatus == this.syncStatus &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.isDeleted == this.isDeleted &&
@@ -1102,12 +1100,12 @@ class SessionEntityData extends DataClass
           other.positionTimestamp == this.positionTimestamp &&
           other.locationError == this.locationError &&
           other.locationSource == this.locationSource &&
-          other.isLocked == this.isLocked);
+          other.isLocked == this.isLocked &&
+          other.syncStatus == this.syncStatus);
 }
 
 class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
   final Value<String> id;
-  final Value<SyncStatus> syncStatus;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<bool> isDeleted;
@@ -1131,10 +1129,10 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
   final Value<LocationErrorType?> locationError;
   final Value<LocationSource?> locationSource;
   final Value<bool> isLocked;
+  final Value<SyncStatus> syncStatus;
   final Value<int> rowid;
   const SessionsTableCompanion({
     this.id = const Value.absent(),
-    this.syncStatus = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.isDeleted = const Value.absent(),
@@ -1158,14 +1156,14 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.locationError = const Value.absent(),
     this.locationSource = const Value.absent(),
     this.isLocked = const Value.absent(),
+    this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   SessionsTableCompanion.insert({
     required String id,
-    required SyncStatus syncStatus,
     required DateTime createdAt,
     required DateTime updatedAt,
-    required bool isDeleted,
+    this.isDeleted = const Value.absent(),
     required String annotatorId,
     required SessionType sessionType,
     this.startTime = const Value.absent(),
@@ -1186,18 +1184,17 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.locationError = const Value.absent(),
     this.locationSource = const Value.absent(),
     required bool isLocked,
+    required SyncStatus syncStatus,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       syncStatus = Value(syncStatus),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt),
-       isDeleted = Value(isDeleted),
        annotatorId = Value(annotatorId),
        sessionType = Value(sessionType),
-       isLocked = Value(isLocked);
+       isLocked = Value(isLocked),
+       syncStatus = Value(syncStatus);
   static Insertable<SessionEntityData> custom({
     Expression<String>? id,
-    Expression<int>? syncStatus,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<bool>? isDeleted,
@@ -1221,11 +1218,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Expression<int>? locationError,
     Expression<int>? locationSource,
     Expression<bool>? isLocked,
+    Expression<int>? syncStatus,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (syncStatus != null) 'sync_status': syncStatus,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (isDeleted != null) 'is_deleted': isDeleted,
@@ -1249,13 +1246,13 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       if (locationError != null) 'location_error': locationError,
       if (locationSource != null) 'location_source': locationSource,
       if (isLocked != null) 'is_locked': isLocked,
+      if (syncStatus != null) 'sync_status': syncStatus,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   SessionsTableCompanion copyWith({
     Value<String>? id,
-    Value<SyncStatus>? syncStatus,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<bool>? isDeleted,
@@ -1279,11 +1276,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Value<LocationErrorType?>? locationError,
     Value<LocationSource?>? locationSource,
     Value<bool>? isLocked,
+    Value<SyncStatus>? syncStatus,
     Value<int>? rowid,
   }) {
     return SessionsTableCompanion(
       id: id ?? this.id,
-      syncStatus: syncStatus ?? this.syncStatus,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,
@@ -1307,6 +1304,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       locationError: locationError ?? this.locationError,
       locationSource: locationSource ?? this.locationSource,
       isLocked: isLocked ?? this.isLocked,
+      syncStatus: syncStatus ?? this.syncStatus,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1316,11 +1314,6 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
-    }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<int>(
-        $SessionsTableTable.$convertersyncStatus.toSql(syncStatus.value),
-      );
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -1411,6 +1404,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     if (isLocked.present) {
       map['is_locked'] = Variable<bool>(isLocked.value);
     }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<int>(
+        $SessionsTableTable.$convertersyncStatus.toSql(syncStatus.value),
+      );
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1421,7 +1419,6 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
   String toString() {
     return (StringBuffer('SessionsTableCompanion(')
           ..write('id: $id, ')
-          ..write('syncStatus: $syncStatus, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('isDeleted: $isDeleted, ')
@@ -1445,6 +1442,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
           ..write('locationError: $locationError, ')
           ..write('locationSource: $locationSource, ')
           ..write('isLocked: $isLocked, ')
+          ..write('syncStatus: $syncStatus, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1466,15 +1464,6 @@ class $ObservationsTableTable extends ObservationsTable
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  @override
-  late final GeneratedColumnWithTypeConverter<SyncStatus, int> syncStatus =
-      GeneratedColumn<int>(
-        'sync_status',
-        aliasedName,
-        false,
-        type: DriftSqlType.int,
-        requiredDuringInsert: true,
-      ).withConverter<SyncStatus>($ObservationsTableTable.$convertersyncStatus);
   static const VerificationMeta _createdAtMeta = const VerificationMeta(
     'createdAt',
   );
@@ -1506,10 +1495,11 @@ class $ObservationsTableTable extends ObservationsTable
     aliasedName,
     false,
     type: DriftSqlType.bool,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'CHECK ("is_deleted" IN (0, 1))',
     ),
+    defaultValue: const Constant(false),
   );
   static const VerificationMeta _sessionIdMeta = const VerificationMeta(
     'sessionId',
@@ -1692,21 +1682,8 @@ class $ObservationsTableTable extends ObservationsTable
     requiredDuringInsert: true,
   );
   @override
-  late final GeneratedColumnWithTypeConverter<ValidationStatus, int>
-  validationStatus =
-      GeneratedColumn<int>(
-        'validation_status',
-        aliasedName,
-        false,
-        type: DriftSqlType.int,
-        requiredDuringInsert: true,
-      ).withConverter<ValidationStatus>(
-        $ObservationsTableTable.$convertervalidationStatus,
-      );
-  @override
   List<GeneratedColumn> get $columns => [
     id,
-    syncStatus,
     createdAt,
     updatedAt,
     isDeleted,
@@ -1726,7 +1703,6 @@ class $ObservationsTableTable extends ObservationsTable
     locationError,
     locationSource,
     bearing,
-    validationStatus,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -1766,8 +1742,6 @@ class $ObservationsTableTable extends ObservationsTable
         _isDeletedMeta,
         isDeleted.isAcceptableOrUnknown(data['is_deleted']!, _isDeletedMeta),
       );
-    } else if (isInserting) {
-      context.missing(_isDeletedMeta);
     }
     if (data.containsKey('session_id')) {
       context.handle(
@@ -1878,12 +1852,6 @@ class $ObservationsTableTable extends ObservationsTable
         DriftSqlType.string,
         data['${effectivePrefix}id'],
       )!,
-      syncStatus: $ObservationsTableTable.$convertersyncStatus.fromSql(
-        attachedDatabase.typeMapping.read(
-          DriftSqlType.int,
-          data['${effectivePrefix}sync_status'],
-        )!,
-      ),
       createdAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}created_at'],
@@ -1966,13 +1934,6 @@ class $ObservationsTableTable extends ObservationsTable
         DriftSqlType.double,
         data['${effectivePrefix}bearing'],
       )!,
-      validationStatus: $ObservationsTableTable.$convertervalidationStatus
-          .fromSql(
-            attachedDatabase.typeMapping.read(
-              DriftSqlType.int,
-              data['${effectivePrefix}validation_status'],
-            )!,
-          ),
     );
   }
 
@@ -1981,8 +1942,6 @@ class $ObservationsTableTable extends ObservationsTable
     return $ObservationsTableTable(attachedDatabase, alias);
   }
 
-  static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
-      const SyncStatusConverter();
   static JsonTypeConverter2<ContactType, int, int> $convertercontactType =
       const ContactTypeConverter();
   static JsonTypeConverter2<LocationErrorType, int, int>
@@ -1997,14 +1956,11 @@ class $ObservationsTableTable extends ObservationsTable
   $converterlocationSourcen = JsonTypeConverter2.asNullable(
     $converterlocationSource,
   );
-  static JsonTypeConverter2<ValidationStatus, int, int>
-  $convertervalidationStatus = const ValidationStatusConverter();
 }
 
 class ObservationEntityData extends DataClass
     implements Insertable<ObservationEntityData> {
   final String id;
-  final SyncStatus syncStatus;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDeleted;
@@ -2024,10 +1980,8 @@ class ObservationEntityData extends DataClass
   final LocationErrorType? locationError;
   final LocationSource? locationSource;
   final double bearing;
-  final ValidationStatus validationStatus;
   const ObservationEntityData({
     required this.id,
-    required this.syncStatus,
     required this.createdAt,
     required this.updatedAt,
     required this.isDeleted,
@@ -2047,17 +2001,11 @@ class ObservationEntityData extends DataClass
     this.locationError,
     this.locationSource,
     required this.bearing,
-    required this.validationStatus,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
-    {
-      map['sync_status'] = Variable<int>(
-        $ObservationsTableTable.$convertersyncStatus.toSql(syncStatus),
-      );
-    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['is_deleted'] = Variable<bool>(isDeleted);
@@ -2103,20 +2051,12 @@ class ObservationEntityData extends DataClass
       );
     }
     map['bearing'] = Variable<double>(bearing);
-    {
-      map['validation_status'] = Variable<int>(
-        $ObservationsTableTable.$convertervalidationStatus.toSql(
-          validationStatus,
-        ),
-      );
-    }
     return map;
   }
 
   ObservationsTableCompanion toCompanion(bool nullToAbsent) {
     return ObservationsTableCompanion(
       id: Value(id),
-      syncStatus: Value(syncStatus),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
       isDeleted: Value(isDeleted),
@@ -2154,7 +2094,6 @@ class ObservationEntityData extends DataClass
           ? const Value.absent()
           : Value(locationSource),
       bearing: Value(bearing),
-      validationStatus: Value(validationStatus),
     );
   }
 
@@ -2165,9 +2104,6 @@ class ObservationEntityData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ObservationEntityData(
       id: serializer.fromJson<String>(json['id']),
-      syncStatus: $ObservationsTableTable.$convertersyncStatus.fromJson(
-        serializer.fromJson<int>(json['syncStatus']),
-      ),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       isDeleted: serializer.fromJson<bool>(json['isDeleted']),
@@ -2194,8 +2130,6 @@ class ObservationEntityData extends DataClass
       locationSource: $ObservationsTableTable.$converterlocationSourcen
           .fromJson(serializer.fromJson<int?>(json['locationSource'])),
       bearing: serializer.fromJson<double>(json['bearing']),
-      validationStatus: $ObservationsTableTable.$convertervalidationStatus
-          .fromJson(serializer.fromJson<int>(json['validationStatus'])),
     );
   }
   @override
@@ -2203,9 +2137,6 @@ class ObservationEntityData extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'syncStatus': serializer.toJson<int>(
-        $ObservationsTableTable.$convertersyncStatus.toJson(syncStatus),
-      ),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'isDeleted': serializer.toJson<bool>(isDeleted),
@@ -2233,17 +2164,11 @@ class ObservationEntityData extends DataClass
         ),
       ),
       'bearing': serializer.toJson<double>(bearing),
-      'validationStatus': serializer.toJson<int>(
-        $ObservationsTableTable.$convertervalidationStatus.toJson(
-          validationStatus,
-        ),
-      ),
     };
   }
 
   ObservationEntityData copyWith({
     String? id,
-    SyncStatus? syncStatus,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isDeleted,
@@ -2263,10 +2188,8 @@ class ObservationEntityData extends DataClass
     Value<LocationErrorType?> locationError = const Value.absent(),
     Value<LocationSource?> locationSource = const Value.absent(),
     double? bearing,
-    ValidationStatus? validationStatus,
   }) => ObservationEntityData(
     id: id ?? this.id,
-    syncStatus: syncStatus ?? this.syncStatus,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
     isDeleted: isDeleted ?? this.isDeleted,
@@ -2294,14 +2217,10 @@ class ObservationEntityData extends DataClass
         ? locationSource.value
         : this.locationSource,
     bearing: bearing ?? this.bearing,
-    validationStatus: validationStatus ?? this.validationStatus,
   );
   ObservationEntityData copyWithCompanion(ObservationsTableCompanion data) {
     return ObservationEntityData(
       id: data.id.present ? data.id.value : this.id,
-      syncStatus: data.syncStatus.present
-          ? data.syncStatus.value
-          : this.syncStatus,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       isDeleted: data.isDeleted.present ? data.isDeleted.value : this.isDeleted,
@@ -2331,9 +2250,6 @@ class ObservationEntityData extends DataClass
           ? data.locationSource.value
           : this.locationSource,
       bearing: data.bearing.present ? data.bearing.value : this.bearing,
-      validationStatus: data.validationStatus.present
-          ? data.validationStatus.value
-          : this.validationStatus,
     );
   }
 
@@ -2341,7 +2257,6 @@ class ObservationEntityData extends DataClass
   String toString() {
     return (StringBuffer('ObservationEntityData(')
           ..write('id: $id, ')
-          ..write('syncStatus: $syncStatus, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('isDeleted: $isDeleted, ')
@@ -2360,16 +2275,14 @@ class ObservationEntityData extends DataClass
           ..write('positionTimestamp: $positionTimestamp, ')
           ..write('locationError: $locationError, ')
           ..write('locationSource: $locationSource, ')
-          ..write('bearing: $bearing, ')
-          ..write('validationStatus: $validationStatus')
+          ..write('bearing: $bearing')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hashAll([
+  int get hashCode => Object.hash(
     id,
-    syncStatus,
     createdAt,
     updatedAt,
     isDeleted,
@@ -2389,14 +2302,12 @@ class ObservationEntityData extends DataClass
     locationError,
     locationSource,
     bearing,
-    validationStatus,
-  ]);
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is ObservationEntityData &&
           other.id == this.id &&
-          other.syncStatus == this.syncStatus &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt &&
           other.isDeleted == this.isDeleted &&
@@ -2415,14 +2326,12 @@ class ObservationEntityData extends DataClass
           other.positionTimestamp == this.positionTimestamp &&
           other.locationError == this.locationError &&
           other.locationSource == this.locationSource &&
-          other.bearing == this.bearing &&
-          other.validationStatus == this.validationStatus);
+          other.bearing == this.bearing);
 }
 
 class ObservationsTableCompanion
     extends UpdateCompanion<ObservationEntityData> {
   final Value<String> id;
-  final Value<SyncStatus> syncStatus;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   final Value<bool> isDeleted;
@@ -2442,11 +2351,9 @@ class ObservationsTableCompanion
   final Value<LocationErrorType?> locationError;
   final Value<LocationSource?> locationSource;
   final Value<double> bearing;
-  final Value<ValidationStatus> validationStatus;
   final Value<int> rowid;
   const ObservationsTableCompanion({
     this.id = const Value.absent(),
-    this.syncStatus = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.isDeleted = const Value.absent(),
@@ -2466,15 +2373,13 @@ class ObservationsTableCompanion
     this.locationError = const Value.absent(),
     this.locationSource = const Value.absent(),
     this.bearing = const Value.absent(),
-    this.validationStatus = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   ObservationsTableCompanion.insert({
     required String id,
-    required SyncStatus syncStatus,
     required DateTime createdAt,
     required DateTime updatedAt,
-    required bool isDeleted,
+    this.isDeleted = const Value.absent(),
     required String sessionId,
     required String speciesId,
     required ContactType contactType,
@@ -2491,24 +2396,19 @@ class ObservationsTableCompanion
     this.locationError = const Value.absent(),
     this.locationSource = const Value.absent(),
     required double bearing,
-    required ValidationStatus validationStatus,
     this.rowid = const Value.absent(),
   }) : id = Value(id),
-       syncStatus = Value(syncStatus),
        createdAt = Value(createdAt),
        updatedAt = Value(updatedAt),
-       isDeleted = Value(isDeleted),
        sessionId = Value(sessionId),
        speciesId = Value(speciesId),
        contactType = Value(contactType),
        quantity = Value(quantity),
        startTime = Value(startTime),
        endTime = Value(endTime),
-       bearing = Value(bearing),
-       validationStatus = Value(validationStatus);
+       bearing = Value(bearing);
   static Insertable<ObservationEntityData> custom({
     Expression<String>? id,
-    Expression<int>? syncStatus,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
     Expression<bool>? isDeleted,
@@ -2528,12 +2428,10 @@ class ObservationsTableCompanion
     Expression<int>? locationError,
     Expression<int>? locationSource,
     Expression<double>? bearing,
-    Expression<int>? validationStatus,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
-      if (syncStatus != null) 'sync_status': syncStatus,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (isDeleted != null) 'is_deleted': isDeleted,
@@ -2553,14 +2451,12 @@ class ObservationsTableCompanion
       if (locationError != null) 'location_error': locationError,
       if (locationSource != null) 'location_source': locationSource,
       if (bearing != null) 'bearing': bearing,
-      if (validationStatus != null) 'validation_status': validationStatus,
       if (rowid != null) 'rowid': rowid,
     });
   }
 
   ObservationsTableCompanion copyWith({
     Value<String>? id,
-    Value<SyncStatus>? syncStatus,
     Value<DateTime>? createdAt,
     Value<DateTime>? updatedAt,
     Value<bool>? isDeleted,
@@ -2580,12 +2476,10 @@ class ObservationsTableCompanion
     Value<LocationErrorType?>? locationError,
     Value<LocationSource?>? locationSource,
     Value<double>? bearing,
-    Value<ValidationStatus>? validationStatus,
     Value<int>? rowid,
   }) {
     return ObservationsTableCompanion(
       id: id ?? this.id,
-      syncStatus: syncStatus ?? this.syncStatus,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,
@@ -2605,7 +2499,6 @@ class ObservationsTableCompanion
       locationError: locationError ?? this.locationError,
       locationSource: locationSource ?? this.locationSource,
       bearing: bearing ?? this.bearing,
-      validationStatus: validationStatus ?? this.validationStatus,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -2615,11 +2508,6 @@ class ObservationsTableCompanion
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
-    }
-    if (syncStatus.present) {
-      map['sync_status'] = Variable<int>(
-        $ObservationsTableTable.$convertersyncStatus.toSql(syncStatus.value),
-      );
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -2688,13 +2576,6 @@ class ObservationsTableCompanion
     if (bearing.present) {
       map['bearing'] = Variable<double>(bearing.value);
     }
-    if (validationStatus.present) {
-      map['validation_status'] = Variable<int>(
-        $ObservationsTableTable.$convertervalidationStatus.toSql(
-          validationStatus.value,
-        ),
-      );
-    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -2705,7 +2586,6 @@ class ObservationsTableCompanion
   String toString() {
     return (StringBuffer('ObservationsTableCompanion(')
           ..write('id: $id, ')
-          ..write('syncStatus: $syncStatus, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('isDeleted: $isDeleted, ')
@@ -2725,7 +2605,6 @@ class ObservationsTableCompanion
           ..write('locationError: $locationError, ')
           ..write('locationSource: $locationSource, ')
           ..write('bearing: $bearing, ')
-          ..write('validationStatus: $validationStatus, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3364,10 +3243,9 @@ abstract class _$UserDatabase extends GeneratedDatabase {
 typedef $$SessionsTableTableCreateCompanionBuilder =
     SessionsTableCompanion Function({
       required String id,
-      required SyncStatus syncStatus,
       required DateTime createdAt,
       required DateTime updatedAt,
-      required bool isDeleted,
+      Value<bool> isDeleted,
       required String annotatorId,
       required SessionType sessionType,
       Value<DateTime?> startTime,
@@ -3388,12 +3266,12 @@ typedef $$SessionsTableTableCreateCompanionBuilder =
       Value<LocationErrorType?> locationError,
       Value<LocationSource?> locationSource,
       required bool isLocked,
+      required SyncStatus syncStatus,
       Value<int> rowid,
     });
 typedef $$SessionsTableTableUpdateCompanionBuilder =
     SessionsTableCompanion Function({
       Value<String> id,
-      Value<SyncStatus> syncStatus,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<bool> isDeleted,
@@ -3417,6 +3295,7 @@ typedef $$SessionsTableTableUpdateCompanionBuilder =
       Value<LocationErrorType?> locationError,
       Value<LocationSource?> locationSource,
       Value<bool> isLocked,
+      Value<SyncStatus> syncStatus,
       Value<int> rowid,
     });
 
@@ -3498,12 +3377,6 @@ class $$SessionsTableTableFilterComposer
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, int> get syncStatus =>
-      $composableBuilder(
-        column: $table.syncStatus,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
@@ -3629,6 +3502,12 @@ class $$SessionsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
+
   Expression<bool> observationsTableRefs(
     Expression<bool> Function($$ObservationsTableTableFilterComposer f) f,
   ) {
@@ -3693,11 +3572,6 @@ class $$SessionsTableTableOrderingComposer
   });
   ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -3815,6 +3689,11 @@ class $$SessionsTableTableOrderingComposer
     column: $table.isLocked,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SessionsTableTableAnnotationComposer
@@ -3828,12 +3707,6 @@ class $$SessionsTableTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<SyncStatus, int> get syncStatus =>
-      $composableBuilder(
-        column: $table.syncStatus,
-        builder: (column) => column,
-      );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -3927,6 +3800,12 @@ class $$SessionsTableTableAnnotationComposer
   GeneratedColumn<bool> get isLocked =>
       $composableBuilder(column: $table.isLocked, builder: (column) => column);
 
+  GeneratedColumnWithTypeConverter<SyncStatus, int> get syncStatus =>
+      $composableBuilder(
+        column: $table.syncStatus,
+        builder: (column) => column,
+      );
+
   Expression<T> observationsTableRefs<T extends Object>(
     Expression<T> Function($$ObservationsTableTableAnnotationComposer a) f,
   ) {
@@ -4013,7 +3892,6 @@ class $$SessionsTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<SyncStatus> syncStatus = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<bool> isDeleted = const Value.absent(),
@@ -4037,10 +3915,10 @@ class $$SessionsTableTableTableManager
                 Value<LocationErrorType?> locationError = const Value.absent(),
                 Value<LocationSource?> locationSource = const Value.absent(),
                 Value<bool> isLocked = const Value.absent(),
+                Value<SyncStatus> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion(
                 id: id,
-                syncStatus: syncStatus,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 isDeleted: isDeleted,
@@ -4064,15 +3942,15 @@ class $$SessionsTableTableTableManager
                 locationError: locationError,
                 locationSource: locationSource,
                 isLocked: isLocked,
+                syncStatus: syncStatus,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
-                required SyncStatus syncStatus,
                 required DateTime createdAt,
                 required DateTime updatedAt,
-                required bool isDeleted,
+                Value<bool> isDeleted = const Value.absent(),
                 required String annotatorId,
                 required SessionType sessionType,
                 Value<DateTime?> startTime = const Value.absent(),
@@ -4093,10 +3971,10 @@ class $$SessionsTableTableTableManager
                 Value<LocationErrorType?> locationError = const Value.absent(),
                 Value<LocationSource?> locationSource = const Value.absent(),
                 required bool isLocked,
+                required SyncStatus syncStatus,
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion.insert(
                 id: id,
-                syncStatus: syncStatus,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 isDeleted: isDeleted,
@@ -4120,6 +3998,7 @@ class $$SessionsTableTableTableManager
                 locationError: locationError,
                 locationSource: locationSource,
                 isLocked: isLocked,
+                syncStatus: syncStatus,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -4215,10 +4094,9 @@ typedef $$SessionsTableTableProcessedTableManager =
 typedef $$ObservationsTableTableCreateCompanionBuilder =
     ObservationsTableCompanion Function({
       required String id,
-      required SyncStatus syncStatus,
       required DateTime createdAt,
       required DateTime updatedAt,
-      required bool isDeleted,
+      Value<bool> isDeleted,
       required String sessionId,
       required String speciesId,
       required ContactType contactType,
@@ -4235,13 +4113,11 @@ typedef $$ObservationsTableTableCreateCompanionBuilder =
       Value<LocationErrorType?> locationError,
       Value<LocationSource?> locationSource,
       required double bearing,
-      required ValidationStatus validationStatus,
       Value<int> rowid,
     });
 typedef $$ObservationsTableTableUpdateCompanionBuilder =
     ObservationsTableCompanion Function({
       Value<String> id,
-      Value<SyncStatus> syncStatus,
       Value<DateTime> createdAt,
       Value<DateTime> updatedAt,
       Value<bool> isDeleted,
@@ -4261,7 +4137,6 @@ typedef $$ObservationsTableTableUpdateCompanionBuilder =
       Value<LocationErrorType?> locationError,
       Value<LocationSource?> locationSource,
       Value<double> bearing,
-      Value<ValidationStatus> validationStatus,
       Value<int> rowid,
     });
 
@@ -4314,12 +4189,6 @@ class $$ObservationsTableTableFilterComposer
     column: $table.id,
     builder: (column) => ColumnFilters(column),
   );
-
-  ColumnWithTypeConverterFilters<SyncStatus, SyncStatus, int> get syncStatus =>
-      $composableBuilder(
-        column: $table.syncStatus,
-        builder: (column) => ColumnWithTypeConverterFilters(column),
-      );
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
     column: $table.createdAt,
@@ -4414,12 +4283,6 @@ class $$ObservationsTableTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnWithTypeConverterFilters<ValidationStatus, ValidationStatus, int>
-  get validationStatus => $composableBuilder(
-    column: $table.validationStatus,
-    builder: (column) => ColumnWithTypeConverterFilters(column),
-  );
-
   $$SessionsTableTableFilterComposer get sessionId {
     final $$SessionsTableTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -4455,11 +4318,6 @@ class $$ObservationsTableTableOrderingComposer
   });
   ColumnOrderings<String> get id => $composableBuilder(
     column: $table.id,
-    builder: (column) => ColumnOrderings(column),
-  );
-
-  ColumnOrderings<int> get syncStatus => $composableBuilder(
-    column: $table.syncStatus,
     builder: (column) => ColumnOrderings(column),
   );
 
@@ -4553,11 +4411,6 @@ class $$ObservationsTableTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  ColumnOrderings<int> get validationStatus => $composableBuilder(
-    column: $table.validationStatus,
-    builder: (column) => ColumnOrderings(column),
-  );
-
   $$SessionsTableTableOrderingComposer get sessionId {
     final $$SessionsTableTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -4593,12 +4446,6 @@ class $$ObservationsTableTableAnnotationComposer
   });
   GeneratedColumn<String> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
-
-  GeneratedColumnWithTypeConverter<SyncStatus, int> get syncStatus =>
-      $composableBuilder(
-        column: $table.syncStatus,
-        builder: (column) => column,
-      );
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -4667,12 +4514,6 @@ class $$ObservationsTableTableAnnotationComposer
   GeneratedColumn<double> get bearing =>
       $composableBuilder(column: $table.bearing, builder: (column) => column);
 
-  GeneratedColumnWithTypeConverter<ValidationStatus, int>
-  get validationStatus => $composableBuilder(
-    column: $table.validationStatus,
-    builder: (column) => column,
-  );
-
   $$SessionsTableTableAnnotationComposer get sessionId {
     final $$SessionsTableTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -4731,7 +4572,6 @@ class $$ObservationsTableTableTableManager
           updateCompanionCallback:
               ({
                 Value<String> id = const Value.absent(),
-                Value<SyncStatus> syncStatus = const Value.absent(),
                 Value<DateTime> createdAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<bool> isDeleted = const Value.absent(),
@@ -4751,11 +4591,9 @@ class $$ObservationsTableTableTableManager
                 Value<LocationErrorType?> locationError = const Value.absent(),
                 Value<LocationSource?> locationSource = const Value.absent(),
                 Value<double> bearing = const Value.absent(),
-                Value<ValidationStatus> validationStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => ObservationsTableCompanion(
                 id: id,
-                syncStatus: syncStatus,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 isDeleted: isDeleted,
@@ -4775,16 +4613,14 @@ class $$ObservationsTableTableTableManager
                 locationError: locationError,
                 locationSource: locationSource,
                 bearing: bearing,
-                validationStatus: validationStatus,
                 rowid: rowid,
               ),
           createCompanionCallback:
               ({
                 required String id,
-                required SyncStatus syncStatus,
                 required DateTime createdAt,
                 required DateTime updatedAt,
-                required bool isDeleted,
+                Value<bool> isDeleted = const Value.absent(),
                 required String sessionId,
                 required String speciesId,
                 required ContactType contactType,
@@ -4801,11 +4637,9 @@ class $$ObservationsTableTableTableManager
                 Value<LocationErrorType?> locationError = const Value.absent(),
                 Value<LocationSource?> locationSource = const Value.absent(),
                 required double bearing,
-                required ValidationStatus validationStatus,
                 Value<int> rowid = const Value.absent(),
               }) => ObservationsTableCompanion.insert(
                 id: id,
-                syncStatus: syncStatus,
                 createdAt: createdAt,
                 updatedAt: updatedAt,
                 isDeleted: isDeleted,
@@ -4825,7 +4659,6 @@ class $$ObservationsTableTableTableManager
                 locationError: locationError,
                 locationSource: locationSource,
                 bearing: bearing,
-                validationStatus: validationStatus,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0

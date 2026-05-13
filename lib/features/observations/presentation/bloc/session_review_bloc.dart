@@ -1,40 +1,90 @@
+import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
+import 'package:noctambuls/features/guide/domain/entities/bird.dart';
+import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/domain/failures/validation_failures.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/remove_session_participant_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/validate_session_finalization_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/update_session_properties_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/watch_session_by_id_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_state.dart';
+import 'package:noctambuls/features/settings/domain/usecases/get_language_usecase.dart';
+import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
 
 class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
   SessionReviewBloc({
     required ObservationSession initialSession,
-    required this.updateSessionUseCase,
+    required this.watchSessionByIdUseCase,
+    required this.getBirdsUseCase,
+    required this.getLanguageUseCase,
+    required this.updateSessionPropertiesUseCase,
     required this.deleteSessionUseCase,
     required this.finishAndLockSessionUseCase,
     required this.addSessionParticipantUseCase,
     required this.removeSessionParticipantUseCase,
-    required this.validateSessionFinalizationUseCase,
-  }) : super(SessionReviewEditing(session: initialSession)) {
+  }) : super(
+         SessionReviewEditing(session: initialSession, birdsMap: const {}),
+       ) {
     on<ReviewUpdateProperties>(_onUpdateProperties);
     on<ReviewFinalizeSession>(_onFinalizeSession);
     on<ReviewValidateData>(_onValidateData);
     on<ReviewDeleteSession>(_onDeleteSession);
     on<ReviewAddParticipant>(_onAddParticipant);
     on<ReviewRemoveParticipant>(_onRemoveParticipant);
+    on<ReviewSessionStreamUpdated>(_onStreamUpdated);
+
+    unawaited(_initReactivity(initialSession.id));
   }
 
-  final UpdateSessionUseCase updateSessionUseCase;
+  final UpdateSessionPropertiesUseCase updateSessionPropertiesUseCase;
   final DeleteSessionUseCase deleteSessionUseCase;
   final FinishAndLockSessionUseCase finishAndLockSessionUseCase;
   final AddSessionParticipantUseCase addSessionParticipantUseCase;
   final RemoveSessionParticipantUseCase removeSessionParticipantUseCase;
-  final ValidateSessionFinalizationUseCase validateSessionFinalizationUseCase;
+  final WatchSessionByIdUseCase watchSessionByIdUseCase;
+  final GetBirdsUseCase getBirdsUseCase;
+  final GetLanguageUseCase getLanguageUseCase;
+
+  StreamSubscription<ObservationSession?>? _subscription;
+  Map<String, Bird> _birdsMap = {};
+
+  Future<void> _initReactivity(String sessionId) async {
+    final langCode = getLanguageUseCase().toLanguageCode;
+    final result = await getBirdsUseCase(langCode);
+    result.when(
+      success: (birds) {
+        _birdsMap = {for (final b in birds) b.id: b};
+        if (state is SessionReviewEditing) {
+          add(
+            ReviewSessionStreamUpdated((state as SessionReviewEditing).session),
+          );
+        }
+      },
+      failure: (_) {},
+    );
+
+    _subscription = watchSessionByIdUseCase(sessionId).listen((session) {
+      if (session != null) {
+        add(ReviewSessionStreamUpdated(session));
+      } else {
+        add(ReviewDeleteSession());
+      }
+    });
+  }
+
+  void _onStreamUpdated(
+    ReviewSessionStreamUpdated event,
+    Emitter<SessionReviewState> emit,
+  ) {
+    if (state is! SessionReviewEditing) return;
+    final currentState = state as SessionReviewEditing;
+
+    _runValidation(event.session, emit, currentState);
+  }
 
   Future<void> _onUpdateProperties(
     ReviewUpdateProperties event,
@@ -42,35 +92,25 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
   ) async {
     if (state is! SessionReviewEditing) return;
     final currentSession = (state as SessionReviewEditing).session;
+    final currentState = state as SessionReviewEditing;
 
-    emit(SessionReviewEditing(session: currentSession, isSaving: true));
-
-    final updatedSession = currentSession.copyWith(
-      temperature: event.temperature ?? currentSession.temperature,
-      wind: event.wind ?? currentSession.wind,
-      sky: event.sky ?? currentSession.sky,
-      rain: event.rain ?? currentSession.rain,
-      visibility: event.visibility ?? currentSession.visibility,
-      moon: event.moon ?? currentSession.moon,
-      listeningPoint: event.listeningPoint ?? currentSession.listeningPoint,
-      location: event.location ?? currentSession.location,
-      updatedAt: DateTime.now(),
+    final result = await updateSessionPropertiesUseCase(
+      sessionId: currentSession.id,
+      temperature: event.temperature,
+      wind: event.wind,
+      sky: event.sky,
+      rain: event.rain,
+      visibility: event.visibility,
+      moon: event.moon,
+      listeningPoint: event.listeningPoint,
+      location: event.location,
     );
 
-    final result = await updateSessionUseCase(updatedSession);
-
     result.when(
-      success: (_) {
-        _runValidation(
-          updatedSession,
-          event.observations,
-          emit,
-          SessionReviewEditing(session: updatedSession, isSaving: false),
-        );
-      },
+      success: (updatedSession) {},
       failure: (failure) {
         emit(SessionReviewError(failure));
-        emit(SessionReviewEditing(session: currentSession, isSaving: false));
+        emit(currentState.copyWith(isSaving: false));
       },
     );
   }
@@ -81,7 +121,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
   ) async {
     if (state is! SessionReviewEditing) return;
     final current = state as SessionReviewEditing;
-    _runValidation(current.session, event.observations, emit, current);
+    _runValidation(current.session, emit, current);
   }
 
   Future<void> _onFinalizeSession(
@@ -106,9 +146,9 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     Emitter<SessionReviewState> emit,
   ) async {
     if (state is! SessionReviewEditing) return;
-    final currentSession = (state as SessionReviewEditing).session;
+    final currentState = state as SessionReviewEditing;
 
-    final result = await deleteSessionUseCase(currentSession.id);
+    final result = await deleteSessionUseCase(currentState.session.id);
     result.when(
       success: (_) => emit(SessionReviewDeleted()),
       failure: (failure) => emit(SessionReviewError(failure)),
@@ -120,22 +160,20 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     Emitter<SessionReviewState> emit,
   ) async {
     if (state is! SessionReviewEditing) return;
-    final currentSession = (state as SessionReviewEditing).session;
+    final currentState = state as SessionReviewEditing;
 
-    emit(SessionReviewEditing(session: currentSession, isSaving: true));
+    emit(currentState.copyWith(isSaving: true));
 
     final result = await addSessionParticipantUseCase(
-      currentSession,
+      currentState.session,
       event.code,
     );
 
     result.when(
-      success: (updatedSession) {
-        emit(SessionReviewEditing(session: updatedSession));
-      },
+      success: (_) {},
       failure: (failure) {
         emit(SessionReviewError(failure));
-        emit(SessionReviewEditing(session: currentSession));
+        emit(currentState.copyWith(isSaving: false));
       },
     );
   }
@@ -145,57 +183,45 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     Emitter<SessionReviewState> emit,
   ) async {
     if (state is! SessionReviewEditing) return;
-    final currentSession = (state as SessionReviewEditing).session;
+    final currentState = state as SessionReviewEditing;
 
-    emit(SessionReviewEditing(session: currentSession, isSaving: true));
+    emit(currentState.copyWith(isSaving: true));
 
     final result = await removeSessionParticipantUseCase(
-      currentSession,
+      currentState.session,
       event.code,
     );
 
     result.when(
-      success: (updatedSession) {
-        emit(SessionReviewEditing(session: updatedSession));
-      },
+      success: (_) {},
       failure: (failure) {
         emit(SessionReviewError(failure));
-        emit(SessionReviewEditing(session: currentSession));
+        emit(currentState.copyWith(isSaving: false));
       },
     );
   }
 
   void _runValidation(
     ObservationSession session,
-    List<ObservationRecord> observations,
     Emitter<SessionReviewState> emit,
     SessionReviewEditing currentState,
   ) {
-    var hasSessionLocError = false;
-    var hasListeningPtError = false;
-    var missingLocIds = const <String>{};
-
-    validateSessionFinalizationUseCase(
-      session: session,
-      observations: observations,
-    ).when(
-      success: (_) {},
-      failure: (failure) {
-        if (failure is SessionValidationFailure) {
-          hasSessionLocError = failure.missingSessionLocation;
-          hasListeningPtError = failure.missingListeningPoint;
-          missingLocIds = failure.missingObservationLocationIds;
-        }
-      },
-    );
+    final validationError = session.validateFinalization();
 
     emit(
       currentState.copyWith(
         session: session,
-        showSessionLocationError: hasSessionLocError,
-        showListeningPointError: hasListeningPtError,
-        missingObservationLocationIds: missingLocIds,
+        birdsMap: _birdsMap,
+        isSaving: false,
+        validationError: validationError,
+        clearError: validationError == null,
       ),
     );
+  }
+
+  @override
+  Future<void> close() async {
+    await _subscription?.cancel();
+    return super.close();
   }
 }

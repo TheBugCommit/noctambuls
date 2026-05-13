@@ -105,7 +105,7 @@ class _MapPickerPageState extends State<MapPickerPage>
           accuracy: 0,
           altitude: 0,
           altitudeAccuracy: 0,
-          timestamp: DateTime.now(),
+          timestamp: DateTime.now().toUtc(),
           locationSource: LocationSource.gps,
         );
         _mapController.move(_userLocation!, 16);
@@ -125,7 +125,7 @@ class _MapPickerPageState extends State<MapPickerPage>
         accuracy: 0,
         altitude: 0,
         altitudeAccuracy: 0,
-        timestamp: DateTime.now(),
+        timestamp: DateTime.now().toUtc(),
         locationSource: LocationSource.manual,
       );
     });

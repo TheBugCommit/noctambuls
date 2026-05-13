@@ -65,14 +65,7 @@
     "observingMethodIncDescription": "És una observació inesperada o aïllada mentre fas una altra activitat. Fes-la servir quan vegis un ocell de forma casual i el vulguis anotar ràpidament sense seguir un protocol fix.",
 
     "activeSessionTitle": "Sessió en curs",
-    "startedAt": "Observant des de {time}",
-    "@startedAt": {
-        "placeholders": {
-            "time": {
-                "type": "String"
-            }
-        }
-    },
+    "startedAt": "Observant des de les ",
     "errorSessionAlreadyExists": "Ja hi ha una sessió activa. Finalitza-la o cancel·la-la primer.",
     "observationsRegistered": "{count} observacions registrades",
     "@observationsRegistered": {

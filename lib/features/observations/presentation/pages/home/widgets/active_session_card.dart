@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button.dart';
+import 'package:noctambuls/core/presentation/widgets/time_text.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -19,11 +20,6 @@ class ActiveSessionCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-
-    final startTime = session.startTime != null
-        ? '${session.startTime!.hour.toString().padLeft(2, '0')}:'
-              '${session.startTime!.minute.toString().padLeft(2, '0')}'
-        : '--:--';
 
     return Card(
       elevation: 0,
@@ -45,8 +41,10 @@ class ActiveSessionCard extends StatelessWidget {
                 ),
                 const SizedBox(width: AppDimensions.sm),
                 Expanded(
-                  child: Text(
-                    l10n.startedAt(startTime),
+                  child: TimeText.dateTime(
+                    session.startTime?.toLocal(),
+                    prefixText: l10n.startedAt,
+                    formatStyle: DateTimeFormatStyle.timeOnly,
                     style: textTheme.titleMedium?.copyWith(
                       color: colorScheme.onPrimaryContainer,
                     ),

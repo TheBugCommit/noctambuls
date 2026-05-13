@@ -10,7 +10,6 @@ import 'package:noctambuls/features/observations/domain/enums/session_type.dart'
 import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/temperature_range.dart';
-import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/visibility_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/wind_level.dart';
 

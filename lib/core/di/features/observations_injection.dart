@@ -2,12 +2,12 @@ import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart';
-import 'package:noctambuls/features/observations/data/datasources/observation_local_datasource.dart';
-import 'package:noctambuls/features/observations/data/repositories/observation_repository_impl.dart';
+import 'package:noctambuls/features/observations/data/datasources/session_local_datasource.dart';
+import 'package:noctambuls/features/observations/data/repositories/session_repository_impl.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
+import 'package:noctambuls/features/observations/domain/repositories/session_repository.dart';
 import 'package:noctambuls/features/observations/domain/usecases/add_session_participant_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/change_observations_date_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/change_session_date_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/create_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
@@ -16,29 +16,25 @@ import 'package:noctambuls/features/observations/domain/usecases/get_active_sess
 import 'package:noctambuls/features/observations/domain/usecases/remove_session_participant_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/save_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/update_all_observations_date_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/update_session_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/validate_session_finalization_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/update_session_location_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/update_session_properties_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_all_sessions_usecase.dart';
-import 'package:noctambuls/features/observations/domain/usecases/watch_observations_for_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/watch_session_by_id_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/bloc/observation_form_bloc.dart';
-import 'package:noctambuls/features/settings/domain/usecases/get_language_usecase.dart';
 
 void initObservationsFeature() {
   sl
     // DataSources
-    ..registerLazySingleton<ObservationLocalDataSource>(
-      () =>
-          ObservationLocalDataSourceImpl(dbManager: sl<UserDatabaseManager>()),
+    ..registerLazySingleton<SessionLocalDataSource>(
+      () => SessionLocalDataSourceImpl(dbManager: sl<UserDatabaseManager>()),
     )
     // Repositories
-    ..registerLazySingleton<ObservationRepository>(
-      () => ObservationRepositoryImpl(localDataSource: sl()),
+    ..registerLazySingleton<SessionRepository>(
+      () => SessionRepositoryImpl(localDataSource: sl()),
     )
     // Use Cases — session
     ..registerLazySingleton(() => WatchActiveSessionUseCase(sl()))
@@ -50,19 +46,18 @@ void initObservationsFeature() {
         locationService: sl(),
       ),
     )
-    ..registerLazySingleton(() => UpdateSessionUseCase(sl()))
+    ..registerLazySingleton(() => UpdateSessionPropertiesUseCase(sl()))
     ..registerLazySingleton(() => DeleteSessionUseCase(sl()))
     // Use Cases — observation
-    ..registerLazySingleton(() => WatchObservationsForSessionUseCase(sl()))
     ..registerLazySingleton(() => DeleteObservationUseCase(sl()))
     ..registerLazySingleton(() => StopObservationPhaseUseCase(sl()))
     ..registerLazySingleton(() => FinishAndLockSessionUseCase(sl()))
-    ..registerLazySingleton(() => ChangeObservationDateUseCase(sl()))
-    ..registerLazySingleton(() => UpdateAllObservationsDateUseCase(sl()))
+    ..registerLazySingleton(() => ChangeSessionDateUseCase(sl()))
     ..registerLazySingleton(() => AddSessionParticipantUseCase(sl()))
     ..registerLazySingleton(() => RemoveSessionParticipantUseCase(sl()))
     ..registerLazySingleton(() => SaveObservationUseCase(sl()))
-    ..registerLazySingleton(ValidateSessionFinalizationUseCase.new)
+    ..registerLazySingleton(() => UpdateSessionLocationUseCase(sl()))
+    ..registerLazySingleton(() => WatchSessionByIdUseCase(sl()))
     // BLoC
     ..registerFactory(
       () => ObservingSessionBloc(
@@ -71,7 +66,11 @@ void initObservationsFeature() {
         updateSessionUseCase: sl(),
         deleteSessionUseCase: sl(),
         stopObservationPhaseUseCase: sl(),
-        changeObservationDateUseCase: sl(),
+        changeSessionDateUseCase: sl(),
+        getBirdsUseCase: sl(),
+        deleteObservationUseCase: sl(),
+        getLanguageUseCase: sl(),
+        updateSessionLocationUseCase: sl(),
         logger: sl<IAppLogger>(),
       ),
     )
@@ -79,17 +78,6 @@ void initObservationsFeature() {
       () => ObservationFormBloc(
         getBirdsUseCase: sl<GetBirdsUseCase>(),
         saveObservationUseCase: sl(),
-        logger: sl<IAppLogger>(),
-      ),
-    )
-    ..registerFactoryParam<SessionObservationBloc, String, void>(
-      (sessionId, _) => SessionObservationBloc(
-        sessionId: sessionId,
-        watchObservationsUseCase: sl(),
-        updateAllObservationsDateUseCase: sl(),
-        deleteObservationUseCase: sl(),
-        getBirdsUseCase: sl<GetBirdsUseCase>(),
-        getLanguageUseCase: sl<GetLanguageUseCase>(),
         logger: sl<IAppLogger>(),
       ),
     )
@@ -101,13 +89,15 @@ void initObservationsFeature() {
     )
     ..registerFactoryParam<SessionReviewBloc, ObservationSession, void>(
       (session, _) => SessionReviewBloc(
-        updateSessionUseCase: sl(),
+        updateSessionPropertiesUseCase: sl(),
         deleteSessionUseCase: sl(),
         finishAndLockSessionUseCase: sl(),
         addSessionParticipantUseCase: sl(),
         removeSessionParticipantUseCase: sl(),
-        validateSessionFinalizationUseCase: sl(),
         initialSession: session,
+        watchSessionByIdUseCase: sl(),
+        getBirdsUseCase: sl(),
+        getLanguageUseCase: sl(),
       ),
     );
 }

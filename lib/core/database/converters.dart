@@ -8,7 +8,6 @@ import 'package:noctambuls/features/observations/domain/enums/session_type.dart'
 import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/temperature_range.dart';
-import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/visibility_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/wind_level.dart';
 
@@ -50,26 +49,6 @@ class SessionTypeConverter extends TypeConverter<SessionType, int>
 
   @override
   int toJson(SessionType value) => toSql(value);
-}
-
-class ValidationStatusConverter extends TypeConverter<ValidationStatus, int>
-    with JsonTypeConverter2<ValidationStatus, int, int> {
-  const ValidationStatusConverter();
-
-  @override
-  ValidationStatus fromSql(int fromDb) => ValidationStatus.values.firstWhere(
-    (s) => s.value == fromDb,
-    orElse: () => ValidationStatus.pending,
-  );
-
-  @override
-  int toSql(ValidationStatus value) => value.value;
-
-  @override
-  ValidationStatus fromJson(int json) => fromSql(json);
-
-  @override
-  int toJson(ValidationStatus value) => toSql(value);
 }
 
 class ContactTypeConverter extends TypeConverter<ContactType, int>

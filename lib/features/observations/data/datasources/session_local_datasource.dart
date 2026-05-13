@@ -4,69 +4,51 @@ import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/features/observations/data/models/observation_record_model.dart';
 import 'package:noctambuls/features/observations/data/models/observation_session_model.dart';
 
-abstract class ObservationLocalDataSource {
-  Future<void> createSession(ObservationSessionModel session);
+abstract class SessionLocalDataSource {
+  Future<void> save(ObservationSessionModel session);
 
-  Future<void> updateSession(ObservationSessionModel session);
+  Future<void> delete(String id);
 
-  Future<void> deleteSession(String id);
+  Future<ObservationSessionModel?> getById(String id);
 
-  Future<ObservationSessionModel?> getSessionById(String id);
-
-  Stream<List<ObservationSessionModel>> watchAllSessions();
+  Stream<List<ObservationSessionModel>> watchAll();
 
   Future<ObservationSessionModel?> getActiveSession();
 
   Stream<ObservationSessionModel?> watchActiveSession();
 
-  Future<void> addObservation(ObservationRecordModel observation);
-
-  Future<void> updateObservation(ObservationRecordModel observation);
-
-  Future<void> deleteObservation(String id);
-
-  Stream<List<ObservationRecordModel>> watchObservationsForSession(
-    String sessionId,
-  );
+  Stream<ObservationSessionModel?> watchSessionById(String id);
 }
 
-class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
-  ObservationLocalDataSourceImpl({required this.dbManager});
+class SessionLocalDataSourceImpl implements SessionLocalDataSource {
+  SessionLocalDataSourceImpl({required this.dbManager});
 
   final UserDatabaseManager dbManager;
 
   UserDatabase get db => dbManager.database;
 
   @override
-  Future<void> createSession(ObservationSessionModel session) async {
+  Future<void> save(ObservationSessionModel session) async {
     await db.transaction(() async {
-      await db.into(db.sessionsTable).insert(_sessionCompanion(session));
-      final uniqueParticipants = session.participants.toSet();
-      if (uniqueParticipants.isNotEmpty) {
+      await db
+          .into(db.sessionsTable)
+          .insertOnConflictUpdate(
+            _sessionCompanion(session),
+          );
+
+      await (db.delete(
+        db.observationsTable,
+      )..where((t) => t.sessionId.equals(session.id))).go();
+
+      if (session.observations.isNotEmpty) {
         await db.batch((batch) {
           batch.insertAll(
-            db.sessionParticipantsTable,
-            uniqueParticipants.map(
-              (code) => SessionParticipantsTableCompanion.insert(
-                sessionId: session.id,
-                ornithologistCode: code,
-              ),
-            ),
-            mode: InsertMode.insertOrIgnore,
+            db.observationsTable,
+            session.observations.map(_observationCompanion),
+            mode: InsertMode.insertOrReplace,
           );
         });
       }
-    });
-  }
-
-  @override
-  Future<void> updateSession(ObservationSessionModel session) async {
-    await db.transaction(() async {
-      await db
-          .update(db.sessionsTable)
-          .replace(
-            _sessionCompanion(session),
-          );
 
       await (db.delete(
         db.sessionParticipantsTable,
@@ -91,37 +73,33 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
   }
 
   @override
-  Future<void> deleteSession(String id) async {
+  Future<void> delete(String id) async {
     await db.transaction(() async {
-      await (db.update(db.sessionsTable)..where((tbl) => tbl.id.equals(id)))
-          .write(const SessionsTableCompanion(isDeleted: Value(true)));
+      await (db.delete(
+        db.sessionParticipantsTable,
+      )..where((t) => t.sessionId.equals(id))).go();
 
-      await (db.update(db.observationsTable)
-            ..where((tbl) => tbl.sessionId.equals(id)))
-          .write(const ObservationsTableCompanion(isDeleted: Value(true)));
+      await (db.delete(
+        db.observationsTable,
+      )..where((t) => t.sessionId.equals(id))).go();
+
+      await (db.delete(db.sessionsTable)..where((t) => t.id.equals(id))).go();
     });
   }
 
   @override
-  Future<ObservationSessionModel?> getSessionById(String id) async {
+  Future<ObservationSessionModel?> getById(String id) async {
     final query = db.select(db.sessionsTable)
       ..where((tbl) => tbl.id.equals(id));
     final sessionData = await query.getSingleOrNull();
 
     if (sessionData == null) return null;
 
-    final participantsData = await (db.select(
-      db.sessionParticipantsTable,
-    )..where((t) => t.sessionId.equals(id))).get();
-
-    return ObservationSessionModel.fromData(
-      sessionData,
-      participants: participantsData.map((p) => p.ornithologistCode).toList(),
-    );
+    return _hydrateSessionAggregate(sessionData);
   }
 
   @override
-  Stream<List<ObservationSessionModel>> watchAllSessions() {
+  Stream<List<ObservationSessionModel>> watchAll() {
     final query = db.select(db.sessionsTable)
       ..where((tbl) => tbl.isDeleted.equals(false))
       ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
@@ -142,11 +120,28 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
             .add(p.ornithologistCode);
       }
 
+      final observationsData =
+          await (db.select(db.observationsTable)
+                ..where(
+                  (t) =>
+                      t.sessionId.isIn(sessionIds) & t.isDeleted.equals(false),
+                )
+                ..orderBy([(t) => OrderingTerm.desc(t.startTime)]))
+              .get();
+
+      final observationsMap = <String, List<ObservationRecordModel>>{};
+      for (final obs in observationsData) {
+        observationsMap
+            .putIfAbsent(obs.sessionId, () => [])
+            .add(ObservationRecordModel.fromData(obs));
+      }
+
       return sessions
           .map(
             (s) => ObservationSessionModel.fromData(
               s,
               participants: participantsMap[s.id] ?? [],
+              observations: observationsMap[s.id] ?? [],
             ),
           )
           .toList();
@@ -167,14 +162,7 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
     final sessionData = await query.getSingleOrNull();
     if (sessionData == null) return null;
 
-    final participantsData = await (db.select(
-      db.sessionParticipantsTable,
-    )..where((t) => t.sessionId.equals(sessionData.id))).get();
-
-    return ObservationSessionModel.fromData(
-      sessionData,
-      participants: participantsData.map((p) => p.ornithologistCode).toList(),
-    );
+    return _hydrateSessionAggregate(sessionData);
   }
 
   @override
@@ -190,50 +178,44 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
 
     return query.watchSingleOrNull().asyncMap((sessionData) async {
       if (sessionData == null) return null;
-
-      final participantsData = await (db.select(
-        db.sessionParticipantsTable,
-      )..where((t) => t.sessionId.equals(sessionData.id))).get();
-
-      return ObservationSessionModel.fromData(
-        sessionData,
-        participants: participantsData.map((p) => p.ornithologistCode).toList(),
-      );
+      return _hydrateSessionAggregate(sessionData);
     });
   }
 
   @override
-  Future<void> addObservation(ObservationRecordModel observation) async {
-    await db
-        .into(db.observationsTable)
-        .insert(_observationCompanion(observation));
+  Stream<ObservationSessionModel?> watchSessionById(String id) {
+    final query = db.select(db.sessionsTable)
+      ..where((tbl) => tbl.id.equals(id));
+
+    return query.watchSingleOrNull().asyncMap((sessionData) async {
+      if (sessionData == null) return null;
+      return _hydrateSessionAggregate(sessionData);
+    });
   }
 
-  @override
-  Future<void> updateObservation(ObservationRecordModel observation) async {
-    await db
-        .update(db.observationsTable)
-        .replace(_observationCompanion(observation));
-  }
+  Future<ObservationSessionModel> _hydrateSessionAggregate(
+    SessionEntityData sessionData,
+  ) async {
+    final participantsData = await (db.select(
+      db.sessionParticipantsTable,
+    )..where((t) => t.sessionId.equals(sessionData.id))).get();
 
-  @override
-  Future<void> deleteObservation(String id) async {
-    await (db.update(db.observationsTable)..where((tbl) => tbl.id.equals(id)))
-        .write(const ObservationsTableCompanion(isDeleted: Value(true)));
-  }
+    final observationsData =
+        await (db.select(db.observationsTable)
+              ..where(
+                (t) =>
+                    t.sessionId.equals(sessionData.id) &
+                    t.isDeleted.equals(false),
+              )
+              ..orderBy([(t) => OrderingTerm.desc(t.startTime)]))
+            .get();
 
-  @override
-  Stream<List<ObservationRecordModel>> watchObservationsForSession(
-    String sessionId,
-  ) {
-    final query = db.select(db.observationsTable)
-      ..where(
-        (tbl) => tbl.sessionId.equals(sessionId) & tbl.isDeleted.equals(false),
-      )
-      ..orderBy([(t) => OrderingTerm.desc(t.startTime)]);
-
-    return query.watch().map(
-      (rows) => rows.map(ObservationRecordModel.fromData).toList(),
+    return ObservationSessionModel.fromData(
+      sessionData,
+      participants: participantsData.map((p) => p.ornithologistCode).toList(),
+      observations: observationsData
+          .map(ObservationRecordModel.fromData)
+          .toList(),
     );
   }
 
@@ -263,7 +245,7 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       syncStatus: s.syncStatus,
       createdAt: s.createdAt,
       updatedAt: s.updatedAt,
-      isDeleted: s.isDeleted,
+      isDeleted: Value(s.isDeleted),
     );
   }
 
@@ -286,11 +268,9 @@ class ObservationLocalDataSourceImpl implements ObservationLocalDataSource {
       locationSource: Value(obs.location?.locationSource),
       locationError: Value(obs.locationError),
       bearing: obs.bearing,
-      validationStatus: obs.validationStatus,
-      syncStatus: obs.syncStatus,
       createdAt: obs.createdAt,
       updatedAt: obs.updatedAt,
-      isDeleted: obs.isDeleted,
+      isDeleted: Value(obs.isDeleted),
     );
   }
 }

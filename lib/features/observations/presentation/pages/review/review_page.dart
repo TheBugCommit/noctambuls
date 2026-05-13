@@ -3,10 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
-import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_state.dart';
@@ -31,16 +28,6 @@ class _ReviewPageState extends State<ReviewPage> {
     _listeningPointController = TextEditingController(
       text: widget.session.listeningPoint?.toString() ?? '',
     );
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!mounted) return;
-      final obsState = context.read<SessionObservationBloc>().state;
-      if (obsState is ObservationsLoaded) {
-        context.read<SessionReviewBloc>().add(
-          ReviewValidateData(obsState.observations),
-        );
-      }
-    });
   }
 
   @override
@@ -65,10 +52,7 @@ class _ReviewPageState extends State<ReviewPage> {
     }
   }
 
-  Future<void> _onFinalize(
-    BuildContext context,
-    ObservationSession session,
-  ) async {
+  Future<void> _onFinalize(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
     final confirmed = await AppSheet.showConfirm(
       context: context,
@@ -80,79 +64,65 @@ class _ReviewPageState extends State<ReviewPage> {
     if (!context.mounted) return;
 
     if (confirmed == true) {
-      final obsState = context.read<SessionObservationBloc>().state;
-      final observations = obsState is ObservationsLoaded
-          ? obsState.observations
-          : <ObservationRecord>[];
-
-      context.read<SessionReviewBloc>().add(
-        ReviewFinalizeSession(observations),
-      );
+      context.read<SessionReviewBloc>().add(const ReviewFinalizeSession());
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocListener(
-      listeners: [
-        BlocListener<SessionObservationBloc, SessionObservationState>(
-          listener: (context, obsState) {
-            if (obsState is ObservationsLoaded) {
-              context.read<SessionReviewBloc>().add(
-                ReviewValidateData(obsState.observations),
-              );
-            }
-          },
-        ),
-        BlocListener<SessionReviewBloc, SessionReviewState>(
-          listenWhen: (prev, curr) {
-            return curr is SessionReviewFinalized ||
-                curr is SessionReviewDeleted ||
-                curr is SessionReviewError;
-          },
-          listener: (context, state) {
-            switch (state) {
-              case SessionReviewDeleted():
-                context.go(AppRoutes.home);
-              case SessionReviewFinalized():
-                context.go(AppRoutes.profile);
-              case SessionReviewError():
-                final l10n = AppLocalizations.of(context)!;
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(l10n.reviewErrorSaving),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-              default:
-            }
-          },
-        ),
-      ],
+    return BlocListener<SessionReviewBloc, SessionReviewState>(
+      listenWhen: (prev, curr) {
+        return curr is SessionReviewFinalized ||
+            curr is SessionReviewDeleted ||
+            curr is SessionReviewError;
+      },
+      listener: (context, state) {
+        switch (state) {
+          case SessionReviewDeleted():
+            context.go(AppRoutes.home);
+          case SessionReviewFinalized():
+            context.go(AppRoutes.profile);
+          case SessionReviewError():
+            final l10n = AppLocalizations.of(context)!;
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(l10n.reviewErrorSaving),
+                behavior: SnackBarBehavior.floating,
+              ),
+            );
+          default:
+        }
+      },
       child: BlocBuilder<SessionReviewBloc, SessionReviewState>(
         builder: (context, state) {
-          final isEditingState = state is SessionReviewEditing;
-          final session = isEditingState ? state.session : widget.session;
+          if (state is! SessionReviewEditing) {
+            return const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            );
+          }
 
-          final isValid = isEditingState && state.isValid;
-          final showSessionLocError =
-              isEditingState && state.showSessionLocationError;
-          final missingLocationIds = isEditingState
-              ? state.missingObservationLocationIds
-              : const <String>{};
-          final showListeningPtError =
-              isEditingState && state.showListeningPointError;
+          final session = state.session;
+          final validationError = state.validationError;
+
+          final showSessionLocationError =
+              validationError?.missingSessionLocation ?? false;
+          final showListeningPointError =
+              validationError?.missingListeningPoint ?? false;
+          final missingLocationIds =
+              validationError?.missingObservationLocationIds ??
+              const <String>{};
 
           return ReviewContent(
             session: session,
+            birdsMap: state.birdsMap,
             isReadOnly: session.isFinished,
-            isValid: isValid,
-            showSessionLocationError: showSessionLocError,
-            showListeningPointError: showListeningPtError,
+            isValid: state.isValid,
+            showSessionLocationError: showSessionLocationError,
+            showListeningPointError: showListeningPointError,
             missingLocationIds: missingLocationIds,
             listeningPointController: _listeningPointController,
             onDelete: _onDelete,
-            onFinalize: (ctx) => _onFinalize(ctx, session),
+            onFinalize: _onFinalize,
           );
         },
       ),

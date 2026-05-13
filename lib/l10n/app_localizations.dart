@@ -437,8 +437,8 @@ abstract class AppLocalizations {
   /// No description provided for @startedAt.
   ///
   /// In ca, this message translates to:
-  /// **'Observant des de {time}'**
-  String startedAt(String time);
+  /// **'Observant des de les '**
+  String get startedAt;
 
   /// No description provided for @errorSessionAlreadyExists.
   ///

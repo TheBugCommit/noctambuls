@@ -13,7 +13,7 @@ class StopwatchCubit extends Cubit<Duration> with WidgetsBindingObserver {
   Timer? _timer;
 
   Duration _elapsed() {
-    final diff = DateTime.now().difference(startTime);
+    final diff = DateTime.now().toUtc().difference(startTime);
     if (diff.isNegative) return Duration.zero;
 
     return Duration(seconds: diff.inSeconds);

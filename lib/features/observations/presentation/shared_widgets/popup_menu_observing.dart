@@ -7,9 +7,6 @@ import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/observing_session_state.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 enum _ObservingMenuOption { guide, changeDate, delete }
@@ -21,10 +18,7 @@ class PopupMenuObserving extends StatelessWidget {
 
   Future<void> _pickGlobalDate(BuildContext context) async {
     final now = DateTime.now();
-    final lifecycleState =
-        context.read<ObservingSessionBloc>().state as ObservingSessionActive;
-    final current =
-        lifecycleState.selectedObservationDate ?? session.startTime ?? now;
+    final current = session.startTime ?? now;
 
     final pickedDate = await showDatePicker(
       context: context,
@@ -34,10 +28,7 @@ class PopupMenuObserving extends StatelessWidget {
     );
     if (!context.mounted || pickedDate == null) return;
 
-    context.read<ObservingSessionBloc>().add(ChangeObservingDate(pickedDate));
-    context.read<SessionObservationBloc>().add(
-      UpdateAllObservationsDate(pickedDate),
-    );
+    context.read<ObservingSessionBloc>().add(ChangeSessionDate(pickedDate));
   }
 
   @override

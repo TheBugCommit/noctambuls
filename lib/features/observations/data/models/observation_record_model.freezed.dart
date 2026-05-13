@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ObservationRecordModel {
 
- String get id; String get sessionId; String get speciesId; ContactType get contactType; int get quantity; DateTime get startTime; DateTime get endTime; DateTime get createdAt; DateTime get updatedAt; double get bearing; String? get notes; GeoPosition? get location; LocationErrorType? get locationError; ValidationStatus get validationStatus; SyncStatus get syncStatus; bool get isDeleted;
+ String get id; String get sessionId; String get speciesId; ContactType get contactType; int get quantity; DateTime get startTime; DateTime get endTime; DateTime get createdAt; DateTime get updatedAt; double get bearing; String? get notes; GeoPosition? get location; LocationErrorType? get locationError; bool get isDeleted;
 /// Create a copy of ObservationRecordModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ObservationRecordModelCopyWith<ObservationRecordModel> get copyWith => _$Observ
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ObservationRecordModel&&(identical(other.id, id) || other.id == id)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.speciesId, speciesId) || other.speciesId == speciesId)&&(identical(other.contactType, contactType) || other.contactType == contactType)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.bearing, bearing) || other.bearing == bearing)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationError, locationError) || other.locationError == locationError)&&(identical(other.validationStatus, validationStatus) || other.validationStatus == validationStatus)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ObservationRecordModel&&(identical(other.id, id) || other.id == id)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.speciesId, speciesId) || other.speciesId == speciesId)&&(identical(other.contactType, contactType) || other.contactType == contactType)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.bearing, bearing) || other.bearing == bearing)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationError, locationError) || other.locationError == locationError)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,sessionId,speciesId,contactType,quantity,startTime,endTime,createdAt,updatedAt,bearing,notes,location,locationError,validationStatus,syncStatus,isDeleted);
+int get hashCode => Object.hash(runtimeType,id,sessionId,speciesId,contactType,quantity,startTime,endTime,createdAt,updatedAt,bearing,notes,location,locationError,isDeleted);
 
 @override
 String toString() {
-  return 'ObservationRecordModel(id: $id, sessionId: $sessionId, speciesId: $speciesId, contactType: $contactType, quantity: $quantity, startTime: $startTime, endTime: $endTime, createdAt: $createdAt, updatedAt: $updatedAt, bearing: $bearing, notes: $notes, location: $location, locationError: $locationError, validationStatus: $validationStatus, syncStatus: $syncStatus, isDeleted: $isDeleted)';
+  return 'ObservationRecordModel(id: $id, sessionId: $sessionId, speciesId: $speciesId, contactType: $contactType, quantity: $quantity, startTime: $startTime, endTime: $endTime, createdAt: $createdAt, updatedAt: $updatedAt, bearing: $bearing, notes: $notes, location: $location, locationError: $locationError, isDeleted: $isDeleted)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ObservationRecordModelCopyWith<$Res>  {
   factory $ObservationRecordModelCopyWith(ObservationRecordModel value, $Res Function(ObservationRecordModel) _then) = _$ObservationRecordModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String sessionId, String speciesId, ContactType contactType, int quantity, DateTime startTime, DateTime endTime, DateTime createdAt, DateTime updatedAt, double bearing, String? notes, GeoPosition? location, LocationErrorType? locationError, ValidationStatus validationStatus, SyncStatus syncStatus, bool isDeleted
+ String id, String sessionId, String speciesId, ContactType contactType, int quantity, DateTime startTime, DateTime endTime, DateTime createdAt, DateTime updatedAt, double bearing, String? notes, GeoPosition? location, LocationErrorType? locationError, bool isDeleted
 });
 
 
@@ -62,7 +62,7 @@ class _$ObservationRecordModelCopyWithImpl<$Res>
 
 /// Create a copy of ObservationRecordModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? sessionId = null,Object? speciesId = null,Object? contactType = null,Object? quantity = null,Object? startTime = null,Object? endTime = null,Object? createdAt = null,Object? updatedAt = null,Object? bearing = null,Object? notes = freezed,Object? location = freezed,Object? locationError = freezed,Object? validationStatus = null,Object? syncStatus = null,Object? isDeleted = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? sessionId = null,Object? speciesId = null,Object? contactType = null,Object? quantity = null,Object? startTime = null,Object? endTime = null,Object? createdAt = null,Object? updatedAt = null,Object? bearing = null,Object? notes = freezed,Object? location = freezed,Object? locationError = freezed,Object? isDeleted = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
@@ -77,9 +77,7 @@ as DateTime,bearing: null == bearing ? _self.bearing : bearing // ignore: cast_n
 as double,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as GeoPosition?,locationError: freezed == locationError ? _self.locationError : locationError // ignore: cast_nullable_to_non_nullable
-as LocationErrorType?,validationStatus: null == validationStatus ? _self.validationStatus : validationStatus // ignore: cast_nullable_to_non_nullable
-as ValidationStatus,syncStatus: null == syncStatus ? _self.syncStatus : syncStatus // ignore: cast_nullable_to_non_nullable
-as SyncStatus,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
+as LocationErrorType?,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -165,10 +163,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String sessionId,  String speciesId,  ContactType contactType,  int quantity,  DateTime startTime,  DateTime endTime,  DateTime createdAt,  DateTime updatedAt,  double bearing,  String? notes,  GeoPosition? location,  LocationErrorType? locationError,  ValidationStatus validationStatus,  SyncStatus syncStatus,  bool isDeleted)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String sessionId,  String speciesId,  ContactType contactType,  int quantity,  DateTime startTime,  DateTime endTime,  DateTime createdAt,  DateTime updatedAt,  double bearing,  String? notes,  GeoPosition? location,  LocationErrorType? locationError,  bool isDeleted)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ObservationRecordModel() when $default != null:
-return $default(_that.id,_that.sessionId,_that.speciesId,_that.contactType,_that.quantity,_that.startTime,_that.endTime,_that.createdAt,_that.updatedAt,_that.bearing,_that.notes,_that.location,_that.locationError,_that.validationStatus,_that.syncStatus,_that.isDeleted);case _:
+return $default(_that.id,_that.sessionId,_that.speciesId,_that.contactType,_that.quantity,_that.startTime,_that.endTime,_that.createdAt,_that.updatedAt,_that.bearing,_that.notes,_that.location,_that.locationError,_that.isDeleted);case _:
   return orElse();
 
 }
@@ -186,10 +184,10 @@ return $default(_that.id,_that.sessionId,_that.speciesId,_that.contactType,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String sessionId,  String speciesId,  ContactType contactType,  int quantity,  DateTime startTime,  DateTime endTime,  DateTime createdAt,  DateTime updatedAt,  double bearing,  String? notes,  GeoPosition? location,  LocationErrorType? locationError,  ValidationStatus validationStatus,  SyncStatus syncStatus,  bool isDeleted)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String sessionId,  String speciesId,  ContactType contactType,  int quantity,  DateTime startTime,  DateTime endTime,  DateTime createdAt,  DateTime updatedAt,  double bearing,  String? notes,  GeoPosition? location,  LocationErrorType? locationError,  bool isDeleted)  $default,) {final _that = this;
 switch (_that) {
 case _ObservationRecordModel():
-return $default(_that.id,_that.sessionId,_that.speciesId,_that.contactType,_that.quantity,_that.startTime,_that.endTime,_that.createdAt,_that.updatedAt,_that.bearing,_that.notes,_that.location,_that.locationError,_that.validationStatus,_that.syncStatus,_that.isDeleted);case _:
+return $default(_that.id,_that.sessionId,_that.speciesId,_that.contactType,_that.quantity,_that.startTime,_that.endTime,_that.createdAt,_that.updatedAt,_that.bearing,_that.notes,_that.location,_that.locationError,_that.isDeleted);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -206,10 +204,10 @@ return $default(_that.id,_that.sessionId,_that.speciesId,_that.contactType,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String sessionId,  String speciesId,  ContactType contactType,  int quantity,  DateTime startTime,  DateTime endTime,  DateTime createdAt,  DateTime updatedAt,  double bearing,  String? notes,  GeoPosition? location,  LocationErrorType? locationError,  ValidationStatus validationStatus,  SyncStatus syncStatus,  bool isDeleted)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String sessionId,  String speciesId,  ContactType contactType,  int quantity,  DateTime startTime,  DateTime endTime,  DateTime createdAt,  DateTime updatedAt,  double bearing,  String? notes,  GeoPosition? location,  LocationErrorType? locationError,  bool isDeleted)?  $default,) {final _that = this;
 switch (_that) {
 case _ObservationRecordModel() when $default != null:
-return $default(_that.id,_that.sessionId,_that.speciesId,_that.contactType,_that.quantity,_that.startTime,_that.endTime,_that.createdAt,_that.updatedAt,_that.bearing,_that.notes,_that.location,_that.locationError,_that.validationStatus,_that.syncStatus,_that.isDeleted);case _:
+return $default(_that.id,_that.sessionId,_that.speciesId,_that.contactType,_that.quantity,_that.startTime,_that.endTime,_that.createdAt,_that.updatedAt,_that.bearing,_that.notes,_that.location,_that.locationError,_that.isDeleted);case _:
   return null;
 
 }
@@ -221,7 +219,7 @@ return $default(_that.id,_that.sessionId,_that.speciesId,_that.contactType,_that
 
 
 class _ObservationRecordModel implements ObservationRecordModel {
-  const _ObservationRecordModel({required this.id, required this.sessionId, required this.speciesId, required this.contactType, required this.quantity, required this.startTime, required this.endTime, required this.createdAt, required this.updatedAt, required this.bearing, this.notes, this.location, this.locationError, this.validationStatus = ValidationStatus.pending, this.syncStatus = SyncStatus.draft, this.isDeleted = false});
+  const _ObservationRecordModel({required this.id, required this.sessionId, required this.speciesId, required this.contactType, required this.quantity, required this.startTime, required this.endTime, required this.createdAt, required this.updatedAt, required this.bearing, this.notes, this.location, this.locationError, this.isDeleted = false});
   
 
 @override final  String id;
@@ -237,8 +235,6 @@ class _ObservationRecordModel implements ObservationRecordModel {
 @override final  String? notes;
 @override final  GeoPosition? location;
 @override final  LocationErrorType? locationError;
-@override@JsonKey() final  ValidationStatus validationStatus;
-@override@JsonKey() final  SyncStatus syncStatus;
 @override@JsonKey() final  bool isDeleted;
 
 /// Create a copy of ObservationRecordModel
@@ -251,16 +247,16 @@ _$ObservationRecordModelCopyWith<_ObservationRecordModel> get copyWith => __$Obs
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ObservationRecordModel&&(identical(other.id, id) || other.id == id)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.speciesId, speciesId) || other.speciesId == speciesId)&&(identical(other.contactType, contactType) || other.contactType == contactType)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.bearing, bearing) || other.bearing == bearing)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationError, locationError) || other.locationError == locationError)&&(identical(other.validationStatus, validationStatus) || other.validationStatus == validationStatus)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ObservationRecordModel&&(identical(other.id, id) || other.id == id)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.speciesId, speciesId) || other.speciesId == speciesId)&&(identical(other.contactType, contactType) || other.contactType == contactType)&&(identical(other.quantity, quantity) || other.quantity == quantity)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.bearing, bearing) || other.bearing == bearing)&&(identical(other.notes, notes) || other.notes == notes)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationError, locationError) || other.locationError == locationError)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,sessionId,speciesId,contactType,quantity,startTime,endTime,createdAt,updatedAt,bearing,notes,location,locationError,validationStatus,syncStatus,isDeleted);
+int get hashCode => Object.hash(runtimeType,id,sessionId,speciesId,contactType,quantity,startTime,endTime,createdAt,updatedAt,bearing,notes,location,locationError,isDeleted);
 
 @override
 String toString() {
-  return 'ObservationRecordModel(id: $id, sessionId: $sessionId, speciesId: $speciesId, contactType: $contactType, quantity: $quantity, startTime: $startTime, endTime: $endTime, createdAt: $createdAt, updatedAt: $updatedAt, bearing: $bearing, notes: $notes, location: $location, locationError: $locationError, validationStatus: $validationStatus, syncStatus: $syncStatus, isDeleted: $isDeleted)';
+  return 'ObservationRecordModel(id: $id, sessionId: $sessionId, speciesId: $speciesId, contactType: $contactType, quantity: $quantity, startTime: $startTime, endTime: $endTime, createdAt: $createdAt, updatedAt: $updatedAt, bearing: $bearing, notes: $notes, location: $location, locationError: $locationError, isDeleted: $isDeleted)';
 }
 
 
@@ -271,7 +267,7 @@ abstract mixin class _$ObservationRecordModelCopyWith<$Res> implements $Observat
   factory _$ObservationRecordModelCopyWith(_ObservationRecordModel value, $Res Function(_ObservationRecordModel) _then) = __$ObservationRecordModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String sessionId, String speciesId, ContactType contactType, int quantity, DateTime startTime, DateTime endTime, DateTime createdAt, DateTime updatedAt, double bearing, String? notes, GeoPosition? location, LocationErrorType? locationError, ValidationStatus validationStatus, SyncStatus syncStatus, bool isDeleted
+ String id, String sessionId, String speciesId, ContactType contactType, int quantity, DateTime startTime, DateTime endTime, DateTime createdAt, DateTime updatedAt, double bearing, String? notes, GeoPosition? location, LocationErrorType? locationError, bool isDeleted
 });
 
 
@@ -288,7 +284,7 @@ class __$ObservationRecordModelCopyWithImpl<$Res>
 
 /// Create a copy of ObservationRecordModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? sessionId = null,Object? speciesId = null,Object? contactType = null,Object? quantity = null,Object? startTime = null,Object? endTime = null,Object? createdAt = null,Object? updatedAt = null,Object? bearing = null,Object? notes = freezed,Object? location = freezed,Object? locationError = freezed,Object? validationStatus = null,Object? syncStatus = null,Object? isDeleted = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? sessionId = null,Object? speciesId = null,Object? contactType = null,Object? quantity = null,Object? startTime = null,Object? endTime = null,Object? createdAt = null,Object? updatedAt = null,Object? bearing = null,Object? notes = freezed,Object? location = freezed,Object? locationError = freezed,Object? isDeleted = null,}) {
   return _then(_ObservationRecordModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
@@ -303,9 +299,7 @@ as DateTime,bearing: null == bearing ? _self.bearing : bearing // ignore: cast_n
 as double,notes: freezed == notes ? _self.notes : notes // ignore: cast_nullable_to_non_nullable
 as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as GeoPosition?,locationError: freezed == locationError ? _self.locationError : locationError // ignore: cast_nullable_to_non_nullable
-as LocationErrorType?,validationStatus: null == validationStatus ? _self.validationStatus : validationStatus // ignore: cast_nullable_to_non_nullable
-as ValidationStatus,syncStatus: null == syncStatus ? _self.syncStatus : syncStatus // ignore: cast_nullable_to_non_nullable
-as SyncStatus,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
+as LocationErrorType?,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

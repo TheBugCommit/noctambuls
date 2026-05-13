@@ -62,14 +62,7 @@
     "observingMethodIncDescription": "Es una observación inesperada o aislada mientras realizas otra actividad. Úsalo cuando veas un ave de forma casual y quieras anotarlo rápidamente sin seguir un protocolo fijo.",
 
     "activeSessionTitle": "Sesión en curso",
-    "startedAt": "Observando desde {time}",
-    "@startedAt": {
-        "placeholders": {
-            "time": {
-                "type": "String"
-            }
-        }
-    },
+    "startedAt": "Observando desde las ",
     "errorSessionAlreadyExists": "Ya hay una sesión activa. Finalízala o cancélala primero.",
     "observationsRegistered": "{count} observaciones registradas",
     "@observationsRegistered": {

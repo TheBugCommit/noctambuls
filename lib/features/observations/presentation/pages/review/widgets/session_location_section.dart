@@ -10,10 +10,7 @@ import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_event.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_state.dart';
-import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_event.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
@@ -50,14 +47,31 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
     );
     if (!context.mounted || result == null) return;
 
-    final obsState = context.read<SessionObservationBloc>().state;
-    final obs = obsState is ObservationsLoaded
-        ? obsState.observations
-        : <ObservationRecord>[];
-
     context.read<SessionReviewBloc>().add(
-      ReviewUpdateProperties(location: result, observations: obs),
+      ReviewUpdateProperties(location: result),
     );
+  }
+
+  List<LatLng> _extractMapPoints() {
+    final points = <LatLng>[];
+
+    if (widget.session.isIncidental) {
+      for (final obs in widget.session.observations) {
+        if (obs.location != null) {
+          points.add(LatLng(obs.location!.latitude, obs.location!.longitude));
+        }
+      }
+    } else {
+      if (widget.session.location != null) {
+        points.add(
+          LatLng(
+            widget.session.location!.latitude,
+            widget.session.location!.longitude,
+          ),
+        );
+      }
+    }
+    return points;
   }
 
   @override
@@ -104,29 +118,22 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
                 return const _NoInternetPlaceholder();
               }
 
-              return BlocBuilder<
-                SessionObservationBloc,
-                SessionObservationState
-              >(
-                builder: (context, obsState) {
-                  final points = _extractMapPoints(obsState);
+              final points = _extractMapPoints();
 
-                  if (points.isNotEmpty) {
-                    return _MapPreview(
-                      points: points,
-                      isIncidental: widget.session.isIncidental,
-                      isReadOnly: widget.isReadOnly,
-                      onTap: () => _openMapPicker(context),
-                    );
-                  }
+              if (points.isNotEmpty) {
+                return _MapPreview(
+                  points: points,
+                  isIncidental: widget.session.isIncidental,
+                  isReadOnly: widget.isReadOnly,
+                  onTap: () => _openMapPicker(context),
+                );
+              }
 
-                  return _NoLocationPlaceholder(
-                    hasError: hasError,
-                    isIncidental: widget.session.isIncidental,
-                    isReadOnly: widget.isReadOnly,
-                    onOpenMap: () => _openMapPicker(context),
-                  );
-                },
+              return _NoLocationPlaceholder(
+                hasError: hasError,
+                isIncidental: widget.session.isIncidental,
+                isReadOnly: widget.isReadOnly,
+                onOpenMap: () => _openMapPicker(context),
               );
             },
           ),
@@ -142,30 +149,6 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
         ],
       ],
     );
-  }
-
-  List<LatLng> _extractMapPoints(SessionObservationState obsState) {
-    final points = <LatLng>[];
-
-    if (widget.session.isIncidental) {
-      if (obsState is ObservationsLoaded) {
-        for (final obs in obsState.observations) {
-          if (obs.location != null) {
-            points.add(LatLng(obs.location!.latitude, obs.location!.longitude));
-          }
-        }
-      }
-    } else {
-      if (widget.session.location != null) {
-        points.add(
-          LatLng(
-            widget.session.location!.latitude,
-            widget.session.location!.longitude,
-          ),
-        );
-      }
-    }
-    return points;
   }
 }
 

@@ -49,6 +49,15 @@ class UpdateObservingSessionLocation extends ObservingSessionEvent {
   List<Object?> get props => [geoPosition];
 }
 
+class DeleteObservingRecord extends ObservingSessionEvent {
+  const DeleteObservingRecord(this.recordId);
+
+  final String recordId;
+
+  @override
+  List<Object?> get props => [recordId];
+}
+
 /// Transition event to SessionReviewing
 class StopObservingSession extends ObservingSessionEvent {}
 
@@ -56,8 +65,8 @@ class StopObservingSession extends ObservingSessionEvent {}
 class DeleteObservingSession extends ObservingSessionEvent {}
 
 /// Changes the globally selected observation date for incidental sessions.
-class ChangeObservingDate extends ObservingSessionEvent {
-  const ChangeObservingDate(this.date);
+class ChangeSessionDate extends ObservingSessionEvent {
+  const ChangeSessionDate(this.date);
 
   final DateTime date;
 
@@ -66,3 +75,7 @@ class ChangeObservingDate extends ObservingSessionEvent {
 }
 
 class DismissObservingError extends ObservingSessionEvent {}
+
+class ObservingBirdsReloadRequested extends ObservingSessionEvent {
+  const ObservingBirdsReloadRequested();
+}

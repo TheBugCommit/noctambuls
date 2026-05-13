@@ -135,8 +135,8 @@ class DateTimeRangeSelectorField extends StatelessWidget {
     if (pickedTime == null) return;
 
     final now = DateTime.now();
-    final min = session.observationTimeMin;
-    final max = session.observationTimeMax ?? now;
+    final min = session.observationTimeMin?.toLocal();
+    final max = session.observationTimeMax?.toLocal() ?? now;
 
     var newStart = DateTime(
       startTime.year,

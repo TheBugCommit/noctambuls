@@ -2,8 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/features/observations/domain/enums/contact_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
-import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
-import 'package:noctambuls/features/observations/domain/enums/validation_status.dart';
 
 class ObservationRecord extends Equatable {
   const ObservationRecord({
@@ -20,8 +18,6 @@ class ObservationRecord extends Equatable {
     this.locationError,
     this.quantity = 1,
     this.notes,
-    this.validationStatus = ValidationStatus.pending,
-    this.syncStatus = SyncStatus.draft,
     this.isDeleted = false,
   });
 
@@ -36,8 +32,6 @@ class ObservationRecord extends Equatable {
   final GeoPosition? location;
   final LocationErrorType? locationError;
   final double bearing;
-  final ValidationStatus validationStatus;
-  final SyncStatus syncStatus;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDeleted;
@@ -53,8 +47,6 @@ class ObservationRecord extends Equatable {
     Object? locationError = _absent,
     double? bearing,
     int? quantity,
-    ValidationStatus? validationStatus,
-    SyncStatus? syncStatus,
     bool? isDeleted,
   }) {
     return ObservationRecord(
@@ -73,8 +65,6 @@ class ObservationRecord extends Equatable {
           ? this.locationError
           : locationError as LocationErrorType?,
       bearing: bearing ?? this.bearing,
-      validationStatus: validationStatus ?? this.validationStatus,
-      syncStatus: syncStatus ?? this.syncStatus,
       createdAt: createdAt,
       updatedAt: updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,
@@ -94,8 +84,6 @@ class ObservationRecord extends Equatable {
     location,
     locationError,
     bearing,
-    validationStatus,
-    syncStatus,
     createdAt,
     updatedAt,
     isDeleted,

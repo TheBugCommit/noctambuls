@@ -164,7 +164,7 @@ class _SessionList extends StatelessWidget {
           session: session,
           onTap: () {
             if (session.isObserving) {
-              unawaited(context.push(AppRoutes.observing));
+              unawaited(context.push(AppRoutes.observing, extra: session));
             } else {
               unawaited(context.push(AppRoutes.review, extra: session));
             }

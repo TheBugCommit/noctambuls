@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:noctambuls/core/database/user_database.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/domain/enums/location_source.dart';
+import 'package:noctambuls/features/observations/data/models/observation_record_model.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
@@ -32,12 +33,13 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
     @Default(RainLevel.none) RainLevel rain,
     @Default(VisibilityLevel.poor) VisibilityLevel visibility,
     @Default(MoonPresence.absent) MoonPresence moon,
+    @Default([]) List<String> participants,
+    @Default([]) List<ObservationRecordModel> observations,
     DateTime? startTime,
     DateTime? endTime,
     int? listeningPoint,
     GeoPosition? location,
     LocationErrorType? locationError,
-    @Default([]) List<String> participants,
   }) = _ObservationSessionModel;
 
   factory ObservationSessionModel.fromEntity(ObservationSession entity) {
@@ -57,6 +59,9 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
       location: entity.location,
       locationError: entity.locationError,
       participants: entity.participants,
+      observations: entity.observations
+          .map(ObservationRecordModel.fromEntity)
+          .toList(),
       isLocked: entity.isLocked,
       syncStatus: entity.syncStatus,
       createdAt: entity.createdAt,
@@ -68,6 +73,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
   factory ObservationSessionModel.fromData(
     SessionEntityData data, {
     List<String> participants = const [],
+    List<ObservationRecordModel> observations = const [],
   }) {
     GeoPosition? location;
     if (data.latitude != null && data.longitude != null) {
@@ -98,6 +104,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
       location: location,
       locationError: data.locationError,
       participants: participants,
+      observations: observations,
       isLocked: data.isLocked,
       syncStatus: data.syncStatus,
       createdAt: data.createdAt,
@@ -125,6 +132,7 @@ extension ObservationSessionModelX on ObservationSessionModel {
       location: location,
       locationError: locationError,
       participants: participants,
+      observations: observations.map((obs) => obs.toDomain()).toList(),
       isLocked: isLocked,
       syncStatus: syncStatus,
       createdAt: createdAt,

@@ -24,8 +24,6 @@ import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.da
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_event.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/home_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/map_picker/map_picker_page.dart';
@@ -161,17 +159,12 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
 
         if (session == null) {
           return const Scaffold(
-            body: Center(child: Text("Error: No s'ha trobat la sessió actua")),
+            body: Center(child: Text("Error: No s'ha trobat la sessió activa")),
           );
         }
 
         return MultiBlocProvider(
           providers: [
-            BlocProvider(
-              create: (_) =>
-                  sl<SessionObservationBloc>(param1: session.id)
-                    ..add(WatchObservations()),
-            ),
             BlocProvider(
               create: (context) => sl<PhoneSettingsBloc>(),
             ),
@@ -197,8 +190,6 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
             ],
             child: ObservationFormPage(
               session: args.session,
-              globalDate: args.globalDate,
-              onGlobalDateChanged: args.onGlobalDateChanged,
               existingRecord: args.existingRecord,
             ),
           ),
@@ -224,11 +215,6 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
             ),
             BlocProvider(create: (_) => sl<PhoneSettingsBloc>()),
             BlocProvider(create: (_) => sl<ConnectivityBloc>()),
-            BlocProvider(
-              create: (_) =>
-                  sl<SessionObservationBloc>(param1: sessionToReview.id)
-                    ..add(WatchObservations()),
-            ),
           ],
           child: ReviewPage(session: sessionToReview),
         );

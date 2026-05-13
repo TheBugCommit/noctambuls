@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:noctambuls/core/domain/error/failure.dart';
+import 'package:noctambuls/features/guide/domain/entities/bird.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 
 sealed class ObservingSessionState extends Equatable {
@@ -38,15 +39,13 @@ final class ObservingSessionNavigatingToReview extends ActiveObservingState {
 final class ObservingSessionActive extends ActiveObservingState {
   const ObservingSessionActive({
     required super.session,
-    this.selectedObservationDate,
+    required this.birdsMap,
   });
 
-  /// User-selected global date for new observations (incidental only).
-  /// Null means "use the default" (session.startTime ?? now).
-  final DateTime? selectedObservationDate;
+  final Map<String, Bird> birdsMap;
 
   @override
-  List<Object?> get props => [session, selectedObservationDate];
+  List<Object?> get props => [session, birdsMap];
 }
 
 /// Session operation failure state.

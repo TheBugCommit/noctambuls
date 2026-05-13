@@ -47,3 +47,44 @@ final class ResumeSessionExpiredFailure extends SessionFailure {
     StackTrace? stackTrace,
   ]) => this;
 }
+
+final class InvalidParticipantCodeFailure extends SessionFailure {
+  const InvalidParticipantCodeFailure({
+    super.debugMessage = 'The participant code format is invalid',
+    super.statusCode = 400,
+    super.stackTrace,
+  });
+
+  @override
+  InvalidParticipantCodeFailure withDebug(
+    Object error, [
+    StackTrace? stackTrace,
+  ]) => this;
+}
+
+final class SessionLockedFailure extends SessionFailure {
+  const SessionLockedFailure({
+    super.debugMessage = 'Cannot modify a locked or finished session',
+    super.statusCode = 403,
+    super.stackTrace,
+  });
+
+  @override
+  SessionLockedFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      this;
+}
+
+final class ObservationMissingLocationFailure extends SessionFailure {
+  const ObservationMissingLocationFailure({
+    super.debugMessage =
+        'Cannot add observation in incidental session without location',
+    super.statusCode = 403,
+    super.stackTrace,
+  });
+
+  @override
+  ObservationMissingLocationFailure withDebug(
+    Object error, [
+    StackTrace? stackTrace,
+  ]) => this;
+}

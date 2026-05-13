@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ObservationSessionModel {
 
- String get id; String get annotatorId; SessionType get sessionType; bool get isLocked; SyncStatus get syncStatus; DateTime get createdAt; DateTime get updatedAt; bool get isDeleted; TemperatureRange get temperature; WindLevel get wind; SkyCondition get sky; RainLevel get rain; VisibilityLevel get visibility; MoonPresence get moon; DateTime? get startTime; DateTime? get endTime; int? get listeningPoint; GeoPosition? get location; LocationErrorType? get locationError; List<String> get participants;
+ String get id; String get annotatorId; SessionType get sessionType; bool get isLocked; SyncStatus get syncStatus; DateTime get createdAt; DateTime get updatedAt; bool get isDeleted; TemperatureRange get temperature; WindLevel get wind; SkyCondition get sky; RainLevel get rain; VisibilityLevel get visibility; MoonPresence get moon; List<String> get participants; List<ObservationRecordModel> get observations; DateTime? get startTime; DateTime? get endTime; int? get listeningPoint; GeoPosition? get location; LocationErrorType? get locationError;
 /// Create a copy of ObservationSessionModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ObservationSessionModelCopyWith<ObservationSessionModel> get copyWith => _$Obse
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ObservationSessionModel&&(identical(other.id, id) || other.id == id)&&(identical(other.annotatorId, annotatorId) || other.annotatorId == annotatorId)&&(identical(other.sessionType, sessionType) || other.sessionType == sessionType)&&(identical(other.isLocked, isLocked) || other.isLocked == isLocked)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.temperature, temperature) || other.temperature == temperature)&&(identical(other.wind, wind) || other.wind == wind)&&(identical(other.sky, sky) || other.sky == sky)&&(identical(other.rain, rain) || other.rain == rain)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.moon, moon) || other.moon == moon)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.listeningPoint, listeningPoint) || other.listeningPoint == listeningPoint)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationError, locationError) || other.locationError == locationError)&&const DeepCollectionEquality().equals(other.participants, participants));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ObservationSessionModel&&(identical(other.id, id) || other.id == id)&&(identical(other.annotatorId, annotatorId) || other.annotatorId == annotatorId)&&(identical(other.sessionType, sessionType) || other.sessionType == sessionType)&&(identical(other.isLocked, isLocked) || other.isLocked == isLocked)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.temperature, temperature) || other.temperature == temperature)&&(identical(other.wind, wind) || other.wind == wind)&&(identical(other.sky, sky) || other.sky == sky)&&(identical(other.rain, rain) || other.rain == rain)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.moon, moon) || other.moon == moon)&&const DeepCollectionEquality().equals(other.participants, participants)&&const DeepCollectionEquality().equals(other.observations, observations)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.listeningPoint, listeningPoint) || other.listeningPoint == listeningPoint)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationError, locationError) || other.locationError == locationError));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,annotatorId,sessionType,isLocked,syncStatus,createdAt,updatedAt,isDeleted,temperature,wind,sky,rain,visibility,moon,startTime,endTime,listeningPoint,location,locationError,const DeepCollectionEquality().hash(participants)]);
+int get hashCode => Object.hashAll([runtimeType,id,annotatorId,sessionType,isLocked,syncStatus,createdAt,updatedAt,isDeleted,temperature,wind,sky,rain,visibility,moon,const DeepCollectionEquality().hash(participants),const DeepCollectionEquality().hash(observations),startTime,endTime,listeningPoint,location,locationError]);
 
 @override
 String toString() {
-  return 'ObservationSessionModel(id: $id, annotatorId: $annotatorId, sessionType: $sessionType, isLocked: $isLocked, syncStatus: $syncStatus, createdAt: $createdAt, updatedAt: $updatedAt, isDeleted: $isDeleted, temperature: $temperature, wind: $wind, sky: $sky, rain: $rain, visibility: $visibility, moon: $moon, startTime: $startTime, endTime: $endTime, listeningPoint: $listeningPoint, location: $location, locationError: $locationError, participants: $participants)';
+  return 'ObservationSessionModel(id: $id, annotatorId: $annotatorId, sessionType: $sessionType, isLocked: $isLocked, syncStatus: $syncStatus, createdAt: $createdAt, updatedAt: $updatedAt, isDeleted: $isDeleted, temperature: $temperature, wind: $wind, sky: $sky, rain: $rain, visibility: $visibility, moon: $moon, participants: $participants, observations: $observations, startTime: $startTime, endTime: $endTime, listeningPoint: $listeningPoint, location: $location, locationError: $locationError)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ObservationSessionModelCopyWith<$Res>  {
   factory $ObservationSessionModelCopyWith(ObservationSessionModel value, $Res Function(ObservationSessionModel) _then) = _$ObservationSessionModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String annotatorId, SessionType sessionType, bool isLocked, SyncStatus syncStatus, DateTime createdAt, DateTime updatedAt, bool isDeleted, TemperatureRange temperature, WindLevel wind, SkyCondition sky, RainLevel rain, VisibilityLevel visibility, MoonPresence moon, DateTime? startTime, DateTime? endTime, int? listeningPoint, GeoPosition? location, LocationErrorType? locationError, List<String> participants
+ String id, String annotatorId, SessionType sessionType, bool isLocked, SyncStatus syncStatus, DateTime createdAt, DateTime updatedAt, bool isDeleted, TemperatureRange temperature, WindLevel wind, SkyCondition sky, RainLevel rain, VisibilityLevel visibility, MoonPresence moon, List<String> participants, List<ObservationRecordModel> observations, DateTime? startTime, DateTime? endTime, int? listeningPoint, GeoPosition? location, LocationErrorType? locationError
 });
 
 
@@ -62,7 +62,7 @@ class _$ObservationSessionModelCopyWithImpl<$Res>
 
 /// Create a copy of ObservationSessionModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? annotatorId = null,Object? sessionType = null,Object? isLocked = null,Object? syncStatus = null,Object? createdAt = null,Object? updatedAt = null,Object? isDeleted = null,Object? temperature = null,Object? wind = null,Object? sky = null,Object? rain = null,Object? visibility = null,Object? moon = null,Object? startTime = freezed,Object? endTime = freezed,Object? listeningPoint = freezed,Object? location = freezed,Object? locationError = freezed,Object? participants = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? annotatorId = null,Object? sessionType = null,Object? isLocked = null,Object? syncStatus = null,Object? createdAt = null,Object? updatedAt = null,Object? isDeleted = null,Object? temperature = null,Object? wind = null,Object? sky = null,Object? rain = null,Object? visibility = null,Object? moon = null,Object? participants = null,Object? observations = null,Object? startTime = freezed,Object? endTime = freezed,Object? listeningPoint = freezed,Object? location = freezed,Object? locationError = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,annotatorId: null == annotatorId ? _self.annotatorId : annotatorId // ignore: cast_nullable_to_non_nullable
@@ -78,13 +78,14 @@ as WindLevel,sky: null == sky ? _self.sky : sky // ignore: cast_nullable_to_non_
 as SkyCondition,rain: null == rain ? _self.rain : rain // ignore: cast_nullable_to_non_nullable
 as RainLevel,visibility: null == visibility ? _self.visibility : visibility // ignore: cast_nullable_to_non_nullable
 as VisibilityLevel,moon: null == moon ? _self.moon : moon // ignore: cast_nullable_to_non_nullable
-as MoonPresence,startTime: freezed == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
+as MoonPresence,participants: null == participants ? _self.participants : participants // ignore: cast_nullable_to_non_nullable
+as List<String>,observations: null == observations ? _self.observations : observations // ignore: cast_nullable_to_non_nullable
+as List<ObservationRecordModel>,startTime: freezed == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,endTime: freezed == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,listeningPoint: freezed == listeningPoint ? _self.listeningPoint : listeningPoint // ignore: cast_nullable_to_non_nullable
 as int?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as GeoPosition?,locationError: freezed == locationError ? _self.locationError : locationError // ignore: cast_nullable_to_non_nullable
-as LocationErrorType?,participants: null == participants ? _self.participants : participants // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as LocationErrorType?,
   ));
 }
 
@@ -169,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String annotatorId,  SessionType sessionType,  bool isLocked,  SyncStatus syncStatus,  DateTime createdAt,  DateTime updatedAt,  bool isDeleted,  TemperatureRange temperature,  WindLevel wind,  SkyCondition sky,  RainLevel rain,  VisibilityLevel visibility,  MoonPresence moon,  DateTime? startTime,  DateTime? endTime,  int? listeningPoint,  GeoPosition? location,  LocationErrorType? locationError,  List<String> participants)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String annotatorId,  SessionType sessionType,  bool isLocked,  SyncStatus syncStatus,  DateTime createdAt,  DateTime updatedAt,  bool isDeleted,  TemperatureRange temperature,  WindLevel wind,  SkyCondition sky,  RainLevel rain,  VisibilityLevel visibility,  MoonPresence moon,  List<String> participants,  List<ObservationRecordModel> observations,  DateTime? startTime,  DateTime? endTime,  int? listeningPoint,  GeoPosition? location,  LocationErrorType? locationError)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ObservationSessionModel() when $default != null:
-return $default(_that.id,_that.annotatorId,_that.sessionType,_that.isLocked,_that.syncStatus,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.temperature,_that.wind,_that.sky,_that.rain,_that.visibility,_that.moon,_that.startTime,_that.endTime,_that.listeningPoint,_that.location,_that.locationError,_that.participants);case _:
+return $default(_that.id,_that.annotatorId,_that.sessionType,_that.isLocked,_that.syncStatus,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.temperature,_that.wind,_that.sky,_that.rain,_that.visibility,_that.moon,_that.participants,_that.observations,_that.startTime,_that.endTime,_that.listeningPoint,_that.location,_that.locationError);case _:
   return orElse();
 
 }
@@ -190,10 +191,10 @@ return $default(_that.id,_that.annotatorId,_that.sessionType,_that.isLocked,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String annotatorId,  SessionType sessionType,  bool isLocked,  SyncStatus syncStatus,  DateTime createdAt,  DateTime updatedAt,  bool isDeleted,  TemperatureRange temperature,  WindLevel wind,  SkyCondition sky,  RainLevel rain,  VisibilityLevel visibility,  MoonPresence moon,  DateTime? startTime,  DateTime? endTime,  int? listeningPoint,  GeoPosition? location,  LocationErrorType? locationError,  List<String> participants)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String annotatorId,  SessionType sessionType,  bool isLocked,  SyncStatus syncStatus,  DateTime createdAt,  DateTime updatedAt,  bool isDeleted,  TemperatureRange temperature,  WindLevel wind,  SkyCondition sky,  RainLevel rain,  VisibilityLevel visibility,  MoonPresence moon,  List<String> participants,  List<ObservationRecordModel> observations,  DateTime? startTime,  DateTime? endTime,  int? listeningPoint,  GeoPosition? location,  LocationErrorType? locationError)  $default,) {final _that = this;
 switch (_that) {
 case _ObservationSessionModel():
-return $default(_that.id,_that.annotatorId,_that.sessionType,_that.isLocked,_that.syncStatus,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.temperature,_that.wind,_that.sky,_that.rain,_that.visibility,_that.moon,_that.startTime,_that.endTime,_that.listeningPoint,_that.location,_that.locationError,_that.participants);case _:
+return $default(_that.id,_that.annotatorId,_that.sessionType,_that.isLocked,_that.syncStatus,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.temperature,_that.wind,_that.sky,_that.rain,_that.visibility,_that.moon,_that.participants,_that.observations,_that.startTime,_that.endTime,_that.listeningPoint,_that.location,_that.locationError);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +211,10 @@ return $default(_that.id,_that.annotatorId,_that.sessionType,_that.isLocked,_tha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String annotatorId,  SessionType sessionType,  bool isLocked,  SyncStatus syncStatus,  DateTime createdAt,  DateTime updatedAt,  bool isDeleted,  TemperatureRange temperature,  WindLevel wind,  SkyCondition sky,  RainLevel rain,  VisibilityLevel visibility,  MoonPresence moon,  DateTime? startTime,  DateTime? endTime,  int? listeningPoint,  GeoPosition? location,  LocationErrorType? locationError,  List<String> participants)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String annotatorId,  SessionType sessionType,  bool isLocked,  SyncStatus syncStatus,  DateTime createdAt,  DateTime updatedAt,  bool isDeleted,  TemperatureRange temperature,  WindLevel wind,  SkyCondition sky,  RainLevel rain,  VisibilityLevel visibility,  MoonPresence moon,  List<String> participants,  List<ObservationRecordModel> observations,  DateTime? startTime,  DateTime? endTime,  int? listeningPoint,  GeoPosition? location,  LocationErrorType? locationError)?  $default,) {final _that = this;
 switch (_that) {
 case _ObservationSessionModel() when $default != null:
-return $default(_that.id,_that.annotatorId,_that.sessionType,_that.isLocked,_that.syncStatus,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.temperature,_that.wind,_that.sky,_that.rain,_that.visibility,_that.moon,_that.startTime,_that.endTime,_that.listeningPoint,_that.location,_that.locationError,_that.participants);case _:
+return $default(_that.id,_that.annotatorId,_that.sessionType,_that.isLocked,_that.syncStatus,_that.createdAt,_that.updatedAt,_that.isDeleted,_that.temperature,_that.wind,_that.sky,_that.rain,_that.visibility,_that.moon,_that.participants,_that.observations,_that.startTime,_that.endTime,_that.listeningPoint,_that.location,_that.locationError);case _:
   return null;
 
 }
@@ -225,7 +226,7 @@ return $default(_that.id,_that.annotatorId,_that.sessionType,_that.isLocked,_tha
 
 
 class _ObservationSessionModel implements ObservationSessionModel {
-  const _ObservationSessionModel({required this.id, required this.annotatorId, required this.sessionType, required this.isLocked, required this.syncStatus, required this.createdAt, required this.updatedAt, required this.isDeleted, this.temperature = TemperatureRange.belowZero, this.wind = WindLevel.calm, this.sky = SkyCondition.clear, this.rain = RainLevel.none, this.visibility = VisibilityLevel.poor, this.moon = MoonPresence.absent, this.startTime, this.endTime, this.listeningPoint, this.location, this.locationError, final  List<String> participants = const []}): _participants = participants;
+  const _ObservationSessionModel({required this.id, required this.annotatorId, required this.sessionType, required this.isLocked, required this.syncStatus, required this.createdAt, required this.updatedAt, required this.isDeleted, this.temperature = TemperatureRange.belowZero, this.wind = WindLevel.calm, this.sky = SkyCondition.clear, this.rain = RainLevel.none, this.visibility = VisibilityLevel.poor, this.moon = MoonPresence.absent, final  List<String> participants = const [], final  List<ObservationRecordModel> observations = const [], this.startTime, this.endTime, this.listeningPoint, this.location, this.locationError}): _participants = participants,_observations = observations;
   
 
 @override final  String id;
@@ -242,11 +243,6 @@ class _ObservationSessionModel implements ObservationSessionModel {
 @override@JsonKey() final  RainLevel rain;
 @override@JsonKey() final  VisibilityLevel visibility;
 @override@JsonKey() final  MoonPresence moon;
-@override final  DateTime? startTime;
-@override final  DateTime? endTime;
-@override final  int? listeningPoint;
-@override final  GeoPosition? location;
-@override final  LocationErrorType? locationError;
  final  List<String> _participants;
 @override@JsonKey() List<String> get participants {
   if (_participants is EqualUnmodifiableListView) return _participants;
@@ -254,6 +250,18 @@ class _ObservationSessionModel implements ObservationSessionModel {
   return EqualUnmodifiableListView(_participants);
 }
 
+ final  List<ObservationRecordModel> _observations;
+@override@JsonKey() List<ObservationRecordModel> get observations {
+  if (_observations is EqualUnmodifiableListView) return _observations;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_observations);
+}
+
+@override final  DateTime? startTime;
+@override final  DateTime? endTime;
+@override final  int? listeningPoint;
+@override final  GeoPosition? location;
+@override final  LocationErrorType? locationError;
 
 /// Create a copy of ObservationSessionModel
 /// with the given fields replaced by the non-null parameter values.
@@ -265,16 +273,16 @@ _$ObservationSessionModelCopyWith<_ObservationSessionModel> get copyWith => __$O
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ObservationSessionModel&&(identical(other.id, id) || other.id == id)&&(identical(other.annotatorId, annotatorId) || other.annotatorId == annotatorId)&&(identical(other.sessionType, sessionType) || other.sessionType == sessionType)&&(identical(other.isLocked, isLocked) || other.isLocked == isLocked)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.temperature, temperature) || other.temperature == temperature)&&(identical(other.wind, wind) || other.wind == wind)&&(identical(other.sky, sky) || other.sky == sky)&&(identical(other.rain, rain) || other.rain == rain)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.moon, moon) || other.moon == moon)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.listeningPoint, listeningPoint) || other.listeningPoint == listeningPoint)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationError, locationError) || other.locationError == locationError)&&const DeepCollectionEquality().equals(other._participants, _participants));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ObservationSessionModel&&(identical(other.id, id) || other.id == id)&&(identical(other.annotatorId, annotatorId) || other.annotatorId == annotatorId)&&(identical(other.sessionType, sessionType) || other.sessionType == sessionType)&&(identical(other.isLocked, isLocked) || other.isLocked == isLocked)&&(identical(other.syncStatus, syncStatus) || other.syncStatus == syncStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted)&&(identical(other.temperature, temperature) || other.temperature == temperature)&&(identical(other.wind, wind) || other.wind == wind)&&(identical(other.sky, sky) || other.sky == sky)&&(identical(other.rain, rain) || other.rain == rain)&&(identical(other.visibility, visibility) || other.visibility == visibility)&&(identical(other.moon, moon) || other.moon == moon)&&const DeepCollectionEquality().equals(other._participants, _participants)&&const DeepCollectionEquality().equals(other._observations, _observations)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.endTime, endTime) || other.endTime == endTime)&&(identical(other.listeningPoint, listeningPoint) || other.listeningPoint == listeningPoint)&&(identical(other.location, location) || other.location == location)&&(identical(other.locationError, locationError) || other.locationError == locationError));
 }
 
 
 @override
-int get hashCode => Object.hashAll([runtimeType,id,annotatorId,sessionType,isLocked,syncStatus,createdAt,updatedAt,isDeleted,temperature,wind,sky,rain,visibility,moon,startTime,endTime,listeningPoint,location,locationError,const DeepCollectionEquality().hash(_participants)]);
+int get hashCode => Object.hashAll([runtimeType,id,annotatorId,sessionType,isLocked,syncStatus,createdAt,updatedAt,isDeleted,temperature,wind,sky,rain,visibility,moon,const DeepCollectionEquality().hash(_participants),const DeepCollectionEquality().hash(_observations),startTime,endTime,listeningPoint,location,locationError]);
 
 @override
 String toString() {
-  return 'ObservationSessionModel(id: $id, annotatorId: $annotatorId, sessionType: $sessionType, isLocked: $isLocked, syncStatus: $syncStatus, createdAt: $createdAt, updatedAt: $updatedAt, isDeleted: $isDeleted, temperature: $temperature, wind: $wind, sky: $sky, rain: $rain, visibility: $visibility, moon: $moon, startTime: $startTime, endTime: $endTime, listeningPoint: $listeningPoint, location: $location, locationError: $locationError, participants: $participants)';
+  return 'ObservationSessionModel(id: $id, annotatorId: $annotatorId, sessionType: $sessionType, isLocked: $isLocked, syncStatus: $syncStatus, createdAt: $createdAt, updatedAt: $updatedAt, isDeleted: $isDeleted, temperature: $temperature, wind: $wind, sky: $sky, rain: $rain, visibility: $visibility, moon: $moon, participants: $participants, observations: $observations, startTime: $startTime, endTime: $endTime, listeningPoint: $listeningPoint, location: $location, locationError: $locationError)';
 }
 
 
@@ -285,7 +293,7 @@ abstract mixin class _$ObservationSessionModelCopyWith<$Res> implements $Observa
   factory _$ObservationSessionModelCopyWith(_ObservationSessionModel value, $Res Function(_ObservationSessionModel) _then) = __$ObservationSessionModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String annotatorId, SessionType sessionType, bool isLocked, SyncStatus syncStatus, DateTime createdAt, DateTime updatedAt, bool isDeleted, TemperatureRange temperature, WindLevel wind, SkyCondition sky, RainLevel rain, VisibilityLevel visibility, MoonPresence moon, DateTime? startTime, DateTime? endTime, int? listeningPoint, GeoPosition? location, LocationErrorType? locationError, List<String> participants
+ String id, String annotatorId, SessionType sessionType, bool isLocked, SyncStatus syncStatus, DateTime createdAt, DateTime updatedAt, bool isDeleted, TemperatureRange temperature, WindLevel wind, SkyCondition sky, RainLevel rain, VisibilityLevel visibility, MoonPresence moon, List<String> participants, List<ObservationRecordModel> observations, DateTime? startTime, DateTime? endTime, int? listeningPoint, GeoPosition? location, LocationErrorType? locationError
 });
 
 
@@ -302,7 +310,7 @@ class __$ObservationSessionModelCopyWithImpl<$Res>
 
 /// Create a copy of ObservationSessionModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? annotatorId = null,Object? sessionType = null,Object? isLocked = null,Object? syncStatus = null,Object? createdAt = null,Object? updatedAt = null,Object? isDeleted = null,Object? temperature = null,Object? wind = null,Object? sky = null,Object? rain = null,Object? visibility = null,Object? moon = null,Object? startTime = freezed,Object? endTime = freezed,Object? listeningPoint = freezed,Object? location = freezed,Object? locationError = freezed,Object? participants = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? annotatorId = null,Object? sessionType = null,Object? isLocked = null,Object? syncStatus = null,Object? createdAt = null,Object? updatedAt = null,Object? isDeleted = null,Object? temperature = null,Object? wind = null,Object? sky = null,Object? rain = null,Object? visibility = null,Object? moon = null,Object? participants = null,Object? observations = null,Object? startTime = freezed,Object? endTime = freezed,Object? listeningPoint = freezed,Object? location = freezed,Object? locationError = freezed,}) {
   return _then(_ObservationSessionModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,annotatorId: null == annotatorId ? _self.annotatorId : annotatorId // ignore: cast_nullable_to_non_nullable
@@ -318,13 +326,14 @@ as WindLevel,sky: null == sky ? _self.sky : sky // ignore: cast_nullable_to_non_
 as SkyCondition,rain: null == rain ? _self.rain : rain // ignore: cast_nullable_to_non_nullable
 as RainLevel,visibility: null == visibility ? _self.visibility : visibility // ignore: cast_nullable_to_non_nullable
 as VisibilityLevel,moon: null == moon ? _self.moon : moon // ignore: cast_nullable_to_non_nullable
-as MoonPresence,startTime: freezed == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
+as MoonPresence,participants: null == participants ? _self._participants : participants // ignore: cast_nullable_to_non_nullable
+as List<String>,observations: null == observations ? _self._observations : observations // ignore: cast_nullable_to_non_nullable
+as List<ObservationRecordModel>,startTime: freezed == startTime ? _self.startTime : startTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,endTime: freezed == endTime ? _self.endTime : endTime // ignore: cast_nullable_to_non_nullable
 as DateTime?,listeningPoint: freezed == listeningPoint ? _self.listeningPoint : listeningPoint // ignore: cast_nullable_to_non_nullable
 as int?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as GeoPosition?,locationError: freezed == locationError ? _self.locationError : locationError // ignore: cast_nullable_to_non_nullable
-as LocationErrorType?,participants: null == participants ? _self._participants : participants // ignore: cast_nullable_to_non_nullable
-as List<String>,
+as LocationErrorType?,
   ));
 }
 

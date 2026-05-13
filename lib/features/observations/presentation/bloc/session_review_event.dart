@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
-import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
+import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart';
 import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
@@ -15,9 +15,17 @@ sealed class SessionReviewEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class ReviewSessionStreamUpdated extends SessionReviewEvent {
+  const ReviewSessionStreamUpdated(this.session);
+
+  final ObservationSession session;
+
+  @override
+  List<Object?> get props => [session];
+}
+
 class ReviewUpdateProperties extends SessionReviewEvent {
   const ReviewUpdateProperties({
-    required this.observations,
     this.temperature,
     this.wind,
     this.sky,
@@ -36,7 +44,6 @@ class ReviewUpdateProperties extends SessionReviewEvent {
   final MoonPresence? moon;
   final int? listeningPoint;
   final GeoPosition? location;
-  final List<ObservationRecord> observations;
 
   @override
   List<Object?> get props => [
@@ -48,17 +55,11 @@ class ReviewUpdateProperties extends SessionReviewEvent {
     moon,
     listeningPoint,
     location,
-    observations,
   ];
 }
 
 class ReviewValidateData extends SessionReviewEvent {
-  const ReviewValidateData(this.observations);
-
-  final List<ObservationRecord> observations;
-
-  @override
-  List<Object?> get props => [observations];
+  const ReviewValidateData();
 }
 
 class ReviewAddParticipant extends SessionReviewEvent {
@@ -80,12 +81,7 @@ class ReviewRemoveParticipant extends SessionReviewEvent {
 }
 
 class ReviewFinalizeSession extends SessionReviewEvent {
-  const ReviewFinalizeSession(this.observations);
-
-  final List<ObservationRecord> observations;
-
-  @override
-  List<Object?> get props => [observations];
+  const ReviewFinalizeSession();
 }
 
 class ReviewDeleteSession extends SessionReviewEvent {}

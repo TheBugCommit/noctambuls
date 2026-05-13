@@ -1,20 +1,18 @@
 import 'package:drift/drift.dart';
 import 'package:noctambuls/core/database/converters.dart';
 
-mixin OfflineFirstMixin on Table {
+mixin AuditableMixin on Table {
   TextColumn get id => text()();
-
-  IntColumn get syncStatus => integer().map(const SyncStatusConverter())();
 
   DateTimeColumn get createdAt => dateTime()();
 
   DateTimeColumn get updatedAt => dateTime()();
 
-  BoolColumn get isDeleted => boolean()();
+  BoolColumn get isDeleted => boolean().withDefault(const Constant(false))();
 }
 
 @DataClassName('SessionEntityData')
-class SessionsTable extends Table with OfflineFirstMixin {
+class SessionsTable extends Table with AuditableMixin {
   TextColumn get annotatorId => text()();
 
   IntColumn get sessionType => integer().map(const SessionTypeConverter())();
@@ -69,12 +67,14 @@ class SessionsTable extends Table with OfflineFirstMixin {
 
   BoolColumn get isLocked => boolean()();
 
+  IntColumn get syncStatus => integer().map(const SyncStatusConverter())();
+
   @override
   Set<Column> get primaryKey => {id};
 }
 
 @DataClassName('ObservationEntityData')
-class ObservationsTable extends Table with OfflineFirstMixin {
+class ObservationsTable extends Table with AuditableMixin {
   TextColumn get sessionId => text().references(SessionsTable, #id)();
 
   TextColumn get speciesId => text()();
@@ -108,9 +108,6 @@ class ObservationsTable extends Table with OfflineFirstMixin {
       integer().map(const LocationSourceConverter()).nullable()();
 
   RealColumn get bearing => real()();
-
-  IntColumn get validationStatus =>
-      integer().map(const ValidationStatusConverter())();
 
   @override
   Set<Column> get primaryKey => {id};

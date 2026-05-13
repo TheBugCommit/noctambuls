@@ -6,7 +6,7 @@ import 'package:noctambuls/features/observations/domain/entities/observation_ses
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/failures/session_failures.dart';
-import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
+import 'package:noctambuls/features/observations/domain/repositories/session_repository.dart';
 import 'package:uuid/uuid.dart';
 
 class CreateSessionUseCase {
@@ -15,7 +15,7 @@ class CreateSessionUseCase {
     required this.locationService,
   });
 
-  final ObservationRepository observationRepository;
+  final SessionRepository observationRepository;
   final LocationService locationService;
 
   Future<Result<Unit>> call(SessionType sessionType, String annotatorId) async {
@@ -32,9 +32,7 @@ class CreateSessionUseCase {
           annotatorId,
         );
 
-        final saveResult = await observationRepository.createSession(
-          newSession,
-        );
+        final saveResult = await observationRepository.saveSession(newSession);
 
         if (saveResult.isOk && _needsFreshLocation(sessionType, newSession)) {
           _fetchAndUpdateLocationInBackground(newSession);
@@ -63,7 +61,7 @@ class CreateSessionUseCase {
       );
     }
 
-    final now = DateTime.now();
+    final now = DateTime.now().toUtc();
 
     return ObservationSession(
       id: const Uuid().v4(),
@@ -88,12 +86,8 @@ class CreateSessionUseCase {
 
     await freshResult.when(
       success: (pos) async {
-        final updatedSession = session.copyWith(
-          location: pos,
-          updatedAt: DateTime.now(),
-        );
-
-        await observationRepository.updateSession(updatedSession);
+        final updatedSession = session.updateLocation(location: pos);
+        await observationRepository.saveSession(updatedSession);
       },
       failure: (failure) async {
         var errorType = LocationErrorType.timeoutNoSignal;
@@ -103,13 +97,12 @@ class CreateSessionUseCase {
           errorType = LocationErrorType.gpsDisabled;
         }
 
-        final failedSession = session.copyWith(
+        final failedSession = session.updateLocation(
           location: session.location,
           locationError: errorType,
-          updatedAt: DateTime.now(),
         );
 
-        await observationRepository.updateSession(failedSession);
+        await observationRepository.saveSession(failedSession);
       },
     );
   }

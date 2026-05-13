@@ -105,6 +105,7 @@ class ObservationFormBloc
       locationError: event.locationError,
       notes: event.notes,
       existingRecord: event.existingRecord,
+      newGlobalDate: event.newGlobalDate,
     );
 
     result.when(

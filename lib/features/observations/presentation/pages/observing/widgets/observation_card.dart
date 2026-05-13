@@ -14,8 +14,8 @@ import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/bird_scientific_name.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_record.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -70,8 +70,8 @@ class _ObservationCardState extends State<ObservationCard>
   Future<void> _animateAndDelete() async {
     await _animationController.reverse();
     if (mounted) {
-      context.read<SessionObservationBloc>().add(
-        DeleteRecord(widget.record.id),
+      context.read<ObservingSessionBloc>().add(
+        DeleteObservingRecord(widget.record.id),
       );
     }
   }
@@ -128,8 +128,8 @@ class _ObservationCardState extends State<ObservationCard>
               extentRatio: 0.25,
               dismissible: DismissiblePane(
                 onDismissed: () {
-                  context.read<SessionObservationBloc>().add(
-                    DeleteRecord(widget.record.id),
+                  context.read<ObservingSessionBloc>().add(
+                    DeleteObservingRecord(widget.record.id),
                   );
                 },
               ),

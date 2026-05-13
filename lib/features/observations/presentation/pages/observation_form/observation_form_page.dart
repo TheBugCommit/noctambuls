@@ -36,34 +36,21 @@ import 'package:noctambuls/l10n/app_localizations.dart';
 class ObservationFormArgs {
   const ObservationFormArgs({
     required this.session,
-    this.globalDate,
-    this.onGlobalDateChanged,
     this.existingRecord,
   });
 
   final ObservationSession session;
-
-  /// Pre-selected date for new observations (incidental sessions only).
-  final DateTime? globalDate;
-
-  /// Callback to propagate date changes back to the observing page state.
-  final void Function(DateTime)? onGlobalDateChanged;
-
   final ObservationRecord? existingRecord;
 }
 
 class ObservationFormPage extends StatefulWidget {
   const ObservationFormPage({
     required this.session,
-    this.globalDate,
-    this.onGlobalDateChanged,
     this.existingRecord,
     super.key,
   });
 
   final ObservationSession session;
-  final DateTime? globalDate;
-  final void Function(DateTime)? onGlobalDateChanged;
   final ObservationRecord? existingRecord;
 
   @override
@@ -81,6 +68,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
   late DateTime _endTime;
   double? _selectedBearing;
   String? _selectedSpeciesId;
+  bool _hasChangedGlobalDate = false;
 
   // Location state (incidental sessions only)
   bool _isAtLocation = false;
@@ -146,10 +134,10 @@ class _ObservationFormPageState extends State<ObservationFormPage>
     }
 
     if (widget.existingRecord != null) {
-      _startTime = widget.existingRecord!.startTime;
-      _endTime = widget.existingRecord!.endTime;
+      _startTime = widget.existingRecord!.startTime.toLocal();
+      _endTime = widget.existingRecord!.endTime.toLocal();
     } else if (widget.session.canEditObservationDate) {
-      final date = widget.globalDate ?? now;
+      final date = widget.session.startTime?.toLocal() ?? now;
       final initial = DateTime(
         date.year,
         date.month,
@@ -160,9 +148,9 @@ class _ObservationFormPageState extends State<ObservationFormPage>
       _startTime = initial;
       _endTime = initial;
     } else {
-      final min = widget.session.observationTimeMin;
-      final max = widget.session.observationTimeMax ?? now;
-      final base = widget.session.startTime ?? now;
+      final min = widget.session.observationTimeMin?.toLocal();
+      final max = widget.session.observationTimeMax?.toLocal() ?? now;
+      final base = widget.session.startTime?.toLocal() ?? now;
       var initial = DateTime(
         base.year,
         base.month,
@@ -220,9 +208,10 @@ class _ObservationFormPageState extends State<ObservationFormPage>
           bearing: _selectedBearing!,
           location: state.geoPosition,
           locationError: state.locationError,
-          startTime: _startTime,
-          endTime: _endTime,
+          startTime: _startTime.toUtc(),
+          endTime: _endTime.toUtc(),
           existingRecord: widget.existingRecord,
+          newGlobalDate: _hasChangedGlobalDate ? _startTime.toUtc() : null,
         ),
       );
     }
@@ -343,7 +332,11 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                         },
                         onGlobalDateChanged: isReadOnly
                             ? null
-                            : widget.onGlobalDateChanged,
+                            : (date) {
+                                setState(() {
+                                  _hasChangedGlobalDate = true;
+                                });
+                              },
                       ),
                       const SizedBox(height: AppDimensions.lg),
 

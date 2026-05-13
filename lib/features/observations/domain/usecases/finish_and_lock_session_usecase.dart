@@ -1,24 +1,14 @@
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
-import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
-import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
+import 'package:noctambuls/features/observations/domain/repositories/session_repository.dart';
 
 class FinishAndLockSessionUseCase {
   FinishAndLockSessionUseCase(this.repository);
 
-  final ObservationRepository repository;
+  final SessionRepository repository;
 
   Future<Result<Unit>> call(ObservationSession session) async {
-    if (!session.isFinished) {
-      final updated = session.copyWith(
-        isLocked: true,
-        syncStatus: SyncStatus.pending,
-        updatedAt: DateTime.now(),
-      );
-
-      return repository.updateSession(updated);
-    }
-
-    return const Ok(Unit.instance);
+    final updated = session.finishAndLock();
+    return repository.saveSession(updated);
   }
 }

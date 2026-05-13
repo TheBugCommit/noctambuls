@@ -56,6 +56,7 @@ final class SaveObservationRequested extends ObservationFormEvent {
     this.locationError,
     this.notes,
     this.existingRecord,
+    this.newGlobalDate,
   });
 
   final String sessionId;
@@ -69,6 +70,7 @@ final class SaveObservationRequested extends ObservationFormEvent {
   final LocationErrorType? locationError;
   final DateTime startTime;
   final DateTime endTime;
+  final DateTime? newGlobalDate;
 
   @override
   List<Object?> get props => [
@@ -83,5 +85,6 @@ final class SaveObservationRequested extends ObservationFormEvent {
     locationError,
     startTime,
     endTime,
+    newGlobalDate,
   ];
 }

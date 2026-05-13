@@ -184,9 +184,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get activeSessionTitle => 'Sessió en curs';
 
   @override
-  String startedAt(String time) {
-    return 'Observant des de $time';
-  }
+  String get startedAt => 'Observant des de les ';
 
   @override
   String get errorSessionAlreadyExists =>

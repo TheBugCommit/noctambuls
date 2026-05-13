@@ -15,6 +15,7 @@ import 'package:noctambuls/core/presentation/widgets/app_button.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/bottom_nav_bar.dart';
+import 'package:noctambuls/features/guide/domain/entities/bird.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/widgets/catalog_sync_requiered_view.dart';
@@ -23,9 +24,6 @@ import 'package:noctambuls/features/observations/domain/enums/location_error_typ
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_state.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_bloc.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_event.dart';
-import 'package:noctambuls/features/observations/presentation/bloc/session_observation_state.dart';
 import 'package:noctambuls/features/observations/presentation/cubit/stopwatch_cubit.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observation_form/observation_form_page.dart';
 import 'package:noctambuls/features/observations/presentation/pages/observing/widgets/empty_observations.dart';
@@ -165,7 +163,7 @@ class _ObservingPageState extends State<ObservingPage>
           if (prev is ObservingSessionActive &&
               curr is ObservingSessionActive) {
             return prev.session != curr.session ||
-                prev.selectedObservationDate != curr.selectedObservationDate;
+                prev.birdsMap != curr.birdsMap;
           }
           return false;
         },
@@ -179,7 +177,7 @@ class _ObservingPageState extends State<ObservingPage>
           }
 
           return _ObservingContent(
-            session: state.session,
+            activeState: state,
             onOpenMap: () => _openMap(state.session),
           );
         },
@@ -189,10 +187,12 @@ class _ObservingPageState extends State<ObservingPage>
 }
 
 class _ObservingContent extends StatelessWidget {
-  const _ObservingContent({required this.session, required this.onOpenMap});
+  const _ObservingContent({required this.activeState, required this.onOpenMap});
 
-  final ObservationSession session;
+  final ObservingSessionActive activeState;
   final VoidCallback onOpenMap;
+
+  ObservationSession get session => activeState.session;
 
   Future<void> _confirmDelete(BuildContext context) async {
     final l10n = AppLocalizations.of(context)!;
@@ -231,10 +231,7 @@ class _ObservingContent extends StatelessWidget {
 
   Future<void> _pickGlobalDate(BuildContext context) async {
     final now = DateTime.now();
-    final lifecycleState =
-        context.read<ObservingSessionBloc>().state as ObservingSessionActive;
-    final current =
-        lifecycleState.selectedObservationDate ?? session.startTime ?? now;
+    final current = session.startTime?.toLocal() ?? now;
 
     final pickedDate = await showDatePicker(
       context: context,
@@ -244,37 +241,17 @@ class _ObservingContent extends StatelessWidget {
     );
     if (!context.mounted || pickedDate == null) return;
 
-    context.read<ObservingSessionBloc>().add(ChangeObservingDate(pickedDate));
-    context.read<SessionObservationBloc>().add(
-      UpdateAllObservationsDate(pickedDate),
+    context.read<ObservingSessionBloc>().add(
+      ChangeSessionDate(pickedDate.toUtc()),
     );
   }
 
   void _openForm(BuildContext context) {
-    final lifecycleState =
-        context.read<ObservingSessionBloc>().state as ObservingSessionActive;
-    final globalDate = session.canEditObservationDate
-        ? (lifecycleState.selectedObservationDate ??
-              session.startTime ??
-              DateTime.now())
-        : null;
-
     unawaited(
       context.push(
         AppRoutes.observationForm,
         extra: ObservationFormArgs(
           session: session,
-          globalDate: globalDate,
-          onGlobalDateChanged: session.canEditObservationDate
-              ? (date) {
-                  context.read<ObservingSessionBloc>().add(
-                    ChangeObservingDate(date),
-                  );
-                  context.read<SessionObservationBloc>().add(
-                    UpdateAllObservationsDate(date),
-                  );
-                }
-              : null,
         ),
       ),
     );
@@ -324,7 +301,10 @@ class _ObservingContent extends StatelessWidget {
             Expanded(
               child: showCatalogRequiredView
                   ? const CatalogSyncRequiredView()
-                  : _ObservationListBody(session: session),
+                  : _ObservationListBody(
+                      session: session,
+                      birdsMap: activeState.birdsMap,
+                    ),
             ),
           ],
         ),
@@ -332,6 +312,7 @@ class _ObservingContent extends StatelessWidget {
       floatingActionButton: AppButtonFab.large(
         onPressed: () => _openForm(context),
         icon: Icons.add,
+        isDisabled: activeState.birdsMap.isEmpty,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: BottomNavBar(
@@ -363,7 +344,7 @@ class _ObservingContent extends StatelessWidget {
     if (!session.isIncidental) {
       return BlocProvider(
         create: (_) => StopwatchCubit(
-          startTime: session.startTime ?? DateTime.now(),
+          startTime: session.startTime ?? DateTime.now().toUtc(),
         ),
         child: content,
       );
@@ -374,46 +355,41 @@ class _ObservingContent extends StatelessWidget {
 }
 
 class _ObservationListBody extends StatelessWidget {
-  const _ObservationListBody({required this.session});
+  const _ObservationListBody({required this.session, required this.birdsMap});
 
   final ObservationSession session;
+  final Map<String, Bird> birdsMap;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SessionObservationBloc, SessionObservationState>(
-      builder: (context, state) {
-        if (state is ObservationsLoaded) {
-          if (state.observations.isEmpty) {
-            return const EmptyObservations();
-          }
+    final observations = session.observations;
 
-          final missingLocationsCount = session.isIncidental
-              ? state.observations.where((o) => o.location == null).length
-              : 0;
+    if (observations.isEmpty) {
+      return const EmptyObservations();
+    }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(AppDimensions.md),
-            itemCount: state.observations.length,
-            itemBuilder: (context, index) {
-              final record = state.observations[index];
-              final bird = state.birdsMap[record.speciesId];
+    return ListView.builder(
+      padding: const EdgeInsets.all(AppDimensions.md),
+      itemCount: observations.length,
+      itemBuilder: (context, index) {
+        final record = observations[index];
+        final bird = birdsMap[record.speciesId];
 
-              final isMissingLocation =
-                  session.isIncidental && record.location == null;
+        final isMissingLocation =
+            session.isIncidental && record.location == null;
 
-              return ObservationCardWithError(
-                showError: isMissingLocation,
-                child: ObservationCard(
-                  record: record,
-                  bird: bird!,
-                  session: session,
-                ),
-              );
-            },
-          );
+        if (bird == null) {
+          return const Center(child: CircularProgressIndicator());
         }
 
-        return const Center(child: CircularProgressIndicator());
+        return ObservationCardWithError(
+          showError: isMissingLocation,
+          child: ObservationCard(
+            record: record,
+            bird: bird,
+            session: session,
+          ),
+        );
       },
     );
   }
