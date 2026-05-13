@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -39,7 +37,9 @@ void initAuthFeature() {
     )
     // authDio: no interceptors — used by auth endpoints only
     ..registerLazySingleton<Dio>(
-      () => Dio()..options.baseUrl = EnvConfig.serverUrl,
+      () => Dio()
+        ..options.baseUrl = EnvConfig.serverUrl
+        ..options.headers['X-API-KEY'] = EnvConfig.serverApiKey,
       instanceName: 'authDio',
     )
     ..registerLazySingleton<AuthRemoteDataSource>(
@@ -61,6 +61,7 @@ void initAuthFeature() {
         final interceptor = sl<AuthInterceptor>();
         final dio = Dio()
           ..options.baseUrl = EnvConfig.serverUrl
+          ..options.headers['X-API-KEY'] = EnvConfig.serverApiKey
           ..interceptors.add(interceptor);
         interceptor.dio = dio;
         return dio;
@@ -78,7 +79,7 @@ void initAuthFeature() {
         providers: {
           GoogleAuthCredentials: GoogleAuthDataSourceImpl(
             googleSignIn: GoogleSignIn(
-              clientId: Platform.isIOS ? EnvConfig.iosClientId : null,
+              //clientId: Platform.isIOS ? EnvConfig.iosClientId : null,
               serverClientId: EnvConfig.googleWebClientId,
             ),
           ),

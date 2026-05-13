@@ -1,53 +1,58 @@
-class EnvConfig {
-  EnvConfig._();
+import 'package:envied/envied.dart';
 
-  static const String env = String.fromEnvironment('env');
+part 'env_config.g.dart';
 
-  static const String serverUrl = String.fromEnvironment('server_url');
+@Envied(path: 'env/.env')
+abstract class EnvConfig {
+  @EnviedField(varName: 'ENV')
+  static const String env = _EnvConfig.env;
 
-  static const String googleWebClientId = String.fromEnvironment(
-    'google_web_client_id',
-  );
+  @EnviedField(varName: 'SERVER_URL')
+  static const String serverUrl = _EnvConfig.serverUrl;
 
-  static const String iosClientId = String.fromEnvironment('ios_client_id');
+  @EnviedField(varName: 'GOOGLE_WEB_CLIENT_ID', obfuscate: true)
+  static final String googleWebClientId = _EnvConfig.googleWebClientId;
 
-  static const String termsAndConditionsUrl = String.fromEnvironment(
-    'terms_url',
-  );
+  @EnviedField(varName: 'SERVER_API_KEY', obfuscate: true)
+  static final String serverApiKey = _EnvConfig.serverApiKey;
 
-  static const String privacyUrl = String.fromEnvironment('privacy_url');
+  @EnviedField(varName: 'TERMS_URL')
+  static const String termsAndConditionsUrl = _EnvConfig.termsAndConditionsUrl;
 
-  static const String helpUrl = String.fromEnvironment('help_url');
+  @EnviedField(varName: 'PRIVACY_URL')
+  static const String privacyUrl = _EnvConfig.privacyUrl;
 
-  static const String aboutUrl = String.fromEnvironment('about_url');
+  @EnviedField(varName: 'ABOUT_URL')
+  static const String aboutUrl = _EnvConfig.aboutUrl;
 
-  static const String packageName = String.fromEnvironment('package_name');
+  @EnviedField(varName: 'HELP_URL')
+  static const String helpUrl = _EnvConfig.helpUrl;
 
-  static const String openStreetMapCopyright = String.fromEnvironment(
-    'open_street_map_copyright',
-  );
+  @EnviedField(varName: 'PACKAGE_NAME')
+  static const String packageName = _EnvConfig.packageName;
 
-  static const String openTopoMapAbout = String.fromEnvironment(
-    'open_topo_map_about',
-  );
+  @EnviedField(varName: 'OPEN_STREET_MAP_COPYRIGHT')
+  static const String openStreetMapCopyright =
+      _EnvConfig.openStreetMapCopyright;
 
-  static const String openStreetMapTiles = String.fromEnvironment(
-    'open_street_map_tiles',
-  );
+  @EnviedField(varName: 'OPEN_TOPO_MAP_ABOUT')
+  static const String openTopoMapAbout = _EnvConfig.openTopoMapAbout;
 
-  static const String openTopoMapTiles = String.fromEnvironment(
-    'open_topo_map_tiles',
-  );
+  @EnviedField(varName: 'OPEN_STREET_MAP_TILES')
+  static const String openStreetMapTiles = _EnvConfig.openStreetMapTiles;
 
-  static const String openTopoMapTextAttribute = String.fromEnvironment(
-    'open_topo_map_text_attribute',
-  );
+  @EnviedField(varName: 'OPEN_TOPO_MAP_TILES')
+  static const String openTopoMapTiles = _EnvConfig.openTopoMapTiles;
 
-  static const String openTopoMapStyleAttribute = String.fromEnvironment(
-    'open_topo_map_style_attribute',
-  );
+  @EnviedField(varName: 'OPEN_TOPO_MAP_TEXT_ATTRIBUTE')
+  static const String openTopoMapTextAttribute =
+      _EnvConfig.openTopoMapTextAttribute;
 
-  static const String openStreetMapTextAttribute = String.fromEnvironment(
-    'open_street_map_text_atribute',
-  );
+  @EnviedField(varName: 'OPEN_TOPO_MAP_STYLE_ATTRIBUTE')
+  static const String openTopoMapStyleAttribute =
+      _EnvConfig.openTopoMapStyleAttribute;
+
+  @EnviedField(varName: 'OPEN_STREET_MAP_TEXT_ATRIBUTE')
+  static const String openStreetMapTextAttribute =
+      _EnvConfig.openStreetMapTextAttribute;
 }
