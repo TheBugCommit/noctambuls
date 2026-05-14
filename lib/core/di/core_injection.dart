@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/data/services/audio_player_service_impl.dart';
 import 'package:noctambuls/core/data/services/connectivity_service_impl.dart';
 import 'package:noctambuls/core/data/services/external_link_service_impl.dart';
+import 'package:noctambuls/core/data/services/local_notification_service_impl.dart';
 import 'package:noctambuls/core/data/services/location_service_impl.dart';
 import 'package:noctambuls/core/data/services/phone_settings_service_impl.dart';
 import 'package:noctambuls/core/data/services/share_service_impl.dart';
@@ -10,6 +11,7 @@ import 'package:noctambuls/core/domain/services/audio_player_service.dart';
 import 'package:noctambuls/core/domain/services/connectivity_service.dart';
 import 'package:noctambuls/core/domain/services/external_link_service.dart';
 import 'package:noctambuls/core/domain/services/location_service.dart';
+import 'package:noctambuls/core/domain/services/notification_service.dart';
 import 'package:noctambuls/core/domain/services/phone_settings_service.dart';
 import 'package:noctambuls/core/domain/services/share_service.dart';
 import 'package:noctambuls/core/domain/usecases/audio/listen_audio_state_usecase.dart';
@@ -18,6 +20,7 @@ import 'package:noctambuls/core/domain/usecases/audio/toggle_audio_usecase.dart'
 import 'package:noctambuls/core/domain/usecases/connectivity/check_internet_connection_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/location/capture_location_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/location/watch_location_usecase.dart';
+import 'package:noctambuls/core/domain/usecases/notifications/show_local_notifications_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/phone_settings/open_app_settings_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/phone_settings/open_phone_location_settings_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/share/share_text_usecase.dart';
@@ -62,6 +65,10 @@ void initCore() {
     ..registerLazySingleton(() => CaptureLocationUseCase(locationService: sl()))
     ..registerLazySingleton(() => CheckInternetConnectionUseCase(sl()))
     ..registerLazySingleton(() => WatchLocationUseCase(sl()))
+    ..registerLazySingleton(() => ShowLocalNotificationUseCase(sl()))
+    ..registerLazySingleton<NotificationService>(
+      () => LocalNotificationServiceImpl(sl(), sl()),
+    )
     ..registerFactory(
       () => UrlBloc(openUrlUseCase: sl(), logger: sl<IAppLogger>()),
     )

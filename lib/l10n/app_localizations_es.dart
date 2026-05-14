@@ -379,6 +379,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settingsTermsOfUse => 'Términos de uso';
 
   @override
+  String get settingsNotifications => 'Notificaciones';
+
+  @override
+  String get notificationChannelSyncName => 'Sincronización';
+
+  @override
   String get settingsDeleteAccount => 'Eliminar cuenta';
 
   @override
@@ -564,6 +570,28 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get syncErrorUnknown => 'Error desconocido al sincronizar.';
+
+  @override
+  String get notificationSyncPendingTitle => 'Sincronización pendiente';
+
+  @override
+  String notificationSyncPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Tienes $count sesiones pendientes de subir. Revísalas cuando puedas.',
+      one: 'Tienes 1 sesión pendiente de subir. Revísala cuando puedas.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationSyncErrorTitle => 'Error de sincronización';
+
+  @override
+  String get notificationSyncErrorBody =>
+      'No hemos podido conectar con el servidor para subir tus observaciones.';
 
   @override
   String get stopAndReviewTitle => 'Finalizar observación';

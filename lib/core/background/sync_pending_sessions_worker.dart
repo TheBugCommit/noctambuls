@@ -1,9 +1,12 @@
 import 'package:flutter/widgets.dart';
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/di/injection_container.dart' as di;
+import 'package:noctambuls/core/domain/entities/app_notification.dart';
+import 'package:noctambuls/core/domain/usecases/notifications/show_local_notifications_usecase.dart';
 import 'package:noctambuls/features/auth/data/datasources/token_local_datasource.dart';
 import 'package:noctambuls/features/observations/data/datasources/session_local_datasource.dart';
 import 'package:noctambuls/features/observations/domain/usecases/sync_pending_sessions_usecase.dart';
+import 'package:noctambuls/features/settings/domain/usecases/get_notifications_enabled_usecase.dart';
 import 'package:workmanager/workmanager.dart';
 
 const syncPendingTaskName = 'syncPendingSessionsTask';
@@ -34,21 +37,31 @@ void callbackDispatcher() {
         final unsyncedSessions = await localDataSource.getPendingSessions();
 
         if (unsyncedSessions.isNotEmpty) {
-          /*_showLocalNotification(
-              title: 'Sincronització pendent',
-              body:
-                  'Tens ${unsyncedSessions.length} sessions pendents de pujar. Revisa-les quan puguis.',
-            );*/
+          final isEnabled = di.sl<GetNotificationsEnabledUseCase>().call();
+
+          if (isEnabled) {
+            await di.sl<ShowLocalNotificationUseCase>().call(
+              ShowLocalNotificationParams(
+                id: 101,
+                notification: SyncPendingNotification(unsyncedSessions.length),
+              ),
+            );
+          }
         }
       } finally {
         await dbManager.closeDatabase();
       }
     } catch (_) {
-      /*_showLocalNotification(
-          title: 'Error de sincronització',
-          body:
-              'No hem pogut connectar amb el servidor per pujar les teves observacions.',
-        );*/
+      final isEnabled = di.sl<GetNotificationsEnabledUseCase>().call();
+
+      if (isEnabled) {
+        await di.sl<ShowLocalNotificationUseCase>().call(
+          const ShowLocalNotificationParams(
+            id: 102,
+            notification: SyncErrorNotification(),
+          ),
+        );
+      }
     }
 
     return true;

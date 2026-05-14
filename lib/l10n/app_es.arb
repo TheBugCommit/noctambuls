@@ -139,6 +139,8 @@
     "settingsLegalTitle": "Legal",
     "settingsPrivacyPolicy": "Política de privacidad",
     "settingsTermsOfUse": "Términos de uso",
+    "settingsNotifications": "Notificaciones",
+    "notificationChannelSyncName": "Sincronización",
 
     "settingsDeleteAccount": "Eliminar cuenta",
     "settingsDeleteAccountDialogTitle": "¿Eliminar cuenta?",
@@ -219,6 +221,16 @@
     "syncErrorNetwork": "Sin conexión. Se reintentará más tarde.",
     "syncErrorServer": "Se ha producido un error en el servidor.",
     "syncErrorUnknown": "Error desconocido al sincronizar.",
+
+    "notificationSyncPendingTitle": "Sincronización pendiente",
+    "notificationSyncPendingBody": "{count, plural, =1{Tienes 1 sesión pendiente de subir. Revísala cuando puedas.} other{Tienes {count} sesiones pendientes de subir. Revísalas cuando puedas.}}",
+    "@notificationSyncPendingBody": {
+        "placeholders": {
+          "count": { "type": "int" }
+        }
+    },
+    "notificationSyncErrorTitle": "Error de sincronización",
+    "notificationSyncErrorBody": "No hemos podido conectar con el servidor para subir tus observaciones.",
 
     "stopAndReviewTitle": "Finalizar observación",
     "stopAndReviewMessage": "¿Estás seguro de que quieres detener el tiempo y pasar a revisar los datos?",

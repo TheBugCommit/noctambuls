@@ -794,6 +794,18 @@ abstract class AppLocalizations {
   /// **'Termes d\'ús'**
   String get settingsTermsOfUse;
 
+  /// No description provided for @settingsNotifications.
+  ///
+  /// In ca, this message translates to:
+  /// **'Notificacions'**
+  String get settingsNotifications;
+
+  /// No description provided for @notificationChannelSyncName.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sincronització'**
+  String get notificationChannelSyncName;
+
   /// No description provided for @settingsDeleteAccount.
   ///
   /// In ca, this message translates to:
@@ -1141,6 +1153,30 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Error desconegut a l\'hora de sincronitzar.'**
   String get syncErrorUnknown;
+
+  /// No description provided for @notificationSyncPendingTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sincronització pendent'**
+  String get notificationSyncPendingTitle;
+
+  /// No description provided for @notificationSyncPendingBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'{count, plural, =1{Tens 1 sessió pendent de pujar. Revisa-la quan puguis.} other{Tens {count} sessions pendents de pujar. Revisa-les quan puguis.}}'**
+  String notificationSyncPendingBody(int count);
+
+  /// No description provided for @notificationSyncErrorTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error de sincronització'**
+  String get notificationSyncErrorTitle;
+
+  /// No description provided for @notificationSyncErrorBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'No hem pogut connectar amb el servidor per pujar les teves observacions.'**
+  String get notificationSyncErrorBody;
 
   /// No description provided for @stopAndReviewTitle.
   ///

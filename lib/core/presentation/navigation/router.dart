@@ -36,6 +36,7 @@ import 'package:noctambuls/features/observations/presentation/pages/review/revie
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:noctambuls/features/profile/presentation/pages/edit_profile/edit_profile_page.dart';
 import 'package:noctambuls/features/profile/presentation/pages/profile/profile_page.dart';
+import 'package:noctambuls/features/settings/presentation/bloc/notification_settings_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/pages/settings_page.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
@@ -152,6 +153,7 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           providers: [
             BlocProvider(create: (context) => sl<UrlBloc>()),
             BlocProvider(create: (context) => sl<ShareBloc>()),
+            BlocProvider(create: (context) => sl<NotificationSettingsBloc>())
           ],
           child: const SettingsPage(),
         );

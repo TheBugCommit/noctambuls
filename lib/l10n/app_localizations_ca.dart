@@ -378,6 +378,12 @@ class AppLocalizationsCa extends AppLocalizations {
   String get settingsTermsOfUse => 'Termes d\'ús';
 
   @override
+  String get settingsNotifications => 'Notificacions';
+
+  @override
+  String get notificationChannelSyncName => 'Sincronització';
+
+  @override
   String get settingsDeleteAccount => 'Eliminar compte';
 
   @override
@@ -562,6 +568,27 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get syncErrorUnknown => 'Error desconegut a l\'hora de sincronitzar.';
+
+  @override
+  String get notificationSyncPendingTitle => 'Sincronització pendent';
+
+  @override
+  String notificationSyncPendingBody(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Tens $count sessions pendents de pujar. Revisa-les quan puguis.',
+      one: 'Tens 1 sessió pendent de pujar. Revisa-la quan puguis.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get notificationSyncErrorTitle => 'Error de sincronització';
+
+  @override
+  String get notificationSyncErrorBody =>
+      'No hem pogut connectar amb el servidor per pujar les teves observacions.';
 
   @override
   String get stopAndReviewTitle => 'Finalitzar observació';

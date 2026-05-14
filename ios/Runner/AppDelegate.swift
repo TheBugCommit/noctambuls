@@ -1,5 +1,7 @@
 import Flutter
 import UIKit
+import flutter_local_notifications
+import workmanager
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
@@ -8,10 +10,16 @@ import UIKit
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     WorkmanagerPlugin.registerBGAppRefreshTask(withIdentifier: "syncPendingSessionsTask")
+    if #available(iOS 10.0, *) {
+          UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+    }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
+      FlutterLocalNotificationsPlugin.setPluginRegistrantCallback { (registry) in
+            GeneratedPluginRegistrant.register(with: registry)
+      }
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
   }
 }

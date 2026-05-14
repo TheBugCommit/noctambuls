@@ -142,6 +142,8 @@
     "settingsLegalTitle": "Legal",
     "settingsPrivacyPolicy": "Política de privacitat",
     "settingsTermsOfUse": "Termes d'ús",
+    "settingsNotifications": "Notificacions",
+    "notificationChannelSyncName": "Sincronització",
 
     "settingsDeleteAccount": "Eliminar compte",
     "settingsDeleteAccountDialogTitle": "Eliminar compte?",
@@ -224,6 +226,16 @@
     "syncErrorNetwork": "Sense connexió. Es reintentarà més tard.",
     "syncErrorServer": "S'ha produït un error al servidor.",
     "syncErrorUnknown": "Error desconegut a l'hora de sincronitzar.",
+
+    "notificationSyncPendingTitle": "Sincronització pendent",
+    "notificationSyncPendingBody": "{count, plural, =1{Tens 1 sessió pendent de pujar. Revisa-la quan puguis.} other{Tens {count} sessions pendents de pujar. Revisa-les quan puguis.}}",
+    "@notificationSyncPendingBody": {
+        "placeholders": {
+          "count": { "type": "int" }
+        }
+    },
+    "notificationSyncErrorTitle": "Error de sincronització",
+    "notificationSyncErrorBody": "No hem pogut connectar amb el servidor per pujar les teves observacions.",
 
     "stopAndReviewTitle": "Finalitzar observació",
     "stopAndReviewMessage": "Estàs segur que vols aturar el temps i passar a revisar les dades?",
