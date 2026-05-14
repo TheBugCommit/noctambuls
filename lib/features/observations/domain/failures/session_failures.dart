@@ -88,3 +88,51 @@ final class ObservationMissingLocationFailure extends SessionFailure {
     StackTrace? stackTrace,
   ]) => this;
 }
+
+final class SyncNetworkFailure extends SessionFailure {
+  const SyncNetworkFailure({
+    super.debugMessage = 'Sync failed: no network connection',
+    super.statusCode = 0,
+    super.stackTrace,
+  });
+
+  @override
+  SyncNetworkFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      SyncNetworkFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}
+
+final class SyncServerFailure extends SessionFailure {
+  const SyncServerFailure({
+    super.debugMessage = 'Sync failed: server error',
+    super.statusCode = 500,
+    super.stackTrace,
+  });
+
+  @override
+  SyncServerFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      SyncServerFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}
+
+final class FetchHistoryFailure extends SessionFailure {
+  const FetchHistoryFailure({
+    super.debugMessage = 'Could not fetch session history',
+    super.statusCode = 500,
+    super.stackTrace,
+  });
+
+  @override
+  FetchHistoryFailure withDebug(Object error, [StackTrace? stackTrace]) =>
+      FetchHistoryFailure(
+        debugMessage: error.toString(),
+        statusCode: statusCode,
+        stackTrace: stackTrace,
+      );
+}

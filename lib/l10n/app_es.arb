@@ -211,8 +211,14 @@
     "statusReviewing": "En revisión",
     "statusDraft": "Borrador",
     "statusPending": "Pendiente",
+    "statusSyncing": "Sincronizando",
     "statusSynced": "Sincronizado",
     "statusSyncError": "Error de red",
+
+    "syncErrorValidation": "Error en los datos.",
+    "syncErrorNetwork": "Sin conexión. Se reintentará más tarde.",
+    "syncErrorServer": "Se ha producido un error en el servidor.",
+    "syncErrorUnknown": "Error desconocido al sincronizar.",
 
     "stopAndReviewTitle": "Finalizar observación",
     "stopAndReviewMessage": "¿Estás seguro de que quieres detener el tiempo y pasar a revisar los datos?",

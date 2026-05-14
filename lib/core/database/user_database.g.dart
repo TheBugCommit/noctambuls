@@ -285,6 +285,15 @@ class $SessionsTableTable extends SessionsTable
         requiredDuringInsert: true,
       ).withConverter<SyncStatus>($SessionsTableTable.$convertersyncStatus);
   @override
+  late final GeneratedColumnWithTypeConverter<SyncErrorType?, int> syncError =
+      GeneratedColumn<int>(
+        'sync_error',
+        aliasedName,
+        true,
+        type: DriftSqlType.int,
+        requiredDuringInsert: false,
+      ).withConverter<SyncErrorType?>($SessionsTableTable.$convertersyncErrorn);
+  @override
   List<GeneratedColumn> get $columns => [
     id,
     createdAt,
@@ -311,6 +320,7 @@ class $SessionsTableTable extends SessionsTable
     locationSource,
     isLocked,
     syncStatus,
+    syncError,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -562,6 +572,12 @@ class $SessionsTableTable extends SessionsTable
           data['${effectivePrefix}sync_status'],
         )!,
       ),
+      syncError: $SessionsTableTable.$convertersyncErrorn.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}sync_error'],
+        ),
+      ),
     );
   }
 
@@ -598,6 +614,10 @@ class $SessionsTableTable extends SessionsTable
   );
   static JsonTypeConverter2<SyncStatus, int, int> $convertersyncStatus =
       const SyncStatusConverter();
+  static JsonTypeConverter2<SyncErrorType, int, int> $convertersyncError =
+      const SyncErrorTypeConverter();
+  static JsonTypeConverter2<SyncErrorType?, int?, int?> $convertersyncErrorn =
+      JsonTypeConverter2.asNullable($convertersyncError);
 }
 
 class SessionEntityData extends DataClass
@@ -627,6 +647,7 @@ class SessionEntityData extends DataClass
   final LocationSource? locationSource;
   final bool isLocked;
   final SyncStatus syncStatus;
+  final SyncErrorType? syncError;
   const SessionEntityData({
     required this.id,
     required this.createdAt,
@@ -653,6 +674,7 @@ class SessionEntityData extends DataClass
     this.locationSource,
     required this.isLocked,
     required this.syncStatus,
+    this.syncError,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -738,6 +760,11 @@ class SessionEntityData extends DataClass
         $SessionsTableTable.$convertersyncStatus.toSql(syncStatus),
       );
     }
+    if (!nullToAbsent || syncError != null) {
+      map['sync_error'] = Variable<int>(
+        $SessionsTableTable.$convertersyncErrorn.toSql(syncError),
+      );
+    }
     return map;
   }
 
@@ -790,6 +817,9 @@ class SessionEntityData extends DataClass
           : Value(locationSource),
       isLocked: Value(isLocked),
       syncStatus: Value(syncStatus),
+      syncError: syncError == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncError),
     );
   }
 
@@ -846,6 +876,9 @@ class SessionEntityData extends DataClass
       syncStatus: $SessionsTableTable.$convertersyncStatus.fromJson(
         serializer.fromJson<int>(json['syncStatus']),
       ),
+      syncError: $SessionsTableTable.$convertersyncErrorn.fromJson(
+        serializer.fromJson<int?>(json['syncError']),
+      ),
     );
   }
   @override
@@ -897,6 +930,9 @@ class SessionEntityData extends DataClass
       'syncStatus': serializer.toJson<int>(
         $SessionsTableTable.$convertersyncStatus.toJson(syncStatus),
       ),
+      'syncError': serializer.toJson<int?>(
+        $SessionsTableTable.$convertersyncErrorn.toJson(syncError),
+      ),
     };
   }
 
@@ -926,6 +962,7 @@ class SessionEntityData extends DataClass
     Value<LocationSource?> locationSource = const Value.absent(),
     bool? isLocked,
     SyncStatus? syncStatus,
+    Value<SyncErrorType?> syncError = const Value.absent(),
   }) => SessionEntityData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -962,6 +999,7 @@ class SessionEntityData extends DataClass
         : this.locationSource,
     isLocked: isLocked ?? this.isLocked,
     syncStatus: syncStatus ?? this.syncStatus,
+    syncError: syncError.present ? syncError.value : this.syncError,
   );
   SessionEntityData copyWithCompanion(SessionsTableCompanion data) {
     return SessionEntityData(
@@ -1010,6 +1048,7 @@ class SessionEntityData extends DataClass
       syncStatus: data.syncStatus.present
           ? data.syncStatus.value
           : this.syncStatus,
+      syncError: data.syncError.present ? data.syncError.value : this.syncError,
     );
   }
 
@@ -1040,7 +1079,8 @@ class SessionEntityData extends DataClass
           ..write('locationError: $locationError, ')
           ..write('locationSource: $locationSource, ')
           ..write('isLocked: $isLocked, ')
-          ..write('syncStatus: $syncStatus')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('syncError: $syncError')
           ..write(')'))
         .toString();
   }
@@ -1072,6 +1112,7 @@ class SessionEntityData extends DataClass
     locationSource,
     isLocked,
     syncStatus,
+    syncError,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -1101,7 +1142,8 @@ class SessionEntityData extends DataClass
           other.locationError == this.locationError &&
           other.locationSource == this.locationSource &&
           other.isLocked == this.isLocked &&
-          other.syncStatus == this.syncStatus);
+          other.syncStatus == this.syncStatus &&
+          other.syncError == this.syncError);
 }
 
 class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
@@ -1130,6 +1172,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
   final Value<LocationSource?> locationSource;
   final Value<bool> isLocked;
   final Value<SyncStatus> syncStatus;
+  final Value<SyncErrorType?> syncError;
   final Value<int> rowid;
   const SessionsTableCompanion({
     this.id = const Value.absent(),
@@ -1157,6 +1200,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.locationSource = const Value.absent(),
     this.isLocked = const Value.absent(),
     this.syncStatus = const Value.absent(),
+    this.syncError = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   SessionsTableCompanion.insert({
@@ -1185,6 +1229,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.locationSource = const Value.absent(),
     required bool isLocked,
     required SyncStatus syncStatus,
+    this.syncError = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt),
@@ -1219,6 +1264,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Expression<int>? locationSource,
     Expression<bool>? isLocked,
     Expression<int>? syncStatus,
+    Expression<int>? syncError,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1247,6 +1293,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       if (locationSource != null) 'location_source': locationSource,
       if (isLocked != null) 'is_locked': isLocked,
       if (syncStatus != null) 'sync_status': syncStatus,
+      if (syncError != null) 'sync_error': syncError,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1277,6 +1324,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Value<LocationSource?>? locationSource,
     Value<bool>? isLocked,
     Value<SyncStatus>? syncStatus,
+    Value<SyncErrorType?>? syncError,
     Value<int>? rowid,
   }) {
     return SessionsTableCompanion(
@@ -1305,6 +1353,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       locationSource: locationSource ?? this.locationSource,
       isLocked: isLocked ?? this.isLocked,
       syncStatus: syncStatus ?? this.syncStatus,
+      syncError: syncError ?? this.syncError,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1409,6 +1458,11 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
         $SessionsTableTable.$convertersyncStatus.toSql(syncStatus.value),
       );
     }
+    if (syncError.present) {
+      map['sync_error'] = Variable<int>(
+        $SessionsTableTable.$convertersyncErrorn.toSql(syncError.value),
+      );
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1443,6 +1497,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
           ..write('locationSource: $locationSource, ')
           ..write('isLocked: $isLocked, ')
           ..write('syncStatus: $syncStatus, ')
+          ..write('syncError: $syncError, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3217,6 +3272,276 @@ class SessionParticipantsTableCompanion
   }
 }
 
+class $SyncMetadataTableTable extends SyncMetadataTable
+    with TableInfo<$SyncMetadataTableTable, SyncMetadataData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncMetadataTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _sinceMeta = const VerificationMeta('since');
+  @override
+  late final GeneratedColumn<String> since = GeneratedColumn<String>(
+    'since',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _currentPageMeta = const VerificationMeta(
+    'currentPage',
+  );
+  @override
+  late final GeneratedColumn<int> currentPage = GeneratedColumn<int>(
+    'current_page',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(0),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [key, since, currentPage];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sync_metadata';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SyncMetadataData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('key')) {
+      context.handle(
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('since')) {
+      context.handle(
+        _sinceMeta,
+        since.isAcceptableOrUnknown(data['since']!, _sinceMeta),
+      );
+    }
+    if (data.containsKey('current_page')) {
+      context.handle(
+        _currentPageMeta,
+        currentPage.isAcceptableOrUnknown(
+          data['current_page']!,
+          _currentPageMeta,
+        ),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {key};
+  @override
+  SyncMetadataData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncMetadataData(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      since: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}since'],
+      ),
+      currentPage: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}current_page'],
+      )!,
+    );
+  }
+
+  @override
+  $SyncMetadataTableTable createAlias(String alias) {
+    return $SyncMetadataTableTable(attachedDatabase, alias);
+  }
+}
+
+class SyncMetadataData extends DataClass
+    implements Insertable<SyncMetadataData> {
+  final String key;
+  final String? since;
+  final int currentPage;
+  const SyncMetadataData({
+    required this.key,
+    this.since,
+    required this.currentPage,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    if (!nullToAbsent || since != null) {
+      map['since'] = Variable<String>(since);
+    }
+    map['current_page'] = Variable<int>(currentPage);
+    return map;
+  }
+
+  SyncMetadataTableCompanion toCompanion(bool nullToAbsent) {
+    return SyncMetadataTableCompanion(
+      key: Value(key),
+      since: since == null && nullToAbsent
+          ? const Value.absent()
+          : Value(since),
+      currentPage: Value(currentPage),
+    );
+  }
+
+  factory SyncMetadataData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncMetadataData(
+      key: serializer.fromJson<String>(json['key']),
+      since: serializer.fromJson<String?>(json['since']),
+      currentPage: serializer.fromJson<int>(json['currentPage']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'since': serializer.toJson<String?>(since),
+      'currentPage': serializer.toJson<int>(currentPage),
+    };
+  }
+
+  SyncMetadataData copyWith({
+    String? key,
+    Value<String?> since = const Value.absent(),
+    int? currentPage,
+  }) => SyncMetadataData(
+    key: key ?? this.key,
+    since: since.present ? since.value : this.since,
+    currentPage: currentPage ?? this.currentPage,
+  );
+  SyncMetadataData copyWithCompanion(SyncMetadataTableCompanion data) {
+    return SyncMetadataData(
+      key: data.key.present ? data.key.value : this.key,
+      since: data.since.present ? data.since.value : this.since,
+      currentPage: data.currentPage.present
+          ? data.currentPage.value
+          : this.currentPage,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncMetadataData(')
+          ..write('key: $key, ')
+          ..write('since: $since, ')
+          ..write('currentPage: $currentPage')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, since, currentPage);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncMetadataData &&
+          other.key == this.key &&
+          other.since == this.since &&
+          other.currentPage == this.currentPage);
+}
+
+class SyncMetadataTableCompanion extends UpdateCompanion<SyncMetadataData> {
+  final Value<String> key;
+  final Value<String?> since;
+  final Value<int> currentPage;
+  final Value<int> rowid;
+  const SyncMetadataTableCompanion({
+    this.key = const Value.absent(),
+    this.since = const Value.absent(),
+    this.currentPage = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SyncMetadataTableCompanion.insert({
+    required String key,
+    this.since = const Value.absent(),
+    this.currentPage = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : key = Value(key);
+  static Insertable<SyncMetadataData> custom({
+    Expression<String>? key,
+    Expression<String>? since,
+    Expression<int>? currentPage,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (since != null) 'since': since,
+      if (currentPage != null) 'current_page': currentPage,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SyncMetadataTableCompanion copyWith({
+    Value<String>? key,
+    Value<String?>? since,
+    Value<int>? currentPage,
+    Value<int>? rowid,
+  }) {
+    return SyncMetadataTableCompanion(
+      key: key ?? this.key,
+      since: since ?? this.since,
+      currentPage: currentPage ?? this.currentPage,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (since.present) {
+      map['since'] = Variable<String>(since.value);
+    }
+    if (currentPage.present) {
+      map['current_page'] = Variable<int>(currentPage.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncMetadataTableCompanion(')
+          ..write('key: $key, ')
+          ..write('since: $since, ')
+          ..write('currentPage: $currentPage, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$UserDatabase extends GeneratedDatabase {
   _$UserDatabase(QueryExecutor e) : super(e);
   $UserDatabaseManager get managers => $UserDatabaseManager(this);
@@ -3228,6 +3553,8 @@ abstract class _$UserDatabase extends GeneratedDatabase {
   );
   late final $SessionParticipantsTableTable sessionParticipantsTable =
       $SessionParticipantsTableTable(this);
+  late final $SyncMetadataTableTable syncMetadataTable =
+      $SyncMetadataTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3237,6 +3564,7 @@ abstract class _$UserDatabase extends GeneratedDatabase {
     observationsTable,
     userProfileTable,
     sessionParticipantsTable,
+    syncMetadataTable,
   ];
 }
 
@@ -3267,6 +3595,7 @@ typedef $$SessionsTableTableCreateCompanionBuilder =
       Value<LocationSource?> locationSource,
       required bool isLocked,
       required SyncStatus syncStatus,
+      Value<SyncErrorType?> syncError,
       Value<int> rowid,
     });
 typedef $$SessionsTableTableUpdateCompanionBuilder =
@@ -3296,6 +3625,7 @@ typedef $$SessionsTableTableUpdateCompanionBuilder =
       Value<LocationSource?> locationSource,
       Value<bool> isLocked,
       Value<SyncStatus> syncStatus,
+      Value<SyncErrorType?> syncError,
       Value<int> rowid,
     });
 
@@ -3508,6 +3838,12 @@ class $$SessionsTableTableFilterComposer
         builder: (column) => ColumnWithTypeConverterFilters(column),
       );
 
+  ColumnWithTypeConverterFilters<SyncErrorType?, SyncErrorType, int>
+  get syncError => $composableBuilder(
+    column: $table.syncError,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
+  );
+
   Expression<bool> observationsTableRefs(
     Expression<bool> Function($$ObservationsTableTableFilterComposer f) f,
   ) {
@@ -3694,6 +4030,11 @@ class $$SessionsTableTableOrderingComposer
     column: $table.syncStatus,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<int> get syncError => $composableBuilder(
+    column: $table.syncError,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SessionsTableTableAnnotationComposer
@@ -3806,6 +4147,9 @@ class $$SessionsTableTableAnnotationComposer
         builder: (column) => column,
       );
 
+  GeneratedColumnWithTypeConverter<SyncErrorType?, int> get syncError =>
+      $composableBuilder(column: $table.syncError, builder: (column) => column);
+
   Expression<T> observationsTableRefs<T extends Object>(
     Expression<T> Function($$ObservationsTableTableAnnotationComposer a) f,
   ) {
@@ -3916,6 +4260,7 @@ class $$SessionsTableTableTableManager
                 Value<LocationSource?> locationSource = const Value.absent(),
                 Value<bool> isLocked = const Value.absent(),
                 Value<SyncStatus> syncStatus = const Value.absent(),
+                Value<SyncErrorType?> syncError = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion(
                 id: id,
@@ -3943,6 +4288,7 @@ class $$SessionsTableTableTableManager
                 locationSource: locationSource,
                 isLocked: isLocked,
                 syncStatus: syncStatus,
+                syncError: syncError,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -3972,6 +4318,7 @@ class $$SessionsTableTableTableManager
                 Value<LocationSource?> locationSource = const Value.absent(),
                 required bool isLocked,
                 required SyncStatus syncStatus,
+                Value<SyncErrorType?> syncError = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion.insert(
                 id: id,
@@ -3999,6 +4346,7 @@ class $$SessionsTableTableTableManager
                 locationSource: locationSource,
                 isLocked: isLocked,
                 syncStatus: syncStatus,
+                syncError: syncError,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -5227,6 +5575,183 @@ typedef $$SessionParticipantsTableTableProcessedTableManager =
       SessionParticipantData,
       PrefetchHooks Function({bool sessionId})
     >;
+typedef $$SyncMetadataTableTableCreateCompanionBuilder =
+    SyncMetadataTableCompanion Function({
+      required String key,
+      Value<String?> since,
+      Value<int> currentPage,
+      Value<int> rowid,
+    });
+typedef $$SyncMetadataTableTableUpdateCompanionBuilder =
+    SyncMetadataTableCompanion Function({
+      Value<String> key,
+      Value<String?> since,
+      Value<int> currentPage,
+      Value<int> rowid,
+    });
+
+class $$SyncMetadataTableTableFilterComposer
+    extends Composer<_$UserDatabase, $SyncMetadataTableTable> {
+  $$SyncMetadataTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get since => $composableBuilder(
+    column: $table.since,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get currentPage => $composableBuilder(
+    column: $table.currentPage,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SyncMetadataTableTableOrderingComposer
+    extends Composer<_$UserDatabase, $SyncMetadataTableTable> {
+  $$SyncMetadataTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get since => $composableBuilder(
+    column: $table.since,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get currentPage => $composableBuilder(
+    column: $table.currentPage,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SyncMetadataTableTableAnnotationComposer
+    extends Composer<_$UserDatabase, $SyncMetadataTableTable> {
+  $$SyncMetadataTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<String> get since =>
+      $composableBuilder(column: $table.since, builder: (column) => column);
+
+  GeneratedColumn<int> get currentPage => $composableBuilder(
+    column: $table.currentPage,
+    builder: (column) => column,
+  );
+}
+
+class $$SyncMetadataTableTableTableManager
+    extends
+        RootTableManager<
+          _$UserDatabase,
+          $SyncMetadataTableTable,
+          SyncMetadataData,
+          $$SyncMetadataTableTableFilterComposer,
+          $$SyncMetadataTableTableOrderingComposer,
+          $$SyncMetadataTableTableAnnotationComposer,
+          $$SyncMetadataTableTableCreateCompanionBuilder,
+          $$SyncMetadataTableTableUpdateCompanionBuilder,
+          (
+            SyncMetadataData,
+            BaseReferences<
+              _$UserDatabase,
+              $SyncMetadataTableTable,
+              SyncMetadataData
+            >,
+          ),
+          SyncMetadataData,
+          PrefetchHooks Function()
+        > {
+  $$SyncMetadataTableTableTableManager(
+    _$UserDatabase db,
+    $SyncMetadataTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SyncMetadataTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SyncMetadataTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SyncMetadataTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> key = const Value.absent(),
+                Value<String?> since = const Value.absent(),
+                Value<int> currentPage = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SyncMetadataTableCompanion(
+                key: key,
+                since: since,
+                currentPage: currentPage,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String key,
+                Value<String?> since = const Value.absent(),
+                Value<int> currentPage = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SyncMetadataTableCompanion.insert(
+                key: key,
+                since: since,
+                currentPage: currentPage,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SyncMetadataTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$UserDatabase,
+      $SyncMetadataTableTable,
+      SyncMetadataData,
+      $$SyncMetadataTableTableFilterComposer,
+      $$SyncMetadataTableTableOrderingComposer,
+      $$SyncMetadataTableTableAnnotationComposer,
+      $$SyncMetadataTableTableCreateCompanionBuilder,
+      $$SyncMetadataTableTableUpdateCompanionBuilder,
+      (
+        SyncMetadataData,
+        BaseReferences<
+          _$UserDatabase,
+          $SyncMetadataTableTable,
+          SyncMetadataData
+        >,
+      ),
+      SyncMetadataData,
+      PrefetchHooks Function()
+    >;
 
 class $UserDatabaseManager {
   final _$UserDatabase _db;
@@ -5242,4 +5767,6 @@ class $UserDatabaseManager {
         _db,
         _db.sessionParticipantsTable,
       );
+  $$SyncMetadataTableTableTableManager get syncMetadataTable =>
+      $$SyncMetadataTableTableTableManager(_db, _db.syncMetadataTable);
 }

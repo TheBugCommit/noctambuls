@@ -545,10 +545,25 @@ class AppLocalizationsEs extends AppLocalizations {
   String get statusPending => 'Pendiente';
 
   @override
+  String get statusSyncing => 'Sincronizando';
+
+  @override
   String get statusSynced => 'Sincronizado';
 
   @override
   String get statusSyncError => 'Error de red';
+
+  @override
+  String get syncErrorValidation => 'Error en los datos.';
+
+  @override
+  String get syncErrorNetwork => 'Sin conexión. Se reintentará más tarde.';
+
+  @override
+  String get syncErrorServer => 'Se ha producido un error en el servidor.';
+
+  @override
+  String get syncErrorUnknown => 'Error desconocido al sincronizar.';
 
   @override
   String get stopAndReviewTitle => 'Finalizar observación';

@@ -69,6 +69,9 @@ class SessionsTable extends Table with AuditableMixin {
 
   IntColumn get syncStatus => integer().map(const SyncStatusConverter())();
 
+  IntColumn get syncError =>
+      integer().map(const SyncErrorTypeConverter()).nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -176,6 +179,21 @@ class UserProfileTable extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+}
+
+@DataClassName('SyncMetadataData')
+class SyncMetadataTable extends Table {
+  @override
+  String get tableName => 'sync_metadata';
+
+  TextColumn get key => text()();
+
+  TextColumn get since => text().nullable()();
+
+  IntColumn get currentPage => integer().withDefault(const Constant(0))();
+
+  @override
+  Set<Column> get primaryKey => {key};
 }
 
 @DataClassName('CatalogMetadataData')

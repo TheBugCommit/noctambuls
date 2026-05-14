@@ -9,6 +9,7 @@ import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart
 import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
+import 'package:noctambuls/features/observations/domain/enums/sync_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/temperature_range.dart';
 import 'package:noctambuls/features/observations/domain/enums/visibility_level.dart';
@@ -40,6 +41,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
     int? listeningPoint,
     GeoPosition? location,
     LocationErrorType? locationError,
+    SyncErrorType? syncError,
   }) = _ObservationSessionModel;
 
   factory ObservationSessionModel.fromEntity(ObservationSession entity) {
@@ -64,6 +66,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
           .toList(),
       isLocked: entity.isLocked,
       syncStatus: entity.syncStatus,
+      syncError: entity.syncError,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       isDeleted: entity.isDeleted,
@@ -107,6 +110,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
       observations: observations,
       isLocked: data.isLocked,
       syncStatus: data.syncStatus,
+      syncError: data.syncError,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       isDeleted: data.isDeleted,
@@ -135,6 +139,7 @@ extension ObservationSessionModelX on ObservationSessionModel {
       observations: observations.map((obs) => obs.toDomain()).toList(),
       isLocked: isLocked,
       syncStatus: syncStatus,
+      syncError: syncError,
       createdAt: createdAt,
       updatedAt: updatedAt,
       isDeleted: isDeleted,

@@ -11,6 +11,7 @@ extension ObservationSessionExtension on ObservationSession {
     return switch (syncStatus) {
       SyncStatus.draft => l10n.statusDraft,
       SyncStatus.pending => l10n.statusPending,
+      SyncStatus.syncing => l10n.statusSyncing,
       SyncStatus.synced => l10n.statusSynced,
       SyncStatus.error => l10n.statusSyncError,
     };
@@ -24,6 +25,7 @@ extension ObservationSessionExtension on ObservationSession {
     return switch (syncStatus) {
       SyncStatus.draft => colorScheme.surfaceContainerHighest,
       SyncStatus.pending => colorScheme.secondaryContainer,
+      SyncStatus.syncing => colorScheme.tertiaryContainer,
       SyncStatus.synced => colorScheme.primaryContainer,
       SyncStatus.error => colorScheme.errorContainer,
     };
@@ -37,6 +39,7 @@ extension ObservationSessionExtension on ObservationSession {
     return switch (syncStatus) {
       SyncStatus.draft => colorScheme.onSurfaceVariant,
       SyncStatus.pending => colorScheme.onSecondaryContainer,
+      SyncStatus.syncing => colorScheme.onTertiaryContainer,
       SyncStatus.synced => colorScheme.primary,
       SyncStatus.error => colorScheme.onErrorContainer,
     };
@@ -49,6 +52,7 @@ extension ObservationSessionExtension on ObservationSession {
     return switch (syncStatus) {
       SyncStatus.draft => Icons.edit_note,
       SyncStatus.pending => Icons.cloud_upload_outlined,
+      SyncStatus.syncing => Icons.sync,
       SyncStatus.synced => Icons.cloud_done_outlined,
       SyncStatus.error => Icons.error_outline,
     };

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/constants/app_deeplinks.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
+import 'package:noctambuls/features/observations/presentation/pages/review/qr_scanner_page.dart';
+import 'package:noctambuls/features/observations/presentation/pages/review/widgets/adaptative_manual_code.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class ParticipantsSection extends StatelessWidget {
@@ -23,7 +26,20 @@ class ParticipantsSection extends StatelessWidget {
 
     final l10n = AppLocalizations.of(context)!;
 
-    final code = await context.push<String>(AppRoutes.qrScanner);
+    final code = await context.push<String>(
+      AppRoutes.qrScanner,
+      extra: QrScannerArgs(
+        title: l10n.scannerTitle,
+        helperText: l10n.scannerHelperText,
+        manualEntryModalBuilder: (context) => const AdaptiveManualCodeModal(),
+        validator: (rawValue) {
+          final sanitizedValue = rawValue.replaceAll('#', '%23');
+          final uri = Uri.tryParse(sanitizedValue);
+          if (uri == null || !AppDeepLinks.isValidDeepLink(uri)) return null;
+          return AppDeepLinks.extractParticipantCode(uri);
+        },
+      ),
+    );
 
     if (!context.mounted) return;
 

@@ -6,6 +6,7 @@ import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart
 import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
+import 'package:noctambuls/features/observations/domain/enums/sync_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/temperature_range.dart';
 import 'package:noctambuls/features/observations/domain/enums/visibility_level.dart';
@@ -29,6 +30,26 @@ class SyncStatusConverter extends TypeConverter<SyncStatus, int>
 
   @override
   int toJson(SyncStatus value) => toSql(value);
+}
+
+class SyncErrorTypeConverter extends TypeConverter<SyncErrorType, int>
+    with JsonTypeConverter2<SyncErrorType, int, int> {
+  const SyncErrorTypeConverter();
+
+  @override
+  SyncErrorType fromSql(int fromDb) => SyncErrorType.values.firstWhere(
+    (s) => s.value == fromDb,
+    orElse: () => SyncErrorType.unknown,
+  );
+
+  @override
+  int toSql(SyncErrorType value) => value.value;
+
+  @override
+  SyncErrorType fromJson(int json) => fromSql(json);
+
+  @override
+  int toJson(SyncErrorType value) => toSql(value);
 }
 
 class SessionTypeConverter extends TypeConverter<SessionType, int>

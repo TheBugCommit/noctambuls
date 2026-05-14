@@ -3,6 +3,8 @@ import 'package:noctambuls/core/database/user_database.dart';
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/features/observations/data/models/observation_record_model.dart';
 import 'package:noctambuls/features/observations/data/models/observation_session_model.dart';
+import 'package:noctambuls/features/observations/domain/enums/sync_error_type.dart';
+import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 
 abstract class SessionLocalDataSource {
   Future<void> save(ObservationSessionModel session);
@@ -18,6 +20,30 @@ abstract class SessionLocalDataSource {
   Stream<ObservationSessionModel?> watchActiveSession();
 
   Stream<ObservationSessionModel?> watchSessionById(String id);
+
+  Future<List<ObservationSessionModel>> getPendingSessions();
+
+  Future<void> bulkUpsertSessions(List<ObservationSessionModel> sessions);
+
+  // Updates syncStatus and optional error message in bulk.
+  // Record key = sessionId, value = (newStatus, errorMessage).
+  Future<void> bulkUpdateSyncStatuses(
+    Map<String, (SyncStatus, SyncErrorType?)> updates,
+  );
+
+  Future<void> saveSyncMetadata(
+    String key, {
+    String? since,
+    int? currentPage,
+  });
+
+  Future<({String? since, int currentPage})> getSyncMetadata(String key);
+
+  Stream<List<ObservationSessionModel>> watchOwnSessions(String annotatorId);
+
+  Stream<List<ObservationSessionModel>> watchParticipatedSessions(
+    String annotatorId,
+  );
 }
 
 class SessionLocalDataSourceImpl implements SessionLocalDataSource {
@@ -219,6 +245,211 @@ class SessionLocalDataSourceImpl implements SessionLocalDataSource {
     );
   }
 
+  @override
+  Future<List<ObservationSessionModel>> getPendingSessions() async {
+    final query = db.select(db.sessionsTable)
+      ..where(
+        (t) =>
+            t.syncStatus.equals(SyncStatus.pending.value) &
+            t.isDeleted.equals(false),
+      );
+    final sessions = await query.get();
+    return Future.wait(sessions.map(_hydrateSessionAggregate));
+  }
+
+  @override
+  Future<void> bulkUpsertSessions(
+    List<ObservationSessionModel> sessions,
+  ) async {
+    if (sessions.isEmpty) return;
+
+    final sessionIds = sessions.map((s) => s.id).toList();
+
+    // Do not overwrite locally-owned sessions (pending/draft).
+    final localPending =
+        await (db.select(db.sessionsTable)..where(
+              (t) =>
+                  t.id.isIn(sessionIds) &
+                  (t.syncStatus.equals(SyncStatus.pending.value) |
+                      t.syncStatus.equals(SyncStatus.draft.value)),
+            ))
+            .get();
+    final skipIds = localPending.map((s) => s.id).toSet();
+
+    final toUpsert = sessions.where((s) => !skipIds.contains(s.id)).toList();
+    if (toUpsert.isEmpty) return;
+
+    await db.transaction(() async {
+      await db.batch((batch) {
+        batch.insertAll(
+          db.sessionsTable,
+          toUpsert.map(_sessionCompanion),
+          mode: InsertMode.insertOrReplace,
+        );
+      });
+
+      for (final session in toUpsert) {
+        await (db.delete(
+          db.observationsTable,
+        )..where((t) => t.sessionId.equals(session.id))).go();
+
+        if (session.observations.isNotEmpty) {
+          await db.batch((batch) {
+            batch.insertAll(
+              db.observationsTable,
+              session.observations.map(_observationCompanion),
+              mode: InsertMode.insertOrReplace,
+            );
+          });
+        }
+
+        await (db.delete(
+          db.sessionParticipantsTable,
+        )..where((t) => t.sessionId.equals(session.id))).go();
+
+        final uniqueParticipants = session.participants.toSet();
+        if (uniqueParticipants.isNotEmpty) {
+          await db.batch((batch) {
+            batch.insertAll(
+              db.sessionParticipantsTable,
+              uniqueParticipants.map(
+                (code) => SessionParticipantsTableCompanion.insert(
+                  sessionId: session.id,
+                  ornithologistCode: code,
+                ),
+              ),
+              mode: InsertMode.insertOrIgnore,
+            );
+          });
+        }
+      }
+    });
+  }
+
+  @override
+  Future<void> bulkUpdateSyncStatuses(
+    Map<String, (SyncStatus, SyncErrorType?)> updates,
+  ) async {
+    if (updates.isEmpty) return;
+    final now = DateTime.now().toUtc();
+    await db.batch((batch) {
+      for (final entry in updates.entries) {
+        final (status, error) = entry.value;
+        batch.update(
+          db.sessionsTable,
+          SessionsTableCompanion(
+            syncStatus: Value(status),
+            syncError: Value(error),
+            updatedAt: Value(now),
+          ),
+          where: (t) => t.id.equals(entry.key),
+        );
+      }
+    });
+  }
+
+  @override
+  Future<void> saveSyncMetadata(
+    String key, {
+    String? since,
+    int? currentPage,
+  }) async {
+    await db
+        .into(db.syncMetadataTable)
+        .insertOnConflictUpdate(
+          SyncMetadataTableCompanion.insert(
+            key: key,
+            since: since != null ? Value(since) : const Value.absent(),
+            currentPage: currentPage != null
+                ? Value(currentPage)
+                : const Value.absent(),
+          ),
+        );
+  }
+
+  @override
+  Future<({String? since, int currentPage})> getSyncMetadata(
+    String key,
+  ) async {
+    final row = await (db.select(
+      db.syncMetadataTable,
+    )..where((t) => t.key.equals(key))).getSingleOrNull();
+    return (since: row?.since, currentPage: row?.currentPage ?? 0);
+  }
+
+  @override
+  Stream<List<ObservationSessionModel>> watchOwnSessions(String annotatorId) {
+    final query = db.select(db.sessionsTable)
+      ..where(
+        (t) => t.annotatorId.equals(annotatorId) & t.isDeleted.equals(false),
+      )
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
+
+    return query.watch().asyncMap((sessions) async {
+      if (sessions.isEmpty) return [];
+      return _hydrateSessionList(sessions);
+    });
+  }
+
+  @override
+  Stream<List<ObservationSessionModel>> watchParticipatedSessions(
+    String annotatorId,
+  ) {
+    final query = db.select(db.sessionsTable)
+      ..where(
+        (t) =>
+            t.annotatorId.isNotValue(annotatorId) & t.isDeleted.equals(false),
+      )
+      ..orderBy([(t) => OrderingTerm.desc(t.createdAt)]);
+
+    return query.watch().asyncMap((sessions) async {
+      if (sessions.isEmpty) return [];
+      return _hydrateSessionList(sessions);
+    });
+  }
+
+  Future<List<ObservationSessionModel>> _hydrateSessionList(
+    List<SessionEntityData> sessions,
+  ) async {
+    final sessionIds = sessions.map((s) => s.id).toList();
+
+    final participantsData = await (db.select(
+      db.sessionParticipantsTable,
+    )..where((t) => t.sessionId.isIn(sessionIds))).get();
+
+    final participantsMap = <String, List<String>>{};
+    for (final p in participantsData) {
+      participantsMap
+          .putIfAbsent(p.sessionId, () => [])
+          .add(p.ornithologistCode);
+    }
+
+    final observationsData =
+        await (db.select(db.observationsTable)
+              ..where(
+                (t) => t.sessionId.isIn(sessionIds) & t.isDeleted.equals(false),
+              )
+              ..orderBy([(t) => OrderingTerm.desc(t.startTime)]))
+            .get();
+
+    final observationsMap = <String, List<ObservationRecordModel>>{};
+    for (final obs in observationsData) {
+      observationsMap
+          .putIfAbsent(obs.sessionId, () => [])
+          .add(ObservationRecordModel.fromData(obs));
+    }
+
+    return sessions
+        .map(
+          (s) => ObservationSessionModel.fromData(
+            s,
+            participants: participantsMap[s.id] ?? [],
+            observations: observationsMap[s.id] ?? [],
+          ),
+        )
+        .toList();
+  }
+
   SessionsTableCompanion _sessionCompanion(ObservationSessionModel s) {
     return SessionsTableCompanion.insert(
       id: s.id,
@@ -243,6 +474,7 @@ class SessionLocalDataSourceImpl implements SessionLocalDataSource {
       locationError: Value(s.locationError),
       isLocked: s.isLocked,
       syncStatus: s.syncStatus,
+      syncError: Value(s.syncError),
       createdAt: s.createdAt,
       updatedAt: s.updatedAt,
       isDeleted: Value(s.isDeleted),

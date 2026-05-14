@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:noctambuls/app.dart';
+import 'package:noctambuls/core/background/work_manager_init.dart' as wm;
 import 'package:noctambuls/core/di/injection_container.dart' as di;
 import 'package:noctambuls/core/utils/app_bloc_observer.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
@@ -17,6 +18,7 @@ void main() async {
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   await di.init();
+  await wm.init();
 
   Bloc.observer = AppBlocObserver();
 

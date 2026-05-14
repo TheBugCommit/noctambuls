@@ -1100,6 +1100,12 @@ abstract class AppLocalizations {
   /// **'Pendent'**
   String get statusPending;
 
+  /// No description provided for @statusSyncing.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sincronitzant'**
+  String get statusSyncing;
+
   /// No description provided for @statusSynced.
   ///
   /// In ca, this message translates to:
@@ -1111,6 +1117,30 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Error de xarxa'**
   String get statusSyncError;
+
+  /// No description provided for @syncErrorValidation.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error a les dades.'**
+  String get syncErrorValidation;
+
+  /// No description provided for @syncErrorNetwork.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sense connexió. Es reintentarà més tard.'**
+  String get syncErrorNetwork;
+
+  /// No description provided for @syncErrorServer.
+  ///
+  /// In ca, this message translates to:
+  /// **'S\'ha produït un error al servidor.'**
+  String get syncErrorServer;
+
+  /// No description provided for @syncErrorUnknown.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error desconegut a l\'hora de sincronitzar.'**
+  String get syncErrorUnknown;
 
   /// No description provided for @stopAndReviewTitle.
   ///

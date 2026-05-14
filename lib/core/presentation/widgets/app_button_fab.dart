@@ -122,7 +122,7 @@ class AppButtonFab extends StatelessWidget {
     final iconSize = switch (size) {
       AppButtonFabSize.sm => AppDimensions.iconSm,
       AppButtonFabSize.md => AppDimensions.iconLg,
-      AppButtonFabSize.lg => AppDimensions.iconXl,
+      AppButtonFabSize.lg => AppDimensions.iconXl * 1.3,
     };
 
     final borderRadius = switch (size) {

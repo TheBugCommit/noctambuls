@@ -543,10 +543,25 @@ class AppLocalizationsCa extends AppLocalizations {
   String get statusPending => 'Pendent';
 
   @override
+  String get statusSyncing => 'Sincronitzant';
+
+  @override
   String get statusSynced => 'Sincronitzat';
 
   @override
   String get statusSyncError => 'Error de xarxa';
+
+  @override
+  String get syncErrorValidation => 'Error a les dades.';
+
+  @override
+  String get syncErrorNetwork => 'Sense connexió. Es reintentarà més tard.';
+
+  @override
+  String get syncErrorServer => 'S\'ha produït un error al servidor.';
+
+  @override
+  String get syncErrorUnknown => 'Error desconegut a l\'hora de sincronitzar.';
 
   @override
   String get stopAndReviewTitle => 'Finalitzar observació';

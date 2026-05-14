@@ -8,6 +8,7 @@ import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/features/auth/domain/entities/auth_user.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
+import 'package:noctambuls/features/observations/presentation/bloc/session_list_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_state.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/session_card.dart';
 import 'package:noctambuls/features/profile/domain/entities/user_profile.dart';
@@ -54,8 +55,8 @@ class ProfileContent extends StatelessWidget {
       },
       body: const TabBarView(
         children: [
-          _ObservingSessions(),
-          _EmptyTabContent(),
+          _OwnSessionsTab(),
+          _ParticipatedSessionsTab(),
         ],
       ),
     );
@@ -93,71 +94,178 @@ class _SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class _ObservingSessions extends StatelessWidget {
-  const _ObservingSessions();
+class _OwnSessionsTab extends StatefulWidget {
+  const _OwnSessionsTab();
+
+  @override
+  State<_OwnSessionsTab> createState() => _OwnSessionsTabState();
+}
+
+class _OwnSessionsTabState extends State<_OwnSessionsTab>
+    with AutomaticKeepAliveClientMixin {
+  final _scrollController = ScrollController();
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<SessionListBloc>().add(
+      const FetchHistoryRequested(isRefresh: false),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  bool _onScroll(ScrollNotification notification) {
+    if (notification is ScrollUpdateNotification &&
+        notification.metrics.pixels >=
+            notification.metrics.maxScrollExtent - 200) {
+      final state = context.read<SessionListBloc>().state;
+      if (state is SessionListData) {
+        if (!state.isLoadingHistory && state.hasMoreHistory) {
+          context.read<SessionListBloc>().add(HistoryScrollReachedEnd());
+        }
+      }
+    }
+
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return BlocBuilder<SessionListBloc, SessionListState>(
       builder: (context, state) {
-        switch (state) {
-          case SessionListLoading():
-            return const Center(child: CircularProgressIndicator());
-          case SessionListLoaded():
-            return _SessionList(sessions: state.sessions);
-          case SessionListError():
-            return const _SessionListError();
+        if (state is SessionListInitial) {
+          return const Center(child: CircularProgressIndicator());
         }
+        final data = state as SessionListData;
+        return NotificationListener<ScrollNotification>(
+          onNotification: _onScroll,
+          child: RefreshIndicator(
+            onRefresh: () async {
+              context.read<SessionListBloc>().add(
+                const FetchHistoryRequested(isRefresh: true),
+              );
+            },
+            child: _SessionList(
+              sessions: data.ownSessions,
+              isLoadingMore: data.isLoadingHistory,
+            ),
+          ),
+        );
       },
     );
   }
 }
 
-class _SessionListError extends StatelessWidget {
-  const _SessionListError();
+class _ParticipatedSessionsTab extends StatefulWidget {
+  const _ParticipatedSessionsTab();
+
+  @override
+  State<_ParticipatedSessionsTab> createState() =>
+      _ParticipatedSessionsTabState();
+}
+
+class _ParticipatedSessionsTabState extends State<_ParticipatedSessionsTab>
+    with AutomaticKeepAliveClientMixin {
+  final _scrollController = ScrollController();
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<SessionListBloc>().add(
+      const FetchParticipatedRequested(isRefresh: false),
+    );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  bool _onScroll(ScrollNotification notification) {
+    if (notification is ScrollUpdateNotification &&
+        notification.metrics.pixels >=
+            notification.metrics.maxScrollExtent - 200) {
+      final state = context.read<SessionListBloc>().state;
+      if (state is SessionListData) {
+        if (!state.isLoadingParticipated && state.hasMoreParticipated) {
+          context.read<SessionListBloc>().add(ParticipatedScrollReachedEnd());
+        }
+      }
+    }
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
+    super.build(context);
 
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: AppDimensions.xxl,
-            color: theme.colorScheme.error,
-          ),
-          const SizedBox(height: AppDimensions.md),
-          Text(
-            l10n.errorLoadingObservationSessions,
-            style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurface,
+    return BlocBuilder<SessionListBloc, SessionListState>(
+      builder: (context, state) {
+        if (state is SessionListInitial) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        final data = state as SessionListData;
+        return NotificationListener<ScrollNotification>(
+          onNotification: _onScroll,
+          child: RefreshIndicator(
+            onRefresh: () async {
+              context.read<SessionListBloc>().add(
+                const FetchParticipatedRequested(isRefresh: true),
+              );
+            },
+            child: _SessionList(
+              sessions: data.participatedSessions,
+              isLoadingMore: data.isLoadingParticipated,
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
 class _SessionList extends StatelessWidget {
-  const _SessionList({required this.sessions});
+  const _SessionList({
+    required this.sessions,
+    required this.isLoadingMore,
+  });
 
   final List<ObservationSession> sessions;
+  final bool isLoadingMore;
 
   @override
   Widget build(BuildContext context) {
-    if (sessions.isEmpty) {
+    if (sessions.isEmpty && !isLoadingMore) {
       return const _EmptyTabContent();
     }
 
+    final itemCount = sessions.length + (isLoadingMore ? 1 : 0);
+
     return ListView.builder(
       padding: const EdgeInsets.all(AppDimensions.md),
-      itemCount: sessions.length,
+      itemCount: itemCount,
       itemBuilder: (context, index) {
+        if (index == sessions.length) {
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: AppDimensions.md),
+            child: Center(child: CircularProgressIndicator()),
+          );
+        }
+
         final session = sessions[index];
 
         return SessionCard(
@@ -168,6 +276,11 @@ class _SessionList extends StatelessWidget {
             } else {
               unawaited(context.push(AppRoutes.review, extra: session));
             }
+          },
+          onRetrySync: () {
+            context.read<SessionListBloc>().add(
+              RetrySyncSessionRequested(session.id),
+            );
           },
         );
       },

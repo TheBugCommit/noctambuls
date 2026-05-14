@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/presentation/extensions/observation_session_extension.dart';
 import 'package:noctambuls/core/presentation/extensions/session_type_extension.dart';
+import 'package:noctambuls/core/presentation/extensions/sync_error_type_extension.dart';
 import 'package:noctambuls/core/presentation/widgets/time_text.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
@@ -11,16 +12,21 @@ class SessionCard extends StatelessWidget {
   const SessionCard({
     required this.session,
     required this.onTap,
+    this.onRetrySync,
     super.key,
   });
 
   final ObservationSession session;
   final VoidCallback onTap;
+  final VoidCallback? onRetrySync;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final isSyncing = session.syncStatus == SyncStatus.pending;
+    final isSyncing = session.syncStatus == SyncStatus.syncing;
+    final needsSyncAction =
+        session.syncStatus == SyncStatus.error ||
+        session.syncStatus == SyncStatus.pending;
 
     return Card(
       clipBehavior: Clip.antiAlias,
@@ -38,8 +44,10 @@ class SessionCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             if (isSyncing)
-              const LinearProgressIndicator(
+              LinearProgressIndicator(
                 minHeight: 3,
+                backgroundColor: colorScheme.tertiaryContainer,
+                color: colorScheme.tertiary,
               ),
 
             Padding(
@@ -53,6 +61,12 @@ class SessionCard extends StatelessWidget {
                 ],
               ),
             ),
+
+            if (needsSyncAction)
+              _SessionSyncFooter(
+                session: session,
+                onRetrySync: onRetrySync,
+              ),
           ],
         ),
       ),
@@ -150,7 +164,7 @@ class _SessionDetails extends StatelessWidget {
               ),
               if (session.endTime != null)
                 TimeText.dateTime(
-                  session.endTime!,
+                  session.endTime,
                   formatStyle: DateTimeFormatStyle.timeOnly,
                   prefixText: l10n.sessionCardEndsAt,
                   style: theme.textTheme.bodySmall?.copyWith(
@@ -165,6 +179,72 @@ class _SessionDetails extends StatelessWidget {
           color: colorScheme.onSurfaceVariant,
         ),
       ],
+    );
+  }
+}
+
+class _SessionSyncFooter extends StatelessWidget {
+  const _SessionSyncFooter({
+    required this.session,
+    required this.onRetrySync,
+  });
+
+  final ObservationSession session;
+  final VoidCallback? onRetrySync;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isError = session.syncStatus == SyncStatus.error;
+
+    final errorMessage = session.syncError?.errorMessage(l10n);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(
+        horizontal: AppDimensions.md,
+        vertical: AppDimensions.xs,
+      ),
+      decoration: BoxDecoration(
+        color: isError
+            ? colorScheme.errorContainer.withValues(alpha: 0.4)
+            : colorScheme.secondaryContainer.withValues(alpha: 0.4),
+        border: Border(
+          top: BorderSide(
+            color: isError
+                ? colorScheme.error.withValues(alpha: 0.2)
+                : colorScheme.secondary.withValues(alpha: 0.2),
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              errorMessage ?? l10n.statusPending,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: isError
+                    ? colorScheme.onErrorContainer
+                    : colorScheme.onSecondaryContainer,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          if (onRetrySync != null)
+            TextButton.icon(
+              onPressed: onRetrySync,
+              icon: const Icon(Icons.sync),
+              label: Text(l10n.retry),
+              style: TextButton.styleFrom(
+                foregroundColor: isError
+                    ? colorScheme.onErrorContainer
+                    : colorScheme.onSecondaryContainer,
+                visualDensity: VisualDensity.compact,
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

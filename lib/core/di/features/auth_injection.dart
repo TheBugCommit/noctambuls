@@ -39,7 +39,8 @@ void initAuthFeature() {
     ..registerLazySingleton<Dio>(
       () => Dio()
         ..options.baseUrl = EnvConfig.serverUrl
-        ..options.headers['X-API-KEY'] = EnvConfig.serverApiKey,
+        ..options.headers['X-API-KEY'] = EnvConfig.serverApiKey
+        ..transformer = BackgroundTransformer(),
       instanceName: 'authDio',
     )
     ..registerLazySingleton<AuthRemoteDataSource>(
@@ -62,6 +63,7 @@ void initAuthFeature() {
         final dio = Dio()
           ..options.baseUrl = EnvConfig.serverUrl
           ..options.headers['X-API-KEY'] = EnvConfig.serverApiKey
+          ..transformer = BackgroundTransformer()
           ..interceptors.add(interceptor);
         interceptor.dio = dio;
         return dio;

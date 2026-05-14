@@ -12,6 +12,10 @@ abstract class TokenLocalDataSource {
   Future<void> savePhotoUrl(String? url);
 
   Future<String?> getPhotoUrl();
+
+  Future<void> saveUserId(String? userId);
+
+  Future<String?> getUserId();
 }
 
 class TokenLocalDataSourceImpl implements TokenLocalDataSource {
@@ -22,6 +26,7 @@ class TokenLocalDataSourceImpl implements TokenLocalDataSource {
   static const _accessTokenKey = 'auth_access_token';
   static const _refreshTokenKey = 'auth_refresh_token';
   static const _photoUrlKey = 'auth_photo_url';
+  static const _userIdKey = 'auth_user_id';
 
   @override
   Future<void> saveTokenPair(String accessToken, String refreshToken) async {
@@ -53,4 +58,11 @@ class TokenLocalDataSourceImpl implements TokenLocalDataSource {
 
   @override
   Future<String?> getPhotoUrl() => storage.read(key: _photoUrlKey);
+
+  @override
+  Future<void> saveUserId(String? userId) =>
+      storage.write(key: _userIdKey, value: userId);
+
+  @override
+  Future<String?> getUserId() => storage.read(key: _userIdKey);
 }

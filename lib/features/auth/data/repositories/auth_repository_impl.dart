@@ -59,12 +59,13 @@ class AuthRepositoryImpl implements AuthRepository {
         response.refreshToken,
       );
 
-      return Ok(
-        AuthUserModel.fromJwt(
-          response.accessToken,
-          photoUrl: photoUrl,
-        ).toDomain(),
-      );
+      final authUser = AuthUserModel.fromJwt(
+        response.accessToken,
+        photoUrl: photoUrl,
+      ).toDomain();
+
+      await tokenLocalDataSource.saveUserId(authUser.id);
+      return Ok(authUser);
     } on DioException catch (e, st) {
       if (e.isNetworkError || e.isInfrastructureError) {
         return Err(const NetworkFailure().withDebug(e, st));
@@ -105,6 +106,7 @@ class AuthRepositoryImpl implements AuthRepository {
         response.accessToken,
         response.refreshToken,
       );
+
       final provider = _providers.values
           .where(
             (p) => p.authProviderType == params.provider,
@@ -112,12 +114,13 @@ class AuthRepositoryImpl implements AuthRepository {
           .firstOrNull;
       final photoUrl = await provider?.getPhotoUrl();
       await tokenLocalDataSource.savePhotoUrl(photoUrl);
-      return Ok(
-        AuthUserModel.fromJwt(
-          response.accessToken,
-          photoUrl: photoUrl,
-        ).toDomain(),
-      );
+      final authUser = AuthUserModel.fromJwt(
+        response.accessToken,
+        photoUrl: photoUrl,
+      ).toDomain();
+
+      await tokenLocalDataSource.saveUserId(authUser.id);
+      return Ok(authUser);
     } on DioException catch (e, st) {
       if (e.response == null) {
         return Err(const NetworkFailure().withDebug(e, st));

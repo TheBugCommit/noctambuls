@@ -8,6 +8,7 @@ import 'package:noctambuls/features/observations/domain/usecases/add_session_par
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/remove_session_participant_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/sync_pending_sessions_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_properties_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_session_by_id_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_event.dart';
@@ -26,6 +27,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     required this.finishAndLockSessionUseCase,
     required this.addSessionParticipantUseCase,
     required this.removeSessionParticipantUseCase,
+    required this.syncPendingSessionsUseCase,
   }) : super(
          SessionReviewEditing(session: initialSession, birdsMap: const {}),
        ) {
@@ -48,6 +50,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
   final WatchSessionByIdUseCase watchSessionByIdUseCase;
   final GetBirdsUseCase getBirdsUseCase;
   final GetLanguageUseCase getLanguageUseCase;
+  final SyncPendingSessionsUseCase syncPendingSessionsUseCase;
 
   StreamSubscription<ObservationSession?>? _subscription;
   Map<String, Bird> _birdsMap = {};
@@ -134,6 +137,7 @@ class SessionReviewBloc extends Bloc<SessionReviewEvent, SessionReviewState> {
     if (!currentState.isValid) return;
 
     final result = await finishAndLockSessionUseCase(currentState.session);
+    unawaited(syncPendingSessionsUseCase());
 
     result.when(
       success: (_) => emit(SessionReviewFinalized()),

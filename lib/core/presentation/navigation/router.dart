@@ -15,6 +15,7 @@ import 'package:noctambuls/core/presentation/navigation/auth_router_guard.dart';
 import 'package:noctambuls/core/presentation/navigation/go_router_refresh_stream.dart';
 import 'package:noctambuls/core/presentation/pages/main_navigation_screen.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signup/sign_up_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/splash/splash_page.dart';
@@ -127,9 +128,14 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
             GoRoute(
               path: AppRoutes.profile,
               builder: (context, state) {
+                final authState = context.read<AuthBloc>().state;
+                final userId = authState is Authenticated
+                    ? authState.user.id
+                    : '';
                 return BlocProvider(
                   create: (_) =>
-                      sl<SessionListBloc>()..add(WatchAllSessionsRequested()),
+                      sl<SessionListBloc>()
+                        ..add(SessionListStarted(annotatorId: userId)),
                   child: const ProfilePage(),
                 );
               },
@@ -223,7 +229,10 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
     GoRoute(
       path: AppRoutes.qrScanner,
       parentNavigatorKey: _rootNavigatorKey,
-      builder: (context, state) => const QrScannerPage(),
+      builder: (context, state) {
+        final args = state.extra! as QrScannerArgs;
+        return QrScannerPage(args: args);
+      },
     ),
     GoRoute(
       path: AppRoutes.mapPicker,

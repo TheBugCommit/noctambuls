@@ -21,6 +21,7 @@ import 'package:noctambuls/features/observations/presentation/bloc/observing_ses
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_state.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/widgets/active_session_card.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/widgets/home_header.dart';
+import 'package:noctambuls/features/observations/presentation/pages/review/qr_scanner_page.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/session_type_selector.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -149,8 +150,25 @@ class _BaseHomeLayout extends StatelessWidget {
         ),
         floatingActionButton: AppButtonFab.large(
           onPressed: () {
-            // TODO: Fer logica per escanejar QR cens.
-            // context.push(AppRoutes.qrScanner);
+            final url = context.push<String>(
+              AppRoutes.qrScanner,
+              extra: QrScannerArgs(
+                title: "Escanejar Cens",
+                helperText: "Enfoca el codi QR del paper del Cens de Seguiment",
+                helpTitle: "Ajuda Censos",
+                helpMessage:
+                    "Trobaràs el codi QR de censos dalt a la dreta del full imprès...",
+                manualEntryModalBuilder: null,
+                // Si no hi ha entrada manual per censos, esborra el botó de baix automàticament!
+                validator: (rawValue) {
+                  // Tota la teva lògica de validació del format d'un codi de cens aquí
+                  if (rawValue.startsWith('CENS-')) {
+                    return rawValue; // És vàlid! Tanca la pantalla i retorna el valor.
+                  }
+                  return null; // Invàlid, mostra el Toast d'error.
+                },
+              ),
+            );
           },
           icon: Icons.qr_code_scanner,
         ),

@@ -1,8 +1,10 @@
+import 'package:dio/dio.dart';
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/guide/domain/usecases/get_birds_usecase.dart';
 import 'package:noctambuls/features/observations/data/datasources/session_local_datasource.dart';
+import 'package:noctambuls/features/observations/data/datasources/session_remote_datasource.dart';
 import 'package:noctambuls/features/observations/data/repositories/session_repository_impl.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/repositories/session_repository.dart';
@@ -11,15 +13,21 @@ import 'package:noctambuls/features/observations/domain/usecases/change_session_
 import 'package:noctambuls/features/observations/domain/usecases/create_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/delete_session_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/fetch_participated_sessions_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/fetch_session_history_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/finish_and_lock_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/get_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/remove_session_participant_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/retry_session_sync_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/save_observation_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/stop_observation_phase_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/sync_pending_sessions_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_location_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/update_session_properties_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_active_session_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_all_sessions_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/watch_own_sessions_usecase.dart';
+import 'package:noctambuls/features/observations/domain/usecases/watch_participated_sessions_usecase.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_session_by_id_usecase.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_list_bloc.dart';
@@ -32,14 +40,22 @@ void initObservationsFeature() {
     ..registerLazySingleton<SessionLocalDataSource>(
       () => SessionLocalDataSourceImpl(dbManager: sl<UserDatabaseManager>()),
     )
+    ..registerLazySingleton<SessionRemoteDataSource>(
+      () => SessionRemoteDataSourceImpl(dio: sl<Dio>(instanceName: 'apiDio')),
+    )
     // Repositories
     ..registerLazySingleton<SessionRepository>(
-      () => SessionRepositoryImpl(localDataSource: sl()),
+      () => SessionRepositoryImpl(
+        localDataSource: sl(),
+        remoteDataSource: sl(),
+      ),
     )
     // Use Cases — session
     ..registerLazySingleton(() => WatchActiveSessionUseCase(sl()))
     ..registerLazySingleton(() => GetActiveSessionUseCase(sl()))
     ..registerLazySingleton(() => WatchAllSessionsUseCase(sl()))
+    ..registerLazySingleton(() => WatchOwnSessionsUseCase(sl()))
+    ..registerLazySingleton(() => WatchParticipatedSessionsUseCase(sl()))
     ..registerLazySingleton(
       () => CreateSessionUseCase(
         observationRepository: sl(),
@@ -58,6 +74,11 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => SaveObservationUseCase(sl()))
     ..registerLazySingleton(() => UpdateSessionLocationUseCase(sl()))
     ..registerLazySingleton(() => WatchSessionByIdUseCase(sl()))
+    // Use Cases — sync / history
+    ..registerLazySingleton(() => SyncPendingSessionsUseCase(sl()))
+    ..registerLazySingleton(() => FetchSessionHistoryUseCase(sl()))
+    ..registerLazySingleton(() => FetchParticipatedSessionsUseCase(sl()))
+    ..registerLazySingleton(() => RetrySessionSyncUseCase(sl()))
     // BLoC
     ..registerFactory(
       () => ObservingSessionBloc(
@@ -83,7 +104,12 @@ void initObservationsFeature() {
     )
     ..registerFactory(
       () => SessionListBloc(
-        watchAllSessionsUseCase: sl(),
+        watchOwnSessionsUseCase: sl(),
+        watchParticipatedSessionsUseCase: sl(),
+        fetchSessionHistoryUseCase: sl(),
+        fetchParticipatedSessionsUseCase: sl(),
+        syncPendingSessionsUseCase: sl(),
+        retrySessionSyncUseCase: sl(),
         logger: sl<IAppLogger>(),
       ),
     )
@@ -98,6 +124,7 @@ void initObservationsFeature() {
         watchSessionByIdUseCase: sl(),
         getBirdsUseCase: sl(),
         getLanguageUseCase: sl(),
+        syncPendingSessionsUseCase: sl(),
       ),
     );
 }

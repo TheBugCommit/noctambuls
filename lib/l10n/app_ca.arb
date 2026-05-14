@@ -216,8 +216,14 @@
     "statusReviewing": "En revisió",
     "statusDraft": "Esborrany",
     "statusPending": "Pendent",
+    "statusSyncing": "Sincronitzant",
     "statusSynced": "Sincronitzat",
     "statusSyncError": "Error de xarxa",
+
+    "syncErrorValidation": "Error a les dades.",
+    "syncErrorNetwork": "Sense connexió. Es reintentarà més tard.",
+    "syncErrorServer": "S'ha produït un error al servidor.",
+    "syncErrorUnknown": "Error desconegut a l'hora de sincronitzar.",
 
     "stopAndReviewTitle": "Finalitzar observació",
     "stopAndReviewMessage": "Estàs segur que vols aturar el temps i passar a revisar les dades?",

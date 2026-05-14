@@ -13,6 +13,7 @@ class LocationServiceImpl implements LocationService {
   LocationServiceImpl({required this.logger});
 
   final IAppLogger logger;
+  Future<bool>? _permissionRequestFuture;
 
   @override
   Future<Result<GeoPosition>> getLocation() async {
@@ -111,17 +112,34 @@ class LocationServiceImpl implements LocationService {
     if (!serviceEnabled) {
       return const Err(GpsDisabledFailure());
     }
-
-    var permission = await Permission.locationWhenInUse.status;
-    if (permission.isDenied) {
-      permission = await Permission.locationWhenInUse.request();
+    var permissionStatus = await Permission.locationWhenInUse.status;
+    if (permissionStatus.isGranted || permissionStatus.isLimited) {
+      return const Ok(Unit.instance);
     }
 
-    if (permission.isPermanentlyDenied || permission.isDenied) {
+    if (permissionStatus.isPermanentlyDenied) {
       return const Err(PermissionDeniedFailure());
     }
 
-    return const Ok(Unit.instance);
+    if (_permissionRequestFuture != null) {
+      final isGranted = await _permissionRequestFuture!;
+      if (isGranted) return const Ok(Unit.instance);
+      return const Err(PermissionDeniedFailure());
+    }
+    _permissionRequestFuture = _doRequestPermission();
+
+    try {
+      final isGranted = await _permissionRequestFuture!;
+      if (isGranted) return const Ok(Unit.instance);
+      return const Err(PermissionDeniedFailure());
+    } finally {
+      _permissionRequestFuture = null;
+    }
+  }
+
+  Future<bool> _doRequestPermission() async {
+    final newStatus = await Permission.locationWhenInUse.request();
+    return newStatus.isGranted || newStatus.isLimited;
   }
 
   GeoPosition _mapPosition(Position position) {

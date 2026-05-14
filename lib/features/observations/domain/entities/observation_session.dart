@@ -6,6 +6,7 @@ import 'package:noctambuls/features/observations/domain/enums/moon_presence.dart
 import 'package:noctambuls/features/observations/domain/enums/rain_level.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sky_condition.dart';
+import 'package:noctambuls/features/observations/domain/enums/sync_error_type.dart';
 import 'package:noctambuls/features/observations/domain/enums/sync_status.dart';
 import 'package:noctambuls/features/observations/domain/enums/temperature_range.dart';
 import 'package:noctambuls/features/observations/domain/enums/visibility_level.dart';
@@ -35,6 +36,7 @@ class ObservationSession extends Equatable {
     this.observations = const [],
     this.isLocked = false,
     this.syncStatus = SyncStatus.draft,
+    this.syncError,
     this.isDeleted = false,
   });
 
@@ -54,6 +56,7 @@ class ObservationSession extends Equatable {
   final LocationErrorType? locationError;
   final bool isLocked;
   final SyncStatus syncStatus;
+  final SyncErrorType? syncError;
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDeleted;
@@ -308,9 +311,34 @@ class ObservationSession extends Equatable {
     );
   }
 
+  ObservationSession markAsSyncing() {
+    return copyWith(
+      syncStatus: SyncStatus.syncing,
+      syncError: null,
+      updatedAt: DateTime.now().toUtc(),
+    );
+  }
+
   ObservationSession markAsSynced() {
     return copyWith(
       syncStatus: SyncStatus.synced,
+      syncError: null,
+      updatedAt: DateTime.now().toUtc(),
+    );
+  }
+
+  ObservationSession markAsFailed(String errorReason) {
+    return copyWith(
+      syncStatus: SyncStatus.error,
+      syncError: errorReason,
+      updatedAt: DateTime.now().toUtc(),
+    );
+  }
+
+  ObservationSession markBackToPending() {
+    return copyWith(
+      syncStatus: SyncStatus.pending,
+      syncError: null,
       updatedAt: DateTime.now().toUtc(),
     );
   }
@@ -370,6 +398,7 @@ class ObservationSession extends Equatable {
     Object? locationError = _absent,
     bool? isLocked,
     SyncStatus? syncStatus,
+    Object? syncError = _absent,
     bool? isDeleted,
     List<String>? participants,
     List<ObservationRecord>? observations,
@@ -401,6 +430,9 @@ class ObservationSession extends Equatable {
       observations: observations ?? this.observations,
       isLocked: isLocked ?? this.isLocked,
       syncStatus: syncStatus ?? this.syncStatus,
+      syncError: identical(syncError, _absent)
+          ? this.syncError
+          : syncError as SyncErrorType?,
       createdAt: createdAt,
       updatedAt: updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,
@@ -427,6 +459,7 @@ class ObservationSession extends Equatable {
     observations,
     isLocked,
     syncStatus,
+    syncError,
     createdAt,
     updatedAt,
     isDeleted,
