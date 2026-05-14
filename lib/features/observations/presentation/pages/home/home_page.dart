@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
+import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
 import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/taxus_app_bar.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
@@ -145,6 +146,13 @@ class _BaseHomeLayout extends StatelessWidget {
               child,
             ],
           ),
+        ),
+        floatingActionButton: AppButtonFab.large(
+          onPressed: () {
+            // TODO: Fer logica per escanejar QR cens.
+            // context.push(AppRoutes.qrScanner);
+          },
+          icon: Icons.qr_code_scanner,
         ),
       ),
     );
