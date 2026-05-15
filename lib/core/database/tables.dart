@@ -72,6 +72,8 @@ class SessionsTable extends Table with AuditableMixin {
   IntColumn get syncError =>
       integer().map(const SyncErrorTypeConverter()).nullable()();
 
+  TextColumn get censusId => text().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }
@@ -194,6 +196,37 @@ class SyncMetadataTable extends Table {
 
   @override
   Set<Column> get primaryKey => {key};
+}
+
+@DataClassName('CensusEntityData')
+class CensusesTable extends Table {
+  @override
+  String get tableName => 'censuses';
+
+  TextColumn get id => text()();
+
+  TextColumn get title => text()();
+
+  DateTimeColumn get startTime => dateTime()();
+
+  TextColumn get locationName => text().nullable()();
+
+  TextColumn get description => text().nullable()();
+
+  RealColumn get latitude => real().nullable()();
+
+  RealColumn get longitude => real().nullable()();
+
+  BoolColumn get isJoined => boolean().withDefault(const Constant(false))();
+
+  BoolColumn get alreadyDone => boolean().withDefault(const Constant(false))();
+
+  DateTimeColumn get createdAt => dateTime()();
+
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
 }
 
 @DataClassName('CatalogMetadataData')

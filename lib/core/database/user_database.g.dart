@@ -293,6 +293,17 @@ class $SessionsTableTable extends SessionsTable
         type: DriftSqlType.int,
         requiredDuringInsert: false,
       ).withConverter<SyncErrorType?>($SessionsTableTable.$convertersyncErrorn);
+  static const VerificationMeta _censusIdMeta = const VerificationMeta(
+    'censusId',
+  );
+  @override
+  late final GeneratedColumn<String> censusId = GeneratedColumn<String>(
+    'census_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -321,6 +332,7 @@ class $SessionsTableTable extends SessionsTable
     isLocked,
     syncStatus,
     syncError,
+    censusId,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -442,6 +454,12 @@ class $SessionsTableTable extends SessionsTable
       );
     } else if (isInserting) {
       context.missing(_isLockedMeta);
+    }
+    if (data.containsKey('census_id')) {
+      context.handle(
+        _censusIdMeta,
+        censusId.isAcceptableOrUnknown(data['census_id']!, _censusIdMeta),
+      );
     }
     return context;
   }
@@ -578,6 +596,10 @@ class $SessionsTableTable extends SessionsTable
           data['${effectivePrefix}sync_error'],
         ),
       ),
+      censusId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}census_id'],
+      ),
     );
   }
 
@@ -648,6 +670,7 @@ class SessionEntityData extends DataClass
   final bool isLocked;
   final SyncStatus syncStatus;
   final SyncErrorType? syncError;
+  final String? censusId;
   const SessionEntityData({
     required this.id,
     required this.createdAt,
@@ -675,6 +698,7 @@ class SessionEntityData extends DataClass
     required this.isLocked,
     required this.syncStatus,
     this.syncError,
+    this.censusId,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -765,6 +789,9 @@ class SessionEntityData extends DataClass
         $SessionsTableTable.$convertersyncErrorn.toSql(syncError),
       );
     }
+    if (!nullToAbsent || censusId != null) {
+      map['census_id'] = Variable<String>(censusId);
+    }
     return map;
   }
 
@@ -820,6 +847,9 @@ class SessionEntityData extends DataClass
       syncError: syncError == null && nullToAbsent
           ? const Value.absent()
           : Value(syncError),
+      censusId: censusId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(censusId),
     );
   }
 
@@ -879,6 +909,7 @@ class SessionEntityData extends DataClass
       syncError: $SessionsTableTable.$convertersyncErrorn.fromJson(
         serializer.fromJson<int?>(json['syncError']),
       ),
+      censusId: serializer.fromJson<String?>(json['censusId']),
     );
   }
   @override
@@ -933,6 +964,7 @@ class SessionEntityData extends DataClass
       'syncError': serializer.toJson<int?>(
         $SessionsTableTable.$convertersyncErrorn.toJson(syncError),
       ),
+      'censusId': serializer.toJson<String?>(censusId),
     };
   }
 
@@ -963,6 +995,7 @@ class SessionEntityData extends DataClass
     bool? isLocked,
     SyncStatus? syncStatus,
     Value<SyncErrorType?> syncError = const Value.absent(),
+    Value<String?> censusId = const Value.absent(),
   }) => SessionEntityData(
     id: id ?? this.id,
     createdAt: createdAt ?? this.createdAt,
@@ -1000,6 +1033,7 @@ class SessionEntityData extends DataClass
     isLocked: isLocked ?? this.isLocked,
     syncStatus: syncStatus ?? this.syncStatus,
     syncError: syncError.present ? syncError.value : this.syncError,
+    censusId: censusId.present ? censusId.value : this.censusId,
   );
   SessionEntityData copyWithCompanion(SessionsTableCompanion data) {
     return SessionEntityData(
@@ -1049,6 +1083,7 @@ class SessionEntityData extends DataClass
           ? data.syncStatus.value
           : this.syncStatus,
       syncError: data.syncError.present ? data.syncError.value : this.syncError,
+      censusId: data.censusId.present ? data.censusId.value : this.censusId,
     );
   }
 
@@ -1080,7 +1115,8 @@ class SessionEntityData extends DataClass
           ..write('locationSource: $locationSource, ')
           ..write('isLocked: $isLocked, ')
           ..write('syncStatus: $syncStatus, ')
-          ..write('syncError: $syncError')
+          ..write('syncError: $syncError, ')
+          ..write('censusId: $censusId')
           ..write(')'))
         .toString();
   }
@@ -1113,6 +1149,7 @@ class SessionEntityData extends DataClass
     isLocked,
     syncStatus,
     syncError,
+    censusId,
   ]);
   @override
   bool operator ==(Object other) =>
@@ -1143,7 +1180,8 @@ class SessionEntityData extends DataClass
           other.locationSource == this.locationSource &&
           other.isLocked == this.isLocked &&
           other.syncStatus == this.syncStatus &&
-          other.syncError == this.syncError);
+          other.syncError == this.syncError &&
+          other.censusId == this.censusId);
 }
 
 class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
@@ -1173,6 +1211,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
   final Value<bool> isLocked;
   final Value<SyncStatus> syncStatus;
   final Value<SyncErrorType?> syncError;
+  final Value<String?> censusId;
   final Value<int> rowid;
   const SessionsTableCompanion({
     this.id = const Value.absent(),
@@ -1201,6 +1240,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     this.isLocked = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.syncError = const Value.absent(),
+    this.censusId = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   SessionsTableCompanion.insert({
@@ -1230,6 +1270,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     required bool isLocked,
     required SyncStatus syncStatus,
     this.syncError = const Value.absent(),
+    this.censusId = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        createdAt = Value(createdAt),
@@ -1265,6 +1306,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Expression<bool>? isLocked,
     Expression<int>? syncStatus,
     Expression<int>? syncError,
+    Expression<String>? censusId,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -1294,6 +1336,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       if (isLocked != null) 'is_locked': isLocked,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (syncError != null) 'sync_error': syncError,
+      if (censusId != null) 'census_id': censusId,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -1325,6 +1368,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
     Value<bool>? isLocked,
     Value<SyncStatus>? syncStatus,
     Value<SyncErrorType?>? syncError,
+    Value<String?>? censusId,
     Value<int>? rowid,
   }) {
     return SessionsTableCompanion(
@@ -1354,6 +1398,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
       isLocked: isLocked ?? this.isLocked,
       syncStatus: syncStatus ?? this.syncStatus,
       syncError: syncError ?? this.syncError,
+      censusId: censusId ?? this.censusId,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -1463,6 +1508,9 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
         $SessionsTableTable.$convertersyncErrorn.toSql(syncError.value),
       );
     }
+    if (censusId.present) {
+      map['census_id'] = Variable<String>(censusId.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -1498,6 +1546,7 @@ class SessionsTableCompanion extends UpdateCompanion<SessionEntityData> {
           ..write('isLocked: $isLocked, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('syncError: $syncError, ')
+          ..write('censusId: $censusId, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -3542,6 +3591,682 @@ class SyncMetadataTableCompanion extends UpdateCompanion<SyncMetadataData> {
   }
 }
 
+class $CensusesTableTable extends CensusesTable
+    with TableInfo<$CensusesTableTable, CensusEntityData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CensusesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _startTimeMeta = const VerificationMeta(
+    'startTime',
+  );
+  @override
+  late final GeneratedColumn<DateTime> startTime = GeneratedColumn<DateTime>(
+    'start_time',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _locationNameMeta = const VerificationMeta(
+    'locationName',
+  );
+  @override
+  late final GeneratedColumn<String> locationName = GeneratedColumn<String>(
+    'location_name',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _descriptionMeta = const VerificationMeta(
+    'description',
+  );
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+    'description',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _latitudeMeta = const VerificationMeta(
+    'latitude',
+  );
+  @override
+  late final GeneratedColumn<double> latitude = GeneratedColumn<double>(
+    'latitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _longitudeMeta = const VerificationMeta(
+    'longitude',
+  );
+  @override
+  late final GeneratedColumn<double> longitude = GeneratedColumn<double>(
+    'longitude',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _isJoinedMeta = const VerificationMeta(
+    'isJoined',
+  );
+  @override
+  late final GeneratedColumn<bool> isJoined = GeneratedColumn<bool>(
+    'is_joined',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("is_joined" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _alreadyDoneMeta = const VerificationMeta(
+    'alreadyDone',
+  );
+  @override
+  late final GeneratedColumn<bool> alreadyDone = GeneratedColumn<bool>(
+    'already_done',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("already_done" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    title,
+    startTime,
+    locationName,
+    description,
+    latitude,
+    longitude,
+    isJoined,
+    alreadyDone,
+    createdAt,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'censuses';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CensusEntityData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('start_time')) {
+      context.handle(
+        _startTimeMeta,
+        startTime.isAcceptableOrUnknown(data['start_time']!, _startTimeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_startTimeMeta);
+    }
+    if (data.containsKey('location_name')) {
+      context.handle(
+        _locationNameMeta,
+        locationName.isAcceptableOrUnknown(
+          data['location_name']!,
+          _locationNameMeta,
+        ),
+      );
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+        _descriptionMeta,
+        description.isAcceptableOrUnknown(
+          data['description']!,
+          _descriptionMeta,
+        ),
+      );
+    }
+    if (data.containsKey('latitude')) {
+      context.handle(
+        _latitudeMeta,
+        latitude.isAcceptableOrUnknown(data['latitude']!, _latitudeMeta),
+      );
+    }
+    if (data.containsKey('longitude')) {
+      context.handle(
+        _longitudeMeta,
+        longitude.isAcceptableOrUnknown(data['longitude']!, _longitudeMeta),
+      );
+    }
+    if (data.containsKey('is_joined')) {
+      context.handle(
+        _isJoinedMeta,
+        isJoined.isAcceptableOrUnknown(data['is_joined']!, _isJoinedMeta),
+      );
+    }
+    if (data.containsKey('already_done')) {
+      context.handle(
+        _alreadyDoneMeta,
+        alreadyDone.isAcceptableOrUnknown(
+          data['already_done']!,
+          _alreadyDoneMeta,
+        ),
+      );
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  CensusEntityData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CensusEntityData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      startTime: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}start_time'],
+      )!,
+      locationName: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}location_name'],
+      ),
+      description: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}description'],
+      ),
+      latitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}latitude'],
+      ),
+      longitude: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}longitude'],
+      ),
+      isJoined: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}is_joined'],
+      )!,
+      alreadyDone: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}already_done'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CensusesTableTable createAlias(String alias) {
+    return $CensusesTableTable(attachedDatabase, alias);
+  }
+}
+
+class CensusEntityData extends DataClass
+    implements Insertable<CensusEntityData> {
+  final String id;
+  final String title;
+  final DateTime startTime;
+  final String? locationName;
+  final String? description;
+  final double? latitude;
+  final double? longitude;
+  final bool isJoined;
+  final bool alreadyDone;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const CensusEntityData({
+    required this.id,
+    required this.title,
+    required this.startTime,
+    this.locationName,
+    this.description,
+    this.latitude,
+    this.longitude,
+    required this.isJoined,
+    required this.alreadyDone,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['title'] = Variable<String>(title);
+    map['start_time'] = Variable<DateTime>(startTime);
+    if (!nullToAbsent || locationName != null) {
+      map['location_name'] = Variable<String>(locationName);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    if (!nullToAbsent || latitude != null) {
+      map['latitude'] = Variable<double>(latitude);
+    }
+    if (!nullToAbsent || longitude != null) {
+      map['longitude'] = Variable<double>(longitude);
+    }
+    map['is_joined'] = Variable<bool>(isJoined);
+    map['already_done'] = Variable<bool>(alreadyDone);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  CensusesTableCompanion toCompanion(bool nullToAbsent) {
+    return CensusesTableCompanion(
+      id: Value(id),
+      title: Value(title),
+      startTime: Value(startTime),
+      locationName: locationName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(locationName),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      latitude: latitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(latitude),
+      longitude: longitude == null && nullToAbsent
+          ? const Value.absent()
+          : Value(longitude),
+      isJoined: Value(isJoined),
+      alreadyDone: Value(alreadyDone),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory CensusEntityData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CensusEntityData(
+      id: serializer.fromJson<String>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      startTime: serializer.fromJson<DateTime>(json['startTime']),
+      locationName: serializer.fromJson<String?>(json['locationName']),
+      description: serializer.fromJson<String?>(json['description']),
+      latitude: serializer.fromJson<double?>(json['latitude']),
+      longitude: serializer.fromJson<double?>(json['longitude']),
+      isJoined: serializer.fromJson<bool>(json['isJoined']),
+      alreadyDone: serializer.fromJson<bool>(json['alreadyDone']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'title': serializer.toJson<String>(title),
+      'startTime': serializer.toJson<DateTime>(startTime),
+      'locationName': serializer.toJson<String?>(locationName),
+      'description': serializer.toJson<String?>(description),
+      'latitude': serializer.toJson<double?>(latitude),
+      'longitude': serializer.toJson<double?>(longitude),
+      'isJoined': serializer.toJson<bool>(isJoined),
+      'alreadyDone': serializer.toJson<bool>(alreadyDone),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  CensusEntityData copyWith({
+    String? id,
+    String? title,
+    DateTime? startTime,
+    Value<String?> locationName = const Value.absent(),
+    Value<String?> description = const Value.absent(),
+    Value<double?> latitude = const Value.absent(),
+    Value<double?> longitude = const Value.absent(),
+    bool? isJoined,
+    bool? alreadyDone,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) => CensusEntityData(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    startTime: startTime ?? this.startTime,
+    locationName: locationName.present ? locationName.value : this.locationName,
+    description: description.present ? description.value : this.description,
+    latitude: latitude.present ? latitude.value : this.latitude,
+    longitude: longitude.present ? longitude.value : this.longitude,
+    isJoined: isJoined ?? this.isJoined,
+    alreadyDone: alreadyDone ?? this.alreadyDone,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  CensusEntityData copyWithCompanion(CensusesTableCompanion data) {
+    return CensusEntityData(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      startTime: data.startTime.present ? data.startTime.value : this.startTime,
+      locationName: data.locationName.present
+          ? data.locationName.value
+          : this.locationName,
+      description: data.description.present
+          ? data.description.value
+          : this.description,
+      latitude: data.latitude.present ? data.latitude.value : this.latitude,
+      longitude: data.longitude.present ? data.longitude.value : this.longitude,
+      isJoined: data.isJoined.present ? data.isJoined.value : this.isJoined,
+      alreadyDone: data.alreadyDone.present
+          ? data.alreadyDone.value
+          : this.alreadyDone,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CensusEntityData(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('startTime: $startTime, ')
+          ..write('locationName: $locationName, ')
+          ..write('description: $description, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('isJoined: $isJoined, ')
+          ..write('alreadyDone: $alreadyDone, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    title,
+    startTime,
+    locationName,
+    description,
+    latitude,
+    longitude,
+    isJoined,
+    alreadyDone,
+    createdAt,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CensusEntityData &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.startTime == this.startTime &&
+          other.locationName == this.locationName &&
+          other.description == this.description &&
+          other.latitude == this.latitude &&
+          other.longitude == this.longitude &&
+          other.isJoined == this.isJoined &&
+          other.alreadyDone == this.alreadyDone &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class CensusesTableCompanion extends UpdateCompanion<CensusEntityData> {
+  final Value<String> id;
+  final Value<String> title;
+  final Value<DateTime> startTime;
+  final Value<String?> locationName;
+  final Value<String?> description;
+  final Value<double?> latitude;
+  final Value<double?> longitude;
+  final Value<bool> isJoined;
+  final Value<bool> alreadyDone;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const CensusesTableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.startTime = const Value.absent(),
+    this.locationName = const Value.absent(),
+    this.description = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.isJoined = const Value.absent(),
+    this.alreadyDone = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CensusesTableCompanion.insert({
+    required String id,
+    required String title,
+    required DateTime startTime,
+    this.locationName = const Value.absent(),
+    this.description = const Value.absent(),
+    this.latitude = const Value.absent(),
+    this.longitude = const Value.absent(),
+    this.isJoined = const Value.absent(),
+    this.alreadyDone = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       title = Value(title),
+       startTime = Value(startTime),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<CensusEntityData> custom({
+    Expression<String>? id,
+    Expression<String>? title,
+    Expression<DateTime>? startTime,
+    Expression<String>? locationName,
+    Expression<String>? description,
+    Expression<double>? latitude,
+    Expression<double>? longitude,
+    Expression<bool>? isJoined,
+    Expression<bool>? alreadyDone,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (startTime != null) 'start_time': startTime,
+      if (locationName != null) 'location_name': locationName,
+      if (description != null) 'description': description,
+      if (latitude != null) 'latitude': latitude,
+      if (longitude != null) 'longitude': longitude,
+      if (isJoined != null) 'is_joined': isJoined,
+      if (alreadyDone != null) 'already_done': alreadyDone,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CensusesTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? title,
+    Value<DateTime>? startTime,
+    Value<String?>? locationName,
+    Value<String?>? description,
+    Value<double?>? latitude,
+    Value<double?>? longitude,
+    Value<bool>? isJoined,
+    Value<bool>? alreadyDone,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return CensusesTableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      startTime: startTime ?? this.startTime,
+      locationName: locationName ?? this.locationName,
+      description: description ?? this.description,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
+      isJoined: isJoined ?? this.isJoined,
+      alreadyDone: alreadyDone ?? this.alreadyDone,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (startTime.present) {
+      map['start_time'] = Variable<DateTime>(startTime.value);
+    }
+    if (locationName.present) {
+      map['location_name'] = Variable<String>(locationName.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (latitude.present) {
+      map['latitude'] = Variable<double>(latitude.value);
+    }
+    if (longitude.present) {
+      map['longitude'] = Variable<double>(longitude.value);
+    }
+    if (isJoined.present) {
+      map['is_joined'] = Variable<bool>(isJoined.value);
+    }
+    if (alreadyDone.present) {
+      map['already_done'] = Variable<bool>(alreadyDone.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CensusesTableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('startTime: $startTime, ')
+          ..write('locationName: $locationName, ')
+          ..write('description: $description, ')
+          ..write('latitude: $latitude, ')
+          ..write('longitude: $longitude, ')
+          ..write('isJoined: $isJoined, ')
+          ..write('alreadyDone: $alreadyDone, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$UserDatabase extends GeneratedDatabase {
   _$UserDatabase(QueryExecutor e) : super(e);
   $UserDatabaseManager get managers => $UserDatabaseManager(this);
@@ -3555,6 +4280,7 @@ abstract class _$UserDatabase extends GeneratedDatabase {
       $SessionParticipantsTableTable(this);
   late final $SyncMetadataTableTable syncMetadataTable =
       $SyncMetadataTableTable(this);
+  late final $CensusesTableTable censusesTable = $CensusesTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3565,6 +4291,7 @@ abstract class _$UserDatabase extends GeneratedDatabase {
     userProfileTable,
     sessionParticipantsTable,
     syncMetadataTable,
+    censusesTable,
   ];
 }
 
@@ -3596,6 +4323,7 @@ typedef $$SessionsTableTableCreateCompanionBuilder =
       required bool isLocked,
       required SyncStatus syncStatus,
       Value<SyncErrorType?> syncError,
+      Value<String?> censusId,
       Value<int> rowid,
     });
 typedef $$SessionsTableTableUpdateCompanionBuilder =
@@ -3626,6 +4354,7 @@ typedef $$SessionsTableTableUpdateCompanionBuilder =
       Value<bool> isLocked,
       Value<SyncStatus> syncStatus,
       Value<SyncErrorType?> syncError,
+      Value<String?> censusId,
       Value<int> rowid,
     });
 
@@ -3844,6 +4573,11 @@ class $$SessionsTableTableFilterComposer
     builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
+  ColumnFilters<String> get censusId => $composableBuilder(
+    column: $table.censusId,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> observationsTableRefs(
     Expression<bool> Function($$ObservationsTableTableFilterComposer f) f,
   ) {
@@ -4035,6 +4769,11 @@ class $$SessionsTableTableOrderingComposer
     column: $table.syncError,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<String> get censusId => $composableBuilder(
+    column: $table.censusId,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$SessionsTableTableAnnotationComposer
@@ -4150,6 +4889,9 @@ class $$SessionsTableTableAnnotationComposer
   GeneratedColumnWithTypeConverter<SyncErrorType?, int> get syncError =>
       $composableBuilder(column: $table.syncError, builder: (column) => column);
 
+  GeneratedColumn<String> get censusId =>
+      $composableBuilder(column: $table.censusId, builder: (column) => column);
+
   Expression<T> observationsTableRefs<T extends Object>(
     Expression<T> Function($$ObservationsTableTableAnnotationComposer a) f,
   ) {
@@ -4261,6 +5003,7 @@ class $$SessionsTableTableTableManager
                 Value<bool> isLocked = const Value.absent(),
                 Value<SyncStatus> syncStatus = const Value.absent(),
                 Value<SyncErrorType?> syncError = const Value.absent(),
+                Value<String?> censusId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion(
                 id: id,
@@ -4289,6 +5032,7 @@ class $$SessionsTableTableTableManager
                 isLocked: isLocked,
                 syncStatus: syncStatus,
                 syncError: syncError,
+                censusId: censusId,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -4319,6 +5063,7 @@ class $$SessionsTableTableTableManager
                 required bool isLocked,
                 required SyncStatus syncStatus,
                 Value<SyncErrorType?> syncError = const Value.absent(),
+                Value<String?> censusId = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => SessionsTableCompanion.insert(
                 id: id,
@@ -4347,6 +5092,7 @@ class $$SessionsTableTableTableManager
                 isLocked: isLocked,
                 syncStatus: syncStatus,
                 syncError: syncError,
+                censusId: censusId,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -5752,6 +6498,330 @@ typedef $$SyncMetadataTableTableProcessedTableManager =
       SyncMetadataData,
       PrefetchHooks Function()
     >;
+typedef $$CensusesTableTableCreateCompanionBuilder =
+    CensusesTableCompanion Function({
+      required String id,
+      required String title,
+      required DateTime startTime,
+      Value<String?> locationName,
+      Value<String?> description,
+      Value<double?> latitude,
+      Value<double?> longitude,
+      Value<bool> isJoined,
+      Value<bool> alreadyDone,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$CensusesTableTableUpdateCompanionBuilder =
+    CensusesTableCompanion Function({
+      Value<String> id,
+      Value<String> title,
+      Value<DateTime> startTime,
+      Value<String?> locationName,
+      Value<String?> description,
+      Value<double?> latitude,
+      Value<double?> longitude,
+      Value<bool> isJoined,
+      Value<bool> alreadyDone,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$CensusesTableTableFilterComposer
+    extends Composer<_$UserDatabase, $CensusesTableTable> {
+  $$CensusesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get locationName => $composableBuilder(
+    column: $table.locationName,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get longitude => $composableBuilder(
+    column: $table.longitude,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get isJoined => $composableBuilder(
+    column: $table.isJoined,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get alreadyDone => $composableBuilder(
+    column: $table.alreadyDone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CensusesTableTableOrderingComposer
+    extends Composer<_$UserDatabase, $CensusesTableTable> {
+  $$CensusesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get startTime => $composableBuilder(
+    column: $table.startTime,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get locationName => $composableBuilder(
+    column: $table.locationName,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get latitude => $composableBuilder(
+    column: $table.latitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get longitude => $composableBuilder(
+    column: $table.longitude,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get isJoined => $composableBuilder(
+    column: $table.isJoined,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get alreadyDone => $composableBuilder(
+    column: $table.alreadyDone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CensusesTableTableAnnotationComposer
+    extends Composer<_$UserDatabase, $CensusesTableTable> {
+  $$CensusesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startTime =>
+      $composableBuilder(column: $table.startTime, builder: (column) => column);
+
+  GeneratedColumn<String> get locationName => $composableBuilder(
+    column: $table.locationName,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get description => $composableBuilder(
+    column: $table.description,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get latitude =>
+      $composableBuilder(column: $table.latitude, builder: (column) => column);
+
+  GeneratedColumn<double> get longitude =>
+      $composableBuilder(column: $table.longitude, builder: (column) => column);
+
+  GeneratedColumn<bool> get isJoined =>
+      $composableBuilder(column: $table.isJoined, builder: (column) => column);
+
+  GeneratedColumn<bool> get alreadyDone => $composableBuilder(
+    column: $table.alreadyDone,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$CensusesTableTableTableManager
+    extends
+        RootTableManager<
+          _$UserDatabase,
+          $CensusesTableTable,
+          CensusEntityData,
+          $$CensusesTableTableFilterComposer,
+          $$CensusesTableTableOrderingComposer,
+          $$CensusesTableTableAnnotationComposer,
+          $$CensusesTableTableCreateCompanionBuilder,
+          $$CensusesTableTableUpdateCompanionBuilder,
+          (
+            CensusEntityData,
+            BaseReferences<
+              _$UserDatabase,
+              $CensusesTableTable,
+              CensusEntityData
+            >,
+          ),
+          CensusEntityData,
+          PrefetchHooks Function()
+        > {
+  $$CensusesTableTableTableManager(_$UserDatabase db, $CensusesTableTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CensusesTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CensusesTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CensusesTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<DateTime> startTime = const Value.absent(),
+                Value<String?> locationName = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
+                Value<bool> isJoined = const Value.absent(),
+                Value<bool> alreadyDone = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CensusesTableCompanion(
+                id: id,
+                title: title,
+                startTime: startTime,
+                locationName: locationName,
+                description: description,
+                latitude: latitude,
+                longitude: longitude,
+                isJoined: isJoined,
+                alreadyDone: alreadyDone,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String title,
+                required DateTime startTime,
+                Value<String?> locationName = const Value.absent(),
+                Value<String?> description = const Value.absent(),
+                Value<double?> latitude = const Value.absent(),
+                Value<double?> longitude = const Value.absent(),
+                Value<bool> isJoined = const Value.absent(),
+                Value<bool> alreadyDone = const Value.absent(),
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => CensusesTableCompanion.insert(
+                id: id,
+                title: title,
+                startTime: startTime,
+                locationName: locationName,
+                description: description,
+                latitude: latitude,
+                longitude: longitude,
+                isJoined: isJoined,
+                alreadyDone: alreadyDone,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CensusesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$UserDatabase,
+      $CensusesTableTable,
+      CensusEntityData,
+      $$CensusesTableTableFilterComposer,
+      $$CensusesTableTableOrderingComposer,
+      $$CensusesTableTableAnnotationComposer,
+      $$CensusesTableTableCreateCompanionBuilder,
+      $$CensusesTableTableUpdateCompanionBuilder,
+      (
+        CensusEntityData,
+        BaseReferences<_$UserDatabase, $CensusesTableTable, CensusEntityData>,
+      ),
+      CensusEntityData,
+      PrefetchHooks Function()
+    >;
 
 class $UserDatabaseManager {
   final _$UserDatabase _db;
@@ -5769,4 +6839,6 @@ class $UserDatabaseManager {
       );
   $$SyncMetadataTableTableTableManager get syncMetadataTable =>
       $$SyncMetadataTableTableTableManager(_db, _db.syncMetadataTable);
+  $$CensusesTableTableTableManager get censusesTable =>
+      $$CensusesTableTableTableManager(_db, _db.censusesTable);
 }

@@ -23,6 +23,7 @@ part 'user_database.g.dart';
     UserProfileTable,
     SessionParticipantsTable,
     SyncMetadataTable,
+    CensusesTable,
   ],
 )
 class UserDatabase extends _$UserDatabase {
@@ -31,7 +32,7 @@ class UserDatabase extends _$UserDatabase {
   UserDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -56,6 +57,10 @@ class UserDatabase extends _$UserDatabase {
       if (from < 9) {
         await m.addColumn(sessionsTable, sessionsTable.syncError);
         await m.createTable(syncMetadataTable);
+      }
+      if (from < 10) {
+        await m.addColumn(sessionsTable, sessionsTable.censusId);
+        await m.createTable(censusesTable);
       }
     },
     beforeOpen: (details) async {
