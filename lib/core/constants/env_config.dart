@@ -55,4 +55,7 @@ abstract class EnvConfig {
   @EnviedField(varName: 'OPEN_STREET_MAP_TEXT_ATRIBUTE')
   static const String openStreetMapTextAttribute =
       _EnvConfig.openStreetMapTextAttribute;
+
+  @EnviedField(varName: 'CENSUS_JWT_PUBLIC_KEY')
+  static const String censusJwtPublicKey = _EnvConfig.censusJwtPublicKey;
 }

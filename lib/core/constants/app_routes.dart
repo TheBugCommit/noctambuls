@@ -21,4 +21,8 @@ class AppRoutes {
   static const String qrScanner = '/review/qr-scanner';
   static const String mapPicker = '/map-picker';
   static const String profileEdit = '/profile/edit';
+
+  // Census Routes
+  static const String censusDetail = '/census/detail';
+  static const String censusConfirmation = '/census/confirmation';
 }

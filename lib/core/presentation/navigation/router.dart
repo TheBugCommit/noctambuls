@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/constants/app_deeplinks.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
@@ -19,6 +20,10 @@ import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signin/sign_in_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/signup/sign_up_page.dart';
 import 'package:noctambuls/features/auth/presentation/pages/splash/splash_page.dart';
+import 'package:noctambuls/features/censuses/domain/entities/census.dart';
+import 'package:noctambuls/features/censuses/presentation/bloc/census_bloc.dart';
+import 'package:noctambuls/features/censuses/presentation/bloc/census_event.dart';
+import 'package:noctambuls/features/censuses/presentation/pages/census_detail_page.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
@@ -153,7 +158,7 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           providers: [
             BlocProvider(create: (context) => sl<UrlBloc>()),
             BlocProvider(create: (context) => sl<ShareBloc>()),
-            BlocProvider(create: (context) => sl<NotificationSettingsBloc>())
+            BlocProvider(create: (context) => sl<NotificationSettingsBloc>()),
           ],
           child: const SettingsPage(),
         );
@@ -267,6 +272,36 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           );
         }
         return EditProfilePage(profile: profile);
+      },
+    ),
+    GoRoute(
+      path: AppRoutes.censusDetail,
+      parentNavigatorKey: _rootNavigatorKey,
+      builder: (context, state) {
+        final census = state.extra as Census?;
+        if (census == null) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        return BlocProvider(
+          create: (_) => sl<ConnectivityBloc>(),
+          child: CensusDetailPage(census: census),
+        );
+      },
+    ),
+    GoRoute(
+      path: '/census/join',
+      parentNavigatorKey: _rootNavigatorKey,
+      redirect: (context, state) {
+        final token = state.uri.queryParameters[AppDeepLinks.censusTokenParam];
+        if (token != null) {
+          final fullUrl =
+              'https://${AppDeepLinks.censusHost}${AppDeepLinks.censusPath}'
+              '?${AppDeepLinks.censusTokenParam}=$token';
+          context.read<CensusBloc>().add(JoinCensusByUrl(fullUrl));
+        }
+        return AppRoutes.home;
       },
     ),
   ],

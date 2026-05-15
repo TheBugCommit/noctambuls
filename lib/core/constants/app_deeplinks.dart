@@ -5,6 +5,10 @@ class AppDeepLinks {
   static const participantHost = 'participant';
   static const participantCodeParam = 'code';
 
+  static const censusHost = 'app.associaciotaxus.cat';
+  static const censusPath = '/census/join';
+  static const censusTokenParam = 'token';
+
   static bool isValidDeepLink(Uri uri) {
     return uri.scheme == scheme && uri.host == participantHost;
   }
@@ -23,5 +27,16 @@ class AppDeepLinks {
     );
 
     return uri.toString();
+  }
+
+  static bool isCensusDeepLink(Uri uri) {
+    return (uri.scheme == 'https' || uri.scheme == 'http') &&
+        uri.host == censusHost &&
+        uri.path == censusPath &&
+        uri.queryParameters.containsKey(censusTokenParam);
+  }
+
+  static String? extractCensusToken(Uri uri) {
+    return uri.queryParameters[censusTokenParam];
   }
 }

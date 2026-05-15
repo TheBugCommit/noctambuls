@@ -4,6 +4,7 @@ import 'package:noctambuls/core/database/app_database.dart';
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/di/core_injection.dart';
 import 'package:noctambuls/core/di/features/auth_injection.dart';
+import 'package:noctambuls/core/di/features/censuses_injection.dart';
 import 'package:noctambuls/core/di/features/guide_injection.dart';
 import 'package:noctambuls/core/di/features/observations_injection.dart';
 import 'package:noctambuls/core/di/features/profile_injection.dart';
@@ -29,6 +30,7 @@ Future<void> init() async {
   initAuthFeature();
   initSettingsFeature();
   initObservationsFeature();
+  initCensusesFeature();
   initGuideFeature();
   initProfileFeature();
 

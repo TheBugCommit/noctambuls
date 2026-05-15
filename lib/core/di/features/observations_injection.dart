@@ -58,7 +58,7 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => WatchParticipatedSessionsUseCase(sl()))
     ..registerLazySingleton(
       () => CreateSessionUseCase(
-        observationRepository: sl(),
+        sessionRepository: sl(),
         locationService: sl(),
       ),
     )
@@ -66,8 +66,13 @@ void initObservationsFeature() {
     ..registerLazySingleton(() => DeleteSessionUseCase(sl()))
     // Use Cases — observation
     ..registerLazySingleton(() => DeleteObservationUseCase(sl()))
-    ..registerLazySingleton(() => StopObservationPhaseUseCase(sl()))
-    ..registerLazySingleton(() => FinishAndLockSessionUseCase(sl()))
+    ..registerLazySingleton(() => StopObservationPhaseUseCase(sl(), sl()))
+    ..registerLazySingleton(
+      () => FinishAndLockSessionUseCase(
+        sl(),
+        sl(),
+      ),
+    )
     ..registerLazySingleton(() => ChangeSessionDateUseCase(sl()))
     ..registerLazySingleton(() => AddSessionParticipantUseCase(sl()))
     ..registerLazySingleton(() => RemoveSessionParticipantUseCase(sl()))
