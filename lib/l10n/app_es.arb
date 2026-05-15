@@ -334,6 +334,28 @@
     "mapPickerConfirm": "Confirmar ubicación",
     "mapPickerSelectPoint": "Mantén pulsado para colocar el marcador",
     "mapPickerHelpTitle": "Cómo usar el mapa",
-    "mapPickerHelpContent": "Mantén pulsado en cualquier punto del mapa para colocar el marcador. Puedes usar el botón de la diana para centrar el mapa en tu ubicación actual."
+    "mapPickerHelpContent": "Mantén pulsado en cualquier punto del mapa para colocar el marcador. Puedes usar el botón de la diana para centrar el mapa en tu ubicación actual.",
 
+    "ok": "De acuerdo",
+
+    "censusSessionExistentWarning": "Ya existe una session para este censo.",
+    "censusConfirmStartTitle": "¿Seguro que quieres iniciar la sesión de observación ahora?",
+    "censusConfirmStartButton": "Sí, iniciar",
+    "censusDetailTitle": "Detalle del censo",
+    "censusDescriptionTitle": "Descripción",
+    "censusNoDescription": "Este censo no tiene ninguna descripción añadida.",
+    "censusesUpcomingTitle": "Próximos censos",
+    "censusLobbyWaiting": "Censo en espera",
+    "censusEnterLobby": "Entrar",
+    "censusAbandon": "Cancelar",
+    "censusStartSession": "Iniciar sesión",
+    "censusWarningPoint": "Por favor, no inicies la sesión hasta que no estés en el punto de escucha y sea la hora acordada para empezar el censo.",    "censusDirectionLabel": "Dirección:",
+    "censusNotTodayBody": "Este censo no se celebra hoy. Comprueba la fecha e inténtalo de nuevo el día de la jornada.",
+    "censusLobbyConflictBody": "Ya estás inscrito en otro censo. Cancélalo antes de unirte a un nuevo censo.",
+    "censusAlreadySessionActive": "Cierra la sesión activa antes de iniciar la del censo.",
+    "censusInvalidTokenBody": "El código QR o el enlace del censo no ha podido verificarse. Asegúrate de que es correcto.",
+    "censusQrScanTitle": "Escanea el QR del censo",
+    "censusQrScanHelper": "Apunta la cámara al código QR del censo",
+    "censusQrHelpTitle": "¿Cómo unirse al censo?",
+    "censusQrHelpBody": "Escanea el código QR que ha compartido el coordinador del censo. Si no puedes escanearlo, puedes introducir la URL manualmente."
 }

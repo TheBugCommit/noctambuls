@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:go_router/go_router.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
-import 'package:noctambuls/core/constants/env_config.dart';
 import 'package:noctambuls/core/domain/entities/geo_position.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_event.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_state.dart';
+import 'package:noctambuls/core/presentation/widgets/map_preview_widget.dart';
+import 'package:noctambuls/core/presentation/widgets/no_internet_placeholder_widget.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/session_review_event.dart';
@@ -115,17 +115,18 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
               }
 
               if (networkState is! NetworkActionSuccess) {
-                return const _NoInternetPlaceholder();
+                return const NoInternetPlaceholderWidget();
               }
 
               final points = _extractMapPoints();
 
               if (points.isNotEmpty) {
-                return _MapPreview(
+                return MapPreviewWidget(
                   points: points,
-                  isIncidental: widget.session.isIncidental,
                   isReadOnly: widget.isReadOnly,
-                  onTap: () => _openMapPicker(context),
+                  onTap: (widget.session.isIncidental)
+                      ? null
+                      : () => _openMapPicker(context),
                 );
               }
 
@@ -148,165 +149,6 @@ class _SessionLocationSectionState extends State<SessionLocationSection> {
           ),
         ],
       ],
-    );
-  }
-}
-
-class _MapPreview extends StatefulWidget {
-  const _MapPreview({
-    required this.points,
-    required this.isIncidental,
-    required this.isReadOnly,
-    required this.onTap,
-  });
-
-  final List<LatLng> points;
-  final bool isIncidental;
-  final VoidCallback onTap;
-  final bool isReadOnly;
-
-  @override
-  State<_MapPreview> createState() => _MapPreviewState();
-}
-
-class _MapPreviewState extends State<_MapPreview> {
-  late final MapController _mapController;
-
-  @override
-  void initState() {
-    super.initState();
-    _mapController = MapController();
-  }
-
-  @override
-  void dispose() {
-    _mapController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant _MapPreview oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.points.length != oldWidget.points.length ||
-        (widget.points.isNotEmpty &&
-            oldWidget.points.isNotEmpty &&
-            widget.points.first != oldWidget.points.first)) {
-      if (widget.points.length > 1) {
-        final bounds = LatLngBounds.fromPoints(widget.points);
-        final isSinglePointArea = bounds.southWest == bounds.northEast;
-        if (!isSinglePointArea) {
-          _mapController.fitCamera(
-            CameraFit.bounds(
-              bounds: bounds,
-              padding: const EdgeInsets.all(AppDimensions.xl),
-            ),
-          );
-        } else {
-          _mapController.move(widget.points.first, 14);
-        }
-      } else if (widget.points.isNotEmpty) {
-        _mapController.move(widget.points.first, 14);
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-
-    CameraFit? cameraFit;
-    final bounds = LatLngBounds.fromPoints(widget.points);
-    final isSinglePointArea = bounds.southWest == bounds.northEast;
-
-    if (!isSinglePointArea) {
-      cameraFit = CameraFit.bounds(
-        bounds: bounds,
-        padding: const EdgeInsets.all(AppDimensions.xl),
-      );
-    }
-
-    return SizedBox(
-      height: 180,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          FlutterMap(
-            mapController: _mapController,
-            options: MapOptions(
-              initialCenter: widget.points.first,
-              initialZoom: 14,
-              initialCameraFit: cameraFit,
-              interactionOptions: const InteractionOptions(
-                flags: InteractiveFlag.none,
-              ),
-            ),
-            children: [
-              TileLayer(
-                urlTemplate: EnvConfig.openStreetMapTiles,
-                userAgentPackageName: EnvConfig.packageName,
-              ),
-              MarkerLayer(
-                markers: widget.points
-                    .map(
-                      (p) => Marker(
-                        point: p,
-                        width: AppDimensions.xl,
-                        height: AppDimensions.xl,
-                        child: const Icon(
-                          Icons.location_on,
-                          color: Colors.redAccent,
-                          size: AppDimensions.xl,
-                        ),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ],
-          ),
-
-          if (!widget.isIncidental && !widget.isReadOnly) ...[
-            Positioned.fill(
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: widget.onTap,
-                  child: const SizedBox.shrink(),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: AppDimensions.sm,
-                  vertical: AppDimensions.xs,
-                ),
-                color: theme.colorScheme.scrim.withValues(alpha: 0.65),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Icon(
-                      Icons.edit_location_alt_outlined,
-                      color: theme.colorScheme.onInverseSurface,
-                      size: AppDimensions.iconSm,
-                    ),
-                    const SizedBox(width: AppDimensions.xs),
-                    Text(
-                      l10n.reviewLocationModify,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.onInverseSurface,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ],
-      ),
     );
   }
 }
@@ -366,45 +208,6 @@ class _NoLocationPlaceholder extends StatelessWidget {
               ),
             ),
           ],
-        ],
-      ),
-    );
-  }
-}
-
-class _NoInternetPlaceholder extends StatelessWidget {
-  const _NoInternetPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
-
-    return Padding(
-      padding: const EdgeInsets.all(AppDimensions.xl),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.wifi_off_outlined,
-            size: AppDimensions.iconXl,
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-          const SizedBox(height: AppDimensions.sm),
-          Text(
-            l10n.reviewLocationNoInternet,
-            style: theme.textTheme.titleMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: AppDimensions.xs),
-          Text(
-            l10n.reviewLocationNoInternetDesc,
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
         ],
       ),
     );

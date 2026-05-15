@@ -61,6 +61,18 @@ class SessionRepositoryImpl implements SessionRepository {
   }
 
   @override
+  Future<Result<ObservationSession?>> getSessionByCensusId(
+    String censusId,
+  ) async {
+    try {
+      final model = await localDataSource.getByCensusId(censusId);
+      return Ok(model?.toDomain());
+    } on Exception catch (e, st) {
+      return Err(const DatabaseFailure().withDebug(e, st));
+    }
+  }
+
+  @override
   Stream<List<ObservationSession>> watchAllSessions() {
     return localDataSource.watchAll().map(
       (models) => models.map((m) => m.toDomain()).toList(),

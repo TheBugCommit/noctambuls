@@ -150,16 +150,10 @@ class _ObservationFormPageState extends State<ObservationFormPage>
     } else {
       final min = widget.session.observationTimeMin?.toLocal();
       final max = widget.session.observationTimeMax?.toLocal() ?? now;
-      final base = widget.session.startTime?.toLocal() ?? now;
-      var initial = DateTime(
-        base.year,
-        base.month,
-        base.day,
-        now.hour,
-        now.minute,
-      );
+      var initial = now;
       if (initial.isAfter(max)) initial = max;
       if (min != null && initial.isBefore(min)) initial = min;
+
       _startTime = initial;
       _endTime = initial;
     }
@@ -208,10 +202,10 @@ class _ObservationFormPageState extends State<ObservationFormPage>
           bearing: _selectedBearing!,
           location: state.geoPosition,
           locationError: state.locationError,
-          startTime: _startTime.toUtc(),
-          endTime: _endTime.toUtc(),
+          startTime: _startTime,
+          endTime: _endTime,
           existingRecord: widget.existingRecord,
-          newGlobalDate: _hasChangedGlobalDate ? _startTime.toUtc() : null,
+          newGlobalDate: _hasChangedGlobalDate ? _startTime : null,
         ),
       );
     }

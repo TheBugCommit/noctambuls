@@ -6,6 +6,8 @@ import 'package:noctambuls/core/presentation/theme/theme.dart';
 import 'package:noctambuls/core/presentation/theme/util.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
+import 'package:noctambuls/features/censuses/presentation/bloc/census_bloc.dart';
+import 'package:noctambuls/features/censuses/presentation/bloc/census_event.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_event.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
@@ -52,6 +54,7 @@ class _NoctambulsAppState extends State<NoctambulsApp> {
                 context.read<ObservingSessionBloc>().add(
                   WatchObservingSession(),
                 );
+                context.read<CensusBloc>().add(CensusStarted());
                 context.read<ProfileBloc>().add(
                   ProfileLoadRequested(userId: state.user.id),
                 );

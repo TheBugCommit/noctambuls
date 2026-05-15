@@ -87,14 +87,14 @@ extension ObservationRecordModelX on ObservationRecordModel {
       speciesId: speciesId,
       contactType: contactType,
       quantity: quantity,
-      startTime: startTime,
-      endTime: endTime,
+      startTime: startTime.toUtc(),
+      endTime: endTime.toUtc(),
       notes: notes,
       location: location,
       locationError: locationError,
       bearing: bearing,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
+      createdAt: createdAt.toUtc(),
+      updatedAt: updatedAt.toUtc(),
       isDeleted: isDeleted,
     );
   }

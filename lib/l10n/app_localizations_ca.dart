@@ -893,4 +893,78 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get mapPickerHelpContent =>
       'Mantén premut a qualsevol punt del mapa per col·locar el marcador. Pots utilitzar el botó de la diana per centrar el mapa a la teva posició actual.';
+
+  @override
+  String get ok => 'D\'acord';
+
+  @override
+  String get censusSessionExistentWarning =>
+      'Ja existeix una sessió d\'aquest cens.';
+
+  @override
+  String get censusConfirmStartTitle =>
+      'Segur que vols iniciar la sessió d\'observació ara?';
+
+  @override
+  String get censusConfirmStartButton => 'Sí, iniciar';
+
+  @override
+  String get censusDetailTitle => 'Detall del cens';
+
+  @override
+  String get censusDescriptionTitle => 'Descripció';
+
+  @override
+  String get censusNoDescription => 'Aquest cens no té cap descripció afegida.';
+
+  @override
+  String get censusesUpcomingTitle => 'Pròxims censos';
+
+  @override
+  String get censusLobbyWaiting => 'Cens en espera';
+
+  @override
+  String get censusEnterLobby => 'Entrar';
+
+  @override
+  String get censusAbandon => 'Cancel·lar';
+
+  @override
+  String get censusStartSession => 'Iniciar sessió';
+
+  @override
+  String get censusWarningPoint =>
+      'Si us plau, no iniciïs la sessió fins que no estiguis al punt d\'escolta i sigui l\'hora acordada per començar el cens.';
+
+  @override
+  String get censusDirectionLabel => 'Direcció:';
+
+  @override
+  String get censusNotTodayBody =>
+      'Aquest cens no té lloc avui. Comprova la data i torna-ho a intentar el dia de la jornada.';
+
+  @override
+  String get censusLobbyConflictBody =>
+      'Ja estàs inscrit a un altre cens. Cancel·la\'l abans d\'unir-te a un nou cens.';
+
+  @override
+  String get censusAlreadySessionActive =>
+      'Tanca la sessió activa abans d\'iniciar la del cens.';
+
+  @override
+  String get censusInvalidTokenBody =>
+      'El codi QR o l\'enllaç del cens no s\'ha pogut verificar. Assegura\'t que és correcte.';
+
+  @override
+  String get censusQrScanTitle => 'Escaneja el QR del cens';
+
+  @override
+  String get censusQrScanHelper => 'Apunta la càmera al codi QR del cens';
+
+  @override
+  String get censusQrHelpTitle => 'Com unir-se al cens?';
+
+  @override
+  String get censusQrHelpBody =>
+      'Escaneja el codi QR que ha compartit el coordinador del cens. Si no pots escanejar el codi, pots introduir l\'URL manualment.';
 }

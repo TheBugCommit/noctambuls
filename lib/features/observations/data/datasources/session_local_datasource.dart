@@ -13,6 +13,8 @@ abstract class SessionLocalDataSource {
 
   Future<ObservationSessionModel?> getById(String id);
 
+  Future<ObservationSessionModel?> getByCensusId(String censusId);
+
   Stream<List<ObservationSessionModel>> watchAll();
 
   Future<ObservationSessionModel?> getActiveSession();
@@ -117,6 +119,17 @@ class SessionLocalDataSourceImpl implements SessionLocalDataSource {
   Future<ObservationSessionModel?> getById(String id) async {
     final query = db.select(db.sessionsTable)
       ..where((tbl) => tbl.id.equals(id));
+    final sessionData = await query.getSingleOrNull();
+
+    if (sessionData == null) return null;
+
+    return _hydrateSessionAggregate(sessionData);
+  }
+
+  @override
+  Future<ObservationSessionModel?> getByCensusId(String censusId) async {
+    final query = db.select(db.sessionsTable)
+      ..where((tbl) => tbl.censusId.equals(censusId));
     final sessionData = await query.getSingleOrNull();
 
     if (sessionData == null) return null;
@@ -455,6 +468,7 @@ class SessionLocalDataSourceImpl implements SessionLocalDataSource {
       id: s.id,
       annotatorId: s.annotatorId,
       sessionType: s.sessionType,
+      censusId: Value(s.censusId),
       startTime: Value(s.startTime),
       endTime: Value(s.endTime),
       temperature: Value(s.temperature),

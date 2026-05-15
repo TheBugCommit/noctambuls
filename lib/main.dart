@@ -4,9 +4,11 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:noctambuls/app.dart';
 import 'package:noctambuls/core/background/work_manager_init.dart' as wm;
 import 'package:noctambuls/core/di/injection_container.dart' as di;
+import 'package:noctambuls/core/domain/services/notification_service.dart';
 import 'package:noctambuls/core/utils/app_bloc_observer.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_event.dart';
+import 'package:noctambuls/features/censuses/presentation/bloc/census_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
@@ -19,6 +21,7 @@ void main() async {
 
   await di.init();
   await wm.init();
+  await di.sl<NotificationService>().requestPermissions();
 
   Bloc.observer = AppBlocObserver();
 
@@ -35,6 +38,9 @@ void main() async {
         BlocProvider(create: (_) => di.sl<LanguageBloc>()),
         BlocProvider(
           create: (_) => di.sl<ObservingSessionBloc>(),
+        ),
+        BlocProvider(
+          create: (_) => di.sl<CensusBloc>(),
         ),
         BlocProvider(
           create: (_) => di.sl<ProfileBloc>(),

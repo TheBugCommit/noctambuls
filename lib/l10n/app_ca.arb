@@ -339,5 +339,29 @@
     "mapPickerConfirm": "Confirmar ubicació",
     "mapPickerSelectPoint": "Mantén premut per col·locar el marcador",
     "mapPickerHelpTitle": "Com utilitzar el mapa",
-    "mapPickerHelpContent": "Mantén premut a qualsevol punt del mapa per col·locar el marcador. Pots utilitzar el botó de la diana per centrar el mapa a la teva posició actual."
+    "mapPickerHelpContent": "Mantén premut a qualsevol punt del mapa per col·locar el marcador. Pots utilitzar el botó de la diana per centrar el mapa a la teva posició actual.",
+
+    "ok": "D'acord",
+
+    "censusSessionExistentWarning": "Ja existeix una sessió d'aquest cens.",
+    "censusConfirmStartTitle": "Segur que vols iniciar la sessió d'observació ara?",
+    "censusConfirmStartButton": "Sí, iniciar",
+    "censusDetailTitle": "Detall del cens",
+    "censusDescriptionTitle": "Descripció",
+    "censusNoDescription": "Aquest cens no té cap descripció afegida.",
+    "censusesUpcomingTitle": "Pròxims censos",
+    "censusLobbyWaiting": "Cens en espera",
+    "censusEnterLobby": "Entrar",
+    "censusAbandon": "Cancel·lar",
+    "censusStartSession": "Iniciar sessió",
+    "censusWarningPoint": "Si us plau, no iniciïs la sessió fins que no estiguis al punt d'escolta i sigui l'hora acordada per començar el cens.",
+    "censusDirectionLabel": "Direcció:",
+    "censusNotTodayBody": "Aquest cens no té lloc avui. Comprova la data i torna-ho a intentar el dia de la jornada.",
+    "censusLobbyConflictBody": "Ja estàs inscrit a un altre cens. Cancel·la'l abans d'unir-te a un nou cens.",
+    "censusAlreadySessionActive": "Tanca la sessió activa abans d'iniciar la del cens.",
+    "censusInvalidTokenBody": "El codi QR o l'enllaç del cens no s'ha pogut verificar. Assegura't que és correcte.",
+    "censusQrScanTitle": "Escaneja el QR del cens",
+    "censusQrScanHelper": "Apunta la càmera al codi QR del cens",
+    "censusQrHelpTitle": "Com unir-se al cens?",
+    "censusQrHelpBody": "Escaneja el codi QR que ha compartit el coordinador del cens. Si no pots escanejar el codi, pots introduir l'URL manualment."
 }

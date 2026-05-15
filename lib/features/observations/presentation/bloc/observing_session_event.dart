@@ -28,13 +28,15 @@ class StartObservingSession extends ObservingSessionEvent {
   const StartObservingSession({
     required this.sessionType,
     required this.annotatorId,
+    this.censusId,
   });
 
   final SessionType sessionType;
   final String annotatorId;
+  final String? censusId;
 
   @override
-  List<Object?> get props => [sessionType, annotatorId];
+  List<Object?> get props => [sessionType, annotatorId, censusId];
 }
 
 /// Updates any session property event

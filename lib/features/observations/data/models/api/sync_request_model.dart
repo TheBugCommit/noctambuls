@@ -47,7 +47,7 @@ abstract class SyncSessionDto with _$SyncSessionDto {
 
   factory SyncSessionDto.fromModel(ObservationSessionModel s) => SyncSessionDto(
     id: s.id,
-    censusId: null,
+    censusId: s.censusId,
     sessionType: s.sessionType.value,
     startTime: (s.startTime ?? s.createdAt).toUtc().toIso8601String(),
     endTime: (s.endTime ?? s.updatedAt).toUtc().toIso8601String(),

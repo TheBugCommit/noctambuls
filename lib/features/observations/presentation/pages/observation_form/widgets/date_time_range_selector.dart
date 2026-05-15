@@ -35,6 +35,8 @@ class ObservationDateHeader extends StatelessWidget {
     if (pickedDate == null || !context.mounted) return;
 
     final currentNow = DateTime.now();
+    final duration = endTime.difference(startTime);
+
     var newStart = DateTime(
       pickedDate.year,
       pickedDate.month,
@@ -42,17 +44,15 @@ class ObservationDateHeader extends StatelessWidget {
       startTime.hour,
       startTime.minute,
     );
-    var newEnd = DateTime(
-      pickedDate.year,
-      pickedDate.month,
-      pickedDate.day,
-      endTime.hour,
-      endTime.minute,
-    );
 
-    if (newStart.isAfter(currentNow)) newStart = currentNow;
-    if (newEnd.isAfter(currentNow)) newEnd = currentNow;
-    if (newStart.isAfter(newEnd)) newEnd = newStart;
+    var newEnd = newStart.add(duration);
+
+    if (newStart.isAfter(currentNow)) {
+      newStart = currentNow;
+      newEnd = currentNow;
+    } else if (newEnd.isAfter(currentNow)) {
+      newEnd = currentNow;
+    }
 
     onChanged(newStart, newEnd);
     onGlobalDateChanged?.call(pickedDate);
@@ -145,11 +145,36 @@ class DateTimeRangeSelectorField extends StatelessWidget {
       pickedTime.hour,
       pickedTime.minute,
     );
-    var newEnd = endTime;
+
+    if (!session.isIncidental && min != null) {
+      // CAS A: L'usuari tria "23:59" estant ja a dia 16. L'App es pensa que és del futur.
+      // Solució: Comprovem si restant-li un dia (15 a les 23:59) entra en la sessió.
+      if (newStart.isAfter(max)) {
+        final prevDay = newStart.subtract(const Duration(days: 1));
+        if (!prevDay.isBefore(min)) {
+          newStart = prevDay;
+        } else {
+          newStart = min;
+        }
+      }
+      // CAS B: L'usuari tria "00:10" estant a dia 15. L'App es pensa que és abans de començar.
+      // Solució: Comprovem si sumant-li un dia (16 a les 00:10) entra en la sessió.
+      else if (newStart.isBefore(min)) {
+        final nextDay = newStart.add(const Duration(days: 1));
+        if (!nextDay.isAfter(max)) {
+          newStart = nextDay;
+        }
+      }
+    }
 
     if (newStart.isAfter(max)) newStart = max;
     if (min != null && newStart.isBefore(min)) newStart = min;
-    if (newStart.isAfter(newEnd)) newEnd = newStart;
+
+    var newEnd = endTime;
+    if (newStart.isAfter(newEnd)) {
+      newEnd = newStart;
+      if (newEnd.isAfter(max)) newEnd = max;
+    }
 
     onChanged(newStart, newEnd);
   }
@@ -162,22 +187,28 @@ class DateTimeRangeSelectorField extends StatelessWidget {
     if (pickedTime == null) return;
 
     final now = DateTime.now();
-    final min = session.observationTimeMin;
-    final max = session.observationTimeMax ?? now;
+    final min = session.observationTimeMin?.toLocal();
+    final max = session.observationTimeMax?.toLocal() ?? now;
 
     var newEnd = DateTime(
-      endTime.year,
-      endTime.month,
-      endTime.day,
+      startTime.year,
+      startTime.month,
+      startTime.day,
       pickedTime.hour,
       pickedTime.minute,
     );
-    var newStart = startTime;
+
+    // Si l'usuari ha triat una hora més petita, intentem donar-li un dia de marge (ha creuat la nit)
+    if (newEnd.isBefore(startTime)) {
+      newEnd = newEnd.add(const Duration(days: 1));
+    }
 
     if (newEnd.isAfter(max)) newEnd = max;
     if (min != null && newEnd.isBefore(min)) newEnd = min;
-    if (newEnd.isBefore(newStart)) newStart = newEnd;
 
+    var newStart = startTime;
+    // Si després de tot, el final segueix sent anterior a l'inici, igualem
+    if (newEnd.isBefore(newStart)) newStart = newEnd;
     onChanged(newStart, newEnd);
   }
 
@@ -212,7 +243,9 @@ class DateTimeRangeSelectorField extends StatelessWidget {
               Expanded(
                 child: DateTimeSelectionCard(
                   label: l10n.endTimeLabel,
-                  value: _formatTime(endTime),
+                  value: startTime.day != endTime.day
+                      ? '${_formatTime(endTime)} (+1d)'
+                      : _formatTime(endTime),
                   icon: Icons.access_time,
                   onTap: isReadOnly ? null : () => _onEndTimePicked(context),
                 ),

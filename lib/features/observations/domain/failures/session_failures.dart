@@ -34,6 +34,21 @@ final class SessionNotFoundFailure extends SessionFailure {
       this;
 }
 
+final class AlreadyCensusSessionCreatedFailure extends SessionFailure {
+  const AlreadyCensusSessionCreatedFailure({
+    super.debugMessage =
+        'Session could not be created, becouse already exists one by this census',
+    super.statusCode = 500,
+    super.stackTrace,
+  });
+
+  @override
+  AlreadyCensusSessionCreatedFailure withDebug(
+    Object error, [
+    StackTrace? stackTrace,
+  ]) => this;
+}
+
 final class ResumeSessionExpiredFailure extends SessionFailure {
   const ResumeSessionExpiredFailure({
     super.debugMessage = 'Cannot resume session after more than 1 hour',

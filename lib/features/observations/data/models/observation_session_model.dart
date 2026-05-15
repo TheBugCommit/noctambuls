@@ -42,6 +42,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
     GeoPosition? location,
     LocationErrorType? locationError,
     SyncErrorType? syncError,
+    String? censusId,
   }) = _ObservationSessionModel;
 
   factory ObservationSessionModel.fromEntity(ObservationSession entity) {
@@ -70,6 +71,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
       isDeleted: entity.isDeleted,
+      censusId: entity.censusId,
     );
   }
 
@@ -114,6 +116,7 @@ abstract class ObservationSessionModel with _$ObservationSessionModel {
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
       isDeleted: data.isDeleted,
+      censusId: data.censusId,
     );
   }
 }
@@ -124,8 +127,8 @@ extension ObservationSessionModelX on ObservationSessionModel {
       id: id,
       annotatorId: annotatorId,
       sessionType: sessionType,
-      startTime: startTime,
-      endTime: endTime,
+      startTime: startTime?.toUtc(),
+      endTime: endTime?.toUtc(),
       temperature: temperature,
       wind: wind,
       sky: sky,
@@ -140,9 +143,10 @@ extension ObservationSessionModelX on ObservationSessionModel {
       isLocked: isLocked,
       syncStatus: syncStatus,
       syncError: syncError,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
+      createdAt: createdAt.toUtc(),
+      updatedAt: updatedAt.toUtc(),
       isDeleted: isDeleted,
+      censusId: censusId,
     );
   }
 }

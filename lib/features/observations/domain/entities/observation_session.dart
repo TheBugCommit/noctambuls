@@ -38,11 +38,13 @@ class ObservationSession extends Equatable {
     this.syncStatus = SyncStatus.draft,
     this.syncError,
     this.isDeleted = false,
+    this.censusId,
   });
 
   final String id;
   final String annotatorId;
   final SessionType sessionType;
+  final String? censusId;
   final DateTime? startTime;
   final DateTime? endTime;
   final TemperatureRange temperature;
@@ -91,6 +93,8 @@ class ObservationSession extends Equatable {
       sessionType == SessionType.census || sessionType == SessionType.station;
 
   bool get isIncidental => sessionType == SessionType.incidental;
+
+  bool get isCensus => sessionType == SessionType.census;
 
   ObservationSession addObservation(ObservationRecord observation) {
     if (isLocked) {
@@ -192,36 +196,42 @@ class ObservationSession extends Equatable {
     }
 
     final nowUtc = DateTime.now().toUtc();
+    final localNewDate = newDate.toLocal();
 
     DateTime? newSessionStart;
     if (startTime != null) {
-      newSessionStart = DateTime.utc(
-        newDate.year,
-        newDate.month,
-        newDate.day,
-        startTime!.hour,
-        startTime!.minute,
+      final localStartTime = startTime!.toLocal();
+      final combinedLocal = DateTime(
+        localNewDate.year,
+        localNewDate.month,
+        localNewDate.day,
+        localStartTime.hour,
+        localStartTime.minute,
+        localStartTime.second,
       );
+
+      newSessionStart = combinedLocal.toUtc();
       if (newSessionStart.isAfter(nowUtc)) newSessionStart = nowUtc;
     } else {
-      newSessionStart = DateTime.utc(newDate.year, newDate.month, newDate.day);
+      newSessionStart = DateTime(
+        localNewDate.year,
+        localNewDate.month,
+        localNewDate.day,
+      ).toUtc();
     }
 
     final newObservations = observations.map((obs) {
-      var newStart = DateTime.utc(
-        newDate.year,
-        newDate.month,
-        newDate.day,
-        obs.startTime.hour,
-        obs.startTime.minute,
-      );
-      var newEnd = DateTime.utc(
-        newDate.year,
-        newDate.month,
-        newDate.day,
-        obs.endTime.hour,
-        obs.endTime.minute,
-      );
+      final localObsStart = obs.startTime.toLocal();
+      var newStart = DateTime(
+        localNewDate.year,
+        localNewDate.month,
+        localNewDate.day,
+        localObsStart.hour,
+        localObsStart.minute,
+        localObsStart.second,
+      ).toUtc();
+      final duration = obs.endTime.difference(obs.startTime);
+      var newEnd = newStart.add(duration);
 
       if (newStart.isAfter(nowUtc)) newStart = nowUtc;
       if (newEnd.isAfter(nowUtc)) newEnd = newStart;
@@ -436,6 +446,7 @@ class ObservationSession extends Equatable {
       createdAt: createdAt,
       updatedAt: updatedAt,
       isDeleted: isDeleted ?? this.isDeleted,
+      censusId: censusId,
     );
   }
 
@@ -444,6 +455,7 @@ class ObservationSession extends Equatable {
     id,
     annotatorId,
     sessionType,
+    censusId,
     startTime,
     endTime,
     temperature,

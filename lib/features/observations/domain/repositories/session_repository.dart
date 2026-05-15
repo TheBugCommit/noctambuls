@@ -13,6 +13,8 @@ abstract class SessionRepository {
 
   Future<Result<ObservationSession?>> getActiveSession();
 
+  Future<Result<ObservationSession?>> getSessionByCensusId(String censusId);
+
   Stream<ObservationSession?> watchActiveSession();
 
   Stream<ObservationSession?> watchSessionById(String id);

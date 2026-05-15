@@ -1753,6 +1753,138 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Mantén premut a qualsevol punt del mapa per col·locar el marcador. Pots utilitzar el botó de la diana per centrar el mapa a la teva posició actual.'**
   String get mapPickerHelpContent;
+
+  /// No description provided for @ok.
+  ///
+  /// In ca, this message translates to:
+  /// **'D\'acord'**
+  String get ok;
+
+  /// No description provided for @censusSessionExistentWarning.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ja existeix una sessió d\'aquest cens.'**
+  String get censusSessionExistentWarning;
+
+  /// No description provided for @censusConfirmStartTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Segur que vols iniciar la sessió d\'observació ara?'**
+  String get censusConfirmStartTitle;
+
+  /// No description provided for @censusConfirmStartButton.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sí, iniciar'**
+  String get censusConfirmStartButton;
+
+  /// No description provided for @censusDetailTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Detall del cens'**
+  String get censusDetailTitle;
+
+  /// No description provided for @censusDescriptionTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Descripció'**
+  String get censusDescriptionTitle;
+
+  /// No description provided for @censusNoDescription.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aquest cens no té cap descripció afegida.'**
+  String get censusNoDescription;
+
+  /// No description provided for @censusesUpcomingTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Pròxims censos'**
+  String get censusesUpcomingTitle;
+
+  /// No description provided for @censusLobbyWaiting.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cens en espera'**
+  String get censusLobbyWaiting;
+
+  /// No description provided for @censusEnterLobby.
+  ///
+  /// In ca, this message translates to:
+  /// **'Entrar'**
+  String get censusEnterLobby;
+
+  /// No description provided for @censusAbandon.
+  ///
+  /// In ca, this message translates to:
+  /// **'Cancel·lar'**
+  String get censusAbandon;
+
+  /// No description provided for @censusStartSession.
+  ///
+  /// In ca, this message translates to:
+  /// **'Iniciar sessió'**
+  String get censusStartSession;
+
+  /// No description provided for @censusWarningPoint.
+  ///
+  /// In ca, this message translates to:
+  /// **'Si us plau, no iniciïs la sessió fins que no estiguis al punt d\'escolta i sigui l\'hora acordada per començar el cens.'**
+  String get censusWarningPoint;
+
+  /// No description provided for @censusDirectionLabel.
+  ///
+  /// In ca, this message translates to:
+  /// **'Direcció:'**
+  String get censusDirectionLabel;
+
+  /// No description provided for @censusNotTodayBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Aquest cens no té lloc avui. Comprova la data i torna-ho a intentar el dia de la jornada.'**
+  String get censusNotTodayBody;
+
+  /// No description provided for @censusLobbyConflictBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Ja estàs inscrit a un altre cens. Cancel·la\'l abans d\'unir-te a un nou cens.'**
+  String get censusLobbyConflictBody;
+
+  /// No description provided for @censusAlreadySessionActive.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tanca la sessió activa abans d\'iniciar la del cens.'**
+  String get censusAlreadySessionActive;
+
+  /// No description provided for @censusInvalidTokenBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'El codi QR o l\'enllaç del cens no s\'ha pogut verificar. Assegura\'t que és correcte.'**
+  String get censusInvalidTokenBody;
+
+  /// No description provided for @censusQrScanTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Escaneja el QR del cens'**
+  String get censusQrScanTitle;
+
+  /// No description provided for @censusQrScanHelper.
+  ///
+  /// In ca, this message translates to:
+  /// **'Apunta la càmera al codi QR del cens'**
+  String get censusQrScanHelper;
+
+  /// No description provided for @censusQrHelpTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Com unir-se al cens?'**
+  String get censusQrHelpTitle;
+
+  /// No description provided for @censusQrHelpBody.
+  ///
+  /// In ca, this message translates to:
+  /// **'Escaneja el codi QR que ha compartit el coordinador del cens. Si no pots escanejar el codi, pots introduir l\'URL manualment.'**
+  String get censusQrHelpBody;
 }
 
 class _AppLocalizationsDelegate

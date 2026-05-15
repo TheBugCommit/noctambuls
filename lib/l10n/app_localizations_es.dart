@@ -896,4 +896,79 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get mapPickerHelpContent =>
       'Mantén pulsado en cualquier punto del mapa para colocar el marcador. Puedes usar el botón de la diana para centrar el mapa en tu ubicación actual.';
+
+  @override
+  String get ok => 'De acuerdo';
+
+  @override
+  String get censusSessionExistentWarning =>
+      'Ya existe una session para este censo.';
+
+  @override
+  String get censusConfirmStartTitle =>
+      '¿Seguro que quieres iniciar la sesión de observación ahora?';
+
+  @override
+  String get censusConfirmStartButton => 'Sí, iniciar';
+
+  @override
+  String get censusDetailTitle => 'Detalle del censo';
+
+  @override
+  String get censusDescriptionTitle => 'Descripción';
+
+  @override
+  String get censusNoDescription =>
+      'Este censo no tiene ninguna descripción añadida.';
+
+  @override
+  String get censusesUpcomingTitle => 'Próximos censos';
+
+  @override
+  String get censusLobbyWaiting => 'Censo en espera';
+
+  @override
+  String get censusEnterLobby => 'Entrar';
+
+  @override
+  String get censusAbandon => 'Cancelar';
+
+  @override
+  String get censusStartSession => 'Iniciar sesión';
+
+  @override
+  String get censusWarningPoint =>
+      'Por favor, no inicies la sesión hasta que no estés en el punto de escucha y sea la hora acordada para empezar el censo.';
+
+  @override
+  String get censusDirectionLabel => 'Dirección:';
+
+  @override
+  String get censusNotTodayBody =>
+      'Este censo no se celebra hoy. Comprueba la fecha e inténtalo de nuevo el día de la jornada.';
+
+  @override
+  String get censusLobbyConflictBody =>
+      'Ya estás inscrito en otro censo. Cancélalo antes de unirte a un nuevo censo.';
+
+  @override
+  String get censusAlreadySessionActive =>
+      'Cierra la sesión activa antes de iniciar la del censo.';
+
+  @override
+  String get censusInvalidTokenBody =>
+      'El código QR o el enlace del censo no ha podido verificarse. Asegúrate de que es correcto.';
+
+  @override
+  String get censusQrScanTitle => 'Escanea el QR del censo';
+
+  @override
+  String get censusQrScanHelper => 'Apunta la cámara al código QR del censo';
+
+  @override
+  String get censusQrHelpTitle => '¿Cómo unirse al censo?';
+
+  @override
+  String get censusQrHelpBody =>
+      'Escanea el código QR que ha compartido el coordinador del censo. Si no puedes escanearlo, puedes introducir la URL manualmente.';
 }

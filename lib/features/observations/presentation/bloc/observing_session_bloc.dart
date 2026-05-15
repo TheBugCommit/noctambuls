@@ -112,6 +112,7 @@ class ObservingSessionBloc
     final result = await createSessionUseCase(
       event.sessionType,
       event.annotatorId,
+      censusId: event.censusId,
     );
     result.when(
       success: (_) {},

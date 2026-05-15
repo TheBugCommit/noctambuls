@@ -11,15 +11,19 @@ import 'package:uuid/uuid.dart';
 
 class CreateSessionUseCase {
   CreateSessionUseCase({
-    required this.observationRepository,
+    required this.sessionRepository,
     required this.locationService,
   });
 
-  final SessionRepository observationRepository;
+  final SessionRepository sessionRepository;
   final LocationService locationService;
 
-  Future<Result<Unit>> call(SessionType sessionType, String annotatorId) async {
-    final activeSessionResult = await observationRepository.getActiveSession();
+  Future<Result<Unit>> call(
+    SessionType sessionType,
+    String annotatorId, {
+    String? censusId,
+  }) async {
+    final activeSessionResult = await sessionRepository.getActiveSession();
     return activeSessionResult.when(
       failure: Err.new,
       success: (activeSession) async {
@@ -27,12 +31,24 @@ class CreateSessionUseCase {
           return const Err(ActiveSessionAlreadyExistsFailure());
         }
 
+        if (censusId != null) {
+          final censusSession = await sessionRepository.getSessionByCensusId(
+            censusId,
+          );
+
+          if (censusSession is Ok<ObservationSession?> &&
+              censusSession.value != null) {
+            return const Err(AlreadyCensusSessionCreatedFailure());
+          }
+        }
+
         final newSession = await _createImmediateSession(
           sessionType,
           annotatorId,
+          censusId: censusId,
         );
 
-        final saveResult = await observationRepository.saveSession(newSession);
+        final saveResult = await sessionRepository.saveSession(newSession);
 
         if (saveResult.isOk && _needsFreshLocation(sessionType, newSession)) {
           _fetchAndUpdateLocationInBackground(newSession);
@@ -45,8 +61,9 @@ class CreateSessionUseCase {
 
   Future<ObservationSession> _createImmediateSession(
     SessionType sessionType,
-    String userId,
-  ) async {
+    String userId, {
+    String? censusId,
+  }) async {
     GeoPosition? lastLocation;
 
     if (sessionType == SessionType.census ||
@@ -71,6 +88,7 @@ class CreateSessionUseCase {
       startTime: now,
       createdAt: now,
       updatedAt: now,
+      censusId: censusId,
     );
   }
 
@@ -87,7 +105,7 @@ class CreateSessionUseCase {
     await freshResult.when(
       success: (pos) async {
         final updatedSession = session.updateLocation(location: pos);
-        await observationRepository.saveSession(updatedSession);
+        await sessionRepository.saveSession(updatedSession);
       },
       failure: (failure) async {
         var errorType = LocationErrorType.timeoutNoSignal;
@@ -102,7 +120,7 @@ class CreateSessionUseCase {
           locationError: errorType,
         );
 
-        await observationRepository.saveSession(failedSession);
+        await sessionRepository.saveSession(failedSession);
       },
     );
   }

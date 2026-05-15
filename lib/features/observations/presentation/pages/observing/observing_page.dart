@@ -242,7 +242,7 @@ class _ObservingContent extends StatelessWidget {
     if (!context.mounted || pickedDate == null) return;
 
     context.read<ObservingSessionBloc>().add(
-      ChangeSessionDate(pickedDate.toUtc()),
+      ChangeSessionDate(pickedDate),
     );
   }
 
