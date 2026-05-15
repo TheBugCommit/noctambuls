@@ -27,11 +27,10 @@ class Census extends Equatable {
   final DateTime updatedAt;
 
   bool get isTodaysCensus {
-    final today = DateTime.now().toLocal();
-    final censusDate = startTime.toLocal();
-    return censusDate.year == today.year &&
-        censusDate.month == today.month &&
-        censusDate.day == today.day;
+    final today = DateTime.now().toUtc();
+    return startTime.year == today.year &&
+        startTime.month == today.month &&
+        startTime.day == today.day;
   }
 
   Census join() => _copyWith(isJoined: true);
