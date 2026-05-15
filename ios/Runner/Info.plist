@@ -93,5 +93,7 @@
 	<array>
 		<string>syncPendingSessionsTask</string>
 	</array>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
 </dict>
 </plist>

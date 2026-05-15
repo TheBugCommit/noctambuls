@@ -30,10 +30,13 @@ void callbackDispatcher() {
       await dbManager.initDatabase(userId);
 
       try {
+        final localDataSource = di.sl<SessionLocalDataSource>();
+        final pendingToSync = await localDataSource.getPendingSessions();
+        if (pendingToSync.isEmpty) return true;
+
         final syncUseCase = di.sl<SyncPendingSessionsUseCase>();
         await syncUseCase();
 
-        final localDataSource = di.sl<SessionLocalDataSource>();
         final unsyncedSessions = await localDataSource.getPendingSessions();
 
         if (unsyncedSessions.isNotEmpty) {
@@ -51,7 +54,7 @@ void callbackDispatcher() {
       } finally {
         await dbManager.closeDatabase();
       }
-    } catch (_) {
+    } catch (e) {
       final isEnabled = di.sl<GetNotificationsEnabledUseCase>().call();
 
       if (isEnabled) {
