@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/constants/app_deeplinks.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
@@ -10,6 +11,14 @@ import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/taxus_app_bar.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_state.dart';
+import 'package:noctambuls/features/censuses/domain/entities/census.dart';
+import 'package:noctambuls/features/censuses/domain/failures/census_failures.dart';
+import 'package:noctambuls/features/censuses/presentation/bloc/census_bloc.dart';
+import 'package:noctambuls/features/censuses/presentation/bloc/census_event.dart';
+import 'package:noctambuls/features/censuses/presentation/bloc/census_state.dart';
+import 'package:noctambuls/features/censuses/presentation/widgets/census_confirmation_sheet.dart';
+import 'package:noctambuls/features/censuses/presentation/widgets/census_lobby_card.dart';
+import 'package:noctambuls/features/censuses/presentation/widgets/upcoming_censuses_section.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_event.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/catalog_sync_state.dart';
@@ -135,44 +144,155 @@ class _BaseHomeLayout extends StatelessWidget {
           await _handleSyncFailure(context);
         }
       },
-      child: Scaffold(
-        appBar: const TaxusAppBar(),
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppDimensions.lg),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const HomeHeader(),
-              const SizedBox(height: AppDimensions.xl),
-              child,
-            ],
+      child: BlocListener<CensusBloc, CensusState>(
+        listenWhen: (_, curr) =>
+            curr is CensusJoinError || curr is CensusSessionStarted,
+        listener: (context, state) {
+          final l10n = AppLocalizations.of(context)!;
+          switch (state) {
+            case CensusJoinError(:final failure):
+              final message = switch (failure) {
+                CensusNotTodayFailure() => l10n.censusNotTodayBody,
+                CensusJoinAlreadyHasLobbyFailure() =>
+                  l10n.censusLobbyConflictBody,
+                InvalidCensusTokenFailure() => l10n.censusInvalidTokenBody,
+                ActiveSessionAlreadyExistsFailure() =>
+                  l10n.censusAlreadySessionActive,
+                CensusSessionAlreadyFinishedFailure() ||
+                AlreadyCensusSessionCreatedFailure() =>
+                  l10n.censusSessionExistentWarning,
+                _ => l10n.errorUnknown,
+              };
+
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(message),
+                  behavior: SnackBarBehavior.floating,
+                ),
+              );
+
+              context.read<CensusBloc>().add(DismissCensusError());
+            case CensusSessionStarted(:final session):
+              unawaited(context.push(AppRoutes.observing, extra: session));
+            default:
+              break;
+          }
+        },
+        child: Scaffold(
+          appBar: const TaxusAppBar(),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppDimensions.lg),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const HomeHeader(),
+                  const SizedBox(height: AppDimensions.xl),
+                  child,
+                  const SizedBox(height: AppDimensions.lg),
+                  const _CensusSection(),
+                ],
+              ),
+            ),
+          ),
+          floatingActionButton: AppButtonFab.large(
+            onPressed: () async {
+              final l10n = AppLocalizations.of(context)!;
+              final url = await context.push<String>(
+                AppRoutes.qrScanner,
+                extra: QrScannerArgs(
+                  title: l10n.censusQrScanTitle,
+                  helperText: l10n.censusQrScanHelper,
+                  helpTitle: l10n.censusQrHelpTitle,
+                  helpMessage: l10n.censusQrHelpBody,
+                  validator: (rawValue) {
+                    final uri = Uri.tryParse(rawValue);
+                    if (uri != null && AppDeepLinks.isCensusDeepLink(uri)) {
+                      return rawValue;
+                    }
+                    return null;
+                  },
+                ),
+              );
+              if (url != null && context.mounted) {
+                context.read<CensusBloc>().add(JoinCensusByUrl(url));
+              }
+            },
+            icon: Icons.qr_code_scanner,
           ),
         ),
-        floatingActionButton: AppButtonFab.large(
-          onPressed: () {
-            final url = context.push<String>(
-              AppRoutes.qrScanner,
-              extra: QrScannerArgs(
-                title: "Escanejar Cens",
-                helperText: "Enfoca el codi QR del paper del Cens de Seguiment",
-                helpTitle: "Ajuda Censos",
-                helpMessage:
-                    "Trobaràs el codi QR de censos dalt a la dreta del full imprès...",
-                manualEntryModalBuilder: null,
-                // Si no hi ha entrada manual per censos, esborra el botó de baix automàticament!
-                validator: (rawValue) {
-                  // Tota la teva lògica de validació del format d'un codi de cens aquí
-                  if (rawValue.startsWith('CENS-')) {
-                    return rawValue; // És vàlid! Tanca la pantalla i retorna el valor.
-                  }
-                  return null; // Invàlid, mostra el Toast d'error.
-                },
-              ),
+      ),
+    );
+  }
+}
+
+class _CensusSection extends StatelessWidget {
+  const _CensusSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ObservingSessionBloc, ObservingSessionState>(
+      builder: (context, observingState) {
+        final activeCensusId = observingState is ObservingSessionActive
+            ? observingState.session.censusId
+            : null;
+
+        return BlocBuilder<CensusBloc, CensusState>(
+          buildWhen: (prev, curr) =>
+              prev is! CensusJoinError && curr is CensusLoaded,
+          builder: (context, state) {
+            final List<Census> censuses;
+            final Census? lobbyCensus;
+
+            switch (state) {
+              case CensusLoaded():
+                censuses = state.censuses;
+                lobbyCensus = state.lobbyCensus;
+              case CensusJoinError():
+                censuses = state.censuses;
+                lobbyCensus = state.lobbyCensus;
+              default:
+                return const SizedBox.shrink();
+            }
+
+            final isLobbyBeingObserved =
+                lobbyCensus != null && lobbyCensus.id == activeCensusId;
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (lobbyCensus != null &&
+                    !isLobbyBeingObserved &&
+                    lobbyCensus.isJoined) ...[
+                  CensusLobbyCard(
+                    census: lobbyCensus,
+                    onEnter: () => CensusConfirmationSheet.show(context, () {
+                      context.read<CensusBloc>().add(
+                        StartCensusSession(
+                          annotatorId:
+                              (context.read<AuthBloc>().state as Authenticated)
+                                  .user
+                                  .id,
+                          census: lobbyCensus!,
+                        ),
+                      );
+                    }),
+                    onAbandon: () => context.read<CensusBloc>().add(
+                      AbandonCensus(lobbyCensus!.id),
+                    ),
+                  ),
+                  const SizedBox(height: AppDimensions.md),
+                ],
+                UpcomingCensusesSection(
+                  censuses: censuses,
+                  onCensusTap: (census) =>
+                      context.push(AppRoutes.censusDetail, extra: census),
+                ),
+              ],
             );
           },
-          icon: Icons.qr_code_scanner,
-        ),
-      ),
+        );
+      },
     );
   }
 }

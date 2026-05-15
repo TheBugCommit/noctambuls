@@ -69,14 +69,14 @@ extension CensusModelX on CensusModel {
     return Census(
       id: id,
       title: title,
-      startTime: startTime,
+      startTime: startTime.toUtc(),
       locationName: locationName,
       description: description,
       geoPosition: geoPosition,
       isJoined: isJoined,
       alreadyDone: alreadyDone,
-      createdAt: createdAt,
-      updatedAt: updatedAt,
+      createdAt: createdAt.toUtc(),
+      updatedAt: updatedAt.toUtc(),
     );
   }
 }
