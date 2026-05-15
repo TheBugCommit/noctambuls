@@ -284,8 +284,15 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
             body: Center(child: CircularProgressIndicator()),
           );
         }
-        return BlocProvider(
-          create: (_) => sl<ConnectivityBloc>(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => sl<ConnectivityBloc>(),
+            ),
+            BlocProvider(
+              create: (_) => sl<UrlBloc>(),
+            ),
+          ],
           child: CensusDetailPage(census: census),
         );
       },

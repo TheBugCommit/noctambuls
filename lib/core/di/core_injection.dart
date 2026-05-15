@@ -1,4 +1,5 @@
 import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/constants/env_config.dart';
 import 'package:noctambuls/core/data/services/audio_player_service_impl.dart';
 import 'package:noctambuls/core/data/services/connectivity_service_impl.dart';
 import 'package:noctambuls/core/data/services/external_link_service_impl.dart';
@@ -25,6 +26,7 @@ import 'package:noctambuls/core/domain/usecases/phone_settings/open_app_settings
 import 'package:noctambuls/core/domain/usecases/phone_settings/open_phone_location_settings_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/share/share_text_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/share/share_uri_usecase.dart';
+import 'package:noctambuls/core/domain/usecases/url/open_maps_url_usecase.dart';
 import 'package:noctambuls/core/domain/usecases/url/open_url_usecase.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
@@ -66,11 +68,18 @@ void initCore() {
     ..registerLazySingleton(() => CheckInternetConnectionUseCase(sl()))
     ..registerLazySingleton(() => WatchLocationUseCase(sl()))
     ..registerLazySingleton(() => ShowLocalNotificationUseCase(sl()))
+    ..registerLazySingleton(
+      () => OpenMapsUrlUseCase(sl(), EnvConfig.googleMapsUrl),
+    )
     ..registerLazySingleton<NotificationService>(
       () => LocalNotificationServiceImpl(sl(), sl()),
     )
     ..registerFactory(
-      () => UrlBloc(openUrlUseCase: sl(), logger: sl<IAppLogger>()),
+      () => UrlBloc(
+        openUrlUseCase: sl(),
+        openMapsUrlUseCase: sl(),
+        logger: sl<IAppLogger>(),
+      ),
     )
     ..registerFactory(
       () => AudioBloc(

@@ -12,12 +12,14 @@ class MapPreviewWidget extends StatefulWidget {
     required this.points,
     this.onTap,
     this.isReadOnly = true,
+    this.showEditOverlay = true,
     super.key,
   });
 
   final List<LatLng> points;
   final VoidCallback? onTap;
   final bool isReadOnly;
+  final bool showEditOverlay;
 
   @override
   State<MapPreviewWidget> createState() => _MapPreviewWidgetState();
@@ -81,6 +83,9 @@ class _MapPreviewWidgetState extends State<MapPreviewWidget> {
       }
     }
 
+    final canTap = widget.onTap != null && !widget.isReadOnly;
+    final shouldShowBanner = canTap && widget.showEditOverlay;
+
     return SizedBox(
       height: 180,
       child: Stack(
@@ -119,7 +124,7 @@ class _MapPreviewWidgetState extends State<MapPreviewWidget> {
               ),
             ],
           ),
-          if (widget.isReadOnly) ...[
+          if (canTap)
             Positioned.fill(
               child: Material(
                 color: Colors.transparent,
@@ -129,6 +134,7 @@ class _MapPreviewWidgetState extends State<MapPreviewWidget> {
                 ),
               ),
             ),
+          if (shouldShowBanner)
             Positioned(
               bottom: 0,
               left: 0,
@@ -158,7 +164,6 @@ class _MapPreviewWidgetState extends State<MapPreviewWidget> {
                 ),
               ),
             ),
-          ],
         ],
       ),
     );

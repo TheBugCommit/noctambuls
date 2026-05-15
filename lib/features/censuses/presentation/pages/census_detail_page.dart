@@ -6,6 +6,7 @@ import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_bloc
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_event.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_state.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/url/url_event.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_state.dart';
 import 'package:noctambuls/core/presentation/widgets/map_preview_widget.dart';
 import 'package:noctambuls/core/presentation/widgets/no_internet_placeholder_widget.dart';
@@ -121,6 +122,14 @@ class _CensusDetailPageState extends State<CensusDetailPage> {
                           return SizedBox(
                             height: 180,
                             child: MapPreviewWidget(
+                              isReadOnly: false,
+                              showEditOverlay: false,
+                              onTap: () => context.read<UrlBloc>().add(
+                                OpenMapsUrlRequested(
+                                  latitude: census.geoPosition!.latitude,
+                                  longitude: census.geoPosition!.longitude,
+                                ),
+                              ),
                               points: [
                                 LatLng(
                                   census.geoPosition!.latitude,

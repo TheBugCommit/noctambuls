@@ -56,6 +56,9 @@ abstract class EnvConfig {
   static const String openStreetMapTextAttribute =
       _EnvConfig.openStreetMapTextAttribute;
 
+  @EnviedField(varName: 'GOOGLE_MAPS_URL')
+  static const String googleMapsUrl = _EnvConfig.googleMapsUrl;
+
   @EnviedField(varName: 'CENSUS_JWT_PUBLIC_KEY')
   static const String censusJwtPublicKey = _EnvConfig.censusJwtPublicKey;
 }
