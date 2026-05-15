@@ -26,27 +26,6 @@ class LocalNotificationServiceImpl implements NotificationService {
     );
 
     await _plugin.initialize(settings: initSettings);
-
-    bool? isGranted;
-    if (Platform.isIOS) {
-      isGranted = await _plugin
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >()
-          ?.requestPermissions(alert: true, badge: true, sound: true);
-    }
-
-    if (Platform.isAndroid) {
-      isGranted = await _plugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >()
-          ?.requestNotificationsPermission();
-    }
-
-    if (isGranted != null) {
-      await _saveNotificationsEnabledUseCase(isEnabled: isGranted);
-    }
   }
 
   @override
@@ -100,5 +79,28 @@ class LocalNotificationServiceImpl implements NotificationService {
       notificationDetails: notificationDetails,
       payload: payload,
     );
+  }
+
+  @override
+  Future<void> requestPermissions() async {
+    bool? isGranted;
+
+    if (Platform.isIOS) {
+      isGranted = await _plugin
+          .resolvePlatformSpecificImplementation<
+            IOSFlutterLocalNotificationsPlugin
+          >()
+          ?.requestPermissions(alert: true, badge: true, sound: true);
+    } else if (Platform.isAndroid) {
+      isGranted = await _plugin
+          .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin
+          >()
+          ?.requestNotificationsPermission();
+    }
+
+    if (isGranted != null) {
+      await _saveNotificationsEnabledUseCase(isEnabled: isGranted);
+    }
   }
 }
