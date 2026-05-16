@@ -231,6 +231,8 @@ class _CensusSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
     return BlocBuilder<ObservingSessionBloc, ObservingSessionState>(
       builder: (context, observingState) {
         final activeCensusId = observingState is ObservingSessionActive
@@ -283,6 +285,13 @@ class _CensusSection extends StatelessWidget {
                   ),
                   const SizedBox(height: AppDimensions.md),
                 ],
+                Text(
+                  l10n.censusesUpcomingTitle,
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: AppDimensions.sm),
                 UpcomingCensusesSection(
                   censuses: censuses,
                   onCensusTap: (census) =>
