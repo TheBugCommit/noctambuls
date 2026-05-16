@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,22 +18,26 @@ class AppMapView extends StatefulWidget {
     required this.mapController,
     this.initialCenter,
     this.initialZoom = 15.0,
+    this.maxZoom = 18.0,
     this.markers = const [],
     this.userLocation,
     this.onLongPress,
     this.onTap,
     this.bottomAction,
+    this.middleColumnAction,
     super.key,
   });
 
   final MapController mapController;
   final LatLng? initialCenter;
   final double initialZoom;
+  final double maxZoom;
   final List<Marker> markers;
   final LatLng? userLocation;
   final void Function(TapPosition, LatLng)? onLongPress;
   final void Function(TapPosition, LatLng)? onTap;
   final Widget? bottomAction;
+  final Widget? middleColumnAction;
 
   @override
   State<AppMapView> createState() => _AppMapViewState();
@@ -80,7 +85,7 @@ class _AppMapViewState extends State<AppMapView> with TickerProviderStateMixin {
 
   void _centerOnUser() {
     if (widget.userLocation != null) {
-      _animatedMapMove(widget.userLocation!, 16.0);
+      _animatedMapMove(widget.userLocation!, min(16.0, widget.maxZoom));
     }
   }
 
@@ -171,7 +176,7 @@ class _AppMapViewState extends State<AppMapView> with TickerProviderStateMixin {
               }
             },
             minZoom: 3.0,
-            maxZoom: 18.0,
+            maxZoom: widget.maxZoom,
             cameraConstraint: CameraConstraint.contain(
               bounds: LatLngBounds(
                 const LatLng(-90, -180),
@@ -284,6 +289,10 @@ class _AppMapViewState extends State<AppMapView> with TickerProviderStateMixin {
                   onPressed: () => setState(() => _isTopoLayer = !_isTopoLayer),
                 ),
                 const SizedBox(height: AppDimensions.sm),
+                if (widget.middleColumnAction != null) ...[
+                  widget.middleColumnAction!,
+                  const SizedBox(height: AppDimensions.sm),
+                ],
                 AppButtonFab.regular(
                   heroTag: 'map_location_btn',
                   icon: Icons.my_location,
