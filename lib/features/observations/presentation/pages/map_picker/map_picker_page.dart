@@ -15,6 +15,7 @@ import 'package:noctambuls/core/presentation/bloc/location/location_event.dart';
 import 'package:noctambuls/core/presentation/bloc/location/location_state.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
 import 'package:noctambuls/core/presentation/widgets/app_map_view.dart';
+import 'package:noctambuls/core/presentation/widgets/page_loading_overlay.dart';
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/location_auto_capture_mixin.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/location_permissions_dialog.dart';
@@ -264,36 +265,13 @@ class _MapPickerPageState extends State<MapPickerPage>
                   ),
                 ),
 
-                if (isLoading) Positioned.fill(child: _LoadingOverlay()),
+                if (isLoading)
+                  Positioned.fill(
+                    child: LoadingOverlay(message: l10n.locationWaitingGps),
+                  ),
               ],
             );
           },
-        ),
-      ),
-    );
-  }
-}
-
-class _LoadingOverlay extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
-    return ColoredBox(
-      color: Colors.black.withValues(alpha: 0.3),
-      child: Center(
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.all(AppDimensions.md),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(height: AppDimensions.md),
-                Text(l10n.locationWaitingGps),
-              ],
-            ),
-          ),
         ),
       ),
     );
