@@ -13,6 +13,7 @@ part 'app_database.g.dart';
     BirdsTable,
     BirdNamesTable,
     CatalogMetadataTable,
+    MapBubblesTable,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -21,7 +22,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.e);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration {
@@ -31,6 +32,7 @@ class AppDatabase extends _$AppDatabase {
       },
       onUpgrade: (m, from, to) async {
         if (from < 2) await m.createTable(catalogMetadataTable);
+        if (from < 3) await m.createTable(mapBubblesTable);
       },
     );
   }

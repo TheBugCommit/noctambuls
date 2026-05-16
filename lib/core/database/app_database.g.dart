@@ -1085,6 +1085,455 @@ class CatalogMetadataTableCompanion
   }
 }
 
+class $MapBubblesTableTable extends MapBubblesTable
+    with TableInfo<$MapBubblesTableTable, MapBubbleData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $MapBubblesTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _speciesIdMeta = const VerificationMeta(
+    'speciesId',
+  );
+  @override
+  late final GeneratedColumn<String> speciesId = GeneratedColumn<String>(
+    'species_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _latMeta = const VerificationMeta('lat');
+  @override
+  late final GeneratedColumn<double> lat = GeneratedColumn<double>(
+    'lat',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lonMeta = const VerificationMeta('lon');
+  @override
+  late final GeneratedColumn<double> lon = GeneratedColumn<double>(
+    'lon',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _yearMeta = const VerificationMeta('year');
+  @override
+  late final GeneratedColumn<int> year = GeneratedColumn<int>(
+    'year',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _countMeta = const VerificationMeta('count');
+  @override
+  late final GeneratedColumn<int> count = GeneratedColumn<int>(
+    'count',
+    aliasedName,
+    false,
+    type: DriftSqlType.int,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    speciesId,
+    lat,
+    lon,
+    year,
+    count,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'map_bubbles';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<MapBubbleData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('species_id')) {
+      context.handle(
+        _speciesIdMeta,
+        speciesId.isAcceptableOrUnknown(data['species_id']!, _speciesIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_speciesIdMeta);
+    }
+    if (data.containsKey('lat')) {
+      context.handle(
+        _latMeta,
+        lat.isAcceptableOrUnknown(data['lat']!, _latMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_latMeta);
+    }
+    if (data.containsKey('lon')) {
+      context.handle(
+        _lonMeta,
+        lon.isAcceptableOrUnknown(data['lon']!, _lonMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_lonMeta);
+    }
+    if (data.containsKey('year')) {
+      context.handle(
+        _yearMeta,
+        year.isAcceptableOrUnknown(data['year']!, _yearMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_yearMeta);
+    }
+    if (data.containsKey('count')) {
+      context.handle(
+        _countMeta,
+        count.isAcceptableOrUnknown(data['count']!, _countMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_countMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  MapBubbleData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return MapBubbleData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      speciesId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}species_id'],
+      )!,
+      lat: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}lat'],
+      )!,
+      lon: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}lon'],
+      )!,
+      year: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}year'],
+      )!,
+      count: attachedDatabase.typeMapping.read(
+        DriftSqlType.int,
+        data['${effectivePrefix}count'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $MapBubblesTableTable createAlias(String alias) {
+    return $MapBubblesTableTable(attachedDatabase, alias);
+  }
+}
+
+class MapBubbleData extends DataClass implements Insertable<MapBubbleData> {
+  final String id;
+  final String speciesId;
+  final double lat;
+  final double lon;
+  final int year;
+  final int count;
+  final DateTime updatedAt;
+  const MapBubbleData({
+    required this.id,
+    required this.speciesId,
+    required this.lat,
+    required this.lon,
+    required this.year,
+    required this.count,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['species_id'] = Variable<String>(speciesId);
+    map['lat'] = Variable<double>(lat);
+    map['lon'] = Variable<double>(lon);
+    map['year'] = Variable<int>(year);
+    map['count'] = Variable<int>(count);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  MapBubblesTableCompanion toCompanion(bool nullToAbsent) {
+    return MapBubblesTableCompanion(
+      id: Value(id),
+      speciesId: Value(speciesId),
+      lat: Value(lat),
+      lon: Value(lon),
+      year: Value(year),
+      count: Value(count),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory MapBubbleData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return MapBubbleData(
+      id: serializer.fromJson<String>(json['id']),
+      speciesId: serializer.fromJson<String>(json['speciesId']),
+      lat: serializer.fromJson<double>(json['lat']),
+      lon: serializer.fromJson<double>(json['lon']),
+      year: serializer.fromJson<int>(json['year']),
+      count: serializer.fromJson<int>(json['count']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'speciesId': serializer.toJson<String>(speciesId),
+      'lat': serializer.toJson<double>(lat),
+      'lon': serializer.toJson<double>(lon),
+      'year': serializer.toJson<int>(year),
+      'count': serializer.toJson<int>(count),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  MapBubbleData copyWith({
+    String? id,
+    String? speciesId,
+    double? lat,
+    double? lon,
+    int? year,
+    int? count,
+    DateTime? updatedAt,
+  }) => MapBubbleData(
+    id: id ?? this.id,
+    speciesId: speciesId ?? this.speciesId,
+    lat: lat ?? this.lat,
+    lon: lon ?? this.lon,
+    year: year ?? this.year,
+    count: count ?? this.count,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  MapBubbleData copyWithCompanion(MapBubblesTableCompanion data) {
+    return MapBubbleData(
+      id: data.id.present ? data.id.value : this.id,
+      speciesId: data.speciesId.present ? data.speciesId.value : this.speciesId,
+      lat: data.lat.present ? data.lat.value : this.lat,
+      lon: data.lon.present ? data.lon.value : this.lon,
+      year: data.year.present ? data.year.value : this.year,
+      count: data.count.present ? data.count.value : this.count,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MapBubbleData(')
+          ..write('id: $id, ')
+          ..write('speciesId: $speciesId, ')
+          ..write('lat: $lat, ')
+          ..write('lon: $lon, ')
+          ..write('year: $year, ')
+          ..write('count: $count, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, speciesId, lat, lon, year, count, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is MapBubbleData &&
+          other.id == this.id &&
+          other.speciesId == this.speciesId &&
+          other.lat == this.lat &&
+          other.lon == this.lon &&
+          other.year == this.year &&
+          other.count == this.count &&
+          other.updatedAt == this.updatedAt);
+}
+
+class MapBubblesTableCompanion extends UpdateCompanion<MapBubbleData> {
+  final Value<String> id;
+  final Value<String> speciesId;
+  final Value<double> lat;
+  final Value<double> lon;
+  final Value<int> year;
+  final Value<int> count;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const MapBubblesTableCompanion({
+    this.id = const Value.absent(),
+    this.speciesId = const Value.absent(),
+    this.lat = const Value.absent(),
+    this.lon = const Value.absent(),
+    this.year = const Value.absent(),
+    this.count = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  MapBubblesTableCompanion.insert({
+    required String id,
+    required String speciesId,
+    required double lat,
+    required double lon,
+    required int year,
+    required int count,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       speciesId = Value(speciesId),
+       lat = Value(lat),
+       lon = Value(lon),
+       year = Value(year),
+       count = Value(count),
+       updatedAt = Value(updatedAt);
+  static Insertable<MapBubbleData> custom({
+    Expression<String>? id,
+    Expression<String>? speciesId,
+    Expression<double>? lat,
+    Expression<double>? lon,
+    Expression<int>? year,
+    Expression<int>? count,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (speciesId != null) 'species_id': speciesId,
+      if (lat != null) 'lat': lat,
+      if (lon != null) 'lon': lon,
+      if (year != null) 'year': year,
+      if (count != null) 'count': count,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  MapBubblesTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? speciesId,
+    Value<double>? lat,
+    Value<double>? lon,
+    Value<int>? year,
+    Value<int>? count,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return MapBubblesTableCompanion(
+      id: id ?? this.id,
+      speciesId: speciesId ?? this.speciesId,
+      lat: lat ?? this.lat,
+      lon: lon ?? this.lon,
+      year: year ?? this.year,
+      count: count ?? this.count,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (speciesId.present) {
+      map['species_id'] = Variable<String>(speciesId.value);
+    }
+    if (lat.present) {
+      map['lat'] = Variable<double>(lat.value);
+    }
+    if (lon.present) {
+      map['lon'] = Variable<double>(lon.value);
+    }
+    if (year.present) {
+      map['year'] = Variable<int>(year.value);
+    }
+    if (count.present) {
+      map['count'] = Variable<int>(count.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('MapBubblesTableCompanion(')
+          ..write('id: $id, ')
+          ..write('speciesId: $speciesId, ')
+          ..write('lat: $lat, ')
+          ..write('lon: $lon, ')
+          ..write('year: $year, ')
+          ..write('count: $count, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1092,6 +1541,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $BirdNamesTableTable birdNamesTable = $BirdNamesTableTable(this);
   late final $CatalogMetadataTableTable catalogMetadataTable =
       $CatalogMetadataTableTable(this);
+  late final $MapBubblesTableTable mapBubblesTable = $MapBubblesTableTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1100,6 +1552,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     birdsTable,
     birdNamesTable,
     catalogMetadataTable,
+    mapBubblesTable,
   ];
 }
 
@@ -1946,6 +2399,246 @@ typedef $$CatalogMetadataTableTableProcessedTableManager =
       CatalogMetadataData,
       PrefetchHooks Function()
     >;
+typedef $$MapBubblesTableTableCreateCompanionBuilder =
+    MapBubblesTableCompanion Function({
+      required String id,
+      required String speciesId,
+      required double lat,
+      required double lon,
+      required int year,
+      required int count,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$MapBubblesTableTableUpdateCompanionBuilder =
+    MapBubblesTableCompanion Function({
+      Value<String> id,
+      Value<String> speciesId,
+      Value<double> lat,
+      Value<double> lon,
+      Value<int> year,
+      Value<int> count,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$MapBubblesTableTableFilterComposer
+    extends Composer<_$AppDatabase, $MapBubblesTableTable> {
+  $$MapBubblesTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get speciesId => $composableBuilder(
+    column: $table.speciesId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get lat => $composableBuilder(
+    column: $table.lat,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get lon => $composableBuilder(
+    column: $table.lon,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<int> get count => $composableBuilder(
+    column: $table.count,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$MapBubblesTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $MapBubblesTableTable> {
+  $$MapBubblesTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get speciesId => $composableBuilder(
+    column: $table.speciesId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get lat => $composableBuilder(
+    column: $table.lat,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get lon => $composableBuilder(
+    column: $table.lon,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get year => $composableBuilder(
+    column: $table.year,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<int> get count => $composableBuilder(
+    column: $table.count,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$MapBubblesTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $MapBubblesTableTable> {
+  $$MapBubblesTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get speciesId =>
+      $composableBuilder(column: $table.speciesId, builder: (column) => column);
+
+  GeneratedColumn<double> get lat =>
+      $composableBuilder(column: $table.lat, builder: (column) => column);
+
+  GeneratedColumn<double> get lon =>
+      $composableBuilder(column: $table.lon, builder: (column) => column);
+
+  GeneratedColumn<int> get year =>
+      $composableBuilder(column: $table.year, builder: (column) => column);
+
+  GeneratedColumn<int> get count =>
+      $composableBuilder(column: $table.count, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$MapBubblesTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $MapBubblesTableTable,
+          MapBubbleData,
+          $$MapBubblesTableTableFilterComposer,
+          $$MapBubblesTableTableOrderingComposer,
+          $$MapBubblesTableTableAnnotationComposer,
+          $$MapBubblesTableTableCreateCompanionBuilder,
+          $$MapBubblesTableTableUpdateCompanionBuilder,
+          (
+            MapBubbleData,
+            BaseReferences<_$AppDatabase, $MapBubblesTableTable, MapBubbleData>,
+          ),
+          MapBubbleData,
+          PrefetchHooks Function()
+        > {
+  $$MapBubblesTableTableTableManager(
+    _$AppDatabase db,
+    $MapBubblesTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$MapBubblesTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$MapBubblesTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$MapBubblesTableTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> speciesId = const Value.absent(),
+                Value<double> lat = const Value.absent(),
+                Value<double> lon = const Value.absent(),
+                Value<int> year = const Value.absent(),
+                Value<int> count = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => MapBubblesTableCompanion(
+                id: id,
+                speciesId: speciesId,
+                lat: lat,
+                lon: lon,
+                year: year,
+                count: count,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String speciesId,
+                required double lat,
+                required double lon,
+                required int year,
+                required int count,
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => MapBubblesTableCompanion.insert(
+                id: id,
+                speciesId: speciesId,
+                lat: lat,
+                lon: lon,
+                year: year,
+                count: count,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$MapBubblesTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $MapBubblesTableTable,
+      MapBubbleData,
+      $$MapBubblesTableTableFilterComposer,
+      $$MapBubblesTableTableOrderingComposer,
+      $$MapBubblesTableTableAnnotationComposer,
+      $$MapBubblesTableTableCreateCompanionBuilder,
+      $$MapBubblesTableTableUpdateCompanionBuilder,
+      (
+        MapBubbleData,
+        BaseReferences<_$AppDatabase, $MapBubblesTableTable, MapBubbleData>,
+      ),
+      MapBubbleData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -1956,4 +2649,6 @@ class $AppDatabaseManager {
       $$BirdNamesTableTableTableManager(_db, _db.birdNamesTable);
   $$CatalogMetadataTableTableTableManager get catalogMetadataTable =>
       $$CatalogMetadataTableTableTableManager(_db, _db.catalogMetadataTable);
+  $$MapBubblesTableTableTableManager get mapBubblesTable =>
+      $$MapBubblesTableTableTableManager(_db, _db.mapBubblesTable);
 }

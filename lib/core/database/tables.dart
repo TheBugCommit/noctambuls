@@ -229,6 +229,29 @@ class CensusesTable extends Table {
   Set<Column> get primaryKey => {id};
 }
 
+@DataClassName('MapBubbleData')
+class MapBubblesTable extends Table {
+  @override
+  String get tableName => 'map_bubbles';
+
+  TextColumn get id => text()();
+
+  TextColumn get speciesId => text()();
+
+  RealColumn get lat => real()();
+
+  RealColumn get lon => real()();
+
+  IntColumn get year => integer()();
+
+  IntColumn get count => integer()();
+
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
 @DataClassName('CatalogMetadataData')
 class CatalogMetadataTable extends Table {
   @override
