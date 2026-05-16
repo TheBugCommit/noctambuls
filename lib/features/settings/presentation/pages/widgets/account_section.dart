@@ -76,7 +76,11 @@ class AccountSection extends StatelessWidget {
                 ],
               ),
             ),
-            const Divider(height: 1),
+            const Divider(
+              height: 1,
+              indent: AppDimensions.md,
+              endIndent: AppDimensions.md,
+            ),
             ListTile(
               leading: Icon(Icons.logout, color: colorScheme.error),
               title: Text(
@@ -89,7 +93,11 @@ class AccountSection extends StatelessWidget {
               onTap: () =>
                   context.read<AuthBloc>().add(const SignOutRequested()),
             ),
-            const Divider(height: 1),
+            const Divider(
+              height: 1,
+              indent: AppDimensions.md,
+              endIndent: AppDimensions.md,
+            ),
             ListTile(
               leading: Icon(
                 Icons.delete_forever,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/features/settings/presentation/pages/widgets/language_selector.dart';
 import 'package:noctambuls/features/settings/presentation/pages/widgets/notification_selector.dart';
 import 'package:noctambuls/features/settings/presentation/pages/widgets/section_title.dart';
@@ -20,9 +21,17 @@ class PreferencesSection extends StatelessWidget {
         const SettingsCard(
           children: [
             LanguageSelector(),
-            Divider(height: 1),
+            Divider(
+              height: 1,
+              indent: AppDimensions.md,
+              endIndent: AppDimensions.md,
+            ),
             ThemeSelector(),
-            Divider(height: 1),
+            Divider(
+              height: 1,
+              indent: AppDimensions.md,
+              endIndent: AppDimensions.md,
+            ),
             NotificationSelector(),
           ],
         ),
