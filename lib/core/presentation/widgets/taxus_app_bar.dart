@@ -41,11 +41,11 @@ class TaxusAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
 
       actions: [
-        IconButton(
+        /*IconButton(
           icon: const Icon(Icons.notifications_none),
           color: colorScheme.onSurface,
           onPressed: () {},
-        ),
+        ),*/
         const _ThemeToggleButon(),
         IconButton(
           icon: const Icon(Icons.settings),
