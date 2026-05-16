@@ -113,7 +113,7 @@ class ExploreBloc extends Bloc<ExploreEvent, ExploreState> {
       emit(state.copyWith(isConnected: false));
       return;
     }
-    emit(state.copyWith(isSyncing: true, syncError: null));
+    emit(state.copyWith(isConnected: true, isSyncing: true, syncError: null));
     unawaited(_runSync(force: true));
   }
 
