@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:noctambuls/features/explore/domain/entities/map_bubble.dart';
 
 class ExploreFilters extends Equatable {
   const ExploreFilters({
@@ -10,6 +11,17 @@ class ExploreFilters extends Equatable {
   final Set<int> selectedYears;
 
   bool get isHistoric => selectedYears.isEmpty;
+
+  List<MapBubble> apply(List<MapBubble> bubbles) {
+    var result = bubbles;
+    if (speciesId != null) {
+      result = result.where((b) => b.speciesId == speciesId).toList();
+    }
+    if (selectedYears.isNotEmpty) {
+      result = result.where((b) => selectedYears.contains(b.year)).toList();
+    }
+    return result;
+  }
 
   ExploreFilters copyWith({
     Object? speciesId = _absent,
