@@ -62,11 +62,7 @@ class _SheetContent extends StatelessWidget {
                 slivers: const [
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: EdgeInsets.only(
-                        left: AppDimensions.lg,
-                        right: AppDimensions.lg,
-                        bottom: AppDimensions.lg,
-                      ),
+                      padding: EdgeInsets.all(AppDimensions.lg),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
