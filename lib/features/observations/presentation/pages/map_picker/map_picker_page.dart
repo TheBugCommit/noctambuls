@@ -15,6 +15,7 @@ import 'package:noctambuls/core/presentation/bloc/location/location_event.dart';
 import 'package:noctambuls/core/presentation/bloc/location/location_state.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
 import 'package:noctambuls/core/presentation/widgets/app_map_view.dart';
+import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
 import 'package:noctambuls/core/presentation/widgets/page_loading_overlay.dart';
 import 'package:noctambuls/features/observations/domain/enums/location_error_type.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/location_auto_capture_mixin.dart';
@@ -204,6 +205,17 @@ class _MapPickerPageState extends State<MapPickerPage>
                     initialZoom: selectedLatLng != null ? 16.0 : 8.0,
                     userLocation: _userLocation,
                     onLongPress: _onMapLongPress,
+                    onHelp: () {
+                      final l10n = AppLocalizations.of(context)!;
+                      unawaited(
+                        AppSheet.showInfo(
+                          context: context,
+                          title: l10n.mapPickerHelpTitle,
+                          message: l10n.mapPickerHelpContent,
+                          buttonText: l10n.understood,
+                        ),
+                      );
+                    },
                     markers: [
                       if (selectedLatLng != null)
                         Marker(

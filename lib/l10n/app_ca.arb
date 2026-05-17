@@ -363,5 +363,27 @@
     "censusQrScanTitle": "Escaneja el QR del cens",
     "censusQrScanHelper": "Apunta la càmera al codi QR del cens",
     "censusQrHelpTitle": "Com unir-se al cens?",
-    "censusQrHelpBody": "Escaneja el codi QR que ha compartit el coordinador del cens. Si no pots escanejar el codi, pots introduir l'URL manualment."
+    "censusQrHelpBody": "Escaneja el codi QR que ha compartit el coordinador del cens. Si no pots escanejar el codi, pots introduir l'URL manualment.",
+
+    "exploreTitle": "Explora",
+    "exploreAllSpecies": "Totes les espècies",
+    "exploreHistoric": "Històric",
+    "exploreBreakdownTitle": "Observacions Registrades",
+    "exploreKpiSpecies": "Espècies",
+    "exploreKpiObservations": "Observacions",
+    "exploreSyncing": "Carregant dades...",
+    "exploreSyncError": "Error en carregar les dades",
+    "exploreNoData": "Sense dades d'observació",
+    "exploreRetry": "Tornar a intentar",
+    "exploreNoInternet": "Sense connexió",
+    "exploreNoInternetDesc": "El mapa requereix connexió a internet per visualitzar-se.",
+    "exploreBubbleObservations": "{count} observacions",
+    "@exploreBubbleObservations": {
+        "placeholders": {
+            "count": { "type": "int" }
+        }
+    },
+    "mapPickerHelpTitle": "Com funciona l'explorador?",
+    "mapPickerHelpContent": "Navega pel mapa per descobrir on s'han observat les diferents espècies. \n\n• La mida de les bombolles canvien segons la quantitat d'observacions.\n• Toca qualsevol bombolla per veure'n el resum exacte.\n• Fes servir el panell inferior per filtrar els resultats per una espècie concreta o per l'any d'observació."
+
 }

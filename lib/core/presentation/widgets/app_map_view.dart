@@ -10,8 +10,6 @@ import 'package:noctambuls/core/constants/env_config.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_event.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
-import 'package:noctambuls/core/presentation/widgets/app_sheet.dart';
-import 'package:noctambuls/l10n/app_localizations.dart';
 
 class AppMapView extends StatefulWidget {
   const AppMapView({
@@ -23,8 +21,10 @@ class AppMapView extends StatefulWidget {
     this.userLocation,
     this.onLongPress,
     this.onTap,
+    this.onMapReady,
     this.bottomAction,
     this.middleColumnAction,
+    this.onHelp,
     super.key,
   });
 
@@ -36,8 +36,10 @@ class AppMapView extends StatefulWidget {
   final LatLng? userLocation;
   final void Function(TapPosition, LatLng)? onLongPress;
   final void Function(TapPosition, LatLng)? onTap;
+  final VoidCallback? onMapReady;
   final Widget? bottomAction;
   final Widget? middleColumnAction;
+  final VoidCallback? onHelp;
 
   @override
   State<AppMapView> createState() => _AppMapViewState();
@@ -71,21 +73,9 @@ class _AppMapViewState extends State<AppMapView> with TickerProviderStateMixin {
   String get _tileUrl =>
       _isTopoLayer ? EnvConfig.openTopoMapTiles : EnvConfig.openStreetMapTiles;
 
-  void _showHelp(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    unawaited(
-      AppSheet.showInfo(
-        context: context,
-        title: l10n.mapPickerHelpTitle,
-        message: l10n.mapPickerHelpContent,
-        buttonText: l10n.understood,
-      ),
-    );
-  }
-
   void _centerOnUser() {
     if (widget.userLocation != null) {
-      _animatedMapMove(widget.userLocation!, min(16.0, widget.maxZoom));
+      _animatedMapMove(widget.userLocation!, min(16, widget.maxZoom));
     }
   }
 
@@ -169,6 +159,7 @@ class _AppMapViewState extends State<AppMapView> with TickerProviderStateMixin {
                 _hasAutoCentered = true;
                 _centerOnUser();
               }
+              widget.onMapReady?.call();
             },
             onPositionChanged: (position, hasGesture) {
               if (hasGesture && _moveController?.isAnimating == true) {
@@ -262,18 +253,19 @@ class _AppMapViewState extends State<AppMapView> with TickerProviderStateMixin {
           ],
         ),
 
-        Positioned(
-          top: AppDimensions.md,
-          left: AppDimensions.md,
-          child: SafeArea(
-            child: AppButtonFab.regular(
-              heroTag: 'map_help_btn',
-              icon: Icons.help_outline,
-              style: AppButtonFabStyle.tertiary,
-              onPressed: () => _showHelp(context),
+        if (widget.onHelp != null)
+          Positioned(
+            top: AppDimensions.md,
+            left: AppDimensions.md,
+            child: SafeArea(
+              child: AppButtonFab.regular(
+                heroTag: 'map_help_btn',
+                icon: Icons.help_outline,
+                style: AppButtonFabStyle.tertiary,
+                onPressed: widget.onHelp,
+              ),
             ),
           ),
-        ),
 
         Positioned(
           top: AppDimensions.md,

@@ -888,11 +888,11 @@ class AppLocalizationsCa extends AppLocalizations {
   String get mapPickerSelectPoint => 'Mantén premut per col·locar el marcador';
 
   @override
-  String get mapPickerHelpTitle => 'Com utilitzar el mapa';
+  String get mapPickerHelpTitle => 'Com funciona l\'explorador?';
 
   @override
   String get mapPickerHelpContent =>
-      'Mantén premut a qualsevol punt del mapa per col·locar el marcador. Pots utilitzar el botó de la diana per centrar el mapa a la teva posició actual.';
+      'Navega pel mapa per descobrir on s\'han observat les diferents espècies. \n\n• La mida de les bombolles canvien segons la quantitat d\'observacions.\n• Toca qualsevol bombolla per veure\'n el resum exacte.\n• Fes servir el panell inferior per filtrar els resultats per una espècie concreta o per l\'any d\'observació.';
 
   @override
   String get ok => 'D\'acord';
@@ -967,4 +967,46 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get censusQrHelpBody =>
       'Escaneja el codi QR que ha compartit el coordinador del cens. Si no pots escanejar el codi, pots introduir l\'URL manualment.';
+
+  @override
+  String get exploreTitle => 'Explora';
+
+  @override
+  String get exploreAllSpecies => 'Totes les espècies';
+
+  @override
+  String get exploreHistoric => 'Històric';
+
+  @override
+  String get exploreBreakdownTitle => 'Observacions Registrades';
+
+  @override
+  String get exploreKpiSpecies => 'Espècies';
+
+  @override
+  String get exploreKpiObservations => 'Observacions';
+
+  @override
+  String get exploreSyncing => 'Carregant dades...';
+
+  @override
+  String get exploreSyncError => 'Error en carregar les dades';
+
+  @override
+  String get exploreNoData => 'Sense dades d\'observació';
+
+  @override
+  String get exploreRetry => 'Tornar a intentar';
+
+  @override
+  String get exploreNoInternet => 'Sense connexió';
+
+  @override
+  String get exploreNoInternetDesc =>
+      'El mapa requereix connexió a internet per visualitzar-se.';
+
+  @override
+  String exploreBubbleObservations(int count) {
+    return '$count observacions';
+  }
 }

@@ -357,5 +357,26 @@
     "censusQrScanTitle": "Escanea el QR del censo",
     "censusQrScanHelper": "Apunta la cámara al código QR del censo",
     "censusQrHelpTitle": "¿Cómo unirse al censo?",
-    "censusQrHelpBody": "Escanea el código QR que ha compartido el coordinador del censo. Si no puedes escanearlo, puedes introducir la URL manualmente."
+    "censusQrHelpBody": "Escanea el código QR que ha compartido el coordinador del censo. Si no puedes escanearlo, puedes introducir la URL manualmente.",
+
+    "exploreTitle": "Explora",
+    "exploreAllSpecies": "Todas las especies",
+    "exploreHistoric": "Histórico",
+    "exploreBreakdownTitle": "Observaciones Registradas",
+    "exploreKpiSpecies": "Especies",
+    "exploreKpiObservations": "Observaciones",
+    "exploreSyncing": "Cargando datos...",
+    "exploreSyncError": "Error al cargar los datos",
+    "exploreNoData": "Sin datos de observación",
+    "exploreRetry": "Reintentar",
+    "exploreNoInternet": "Sin conexión",
+    "exploreNoInternetDesc": "El mapa requiere conexión a internet para visualizarse.",
+    "exploreBubbleObservations": "{count} observaciones",
+    "@exploreBubbleObservations": {
+        "placeholders": {
+            "count": { "type": "int" }
+        }
+    },
+    "mapPickerHelpTitle": "¿Cómo funciona el explorador?",
+    "mapPickerHelpContent": "Navega por el mapa para descubrir dónde se han observado las diferentes especies. \n\n• El tamaño de las burbujas cambian según la cantidad de observaciones.\n• Toca cualquier burbuja para ver el resumen exacto.\n• Utiliza el panel inferior para filtrar los resultados por una especie concreta o por el año de observación."
 }

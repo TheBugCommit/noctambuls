@@ -24,6 +24,9 @@ import 'package:noctambuls/features/censuses/domain/entities/census.dart';
 import 'package:noctambuls/features/censuses/presentation/bloc/census_bloc.dart';
 import 'package:noctambuls/features/censuses/presentation/bloc/census_event.dart';
 import 'package:noctambuls/features/censuses/presentation/pages/census_detail_page.dart';
+import 'package:noctambuls/features/explore/presentation/bloc/explore_bloc.dart';
+import 'package:noctambuls/features/explore/presentation/bloc/explore_event.dart';
+import 'package:noctambuls/features/explore/presentation/pages/explore_page.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_bloc.dart';
 import 'package:noctambuls/features/guide/presentation/bloc/guide_event.dart';
 import 'package:noctambuls/features/guide/presentation/pages/guide/guide_page.dart';
@@ -123,9 +126,24 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
           routes: [
             GoRoute(
               path: AppRoutes.explore,
-              builder: (context, state) => const Scaffold(
-                body: Center(child: Text('Pàgina Explora')),
-              ),
+              builder: (context, state) {
+                final languageCode = Localizations.localeOf(
+                  context,
+                ).languageCode;
+                return MultiBlocProvider(
+                  providers: [
+                    BlocProvider(create: (_) => sl<UrlBloc>()),
+                    BlocProvider(create: (_) => sl<LocationBloc>()),
+                    BlocProvider(create: (_) => sl<PhoneSettingsBloc>()),
+                    BlocProvider(
+                      create: (_) =>
+                          sl<ExploreBloc>()
+                            ..add(ExploreStarted(languageCode: languageCode)),
+                    ),
+                  ],
+                  child: const ExplorePage(),
+                );
+              },
             ),
           ],
         ),

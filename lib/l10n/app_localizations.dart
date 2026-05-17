@@ -1745,13 +1745,13 @@ abstract class AppLocalizations {
   /// No description provided for @mapPickerHelpTitle.
   ///
   /// In ca, this message translates to:
-  /// **'Com utilitzar el mapa'**
+  /// **'Com funciona l\'explorador?'**
   String get mapPickerHelpTitle;
 
   /// No description provided for @mapPickerHelpContent.
   ///
   /// In ca, this message translates to:
-  /// **'Mantén premut a qualsevol punt del mapa per col·locar el marcador. Pots utilitzar el botó de la diana per centrar el mapa a la teva posició actual.'**
+  /// **'Navega pel mapa per descobrir on s\'han observat les diferents espècies. \n\n• La mida de les bombolles canvien segons la quantitat d\'observacions.\n• Toca qualsevol bombolla per veure\'n el resum exacte.\n• Fes servir el panell inferior per filtrar els resultats per una espècie concreta o per l\'any d\'observació.'**
   String get mapPickerHelpContent;
 
   /// No description provided for @ok.
@@ -1885,6 +1885,84 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Escaneja el codi QR que ha compartit el coordinador del cens. Si no pots escanejar el codi, pots introduir l\'URL manualment.'**
   String get censusQrHelpBody;
+
+  /// No description provided for @exploreTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Explora'**
+  String get exploreTitle;
+
+  /// No description provided for @exploreAllSpecies.
+  ///
+  /// In ca, this message translates to:
+  /// **'Totes les espècies'**
+  String get exploreAllSpecies;
+
+  /// No description provided for @exploreHistoric.
+  ///
+  /// In ca, this message translates to:
+  /// **'Històric'**
+  String get exploreHistoric;
+
+  /// No description provided for @exploreBreakdownTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observacions Registrades'**
+  String get exploreBreakdownTitle;
+
+  /// No description provided for @exploreKpiSpecies.
+  ///
+  /// In ca, this message translates to:
+  /// **'Espècies'**
+  String get exploreKpiSpecies;
+
+  /// No description provided for @exploreKpiObservations.
+  ///
+  /// In ca, this message translates to:
+  /// **'Observacions'**
+  String get exploreKpiObservations;
+
+  /// No description provided for @exploreSyncing.
+  ///
+  /// In ca, this message translates to:
+  /// **'Carregant dades...'**
+  String get exploreSyncing;
+
+  /// No description provided for @exploreSyncError.
+  ///
+  /// In ca, this message translates to:
+  /// **'Error en carregar les dades'**
+  String get exploreSyncError;
+
+  /// No description provided for @exploreNoData.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sense dades d\'observació'**
+  String get exploreNoData;
+
+  /// No description provided for @exploreRetry.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tornar a intentar'**
+  String get exploreRetry;
+
+  /// No description provided for @exploreNoInternet.
+  ///
+  /// In ca, this message translates to:
+  /// **'Sense connexió'**
+  String get exploreNoInternet;
+
+  /// No description provided for @exploreNoInternetDesc.
+  ///
+  /// In ca, this message translates to:
+  /// **'El mapa requereix connexió a internet per visualitzar-se.'**
+  String get exploreNoInternetDesc;
+
+  /// No description provided for @exploreBubbleObservations.
+  ///
+  /// In ca, this message translates to:
+  /// **'{count} observacions'**
+  String exploreBubbleObservations(int count);
 }
 
 class _AppLocalizationsDelegate

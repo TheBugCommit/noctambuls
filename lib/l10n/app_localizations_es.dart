@@ -891,11 +891,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mapPickerSelectPoint => 'Mantén pulsado para colocar el marcador';
 
   @override
-  String get mapPickerHelpTitle => 'Cómo usar el mapa';
+  String get mapPickerHelpTitle => '¿Cómo funciona el explorador?';
 
   @override
   String get mapPickerHelpContent =>
-      'Mantén pulsado en cualquier punto del mapa para colocar el marcador. Puedes usar el botón de la diana para centrar el mapa en tu ubicación actual.';
+      'Navega por el mapa para descubrir dónde se han observado las diferentes especies. \n\n• El tamaño de las burbujas cambian según la cantidad de observaciones.\n• Toca cualquier burbuja para ver el resumen exacto.\n• Utiliza el panel inferior para filtrar los resultados por una especie concreta o por el año de observación.';
 
   @override
   String get ok => 'De acuerdo';
@@ -971,4 +971,46 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get censusQrHelpBody =>
       'Escanea el código QR que ha compartido el coordinador del censo. Si no puedes escanearlo, puedes introducir la URL manualmente.';
+
+  @override
+  String get exploreTitle => 'Explora';
+
+  @override
+  String get exploreAllSpecies => 'Todas las especies';
+
+  @override
+  String get exploreHistoric => 'Histórico';
+
+  @override
+  String get exploreBreakdownTitle => 'Observaciones Registradas';
+
+  @override
+  String get exploreKpiSpecies => 'Especies';
+
+  @override
+  String get exploreKpiObservations => 'Observaciones';
+
+  @override
+  String get exploreSyncing => 'Cargando datos...';
+
+  @override
+  String get exploreSyncError => 'Error al cargar los datos';
+
+  @override
+  String get exploreNoData => 'Sin datos de observación';
+
+  @override
+  String get exploreRetry => 'Reintentar';
+
+  @override
+  String get exploreNoInternet => 'Sin conexión';
+
+  @override
+  String get exploreNoInternetDesc =>
+      'El mapa requiere conexión a internet para visualizarse.';
+
+  @override
+  String exploreBubbleObservations(int count) {
+    return '$count observaciones';
+  }
 }
