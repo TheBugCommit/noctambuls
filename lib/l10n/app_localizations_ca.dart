@@ -1016,4 +1016,16 @@ class AppLocalizationsCa extends AppLocalizations {
   @override
   String get exploreMapPickerHelpContent =>
       'Navega pel mapa per descobrir on s\'han observat les diferents espècies. \n\n• La mida de les bombolles canvien segons la quantitat d\'observacions.\n• Toca qualsevol bombolla per veure\'n el resum exacte.\n• Fes servir el panell inferior per filtrar els resultats per una espècie concreta o per l\'any d\'observació.';
+
+  @override
+  String get notificationsTitle => 'Notificacions';
+
+  @override
+  String get notificationsClearAll => 'Esborrar tot';
+
+  @override
+  String get notificationsEmpty => 'No tens cap notificació.';
+
+  @override
+  String get notificationsClose => 'Tancar';
 }

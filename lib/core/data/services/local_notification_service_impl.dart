@@ -1,20 +1,20 @@
-import 'dart:io';
-
-import 'package:flutter/material.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:noctambuls/core/domain/entities/app_notification.dart';
+import 'package:noctambuls/core/domain/entities/in_app_notification.dart';
+import 'package:noctambuls/core/domain/repositories/in_app_notification_repository.dart';
 import 'package:noctambuls/core/domain/services/notification_service.dart';
 import 'package:noctambuls/features/settings/domain/usecases/save_notifications_enabled_usecase.dart';
-import 'package:noctambuls/l10n/app_localizations.dart';
 
 class LocalNotificationServiceImpl implements NotificationService {
   LocalNotificationServiceImpl(
     this._plugin,
     this._saveNotificationsEnabledUseCase,
+    this._inboxRepository,
   );
 
   final FlutterLocalNotificationsPlugin _plugin;
   final SaveNotificationsEnabledUseCase _saveNotificationsEnabledUseCase;
+  final InAppNotificationRepository _inboxRepository;
 
   @override
   Future<void> init() async {
@@ -24,83 +24,45 @@ class LocalNotificationServiceImpl implements NotificationService {
       android: androidInit,
       iOS: iosInit,
     );
-
     await _plugin.initialize(settings: initSettings);
   }
 
   @override
   Future<void> showNotification({
-    required int id,
-    required AppNotification notification,
+    required InAppNotification notification,
+    int id = 0,
     String? payload,
   }) async {
-    final localeName = Platform.localeName;
-    final languageCode = localeName.split('_')[0];
-    final supportedLocales = AppLocalizations.supportedLocales.map(
-      (l) => l.languageCode,
+    const androidDetails = AndroidNotificationDetails(
+      'noctambuls',
+      'Notificacions',
     );
-    final finalLanguage = supportedLocales.contains(languageCode)
-        ? languageCode
-        : 'ca';
-
-    final l10n = lookupAppLocalizations(Locale(finalLanguage));
-
-    final (
-      String title,
-      String body,
-      String channelId,
-      String channelName,
-    ) = switch (notification) {
-      SyncPendingNotification n => (
-        l10n.notificationSyncPendingTitle,
-        l10n.notificationSyncPendingBody(n.pendingCount),
-        'sync_channel',
-        l10n.notificationChannelSyncName,
-      ),
-      SyncErrorNotification _ => (
-        l10n.notificationSyncErrorTitle,
-        l10n.notificationSyncErrorBody,
-        'sync_channel',
-        l10n.notificationChannelSyncName,
-      ),
-    };
-
-    final androidDetails = AndroidNotificationDetails(
-      channelId,
-      channelName,
+    const iosDetails = DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
     );
-
-    final notificationDetails = NotificationDetails(android: androidDetails);
 
     await _plugin.show(
       id: id,
-      title: title,
-      body: body,
-      notificationDetails: notificationDetails,
+      title: notification.title,
+      body: notification.body,
+      notificationDetails: const NotificationDetails(
+        android: androidDetails,
+        iOS: iosDetails,
+      ),
       payload: payload,
     );
+
+    await _inboxRepository.add(notification);
   }
 
   @override
   Future<void> requestPermissions() async {
-    bool? isGranted;
-
-    if (Platform.isIOS) {
-      isGranted = await _plugin
-          .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin
-          >()
-          ?.requestPermissions(alert: true, badge: true, sound: true);
-    } else if (Platform.isAndroid) {
-      isGranted = await _plugin
-          .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin
-          >()
-          ?.requestNotificationsPermission();
-    }
-
-    if (isGranted != null) {
-      await _saveNotificationsEnabledUseCase(isEnabled: isGranted);
-    }
+    final settings = await FirebaseMessaging.instance.requestPermission();
+    final isGranted =
+        settings.authorizationStatus == AuthorizationStatus.authorized ||
+        settings.authorizationStatus == AuthorizationStatus.provisional;
+    await _saveNotificationsEnabledUseCase(isEnabled: isGranted);
   }
 }

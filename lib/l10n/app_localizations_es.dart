@@ -1020,4 +1020,16 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get exploreMapPickerHelpContent =>
       'Navega por el mapa para descubrir dónde se han observado las diferentes especies. \n\n• El tamaño de las burbujas cambian según la cantidad de observaciones.\n• Toca cualquier burbuja para ver el resumen exacto.\n• Utiliza el panel inferior para filtrar los resultados por una especie concreta o por el año de observación.';
+
+  @override
+  String get notificationsTitle => 'Notificaciones';
+
+  @override
+  String get notificationsClearAll => 'Borrar todo';
+
+  @override
+  String get notificationsEmpty => 'No tienes ninguna notificación.';
+
+  @override
+  String get notificationsClose => 'Cerrar';
 }

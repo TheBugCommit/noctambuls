@@ -1975,6 +1975,30 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Navega pel mapa per descobrir on s\'han observat les diferents espècies. \n\n• La mida de les bombolles canvien segons la quantitat d\'observacions.\n• Toca qualsevol bombolla per veure\'n el resum exacte.\n• Fes servir el panell inferior per filtrar els resultats per una espècie concreta o per l\'any d\'observació.'**
   String get exploreMapPickerHelpContent;
+
+  /// No description provided for @notificationsTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Notificacions'**
+  String get notificationsTitle;
+
+  /// No description provided for @notificationsClearAll.
+  ///
+  /// In ca, this message translates to:
+  /// **'Esborrar tot'**
+  String get notificationsClearAll;
+
+  /// No description provided for @notificationsEmpty.
+  ///
+  /// In ca, this message translates to:
+  /// **'No tens cap notificació.'**
+  String get notificationsEmpty;
+
+  /// No description provided for @notificationsClose.
+  ///
+  /// In ca, this message translates to:
+  /// **'Tancar'**
+  String get notificationsClose;
 }
 
 class _AppLocalizationsDelegate

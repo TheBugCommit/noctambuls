@@ -1,13 +1,17 @@
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/env_config.dart';
+import 'package:noctambuls/core/data/datasources/notification_local_datasource.dart';
+import 'package:noctambuls/core/data/repositories/in_app_notification_repository_impl.dart';
 import 'package:noctambuls/core/data/services/audio_player_service_impl.dart';
 import 'package:noctambuls/core/data/services/connectivity_service_impl.dart';
 import 'package:noctambuls/core/data/services/external_link_service_impl.dart';
+import 'package:noctambuls/core/data/services/fcm_service.dart';
 import 'package:noctambuls/core/data/services/local_notification_service_impl.dart';
 import 'package:noctambuls/core/data/services/location_service_impl.dart';
 import 'package:noctambuls/core/data/services/phone_settings_service_impl.dart';
 import 'package:noctambuls/core/data/services/share_service_impl.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/domain/repositories/in_app_notification_repository.dart';
 import 'package:noctambuls/core/domain/services/audio_player_service.dart';
 import 'package:noctambuls/core/domain/services/connectivity_service.dart';
 import 'package:noctambuls/core/domain/services/external_link_service.dart';
@@ -32,6 +36,7 @@ import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/presentation/bloc/audio/audio_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/connectivity/connectivity_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/location/location_bloc.dart';
+import 'package:noctambuls/core/presentation/bloc/notification_inbox/notification_inbox_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/phone_settings/phone_settings_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/share/share_bloc.dart';
 import 'package:noctambuls/core/presentation/bloc/url/url_bloc.dart';
@@ -71,8 +76,24 @@ void initCore() {
     ..registerLazySingleton(
       () => OpenMapsUrlUseCase(sl(), EnvConfig.googleMapsUrl),
     )
+    ..registerLazySingleton<NotificationLocalDataSource>(
+      () => NotificationLocalDataSourceImpl(db: sl()),
+    )
+    ..registerLazySingleton<InAppNotificationRepository>(
+      () => InAppNotificationRepositoryImpl(sl<NotificationLocalDataSource>()),
+    )
     ..registerLazySingleton<NotificationService>(
-      () => LocalNotificationServiceImpl(sl(), sl()),
+      () => LocalNotificationServiceImpl(sl(), sl(), sl()),
+    )
+    ..registerLazySingleton<FcmService>(
+      () => FcmService(
+        sl<NotificationService>(),
+        sl<InAppNotificationRepository>(),
+      ),
+    )
+    ..registerLazySingleton<NotificationInboxBloc>(
+      () =>
+          NotificationInboxBloc(repository: sl<InAppNotificationRepository>()),
     )
     ..registerFactory(
       () => UrlBloc(

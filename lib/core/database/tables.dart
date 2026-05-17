@@ -264,3 +264,20 @@ class CatalogMetadataTable extends Table {
   @override
   Set<Column> get primaryKey => {key};
 }
+
+@DataClassName('NotificationEntityData')
+class NotificationsTable extends Table {
+  @override
+  String get tableName => 'notifications';
+
+  TextColumn get id => text()();
+
+  TextColumn get title => text()();
+
+  TextColumn get body => text()();
+
+  DateTimeColumn get receivedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}

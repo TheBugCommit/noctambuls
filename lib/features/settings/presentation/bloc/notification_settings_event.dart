@@ -15,3 +15,8 @@ final class ToggleNotificationsRequested extends NotificationSettingsEvent {
   @override
   List<Object?> get props => [isEnabled];
 }
+
+final class NotificationPermissionCheckRequested
+    extends NotificationSettingsEvent {
+  const NotificationPermissionCheckRequested();
+}

@@ -1,7 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:noctambuls/core/data/services/fcm_service.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
+import 'package:noctambuls/core/domain/services/notification_service.dart';
+import 'package:noctambuls/core/presentation/bloc/notification_inbox/notification_inbox_bloc.dart';
 import 'package:noctambuls/core/presentation/theme/theme.dart';
 import 'package:noctambuls/core/presentation/theme/util.dart';
 import 'package:noctambuls/features/auth/presentation/bloc/auth_bloc.dart';
@@ -15,6 +20,7 @@ import 'package:noctambuls/features/observations/presentation/bloc/observing_ses
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:noctambuls/features/profile/presentation/bloc/profile_event.dart';
+import 'package:noctambuls/features/settings/domain/usecases/get_notifications_enabled_usecase.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/language_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/theme_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/utils/language_mapper.dart';
@@ -30,6 +36,31 @@ class NoctambulsApp extends StatefulWidget {
 
 class _NoctambulsAppState extends State<NoctambulsApp> {
   bool _hasInitializedSession = false;
+  Timer? _notificationPermissionTimer;
+  late final AppLifecycleListener _lifecycleListener;
+
+  @override
+  void initState() {
+    super.initState();
+    _lifecycleListener = AppLifecycleListener(
+      onStateChange: _onStateChanged,
+    );
+  }
+
+  void _onStateChanged(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<NotificationInboxBloc>().add(
+        const NotificationInboxRefreshed(),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _lifecycleListener.dispose();
+    _notificationPermissionTimer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +79,19 @@ class _NoctambulsAppState extends State<NoctambulsApp> {
               if (!_hasInitializedSession) {
                 _hasInitializedSession = true;
 
+                _notificationPermissionTimer = Timer(
+                  const Duration(seconds: 40),
+                  () async {
+                    await sl<NotificationService>().requestPermissions();
+                    final isEnabled = sl<GetNotificationsEnabledUseCase>()();
+                    if (isEnabled) {
+                      await sl<FcmService>().subscribeToNotifications();
+                    } else {
+                      await sl<FcmService>().unsubscribeFromNotifications();
+                    }
+                  },
+                );
+
                 context.read<CatalogSyncBloc>().add(
                   const CatalogSyncEventRequest(showGlobalError: true),
                 );
@@ -61,6 +105,7 @@ class _NoctambulsAppState extends State<NoctambulsApp> {
               }
             } else if (state is Unauthenticated) {
               _hasInitializedSession = false;
+              _notificationPermissionTimer?.cancel();
             }
           },
         ),

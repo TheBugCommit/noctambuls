@@ -6,8 +6,38 @@ import 'package:noctambuls/features/settings/presentation/bloc/notification_sett
 import 'package:noctambuls/features/settings/presentation/bloc/notification_settings_state.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
-class NotificationSelector extends StatelessWidget {
+class NotificationSelector extends StatefulWidget {
   const NotificationSelector({super.key});
+
+  @override
+  State<NotificationSelector> createState() => _NotificationSelectorState();
+}
+
+class _NotificationSelectorState extends State<NotificationSelector>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    context.read<NotificationSettingsBloc>().add(
+      const NotificationPermissionCheckRequested(),
+    );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<NotificationSettingsBloc>().add(
+        const NotificationPermissionCheckRequested(),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

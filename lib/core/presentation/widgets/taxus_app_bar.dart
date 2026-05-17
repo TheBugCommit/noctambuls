@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_assets.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
+import 'package:noctambuls/core/presentation/widgets/notification_bell_button.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/theme_bloc.dart';
 import 'package:noctambuls/features/settings/presentation/bloc/theme_event.dart';
 import 'package:vector_graphics/vector_graphics.dart';
@@ -41,11 +42,7 @@ class TaxusAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
 
       actions: [
-        /*IconButton(
-          icon: const Icon(Icons.notifications_none),
-          color: colorScheme.onSurface,
-          onPressed: () {},
-        ),*/
+        const NotificationBellButton(),
         const _ThemeToggleButon(),
         IconButton(
           icon: const Icon(Icons.settings),

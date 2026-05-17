@@ -1,3 +1,4 @@
+import 'package:noctambuls/core/data/services/fcm_service.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/features/settings/data/datasources/language_local_datasource.dart';
@@ -7,9 +8,12 @@ import 'package:noctambuls/features/settings/data/datasources/theme_system_datas
 import 'package:noctambuls/features/settings/data/repositories/language_repository_impl.dart';
 import 'package:noctambuls/features/settings/data/repositories/notification_settings_repository_impl.dart';
 import 'package:noctambuls/features/settings/data/repositories/theme_repository_impl.dart';
+import 'package:noctambuls/features/settings/data/services/check_notification_permission_impl.dart';
 import 'package:noctambuls/features/settings/domain/repositories/language_repository.dart';
 import 'package:noctambuls/features/settings/domain/repositories/notification_settings_repository.dart';
 import 'package:noctambuls/features/settings/domain/repositories/theme_repository.dart';
+import 'package:noctambuls/features/settings/domain/service/check_notification_permission.dart';
+import 'package:noctambuls/features/settings/domain/usecases/check_notification_permission_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_language_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_notifications_enabled_usecase.dart';
 import 'package:noctambuls/features/settings/domain/usecases/get_system_theme_usecase.dart';
@@ -44,6 +48,9 @@ void initSettingsFeature() {
     ..registerLazySingleton<NotificationSettingsRepository>(
       () => NotificationSettingsRepositoryImpl(localDataSource: sl()),
     )
+    ..registerLazySingleton<CheckNotificationPermission>(
+      CheckNotificationPermissionImpl.new,
+    )
     ..registerLazySingleton(() => GetThemeUseCase(sl()))
     ..registerLazySingleton(() => SaveThemeUseCase(sl()))
     ..registerLazySingleton(() => GetLanguageUseCase(sl()))
@@ -51,6 +58,7 @@ void initSettingsFeature() {
     ..registerLazySingleton(() => SaveLanguageUseCase(sl()))
     ..registerLazySingleton(() => GetNotificationsEnabledUseCase(sl()))
     ..registerLazySingleton(() => SaveNotificationsEnabledUseCase(sl()))
+    ..registerLazySingleton(() => CheckNotificationPermissionUseCase(sl()))
     ..registerFactory(
       () => ThemeBloc(
         getThemeUseCase: sl(),
@@ -70,6 +78,8 @@ void initSettingsFeature() {
       () => NotificationSettingsBloc(
         getEnabledUseCase: sl(),
         saveEnabledUseCase: sl(),
+        checkPermissionUseCase: sl(),
+        fcmService: sl<FcmService>(),
         logger: sl<IAppLogger>(),
       ),
     );

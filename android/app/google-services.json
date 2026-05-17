@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "995570522135",
+    "project_id": "noctambuls-d08cf",
+    "storage_bucket": "noctambuls-d08cf.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:995570522135:android:08171fd82fe7282a8e6452",
+        "android_client_info": {
+          "package_name": "cat.associaciotaxus.noctambuls"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAGfkh_1-gDbErH5D8S2zCvarZpvQ1EMRo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

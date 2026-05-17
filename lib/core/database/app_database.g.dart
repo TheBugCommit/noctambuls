@@ -1534,6 +1534,316 @@ class MapBubblesTableCompanion extends UpdateCompanion<MapBubbleData> {
   }
 }
 
+class $NotificationsTableTable extends NotificationsTable
+    with TableInfo<$NotificationsTableTable, NotificationEntityData> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $NotificationsTableTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title = GeneratedColumn<String>(
+    'title',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _bodyMeta = const VerificationMeta('body');
+  @override
+  late final GeneratedColumn<String> body = GeneratedColumn<String>(
+    'body',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _receivedAtMeta = const VerificationMeta(
+    'receivedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> receivedAt = GeneratedColumn<DateTime>(
+    'received_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [id, title, body, receivedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'notifications';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<NotificationEntityData> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+        _titleMeta,
+        title.isAcceptableOrUnknown(data['title']!, _titleMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (data.containsKey('body')) {
+      context.handle(
+        _bodyMeta,
+        body.isAcceptableOrUnknown(data['body']!, _bodyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_bodyMeta);
+    }
+    if (data.containsKey('received_at')) {
+      context.handle(
+        _receivedAtMeta,
+        receivedAt.isAcceptableOrUnknown(data['received_at']!, _receivedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_receivedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  NotificationEntityData map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return NotificationEntityData(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      title: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}title'],
+      )!,
+      body: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}body'],
+      )!,
+      receivedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}received_at'],
+      )!,
+    );
+  }
+
+  @override
+  $NotificationsTableTable createAlias(String alias) {
+    return $NotificationsTableTable(attachedDatabase, alias);
+  }
+}
+
+class NotificationEntityData extends DataClass
+    implements Insertable<NotificationEntityData> {
+  final String id;
+  final String title;
+  final String body;
+  final DateTime receivedAt;
+  const NotificationEntityData({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.receivedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['title'] = Variable<String>(title);
+    map['body'] = Variable<String>(body);
+    map['received_at'] = Variable<DateTime>(receivedAt);
+    return map;
+  }
+
+  NotificationsTableCompanion toCompanion(bool nullToAbsent) {
+    return NotificationsTableCompanion(
+      id: Value(id),
+      title: Value(title),
+      body: Value(body),
+      receivedAt: Value(receivedAt),
+    );
+  }
+
+  factory NotificationEntityData.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return NotificationEntityData(
+      id: serializer.fromJson<String>(json['id']),
+      title: serializer.fromJson<String>(json['title']),
+      body: serializer.fromJson<String>(json['body']),
+      receivedAt: serializer.fromJson<DateTime>(json['receivedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'title': serializer.toJson<String>(title),
+      'body': serializer.toJson<String>(body),
+      'receivedAt': serializer.toJson<DateTime>(receivedAt),
+    };
+  }
+
+  NotificationEntityData copyWith({
+    String? id,
+    String? title,
+    String? body,
+    DateTime? receivedAt,
+  }) => NotificationEntityData(
+    id: id ?? this.id,
+    title: title ?? this.title,
+    body: body ?? this.body,
+    receivedAt: receivedAt ?? this.receivedAt,
+  );
+  NotificationEntityData copyWithCompanion(NotificationsTableCompanion data) {
+    return NotificationEntityData(
+      id: data.id.present ? data.id.value : this.id,
+      title: data.title.present ? data.title.value : this.title,
+      body: data.body.present ? data.body.value : this.body,
+      receivedAt: data.receivedAt.present
+          ? data.receivedAt.value
+          : this.receivedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationEntityData(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('body: $body, ')
+          ..write('receivedAt: $receivedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, title, body, receivedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is NotificationEntityData &&
+          other.id == this.id &&
+          other.title == this.title &&
+          other.body == this.body &&
+          other.receivedAt == this.receivedAt);
+}
+
+class NotificationsTableCompanion
+    extends UpdateCompanion<NotificationEntityData> {
+  final Value<String> id;
+  final Value<String> title;
+  final Value<String> body;
+  final Value<DateTime> receivedAt;
+  final Value<int> rowid;
+  const NotificationsTableCompanion({
+    this.id = const Value.absent(),
+    this.title = const Value.absent(),
+    this.body = const Value.absent(),
+    this.receivedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  NotificationsTableCompanion.insert({
+    required String id,
+    required String title,
+    required String body,
+    required DateTime receivedAt,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       title = Value(title),
+       body = Value(body),
+       receivedAt = Value(receivedAt);
+  static Insertable<NotificationEntityData> custom({
+    Expression<String>? id,
+    Expression<String>? title,
+    Expression<String>? body,
+    Expression<DateTime>? receivedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (title != null) 'title': title,
+      if (body != null) 'body': body,
+      if (receivedAt != null) 'received_at': receivedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  NotificationsTableCompanion copyWith({
+    Value<String>? id,
+    Value<String>? title,
+    Value<String>? body,
+    Value<DateTime>? receivedAt,
+    Value<int>? rowid,
+  }) {
+    return NotificationsTableCompanion(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      body: body ?? this.body,
+      receivedAt: receivedAt ?? this.receivedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (title.present) {
+      map['title'] = Variable<String>(title.value);
+    }
+    if (body.present) {
+      map['body'] = Variable<String>(body.value);
+    }
+    if (receivedAt.present) {
+      map['received_at'] = Variable<DateTime>(receivedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('NotificationsTableCompanion(')
+          ..write('id: $id, ')
+          ..write('title: $title, ')
+          ..write('body: $body, ')
+          ..write('receivedAt: $receivedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -1544,6 +1854,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $MapBubblesTableTable mapBubblesTable = $MapBubblesTableTable(
     this,
   );
+  late final $NotificationsTableTable notificationsTable =
+      $NotificationsTableTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -1553,6 +1865,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     birdNamesTable,
     catalogMetadataTable,
     mapBubblesTable,
+    notificationsTable,
   ];
 }
 
@@ -2639,6 +2952,202 @@ typedef $$MapBubblesTableTableProcessedTableManager =
       MapBubbleData,
       PrefetchHooks Function()
     >;
+typedef $$NotificationsTableTableCreateCompanionBuilder =
+    NotificationsTableCompanion Function({
+      required String id,
+      required String title,
+      required String body,
+      required DateTime receivedAt,
+      Value<int> rowid,
+    });
+typedef $$NotificationsTableTableUpdateCompanionBuilder =
+    NotificationsTableCompanion Function({
+      Value<String> id,
+      Value<String> title,
+      Value<String> body,
+      Value<DateTime> receivedAt,
+      Value<int> rowid,
+    });
+
+class $$NotificationsTableTableFilterComposer
+    extends Composer<_$AppDatabase, $NotificationsTableTable> {
+  $$NotificationsTableTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get receivedAt => $composableBuilder(
+    column: $table.receivedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$NotificationsTableTableOrderingComposer
+    extends Composer<_$AppDatabase, $NotificationsTableTable> {
+  $$NotificationsTableTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get title => $composableBuilder(
+    column: $table.title,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get body => $composableBuilder(
+    column: $table.body,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get receivedAt => $composableBuilder(
+    column: $table.receivedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$NotificationsTableTableAnnotationComposer
+    extends Composer<_$AppDatabase, $NotificationsTableTable> {
+  $$NotificationsTableTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get title =>
+      $composableBuilder(column: $table.title, builder: (column) => column);
+
+  GeneratedColumn<String> get body =>
+      $composableBuilder(column: $table.body, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get receivedAt => $composableBuilder(
+    column: $table.receivedAt,
+    builder: (column) => column,
+  );
+}
+
+class $$NotificationsTableTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $NotificationsTableTable,
+          NotificationEntityData,
+          $$NotificationsTableTableFilterComposer,
+          $$NotificationsTableTableOrderingComposer,
+          $$NotificationsTableTableAnnotationComposer,
+          $$NotificationsTableTableCreateCompanionBuilder,
+          $$NotificationsTableTableUpdateCompanionBuilder,
+          (
+            NotificationEntityData,
+            BaseReferences<
+              _$AppDatabase,
+              $NotificationsTableTable,
+              NotificationEntityData
+            >,
+          ),
+          NotificationEntityData,
+          PrefetchHooks Function()
+        > {
+  $$NotificationsTableTableTableManager(
+    _$AppDatabase db,
+    $NotificationsTableTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$NotificationsTableTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$NotificationsTableTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$NotificationsTableTableAnnotationComposer(
+                $db: db,
+                $table: table,
+              ),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> title = const Value.absent(),
+                Value<String> body = const Value.absent(),
+                Value<DateTime> receivedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => NotificationsTableCompanion(
+                id: id,
+                title: title,
+                body: body,
+                receivedAt: receivedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String title,
+                required String body,
+                required DateTime receivedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => NotificationsTableCompanion.insert(
+                id: id,
+                title: title,
+                body: body,
+                receivedAt: receivedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$NotificationsTableTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $NotificationsTableTable,
+      NotificationEntityData,
+      $$NotificationsTableTableFilterComposer,
+      $$NotificationsTableTableOrderingComposer,
+      $$NotificationsTableTableAnnotationComposer,
+      $$NotificationsTableTableCreateCompanionBuilder,
+      $$NotificationsTableTableUpdateCompanionBuilder,
+      (
+        NotificationEntityData,
+        BaseReferences<
+          _$AppDatabase,
+          $NotificationsTableTable,
+          NotificationEntityData
+        >,
+      ),
+      NotificationEntityData,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -2651,4 +3160,6 @@ class $AppDatabaseManager {
       $$CatalogMetadataTableTableTableManager(_db, _db.catalogMetadataTable);
   $$MapBubblesTableTableTableManager get mapBubblesTable =>
       $$MapBubblesTableTableTableManager(_db, _db.mapBubblesTable);
+  $$NotificationsTableTableTableManager get notificationsTable =>
+      $$NotificationsTableTableTableManager(_db, _db.notificationsTable);
 }

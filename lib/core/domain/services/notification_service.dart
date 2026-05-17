@@ -1,4 +1,4 @@
-import 'package:noctambuls/core/domain/entities/app_notification.dart';
+import 'package:noctambuls/core/domain/entities/in_app_notification.dart';
 
 abstract interface class NotificationService {
   Future<void> init();
@@ -6,8 +6,8 @@ abstract interface class NotificationService {
   Future<void> requestPermissions();
 
   Future<void> showNotification({
-    required int id,
-    required AppNotification notification,
+    required InAppNotification notification,
+    int id = 0,
     String? payload,
   });
 }
