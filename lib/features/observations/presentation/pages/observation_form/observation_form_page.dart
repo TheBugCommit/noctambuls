@@ -356,7 +356,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                           },
                           onOpenMap: () => _openMapPicker(state.geoPosition),
                         ),
-                        const SizedBox(height: AppDimensions.md),
+                        const SizedBox(height: AppDimensions.lg),
                       ],
 
                       Row(
@@ -385,7 +385,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                         ],
                       ),
 
-                      const SizedBox(height: AppDimensions.md),
+                      const SizedBox(height: AppDimensions.xs),
                       DateTimeRangeSelectorField(
                         session: widget.session,
                         startTime: _startTime,
@@ -398,7 +398,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                           });
                         },
                       ),
-                      const SizedBox(height: AppDimensions.md),
+                      const SizedBox(height: AppDimensions.lg),
 
                       ContactTypeSelectorField(
                         selectedContactType: _selectedContactType,
@@ -406,7 +406,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                         onChanged: (value) =>
                             setState(() => _selectedContactType = value),
                       ),
-                      const SizedBox(height: AppDimensions.md),
+                      const SizedBox(height: AppDimensions.lg),
 
                       OrientationSelectorField(
                         selectedBearing: _selectedBearing,
@@ -414,7 +414,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
                         onChanged: (value) =>
                             setState(() => _selectedBearing = value),
                       ),
-                      const SizedBox(height: AppDimensions.md),
+                      const SizedBox(height: AppDimensions.xs),
 
                       NotesField(
                         controller: _notesController,
