@@ -51,22 +51,9 @@ class MeteoChoiceGroup<T> extends StatelessWidget {
                 label: Text(option.label),
                 selected: isSelected,
                 showCheckmark: true,
-                onSelected: isReadOnly ? null : (_) => onChanged?.call(option.value),
-                backgroundColor: Colors.transparent,
-                selectedColor: colorScheme.primary.withValues(alpha: 0.2),
-                checkmarkColor: colorScheme.primary,
-                labelStyle: TextStyle(
-                  color: isSelected ? colorScheme.primary : colorScheme.onSurface,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(AppDimensions.radiusLg),
-                  side: BorderSide(
-                    color: isSelected
-                        ? colorScheme.primary
-                        : colorScheme.outlineVariant,
-                  ),
-                ),
+                onSelected: isReadOnly
+                    ? null
+                    : (_) => onChanged?.call(option.value),
               );
             }).toList(),
           ),
