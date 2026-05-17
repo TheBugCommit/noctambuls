@@ -891,11 +891,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get mapPickerSelectPoint => 'Mantén pulsado para colocar el marcador';
 
   @override
-  String get mapPickerHelpTitle => '¿Cómo funciona el explorador?';
+  String get mapPickerHelpTitle => 'Cómo usar el mapa';
 
   @override
   String get mapPickerHelpContent =>
-      'Navega por el mapa para descubrir dónde se han observado las diferentes especies. \n\n• El tamaño de las burbujas cambian según la cantidad de observaciones.\n• Toca cualquier burbuja para ver el resumen exacto.\n• Utiliza el panel inferior para filtrar los resultados por una especie concreta o por el año de observación.';
+      'Mantén pulsado en cualquier punto del mapa para colocar el marcador. Puedes usar el botón de la diana para centrar el mapa en tu ubicación actual.';
 
   @override
   String get ok => 'De acuerdo';
@@ -1013,4 +1013,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String exploreBubbleObservations(int count) {
     return '$count observaciones';
   }
+
+  @override
+  String get exploreMapPickerHelpTitle => '¿Cómo funciona el explorador?';
+
+  @override
+  String get exploreMapPickerHelpContent =>
+      'Navega por el mapa para descubrir dónde se han observado las diferentes especies. \n\n• El tamaño de las burbujas cambian según la cantidad de observaciones.\n• Toca cualquier burbuja para ver el resumen exacto.\n• Utiliza el panel inferior para filtrar los resultados por una especie concreta o por el año de observación.';
 }

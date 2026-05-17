@@ -253,8 +253,8 @@ class _ExplorePageState extends State<ExplorePage>
                       unawaited(
                         AppSheet.showInfo(
                           context: context,
-                          title: l10n.mapPickerHelpTitle,
-                          message: l10n.mapPickerHelpContent,
+                          title: l10n.exploreMapPickerHelpTitle,
+                          message: l10n.exploreMapPickerHelpContent,
                           buttonText: l10n.understood,
                         ),
                       );

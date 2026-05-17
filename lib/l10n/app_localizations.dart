@@ -1745,13 +1745,13 @@ abstract class AppLocalizations {
   /// No description provided for @mapPickerHelpTitle.
   ///
   /// In ca, this message translates to:
-  /// **'Com funciona l\'explorador?'**
+  /// **'Com utilitzar el mapa'**
   String get mapPickerHelpTitle;
 
   /// No description provided for @mapPickerHelpContent.
   ///
   /// In ca, this message translates to:
-  /// **'Navega pel mapa per descobrir on s\'han observat les diferents espècies. \n\n• La mida de les bombolles canvien segons la quantitat d\'observacions.\n• Toca qualsevol bombolla per veure\'n el resum exacte.\n• Fes servir el panell inferior per filtrar els resultats per una espècie concreta o per l\'any d\'observació.'**
+  /// **'Mantén premut a qualsevol punt del mapa per col·locar el marcador. Pots utilitzar el botó de la diana per centrar el mapa a la teva posició actual.'**
   String get mapPickerHelpContent;
 
   /// No description provided for @ok.
@@ -1963,6 +1963,18 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'{count} observacions'**
   String exploreBubbleObservations(int count);
+
+  /// No description provided for @exploreMapPickerHelpTitle.
+  ///
+  /// In ca, this message translates to:
+  /// **'Com funciona l\'explorador?'**
+  String get exploreMapPickerHelpTitle;
+
+  /// No description provided for @exploreMapPickerHelpContent.
+  ///
+  /// In ca, this message translates to:
+  /// **'Navega pel mapa per descobrir on s\'han observat les diferents espècies. \n\n• La mida de les bombolles canvien segons la quantitat d\'observacions.\n• Toca qualsevol bombolla per veure\'n el resum exacte.\n• Fes servir el panell inferior per filtrar els resultats per una espècie concreta o per l\'any d\'observació.'**
+  String get exploreMapPickerHelpContent;
 }
 
 class _AppLocalizationsDelegate

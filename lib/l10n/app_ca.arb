@@ -383,7 +383,7 @@
             "count": { "type": "int" }
         }
     },
-    "mapPickerHelpTitle": "Com funciona l'explorador?",
-    "mapPickerHelpContent": "Navega pel mapa per descobrir on s'han observat les diferents espècies. \n\n• La mida de les bombolles canvien segons la quantitat d'observacions.\n• Toca qualsevol bombolla per veure'n el resum exacte.\n• Fes servir el panell inferior per filtrar els resultats per una espècie concreta o per l'any d'observació."
+    "exploreMapPickerHelpTitle": "Com funciona l'explorador?",
+    "exploreMapPickerHelpContent": "Navega pel mapa per descobrir on s'han observat les diferents espècies. \n\n• La mida de les bombolles canvien segons la quantitat d'observacions.\n• Toca qualsevol bombolla per veure'n el resum exacte.\n• Fes servir el panell inferior per filtrar els resultats per una espècie concreta o per l'any d'observació."
 
 }

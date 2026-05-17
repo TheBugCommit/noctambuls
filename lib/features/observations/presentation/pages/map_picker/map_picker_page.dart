@@ -251,10 +251,11 @@ class _MapPickerPageState extends State<MapPickerPage>
                               AppButtonFab.small(
                                 heroTag: 'reset_to_gps',
                                 icon: Icons.my_location,
+                                isDisabled: !_isManual,
                                 style: _isManual
                                     ? AppButtonFabStyle.secondary
                                     : AppButtonFabStyle.surface,
-                                onPressed: _isManual ? _resetToGps : null,
+                                onPressed: _resetToGps,
                               ),
                               const SizedBox(width: AppDimensions.md),
 
