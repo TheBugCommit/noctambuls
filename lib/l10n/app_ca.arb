@@ -363,7 +363,7 @@
     "censusQrScanTitle": "Escaneja el QR del cens",
     "censusQrScanHelper": "Apunta la càmera al codi QR del cens",
     "censusQrHelpTitle": "Com unir-se al cens?",
-    "censusQrHelpBody": "Escaneja el codi QR que ha compartit el coordinador del cens. Si no pots escanejar el codi, pots introduir l'URL manualment.",
+    "censusQrHelpBody": "Escaneja el codi QR compartit pel coordinador o la coordinadora del cens. Si no pots escanejar-lo, també pots obrir l’enllaç URL que hagi compartit.",
 
     "exploreTitle": "Explora",
     "exploreAllSpecies": "Totes les espècies",

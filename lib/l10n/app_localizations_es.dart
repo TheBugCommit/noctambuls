@@ -970,7 +970,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get censusQrHelpBody =>
-      'Escanea el código QR que ha compartido el coordinador del censo. Si no puedes escanearlo, puedes introducir la URL manualmente.';
+      'Escanea el código QR compartido por el coordinador o la coordinadora del censo. Si no puedes escanearlo, también puedes abrir el enlace URL que haya compartido.';
 
   @override
   String get exploreTitle => 'Explora';

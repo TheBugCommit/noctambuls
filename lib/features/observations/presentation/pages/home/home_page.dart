@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:noctambuls/core/constants/app_deeplinks.dart';
 import 'package:noctambuls/core/constants/app_dimensions.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
 import 'package:noctambuls/core/presentation/widgets/app_button_fab.dart';
@@ -28,9 +27,9 @@ import 'package:noctambuls/features/observations/domain/failures/session_failure
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_bloc.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_event.dart';
 import 'package:noctambuls/features/observations/presentation/bloc/observing_session_state.dart';
+import 'package:noctambuls/features/observations/presentation/pages/home/utils/qr_scanner_utils.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/widgets/active_session_card.dart';
 import 'package:noctambuls/features/observations/presentation/pages/home/widgets/home_header.dart';
-import 'package:noctambuls/features/observations/presentation/pages/review/qr_scanner_page.dart';
 import 'package:noctambuls/features/observations/presentation/shared_widgets/session_type_selector.dart';
 import 'package:noctambuls/l10n/app_localizations.dart';
 
@@ -86,13 +85,21 @@ class HomePage extends StatelessWidget {
           ObservingSessionIdle() ||
           ObservingSessionNavigatingToReview() ||
           ObservingSessionError() => _IdleScaffold(
-            onTypeSelected: (type) => context.read<ObservingSessionBloc>().add(
-              StartObservingSession(
-                sessionType: type,
-                annotatorId:
-                    (context.read<AuthBloc>().state as Authenticated).user.id,
-              ),
-            ),
+            onTypeSelected: (type) {
+              if (type == SessionType.census) {
+                unawaited(openCensusQrScanner(context));
+              } else {
+                context.read<ObservingSessionBloc>().add(
+                  StartObservingSession(
+                    sessionType: type,
+                    annotatorId:
+                        (context.read<AuthBloc>().state as Authenticated)
+                            .user
+                            .id,
+                  ),
+                );
+              }
+            },
           ),
           ObservingSessionLoading() => const _LoadingScaffold(),
           ObservingSessionActive() => _ActiveScaffold(
@@ -196,28 +203,7 @@ class _BaseHomeLayout extends StatelessWidget {
             ),
           ),
           floatingActionButton: AppButtonFab.large(
-            onPressed: () async {
-              final l10n = AppLocalizations.of(context)!;
-              final url = await context.push<String>(
-                AppRoutes.qrScanner,
-                extra: QrScannerArgs(
-                  title: l10n.censusQrScanTitle,
-                  helperText: l10n.censusQrScanHelper,
-                  helpTitle: l10n.censusQrHelpTitle,
-                  helpMessage: l10n.censusQrHelpBody,
-                  validator: (rawValue) {
-                    final uri = Uri.tryParse(rawValue);
-                    if (uri != null && AppDeepLinks.isCensusDeepLink(uri)) {
-                      return rawValue;
-                    }
-                    return null;
-                  },
-                ),
-              );
-              if (url != null && context.mounted) {
-                context.read<CensusBloc>().add(JoinCensusByUrl(url));
-              }
-            },
+            onPressed: () => openCensusQrScanner(context),
             icon: Icons.qr_code_scanner,
           ),
         ),

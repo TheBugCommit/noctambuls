@@ -1883,7 +1883,7 @@ abstract class AppLocalizations {
   /// No description provided for @censusQrHelpBody.
   ///
   /// In ca, this message translates to:
-  /// **'Escaneja el codi QR que ha compartit el coordinador del cens. Si no pots escanejar el codi, pots introduir l\'URL manualment.'**
+  /// **'Escaneja el codi QR compartit pel coordinador o la coordinadora del cens. Si no pots escanejar-lo, també pots obrir l’enllaç URL que hagi compartit.'**
   String get censusQrHelpBody;
 
   /// No description provided for @exploreTitle.
