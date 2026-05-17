@@ -33,6 +33,7 @@ _CensusRemoteDto _$CensusRemoteDtoFromJson(Map<String, dynamic> json) =>
       longitude: (json['longitude'] as num?)?.toDouble(),
       locationName: json['locationName'] as String?,
       description: json['description'] as String?,
+      isDeleted: json['isDeleted'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$CensusRemoteDtoToJson(_CensusRemoteDto instance) =>
@@ -46,4 +47,5 @@ Map<String, dynamic> _$CensusRemoteDtoToJson(_CensusRemoteDto instance) =>
       'longitude': instance.longitude,
       'locationName': instance.locationName,
       'description': instance.description,
+      'isDeleted': instance.isDeleted,
     };

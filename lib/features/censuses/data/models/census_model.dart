@@ -19,6 +19,7 @@ abstract class CensusModel with _$CensusModel {
     GeoPosition? geoPosition,
     @Default(false) bool isJoined,
     @Default(false) bool alreadyDone,
+    @Default(false) bool isDeleted,
   }) = _CensusModel;
 
   factory CensusModel.fromEntity(Census entity) {
@@ -31,6 +32,7 @@ abstract class CensusModel with _$CensusModel {
       geoPosition: entity.geoPosition,
       isJoined: entity.isJoined,
       alreadyDone: entity.alreadyDone,
+      isDeleted: false,
       createdAt: entity.createdAt,
       updatedAt: entity.updatedAt,
     );
@@ -58,6 +60,7 @@ abstract class CensusModel with _$CensusModel {
       geoPosition: geoPosition,
       isJoined: data.isJoined,
       alreadyDone: data.alreadyDone,
+      isDeleted: false,
       createdAt: data.createdAt,
       updatedAt: data.updatedAt,
     );

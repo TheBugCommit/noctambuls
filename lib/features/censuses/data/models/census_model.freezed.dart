@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CensusModel {
 
- String get id; String get title; DateTime get startTime; DateTime get createdAt; DateTime get updatedAt; String? get locationName; String? get description; GeoPosition? get geoPosition; bool get isJoined; bool get alreadyDone;
+ String get id; String get title; DateTime get startTime; DateTime get createdAt; DateTime get updatedAt; String? get locationName; String? get description; GeoPosition? get geoPosition; bool get isJoined; bool get alreadyDone; bool get isDeleted;
 /// Create a copy of CensusModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $CensusModelCopyWith<CensusModel> get copyWith => _$CensusModelCopyWithImpl<Cens
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CensusModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.description, description) || other.description == description)&&(identical(other.geoPosition, geoPosition) || other.geoPosition == geoPosition)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.alreadyDone, alreadyDone) || other.alreadyDone == alreadyDone));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CensusModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.description, description) || other.description == description)&&(identical(other.geoPosition, geoPosition) || other.geoPosition == geoPosition)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.alreadyDone, alreadyDone) || other.alreadyDone == alreadyDone)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startTime,createdAt,updatedAt,locationName,description,geoPosition,isJoined,alreadyDone);
+int get hashCode => Object.hash(runtimeType,id,title,startTime,createdAt,updatedAt,locationName,description,geoPosition,isJoined,alreadyDone,isDeleted);
 
 @override
 String toString() {
-  return 'CensusModel(id: $id, title: $title, startTime: $startTime, createdAt: $createdAt, updatedAt: $updatedAt, locationName: $locationName, description: $description, geoPosition: $geoPosition, isJoined: $isJoined, alreadyDone: $alreadyDone)';
+  return 'CensusModel(id: $id, title: $title, startTime: $startTime, createdAt: $createdAt, updatedAt: $updatedAt, locationName: $locationName, description: $description, geoPosition: $geoPosition, isJoined: $isJoined, alreadyDone: $alreadyDone, isDeleted: $isDeleted)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $CensusModelCopyWith<$Res>  {
   factory $CensusModelCopyWith(CensusModel value, $Res Function(CensusModel) _then) = _$CensusModelCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, DateTime startTime, DateTime createdAt, DateTime updatedAt, String? locationName, String? description, GeoPosition? geoPosition, bool isJoined, bool alreadyDone
+ String id, String title, DateTime startTime, DateTime createdAt, DateTime updatedAt, String? locationName, String? description, GeoPosition? geoPosition, bool isJoined, bool alreadyDone, bool isDeleted
 });
 
 
@@ -62,7 +62,7 @@ class _$CensusModelCopyWithImpl<$Res>
 
 /// Create a copy of CensusModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? startTime = null,Object? createdAt = null,Object? updatedAt = null,Object? locationName = freezed,Object? description = freezed,Object? geoPosition = freezed,Object? isJoined = null,Object? alreadyDone = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? startTime = null,Object? createdAt = null,Object? updatedAt = null,Object? locationName = freezed,Object? description = freezed,Object? geoPosition = freezed,Object? isJoined = null,Object? alreadyDone = null,Object? isDeleted = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -74,6 +74,7 @@ as String?,description: freezed == description ? _self.description : description
 as String?,geoPosition: freezed == geoPosition ? _self.geoPosition : geoPosition // ignore: cast_nullable_to_non_nullable
 as GeoPosition?,isJoined: null == isJoined ? _self.isJoined : isJoined // ignore: cast_nullable_to_non_nullable
 as bool,alreadyDone: null == alreadyDone ? _self.alreadyDone : alreadyDone // ignore: cast_nullable_to_non_nullable
+as bool,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  DateTime startTime,  DateTime createdAt,  DateTime updatedAt,  String? locationName,  String? description,  GeoPosition? geoPosition,  bool isJoined,  bool alreadyDone)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  DateTime startTime,  DateTime createdAt,  DateTime updatedAt,  String? locationName,  String? description,  GeoPosition? geoPosition,  bool isJoined,  bool alreadyDone,  bool isDeleted)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CensusModel() when $default != null:
-return $default(_that.id,_that.title,_that.startTime,_that.createdAt,_that.updatedAt,_that.locationName,_that.description,_that.geoPosition,_that.isJoined,_that.alreadyDone);case _:
+return $default(_that.id,_that.title,_that.startTime,_that.createdAt,_that.updatedAt,_that.locationName,_that.description,_that.geoPosition,_that.isJoined,_that.alreadyDone,_that.isDeleted);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.id,_that.title,_that.startTime,_that.createdAt,_that.updat
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  DateTime startTime,  DateTime createdAt,  DateTime updatedAt,  String? locationName,  String? description,  GeoPosition? geoPosition,  bool isJoined,  bool alreadyDone)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  DateTime startTime,  DateTime createdAt,  DateTime updatedAt,  String? locationName,  String? description,  GeoPosition? geoPosition,  bool isJoined,  bool alreadyDone,  bool isDeleted)  $default,) {final _that = this;
 switch (_that) {
 case _CensusModel():
-return $default(_that.id,_that.title,_that.startTime,_that.createdAt,_that.updatedAt,_that.locationName,_that.description,_that.geoPosition,_that.isJoined,_that.alreadyDone);case _:
+return $default(_that.id,_that.title,_that.startTime,_that.createdAt,_that.updatedAt,_that.locationName,_that.description,_that.geoPosition,_that.isJoined,_that.alreadyDone,_that.isDeleted);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.id,_that.title,_that.startTime,_that.createdAt,_that.updat
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  DateTime startTime,  DateTime createdAt,  DateTime updatedAt,  String? locationName,  String? description,  GeoPosition? geoPosition,  bool isJoined,  bool alreadyDone)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  DateTime startTime,  DateTime createdAt,  DateTime updatedAt,  String? locationName,  String? description,  GeoPosition? geoPosition,  bool isJoined,  bool alreadyDone,  bool isDeleted)?  $default,) {final _that = this;
 switch (_that) {
 case _CensusModel() when $default != null:
-return $default(_that.id,_that.title,_that.startTime,_that.createdAt,_that.updatedAt,_that.locationName,_that.description,_that.geoPosition,_that.isJoined,_that.alreadyDone);case _:
+return $default(_that.id,_that.title,_that.startTime,_that.createdAt,_that.updatedAt,_that.locationName,_that.description,_that.geoPosition,_that.isJoined,_that.alreadyDone,_that.isDeleted);case _:
   return null;
 
 }
@@ -215,7 +216,7 @@ return $default(_that.id,_that.title,_that.startTime,_that.createdAt,_that.updat
 
 
 class _CensusModel implements CensusModel {
-  const _CensusModel({required this.id, required this.title, required this.startTime, required this.createdAt, required this.updatedAt, this.locationName, this.description, this.geoPosition, this.isJoined = false, this.alreadyDone = false});
+  const _CensusModel({required this.id, required this.title, required this.startTime, required this.createdAt, required this.updatedAt, this.locationName, this.description, this.geoPosition, this.isJoined = false, this.alreadyDone = false, this.isDeleted = false});
   
 
 @override final  String id;
@@ -228,6 +229,7 @@ class _CensusModel implements CensusModel {
 @override final  GeoPosition? geoPosition;
 @override@JsonKey() final  bool isJoined;
 @override@JsonKey() final  bool alreadyDone;
+@override@JsonKey() final  bool isDeleted;
 
 /// Create a copy of CensusModel
 /// with the given fields replaced by the non-null parameter values.
@@ -239,16 +241,16 @@ _$CensusModelCopyWith<_CensusModel> get copyWith => __$CensusModelCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CensusModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.description, description) || other.description == description)&&(identical(other.geoPosition, geoPosition) || other.geoPosition == geoPosition)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.alreadyDone, alreadyDone) || other.alreadyDone == alreadyDone));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CensusModel&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.startTime, startTime) || other.startTime == startTime)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.description, description) || other.description == description)&&(identical(other.geoPosition, geoPosition) || other.geoPosition == geoPosition)&&(identical(other.isJoined, isJoined) || other.isJoined == isJoined)&&(identical(other.alreadyDone, alreadyDone) || other.alreadyDone == alreadyDone)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,startTime,createdAt,updatedAt,locationName,description,geoPosition,isJoined,alreadyDone);
+int get hashCode => Object.hash(runtimeType,id,title,startTime,createdAt,updatedAt,locationName,description,geoPosition,isJoined,alreadyDone,isDeleted);
 
 @override
 String toString() {
-  return 'CensusModel(id: $id, title: $title, startTime: $startTime, createdAt: $createdAt, updatedAt: $updatedAt, locationName: $locationName, description: $description, geoPosition: $geoPosition, isJoined: $isJoined, alreadyDone: $alreadyDone)';
+  return 'CensusModel(id: $id, title: $title, startTime: $startTime, createdAt: $createdAt, updatedAt: $updatedAt, locationName: $locationName, description: $description, geoPosition: $geoPosition, isJoined: $isJoined, alreadyDone: $alreadyDone, isDeleted: $isDeleted)';
 }
 
 
@@ -259,7 +261,7 @@ abstract mixin class _$CensusModelCopyWith<$Res> implements $CensusModelCopyWith
   factory _$CensusModelCopyWith(_CensusModel value, $Res Function(_CensusModel) _then) = __$CensusModelCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, DateTime startTime, DateTime createdAt, DateTime updatedAt, String? locationName, String? description, GeoPosition? geoPosition, bool isJoined, bool alreadyDone
+ String id, String title, DateTime startTime, DateTime createdAt, DateTime updatedAt, String? locationName, String? description, GeoPosition? geoPosition, bool isJoined, bool alreadyDone, bool isDeleted
 });
 
 
@@ -276,7 +278,7 @@ class __$CensusModelCopyWithImpl<$Res>
 
 /// Create a copy of CensusModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? startTime = null,Object? createdAt = null,Object? updatedAt = null,Object? locationName = freezed,Object? description = freezed,Object? geoPosition = freezed,Object? isJoined = null,Object? alreadyDone = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? startTime = null,Object? createdAt = null,Object? updatedAt = null,Object? locationName = freezed,Object? description = freezed,Object? geoPosition = freezed,Object? isJoined = null,Object? alreadyDone = null,Object? isDeleted = null,}) {
   return _then(_CensusModel(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -288,6 +290,7 @@ as String?,description: freezed == description ? _self.description : description
 as String?,geoPosition: freezed == geoPosition ? _self.geoPosition : geoPosition // ignore: cast_nullable_to_non_nullable
 as GeoPosition?,isJoined: null == isJoined ? _self.isJoined : isJoined // ignore: cast_nullable_to_non_nullable
 as bool,alreadyDone: null == alreadyDone ? _self.alreadyDone : alreadyDone // ignore: cast_nullable_to_non_nullable
+as bool,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
 as bool,
   ));
 }

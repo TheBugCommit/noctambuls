@@ -69,7 +69,10 @@ class CensusRepositoryImpl implements CensusRepository {
       final since = await localDataSource.getSyncSince(_censusesSinceKey);
       final response = await remoteDataSource.fetchCensuses(since: since);
       final models = response.censuses.map((dto) => dto.toModel()).toList();
-      await localDataSource.bulkUpsert(models);
+      final toDelete = models.where((m) => m.isDeleted).map((m) => m.id).toList();
+      final toUpsert = models.where((m) => !m.isDeleted).toList();
+      await localDataSource.delete(toDelete);
+      await localDataSource.bulkUpsert(toUpsert);
       await localDataSource.saveSyncMetadata(
         _censusesSinceKey,
         since: response.serverTime,

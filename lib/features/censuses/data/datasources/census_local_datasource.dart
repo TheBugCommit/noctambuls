@@ -16,6 +16,8 @@ abstract class CensusLocalDataSource {
 
   Future<void> bulkUpsert(List<CensusModel> models);
 
+  Future<void> delete(List<String> ids);
+
   Future<void> saveSyncMetadata(String key, {String? since});
 
   Future<String?> getSyncSince(String key);
@@ -100,6 +102,12 @@ class CensusLocalDataSourceImpl implements CensusLocalDataSource {
         mode: InsertMode.insertOrReplace,
       );
     });
+  }
+
+  @override
+  Future<void> delete(List<String> ids) async {
+    if (ids.isEmpty) return;
+    await (db.delete(db.censusesTable)..where((t) => t.id.isIn(ids))).go();
   }
 
   @override

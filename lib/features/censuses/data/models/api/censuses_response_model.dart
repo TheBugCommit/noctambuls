@@ -29,6 +29,7 @@ abstract class CensusRemoteDto with _$CensusRemoteDto {
     double? longitude,
     String? locationName,
     String? description,
+    @Default(false) bool isDeleted,
   }) = _CensusRemoteDto;
 
   factory CensusRemoteDto.fromJson(Map<String, dynamic> json) =>
@@ -61,6 +62,7 @@ extension CensusRemoteDtoX on CensusRemoteDto {
       locationName: locationName,
       description: description,
       geoPosition: geoPosition,
+      isDeleted: isDeleted,
       createdAt: now,
       updatedAt: serverUpdatedAt,
     );

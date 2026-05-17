@@ -287,7 +287,7 @@ as String,
 /// @nodoc
 mixin _$CensusRemoteDto {
 
- String get id; String get title; String get date; String get time; String get updatedAt; double? get latitude; double? get longitude; String? get locationName; String? get description;
+ String get id; String get title; String get date; String get time; String get updatedAt; double? get latitude; double? get longitude; String? get locationName; String? get description; bool get isDeleted;
 /// Create a copy of CensusRemoteDto
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -300,16 +300,16 @@ $CensusRemoteDtoCopyWith<CensusRemoteDto> get copyWith => _$CensusRemoteDtoCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CensusRemoteDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CensusRemoteDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.description, description) || other.description == description)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,date,time,updatedAt,latitude,longitude,locationName,description);
+int get hashCode => Object.hash(runtimeType,id,title,date,time,updatedAt,latitude,longitude,locationName,description,isDeleted);
 
 @override
 String toString() {
-  return 'CensusRemoteDto(id: $id, title: $title, date: $date, time: $time, updatedAt: $updatedAt, latitude: $latitude, longitude: $longitude, locationName: $locationName, description: $description)';
+  return 'CensusRemoteDto(id: $id, title: $title, date: $date, time: $time, updatedAt: $updatedAt, latitude: $latitude, longitude: $longitude, locationName: $locationName, description: $description, isDeleted: $isDeleted)';
 }
 
 
@@ -320,7 +320,7 @@ abstract mixin class $CensusRemoteDtoCopyWith<$Res>  {
   factory $CensusRemoteDtoCopyWith(CensusRemoteDto value, $Res Function(CensusRemoteDto) _then) = _$CensusRemoteDtoCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, String date, String time, String updatedAt, double? latitude, double? longitude, String? locationName, String? description
+ String id, String title, String date, String time, String updatedAt, double? latitude, double? longitude, String? locationName, String? description, bool isDeleted
 });
 
 
@@ -337,7 +337,7 @@ class _$CensusRemoteDtoCopyWithImpl<$Res>
 
 /// Create a copy of CensusRemoteDto
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? date = null,Object? time = null,Object? updatedAt = null,Object? latitude = freezed,Object? longitude = freezed,Object? locationName = freezed,Object? description = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? date = null,Object? time = null,Object? updatedAt = null,Object? latitude = freezed,Object? longitude = freezed,Object? locationName = freezed,Object? description = freezed,Object? isDeleted = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -348,7 +348,8 @@ as String,latitude: freezed == latitude ? _self.latitude : latitude // ignore: c
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,locationName: freezed == locationName ? _self.locationName : locationName // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -433,10 +434,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String date,  String time,  String updatedAt,  double? latitude,  double? longitude,  String? locationName,  String? description)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  String date,  String time,  String updatedAt,  double? latitude,  double? longitude,  String? locationName,  String? description,  bool isDeleted)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CensusRemoteDto() when $default != null:
-return $default(_that.id,_that.title,_that.date,_that.time,_that.updatedAt,_that.latitude,_that.longitude,_that.locationName,_that.description);case _:
+return $default(_that.id,_that.title,_that.date,_that.time,_that.updatedAt,_that.latitude,_that.longitude,_that.locationName,_that.description,_that.isDeleted);case _:
   return orElse();
 
 }
@@ -454,10 +455,10 @@ return $default(_that.id,_that.title,_that.date,_that.time,_that.updatedAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String date,  String time,  String updatedAt,  double? latitude,  double? longitude,  String? locationName,  String? description)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  String date,  String time,  String updatedAt,  double? latitude,  double? longitude,  String? locationName,  String? description,  bool isDeleted)  $default,) {final _that = this;
 switch (_that) {
 case _CensusRemoteDto():
-return $default(_that.id,_that.title,_that.date,_that.time,_that.updatedAt,_that.latitude,_that.longitude,_that.locationName,_that.description);case _:
+return $default(_that.id,_that.title,_that.date,_that.time,_that.updatedAt,_that.latitude,_that.longitude,_that.locationName,_that.description,_that.isDeleted);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -474,10 +475,10 @@ return $default(_that.id,_that.title,_that.date,_that.time,_that.updatedAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String date,  String time,  String updatedAt,  double? latitude,  double? longitude,  String? locationName,  String? description)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  String date,  String time,  String updatedAt,  double? latitude,  double? longitude,  String? locationName,  String? description,  bool isDeleted)?  $default,) {final _that = this;
 switch (_that) {
 case _CensusRemoteDto() when $default != null:
-return $default(_that.id,_that.title,_that.date,_that.time,_that.updatedAt,_that.latitude,_that.longitude,_that.locationName,_that.description);case _:
+return $default(_that.id,_that.title,_that.date,_that.time,_that.updatedAt,_that.latitude,_that.longitude,_that.locationName,_that.description,_that.isDeleted);case _:
   return null;
 
 }
@@ -489,7 +490,7 @@ return $default(_that.id,_that.title,_that.date,_that.time,_that.updatedAt,_that
 @JsonSerializable()
 
 class _CensusRemoteDto implements CensusRemoteDto {
-  const _CensusRemoteDto({required this.id, required this.title, required this.date, required this.time, required this.updatedAt, this.latitude, this.longitude, this.locationName, this.description});
+  const _CensusRemoteDto({required this.id, required this.title, required this.date, required this.time, required this.updatedAt, this.latitude, this.longitude, this.locationName, this.description, this.isDeleted = false});
   factory _CensusRemoteDto.fromJson(Map<String, dynamic> json) => _$CensusRemoteDtoFromJson(json);
 
 @override final  String id;
@@ -501,6 +502,7 @@ class _CensusRemoteDto implements CensusRemoteDto {
 @override final  double? longitude;
 @override final  String? locationName;
 @override final  String? description;
+@override@JsonKey() final  bool isDeleted;
 
 /// Create a copy of CensusRemoteDto
 /// with the given fields replaced by the non-null parameter values.
@@ -515,16 +517,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CensusRemoteDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CensusRemoteDto&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.latitude, latitude) || other.latitude == latitude)&&(identical(other.longitude, longitude) || other.longitude == longitude)&&(identical(other.locationName, locationName) || other.locationName == locationName)&&(identical(other.description, description) || other.description == description)&&(identical(other.isDeleted, isDeleted) || other.isDeleted == isDeleted));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,date,time,updatedAt,latitude,longitude,locationName,description);
+int get hashCode => Object.hash(runtimeType,id,title,date,time,updatedAt,latitude,longitude,locationName,description,isDeleted);
 
 @override
 String toString() {
-  return 'CensusRemoteDto(id: $id, title: $title, date: $date, time: $time, updatedAt: $updatedAt, latitude: $latitude, longitude: $longitude, locationName: $locationName, description: $description)';
+  return 'CensusRemoteDto(id: $id, title: $title, date: $date, time: $time, updatedAt: $updatedAt, latitude: $latitude, longitude: $longitude, locationName: $locationName, description: $description, isDeleted: $isDeleted)';
 }
 
 
@@ -535,7 +537,7 @@ abstract mixin class _$CensusRemoteDtoCopyWith<$Res> implements $CensusRemoteDto
   factory _$CensusRemoteDtoCopyWith(_CensusRemoteDto value, $Res Function(_CensusRemoteDto) _then) = __$CensusRemoteDtoCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, String date, String time, String updatedAt, double? latitude, double? longitude, String? locationName, String? description
+ String id, String title, String date, String time, String updatedAt, double? latitude, double? longitude, String? locationName, String? description, bool isDeleted
 });
 
 
@@ -552,7 +554,7 @@ class __$CensusRemoteDtoCopyWithImpl<$Res>
 
 /// Create a copy of CensusRemoteDto
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? date = null,Object? time = null,Object? updatedAt = null,Object? latitude = freezed,Object? longitude = freezed,Object? locationName = freezed,Object? description = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? date = null,Object? time = null,Object? updatedAt = null,Object? latitude = freezed,Object? longitude = freezed,Object? locationName = freezed,Object? description = freezed,Object? isDeleted = null,}) {
   return _then(_CensusRemoteDto(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -563,7 +565,8 @@ as String,latitude: freezed == latitude ? _self.latitude : latitude // ignore: c
 as double?,longitude: freezed == longitude ? _self.longitude : longitude // ignore: cast_nullable_to_non_nullable
 as double?,locationName: freezed == locationName ? _self.locationName : locationName // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,isDeleted: null == isDeleted ? _self.isDeleted : isDeleted // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
