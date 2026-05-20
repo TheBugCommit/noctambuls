@@ -40,6 +40,8 @@ void initAuthFeature() {
       () => Dio()
         ..options.baseUrl = EnvConfig.serverUrl
         ..options.headers['X-API-KEY'] = EnvConfig.serverApiKey
+        ..options.connectTimeout = const Duration(seconds: 5000)
+        ..options.receiveTimeout = const Duration(seconds: 5000)
         ..transformer = BackgroundTransformer(),
       instanceName: 'authDio',
     )
@@ -63,6 +65,8 @@ void initAuthFeature() {
         final dio = Dio()
           ..options.baseUrl = EnvConfig.serverUrl
           ..options.headers['X-API-KEY'] = EnvConfig.serverApiKey
+          ..options.connectTimeout = const Duration(seconds: 5000)
+          ..options.receiveTimeout = const Duration(seconds: 5000)
           ..transformer = BackgroundTransformer()
           ..interceptors.add(interceptor);
         interceptor.dio = dio;

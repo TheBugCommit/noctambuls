@@ -11,23 +11,29 @@ class FcmService {
   final InAppNotificationRepository _inboxRepository;
 
   Future<void> init({required bool notificationsEnabled}) async {
-    if (notificationsEnabled) {
-      await FirebaseMessaging.instance.subscribeToTopic('censuses');
-    }
+    try {
+      if (notificationsEnabled) {
+        await subscribeToNotifications();
+      }
+      final initial = await FirebaseMessaging.instance
+          .getInitialMessage()
+          .timeout(const Duration(seconds: 3));
+      if (initial != null) {
+        await _inboxRepository.add(initial.toInAppNotification());
+      }
+    } catch (e) {}
+
     FirebaseMessaging.onMessage.listen(_onForeground);
     FirebaseMessaging.onMessageOpenedApp.listen(_onOpened);
-
-    final initial = await FirebaseMessaging.instance.getInitialMessage();
-    if (initial != null) {
-      await _inboxRepository.add(initial.toInAppNotification());
-    }
   }
 
-  Future<void> subscribeToNotifications() =>
-      FirebaseMessaging.instance.subscribeToTopic('censuses');
+  Future<void> subscribeToNotifications() => FirebaseMessaging.instance
+      .subscribeToTopic('censuses')
+      .timeout(const Duration(seconds: 3));
 
-  Future<void> unsubscribeFromNotifications() =>
-      FirebaseMessaging.instance.unsubscribeFromTopic('censuses');
+  Future<void> unsubscribeFromNotifications() => FirebaseMessaging.instance
+      .unsubscribeFromTopic('censuses')
+      .timeout(const Duration(seconds: 3));
 
   Future<void> _onForeground(RemoteMessage message) async {
     await _notificationService.showNotification(

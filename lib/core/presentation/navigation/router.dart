@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/constants/app_deeplinks.dart';
 import 'package:noctambuls/core/constants/app_routes.dart';
@@ -54,7 +53,6 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
   initialLocation: AppRoutes.splash,
   refreshListenable: GoRouterRefreshStream(authBloc.stream),
   redirect: (context, state) {
-    FlutterNativeSplash.remove();
     return AuthRouterGuard.redirect(state, authBloc.state);
   },
 
