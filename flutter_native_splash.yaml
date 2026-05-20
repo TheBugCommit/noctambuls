@@ -2,10 +2,10 @@ flutter_native_splash:
   android: true
   ios: true
 
-  background_image: "assets/images/bg.png"
+  color: "#f6fbf3"
   image: "assets/images/logo.png"
 
-  background_image_dark: "assets/images/bg_dark.png"
+  color_dark: "#101510"
   image_dark: "assets/images/logo.png"
 
   android_12:

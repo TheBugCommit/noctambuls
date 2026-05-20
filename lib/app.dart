@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:noctambuls/core/data/services/fcm_service.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/core/domain/services/notification_service.dart';
+import 'package:noctambuls/core/logging/app_logger.dart';
 import 'package:noctambuls/core/presentation/bloc/notification_inbox/notification_inbox_bloc.dart';
 import 'package:noctambuls/core/presentation/theme/theme.dart';
 import 'package:noctambuls/core/presentation/theme/util.dart';
@@ -84,10 +85,16 @@ class _NoctambulsAppState extends State<NoctambulsApp> {
                   () async {
                     await sl<NotificationService>().requestPermissions();
                     final isEnabled = sl<GetNotificationsEnabledUseCase>()();
-                    if (isEnabled) {
-                      await sl<FcmService>().subscribeToNotifications();
-                    } else {
-                      await sl<FcmService>().unsubscribeFromNotifications();
+                    try {
+                      if (isEnabled) {
+                        await sl<FcmService>().subscribeToNotifications();
+                      } else {
+                        await sl<FcmService>().unsubscribeFromNotifications();
+                      }
+                    } catch (e) {
+                      sl<IAppLogger>().warning(
+                        'Timeout subscribing to notifications',
+                      );
                     }
                   },
                 );

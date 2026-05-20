@@ -29,11 +29,11 @@ class FcmService {
 
   Future<void> subscribeToNotifications() => FirebaseMessaging.instance
       .subscribeToTopic('censuses')
-      .timeout(const Duration(seconds: 3));
+      .timeout(const Duration(seconds: 15));
 
   Future<void> unsubscribeFromNotifications() => FirebaseMessaging.instance
       .unsubscribeFromTopic('censuses')
-      .timeout(const Duration(seconds: 3));
+      .timeout(const Duration(seconds: 15));
 
   Future<void> _onForeground(RemoteMessage message) async {
     await _notificationService.showNotification(
