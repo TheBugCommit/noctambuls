@@ -81,7 +81,7 @@ class _NoctambulsAppState extends State<NoctambulsApp> {
                 _hasInitializedSession = true;
 
                 _notificationPermissionTimer = Timer(
-                  const Duration(seconds: 40),
+                  const Duration(seconds: 10),
                   () async {
                     await sl<NotificationService>().requestPermissions();
                     final isEnabled = sl<GetNotificationsEnabledUseCase>()();

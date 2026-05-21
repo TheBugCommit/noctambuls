@@ -55,11 +55,18 @@ class NotificationSettingsBloc
     Emitter<NotificationSettingsState> emit,
   ) async {
     final isOsGranted = await checkPermissionUseCase();
-    if (!isOsGranted) {
-      await saveEnabledUseCase(isEnabled: false);
-      emit(const NotificationSettingsState(isEnabled: false));
+    final userPreference = getEnabledUseCase();
+    final shouldBeEnabled = isOsGranted && userPreference;
+
+    final wasEnabled = state.isEnabled;
+    emit(NotificationSettingsState(isEnabled: shouldBeEnabled));
+
+    if (shouldBeEnabled == wasEnabled) return;
+
+    if (shouldBeEnabled) {
+      await fcmService.subscribeToNotifications();
     } else {
-      emit(NotificationSettingsState(isEnabled: getEnabledUseCase()));
+      await fcmService.unsubscribeFromNotifications();
     }
   }
 }
