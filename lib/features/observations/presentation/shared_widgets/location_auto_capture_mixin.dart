@@ -38,12 +38,26 @@ mixin LocationAutoCaptureMixin<T extends StatefulWidget>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed && shouldRetryLocationCapture) {
-      unawaited(onResumedLocationCapture());
+    if (state == AppLifecycleState.resumed) {
+      if (shouldRetryLocationCapture) {
+        unawaited(onResumedLocationCapture());
+      } else {
+        unawaited(_retryIfPermissionJustGranted());
+      }
     } else if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.inactive ||
         state == AppLifecycleState.hidden) {
       unawaited(onPausedLocationCapture());
+    }
+  }
+
+  Future<void> _retryIfPermissionJustGranted() async {
+    if (!mounted) return;
+    final permission = await Geolocator.checkPermission();
+    if (!mounted) return;
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
+      unawaited(onResumedLocationCapture());
     }
   }
 

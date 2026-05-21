@@ -47,7 +47,14 @@ class _ExplorePageState extends State<ExplorePage>
   bool _isSheetVisible = true;
 
   @override
-  bool get shouldRetryLocationCapture => true;
+  bool get shouldRetryLocationCapture {
+    final locationState = context.read<LocationBloc>().state;
+    if (locationState is LocationLoadFailure &&
+        locationState.failure is PermissionDeniedFailure) {
+      return false;
+    }
+    return true;
+  }
 
   @override
   Future<void> onResumedLocationCapture() async {

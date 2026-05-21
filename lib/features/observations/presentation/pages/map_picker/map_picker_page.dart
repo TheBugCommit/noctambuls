@@ -37,7 +37,15 @@ class _MapPickerPageState extends State<MapPickerPage>
   late final LocationBloc _locationBloc;
 
   @override
-  bool get shouldRetryLocationCapture => !_isManual;
+  bool get shouldRetryLocationCapture {
+    if (_isManual) return false;
+    final locationState = context.read<LocationBloc>().state;
+    if (locationState is LocationLoadFailure &&
+        locationState.failure is PermissionDeniedFailure) {
+      return false;
+    }
+    return true;
+  }
 
   @override
   Future<void> onResumedLocationCapture() async {

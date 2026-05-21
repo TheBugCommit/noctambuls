@@ -69,6 +69,12 @@ class _ObservingPageState extends State<ObservingPage>
 
   @override
   bool get shouldRetryLocationCapture {
+    final locationState = context.read<LocationBloc>().state;
+    if (locationState is LocationLoadFailure &&
+        locationState.failure is PermissionDeniedFailure) {
+      return false;
+    }
+
     final state = context.read<ObservingSessionBloc>().state;
     if (state is! ObservingSessionActive) return false;
 

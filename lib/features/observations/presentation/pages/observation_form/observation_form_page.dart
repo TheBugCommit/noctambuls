@@ -76,6 +76,11 @@ class _ObservationFormPageState extends State<ObservationFormPage>
 
   @override
   bool get shouldRetryLocationCapture {
+    final locationState = context.read<LocationBloc>().state;
+    if (locationState is LocationLoadFailure &&
+        locationState.failure is PermissionDeniedFailure) {
+      return false;
+    }
     final state = context.read<ObservationFormBloc>().state;
     if (state is ObservationFormReady) {
       return _isAtLocation && state.geoPosition == null;

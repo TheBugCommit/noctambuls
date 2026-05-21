@@ -13,6 +13,7 @@ class LocationServiceImpl implements LocationService {
 
   final IAppLogger logger;
   Future<bool>? _permissionRequestFuture;
+  bool _softDenied = false;
 
   @override
   Future<Result<GeoPosition>> getLocation() async {
@@ -112,34 +113,33 @@ class LocationServiceImpl implements LocationService {
       return const Err(GpsDisabledFailure());
     }
 
-    var permission = await Geolocator.checkPermission();
+    final permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.whileInUse ||
         permission == LocationPermission.always) {
+      _softDenied = false;
       return const Ok(Unit.instance);
     }
 
-    if (permission == LocationPermission.deniedForever) {
+    if (permission == LocationPermission.deniedForever || _softDenied) {
       return const Err(PermissionDeniedFailure());
     }
 
     if (_permissionRequestFuture != null) {
       final granted = await _permissionRequestFuture!;
-
-      if (granted) {
-        return const Ok(Unit.instance);
-      }
-
-      return const Err(PermissionDeniedFailure());
+      if (!granted) _softDenied = true;
+      return granted
+          ? const Ok(Unit.instance)
+          : const Err(PermissionDeniedFailure());
     }
 
     _permissionRequestFuture = _requestPermission();
 
     try {
       final granted = await _permissionRequestFuture!;
-      if (granted) {
-        return const Ok(Unit.instance);
-      }
-      return const Err(PermissionDeniedFailure());
+      if (!granted) _softDenied = true;
+      return granted
+          ? const Ok(Unit.instance)
+          : const Err(PermissionDeniedFailure());
     } finally {
       _permissionRequestFuture = null;
     }

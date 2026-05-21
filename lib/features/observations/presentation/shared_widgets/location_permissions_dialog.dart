@@ -7,45 +7,51 @@ import 'package:noctambuls/features/observations/domain/enums/location_error_typ
 import 'package:noctambuls/l10n/app_localizations.dart';
 
 class LocationPermissionsDialog {
+  static bool _isShowing = false;
+
   static Future<void> showLocationErrorDialog(
     BuildContext context,
     LocationErrorType errorType,
   ) async {
-    final l10n = AppLocalizations.of(context)!;
-    final isGpsOff = errorType == LocationErrorType.gpsDisabled;
+    if (_isShowing) return;
+    _isShowing = true;
 
-    final title = isGpsOff
-        ? l10n.locationGpsOffTitle
-        : l10n.locationPermissionTitle;
-    final content = isGpsOff
-        ? l10n.locationGpsOffContent
-        : l10n.locationPermissionContent;
+    try {
+      final l10n = AppLocalizations.of(context)!;
+      final isGpsOff = errorType == LocationErrorType.gpsDisabled;
 
-    // Utilitzem el nou AppDialog súper net
-    final shouldOpenSettings = await AppDialog.showConfirm(
-      context: context,
-      title: title,
-      message: content,
-      // Hi posem una icona d'avís ben maca!
-      icon: isGpsOff ? Icons.location_off_outlined : Icons.gpp_maybe_outlined,
-      iconColor: Theme.of(context).colorScheme.error,
-      // Icona en vermell/error
-      confirmText: l10n.actionOpenSettings,
-      cancelText: l10n.actionLater,
-    );
+      final title = isGpsOff
+          ? l10n.locationGpsOffTitle
+          : l10n.locationPermissionTitle;
+      final content = isGpsOff
+          ? l10n.locationGpsOffContent
+          : l10n.locationPermissionContent;
 
-    if (!context.mounted) return;
+      final shouldOpenSettings = await AppDialog.showConfirm(
+        context: context,
+        title: title,
+        message: content,
+        icon: isGpsOff ? Icons.location_off_outlined : Icons.gpp_maybe_outlined,
+        iconColor: Theme.of(context).colorScheme.error,
+        confirmText: l10n.actionOpenSettings,
+        cancelText: l10n.actionLater,
+      );
 
-    if (shouldOpenSettings == true) {
-      if (isGpsOff) {
-        context.read<PhoneSettingsBloc>().add(
-          const OpenLocationSettingsRequested(),
-        );
-      } else {
-        context.read<PhoneSettingsBloc>().add(
-          const OpenAppSettingsRequested(),
-        );
+      if (!context.mounted) return;
+
+      if (shouldOpenSettings == true) {
+        if (isGpsOff) {
+          context.read<PhoneSettingsBloc>().add(
+            const OpenLocationSettingsRequested(),
+          );
+        } else {
+          context.read<PhoneSettingsBloc>().add(
+            const OpenAppSettingsRequested(),
+          );
+        }
       }
+    } finally {
+      _isShowing = false;
     }
   }
 }
