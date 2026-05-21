@@ -1,8 +1,19 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
 // Parella de claus RSA de test generada únicament per als tests de JoinCensusUseCase.
-// La clau pública corresponent s'ha injectat a env_config.g.dart (censusJwtPublicKey).
-// Per restaurar la clau de producció: fvm flutter pub run build_runner build
+// testPublicKey és la clau pública corresponent a _testPrivateKeyPem.
+// La clau de producció es troba a EnvConfig.censusJwtPublicKey (env_config.g.dart).
+
+const testPublicKey =
+    '-----BEGIN PUBLIC KEY-----\n'
+    'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvss1MlZ9fn5PQ1LC1C26\n'
+    'GCBzhpGmxgWA2memuExUpSN7+TnejbBuE1LRxzCMsPMs9e9b5Xq+isJ3B4qgUV3q\n'
+    '8ACI9IKCndwmkLHaagt+BzN1pSnPxvs2X9Yc9lNLwcupb9haIAW+vNLI0aUPgcUJ\n'
+    'Oud4pPpaF7Qa6SPRPhp0GMbMcLO8fwKOYjVOZhSzeToqSy1JEdkX9ezP+pFSauhZ\n'
+    'AMu/S1+J0HIaeyEu3sxU9MXrZD3Qh8YNE+rJDmQOdvCskpTTGPcfF2kOPrEPaSy7\n'
+    'OkZnOfw+4FhJweqAzsj3+DKk8qBcOJPf4mjQ+W93VD05Jt+eVSprNUJX5cESOv3J\n'
+    'YQIDAQAB\n'
+    '-----END PUBLIC KEY-----';
 
 const _testPrivateKeyPem =
     '-----BEGIN PRIVATE KEY-----\n'

@@ -7,7 +7,7 @@ String makeJwt({
 }) {
   final header = base64Url.encode(utf8.encode('{"alg":"HS256","typ":"JWT"}'));
   final payload = base64Url.encode(
-    utf8.encode(jsonEncode({'id': id, 'email': email, 'exp': exp})),
+    utf8.encode(jsonEncode({'id': id, 'username': email, 'exp': exp})),
   );
   return '$header.$payload.fakesig';
 }

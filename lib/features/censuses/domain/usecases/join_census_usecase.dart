@@ -1,6 +1,5 @@
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:noctambuls/core/constants/app_deeplinks.dart';
-import 'package:noctambuls/core/constants/env_config.dart';
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/censuses/domain/entities/census.dart';
 import 'package:noctambuls/features/censuses/domain/failures/census_failures.dart';
@@ -10,10 +9,15 @@ import 'package:noctambuls/features/observations/domain/failures/session_failure
 import 'package:noctambuls/features/observations/domain/repositories/session_repository.dart';
 
 class JoinCensusUseCase {
-  const JoinCensusUseCase(this._repository, this._sessionRepository);
+  const JoinCensusUseCase(
+    this._repository,
+    this._sessionRepository,
+    this._publicKey,
+  );
 
   final CensusRepository _repository;
   final SessionRepository _sessionRepository;
+  final String _publicKey;
 
   Future<Result<Census>> call(String rawUrl) async {
     final activeSession = await _sessionRepository.getActiveSession();
@@ -34,10 +38,7 @@ class JoinCensusUseCase {
 
     JWT jwt;
     try {
-      final publicKeyString = EnvConfig.censusJwtPublicKey.replaceAll(
-        r'\n',
-        '\n',
-      );
+      final publicKeyString = _publicKey.replaceAll(r'\n', '\n');
       jwt = JWT.verify(token, RSAPublicKey(publicKeyString));
     } catch (_) {
       return const Err(InvalidCensusTokenFailure());

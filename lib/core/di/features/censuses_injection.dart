@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:noctambuls/core/constants/env_config.dart';
 import 'package:noctambuls/core/database/user_database_manager.dart';
 import 'package:noctambuls/core/di/injection_container.dart';
 import 'package:noctambuls/features/censuses/data/datasources/census_local_datasource.dart';
@@ -34,7 +35,9 @@ void initCensusesFeature() {
     ..registerLazySingleton(() => GetCensusUseCase(sl()))
     ..registerLazySingleton(() => FetchCensusesUseCase(sl()))
     ..registerLazySingleton(() => AbandonCensusUseCase(sl()))
-    ..registerLazySingleton(() => JoinCensusUseCase(sl(), sl()))
+    ..registerLazySingleton(
+      () => JoinCensusUseCase(sl(), sl(), EnvConfig.censusJwtPublicKey),
+    )
     ..registerLazySingleton(() => WatchJoinedCensusUseCase(sl()))
     // BLoC
     ..registerFactory(

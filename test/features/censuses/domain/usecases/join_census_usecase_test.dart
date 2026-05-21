@@ -35,7 +35,7 @@ void main() {
   setUp(() {
     mockCensusRepo = MockCensusRepository();
     mockSessionRepo = MockSessionRepository();
-    usecase = JoinCensusUseCase(mockCensusRepo, mockSessionRepo);
+    usecase = JoinCensusUseCase(mockCensusRepo, mockSessionRepo, testPublicKey);
   });
 
   Census makeCensus({bool alreadyDone = false, bool isJoined = false}) {
