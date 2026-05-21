@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:noctambuls/core/domain/entities/in_app_notification.dart';
 import 'package:noctambuls/core/domain/repositories/in_app_notification_repository.dart';
 import 'package:noctambuls/core/domain/services/notification_service.dart';
@@ -10,14 +13,18 @@ class FcmService {
   final NotificationService _notificationService;
   final InAppNotificationRepository _inboxRepository;
 
+  final bool isTestingOnSimulator = kDebugMode && Platform.isIOS;
+
   Future<void> init({required bool notificationsEnabled}) async {
+    if(isTestingOnSimulator) return;
+
     try {
       if (notificationsEnabled) {
         await subscribeToNotifications();
       }
       final initial = await FirebaseMessaging.instance
           .getInitialMessage()
-          .timeout(const Duration(seconds: 3));
+          .timeout(const Duration(seconds: 10));
       if (initial != null) {
         await _inboxRepository.add(initial.toInAppNotification());
       }
@@ -27,13 +34,17 @@ class FcmService {
     FirebaseMessaging.onMessageOpenedApp.listen(_onOpened);
   }
 
-  Future<void> subscribeToNotifications() => FirebaseMessaging.instance
-      .subscribeToTopic('censuses')
-      .timeout(const Duration(seconds: 15));
+  Future<void> subscribeToNotifications() async {
+    if(isTestingOnSimulator) return;
+    await FirebaseMessaging.instance.subscribeToTopic('censuses')
+        .timeout(const Duration(seconds: 15));
+  }
 
-  Future<void> unsubscribeFromNotifications() => FirebaseMessaging.instance
-      .unsubscribeFromTopic('censuses')
-      .timeout(const Duration(seconds: 15));
+  Future<void> unsubscribeFromNotifications() async {
+    if(isTestingOnSimulator) return;
+    await FirebaseMessaging.instance.unsubscribeFromTopic('censuses')
+        .timeout(const Duration(seconds: 15));
+  }
 
   Future<void> _onForeground(RemoteMessage message) async {
     await _notificationService.showNotification(

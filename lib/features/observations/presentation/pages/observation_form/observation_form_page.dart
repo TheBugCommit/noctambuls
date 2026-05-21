@@ -219,6 +219,7 @@ class _ObservationFormPageState extends State<ObservationFormPage>
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: Text(
           isEditing ? l10n.editObservationTitle : l10n.newObservationTitle,
         ),

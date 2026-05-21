@@ -29,7 +29,26 @@ class BirdsRepositoryImpl implements BirdsRepository {
   Future<Result<List<Bird>>> getBirds(String languageCode) async {
     try {
       final models = await localDataSource.getBirds(languageCode);
-      return Ok(models.map((e) => e.toDomain()).toList());
+
+      final domainBirds = <Bird>[];
+      for (final model in models) {
+        final domainBird = model.toDomain();
+
+        final absoluteImagePath = domainBird.localImagePath != null
+            ? await mediaService.getAbsolutePath(domainBird.localImagePath!)
+            : null;
+
+        final absoluteAudioPath = domainBird.localAudioPath != null
+            ? await mediaService.getAbsolutePath(domainBird.localAudioPath!)
+            : null;
+
+        domainBirds.add(domainBird.copyWith(
+          localImagePath: absoluteImagePath,
+          localAudioPath: absoluteAudioPath,
+        ));
+      }
+
+      return Ok(domainBirds);
     } catch (e, st) {
       return Err(const DatabaseFailure().withDebug(e, st));
     }

@@ -27,6 +27,30 @@ class Bird extends Equatable {
 
   bool get hasLocalAudio => localAudioPath != null;
 
+  Bird copyWith({
+    String? id,
+    String? commonName,
+    String? scientificName,
+    String? description,
+    String? imageUrl,
+    String? audioUrl,
+    String? infoUrl,
+    String? localAudioPath,
+    String? localImagePath,
+  }) {
+    return Bird(
+      id: id ?? this.id,
+      commonName: commonName ?? this.commonName,
+      scientificName: scientificName ?? this.scientificName,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      audioUrl: audioUrl ?? this.audioUrl,
+      infoUrl: infoUrl ?? this.infoUrl,
+      localAudioPath: localAudioPath ?? this.localAudioPath,
+      localImagePath: localImagePath ?? this.localImagePath,
+    );
+  }
+
   @override
   List<Object?> get props => [
     id,

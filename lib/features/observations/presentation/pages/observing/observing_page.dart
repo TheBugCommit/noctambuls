@@ -278,6 +278,7 @@ class _ObservingContent extends StatelessWidget {
 
     final Widget content = Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         leading: BackButton(onPressed: () => context.pop()),
         title: session.isIncidental
             ? Text(l10n.observingTitle)

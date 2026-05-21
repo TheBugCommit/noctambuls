@@ -57,6 +57,7 @@ class SettingsPage extends StatelessWidget {
       child: Scaffold(
         backgroundColor: colorScheme.surface,
         appBar: AppBar(
+          centerTitle: false,
           title: Text(l10n.settingsTitle),
         ),
         body: SafeArea(

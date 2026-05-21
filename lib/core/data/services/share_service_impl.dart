@@ -10,7 +10,13 @@ class ShareServiceImpl implements ShareService {
     String? subject,
   }) async {
     try {
-      await Share.share(text, subject: subject);
+      await SharePlus.instance.share(
+        ShareParams(
+          text: text,
+          subject: subject,
+        ),
+      );
+
       return const Ok(Unit.instance);
     } catch (e, st) {
       return Err(const UnknownFailure().withDebug(e, st));
@@ -20,7 +26,12 @@ class ShareServiceImpl implements ShareService {
   @override
   Future<Result<Unit>> shareUri({required Uri uri}) async {
     try {
-      await Share.shareUri(uri);
+      await SharePlus.instance.share(
+        ShareParams(
+          uri: uri,
+        ),
+      );
+
       return const Ok(Unit.instance);
     } catch (e, st) {
       return Err(const UnknownFailure().withDebug(e, st));

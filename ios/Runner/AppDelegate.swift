@@ -1,7 +1,8 @@
 import Flutter
 import UIKit
 import flutter_local_notifications
-import workmanager
+import workmanager_apple
+import FirebaseCore
 
 @main
 @objc class AppDelegate: FlutterAppDelegate, FlutterImplicitEngineDelegate {
@@ -9,9 +10,13 @@ import workmanager
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
-    WorkmanagerPlugin.registerBGAppRefreshTask(withIdentifier: "syncPendingSessionsTask")
+    FirebaseApp.configure()
+    WorkmanagerPlugin.registerPeriodicTask(
+        withIdentifier: "syncPendingSessionsTask",
+        frequency: NSNumber(value: 6 * 60 * 60)
+    )
     if #available(iOS 10.0, *) {
-          UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
+        UNUserNotificationCenter.current().delegate = self
     }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }

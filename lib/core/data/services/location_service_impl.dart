@@ -7,7 +7,6 @@ import 'package:noctambuls/core/domain/enums/location_source.dart';
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/core/domain/services/location_service.dart';
 import 'package:noctambuls/core/logging/app_logger.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class LocationServiceImpl implements LocationService {
   LocationServiceImpl({required this.logger});
@@ -93,7 +92,6 @@ class LocationServiceImpl implements LocationService {
         activityType: ActivityType.fitness,
         distanceFilter: 15,
         pauseLocationUpdatesAutomatically: true,
-        showBackgroundLocationIndicator: true,
       );
     } else {
       locationSettings = const LocationSettings(
@@ -109,37 +107,49 @@ class LocationServiceImpl implements LocationService {
 
   Future<Result<Unit>> _checkPermissions() async {
     final serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
     if (!serviceEnabled) {
       return const Err(GpsDisabledFailure());
     }
-    var permissionStatus = await Permission.locationWhenInUse.status;
-    if (permissionStatus.isGranted || permissionStatus.isLimited) {
+
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always) {
       return const Ok(Unit.instance);
     }
 
-    if (permissionStatus.isPermanentlyDenied) {
+    if (permission == LocationPermission.deniedForever) {
       return const Err(PermissionDeniedFailure());
     }
 
     if (_permissionRequestFuture != null) {
-      final isGranted = await _permissionRequestFuture!;
-      if (isGranted) return const Ok(Unit.instance);
+      final granted = await _permissionRequestFuture!;
+
+      if (granted) {
+        return const Ok(Unit.instance);
+      }
+
       return const Err(PermissionDeniedFailure());
     }
-    _permissionRequestFuture = _doRequestPermission();
+
+    _permissionRequestFuture = _requestPermission();
 
     try {
-      final isGranted = await _permissionRequestFuture!;
-      if (isGranted) return const Ok(Unit.instance);
+      final granted = await _permissionRequestFuture!;
+      if (granted) {
+        return const Ok(Unit.instance);
+      }
       return const Err(PermissionDeniedFailure());
     } finally {
       _permissionRequestFuture = null;
     }
   }
 
-  Future<bool> _doRequestPermission() async {
-    final newStatus = await Permission.locationWhenInUse.request();
-    return newStatus.isGranted || newStatus.isLimited;
+  Future<bool> _requestPermission() async {
+    final permission = await Geolocator.requestPermission();
+
+    return permission == LocationPermission.whileInUse ||
+        permission == LocationPermission.always;
   }
 
   GeoPosition _mapPosition(Position position) {

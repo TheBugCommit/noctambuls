@@ -97,6 +97,7 @@ class _SignUpPageState extends State<SignUpPage> {
       },
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: false,
           title: Text(l10n.signUpTitle),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),

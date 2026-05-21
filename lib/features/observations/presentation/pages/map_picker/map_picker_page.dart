@@ -187,6 +187,7 @@ class _MapPickerPageState extends State<MapPickerPage>
       child: Scaffold(
         extendBodyBehindAppBar: true,
         appBar: AppBar(
+          centerTitle: false,
           title: Text(l10n.mapPickerTitle),
           backgroundColor: theme.colorScheme.surface.withValues(alpha: 0.8),
           elevation: 0,

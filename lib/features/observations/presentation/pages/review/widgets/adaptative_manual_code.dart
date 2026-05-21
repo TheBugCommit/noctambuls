@@ -150,6 +150,7 @@ class _LandscapeFullScreen extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Colors.transparent,
           appBar: AppBar(
+            centerTitle: false,
             title: Text(l10n.enterCodeTitle),
             backgroundColor: Colors.transparent,
             elevation: 0,

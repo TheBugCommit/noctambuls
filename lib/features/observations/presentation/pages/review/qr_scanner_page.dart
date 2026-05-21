@@ -138,6 +138,7 @@ class _QrScannerPageState extends State<QrScannerPage> {
       extendBodyBehindAppBar: true,
       backgroundColor: theme.colorScheme.surface,
       appBar: AppBar(
+        centerTitle: false,
         title: Text(widget.args.title ?? l10n.scannerTitle),
         backgroundColor: theme.colorScheme.scrim.withValues(alpha: 0.5),
         foregroundColor: const Color(0xffdfe4dc),

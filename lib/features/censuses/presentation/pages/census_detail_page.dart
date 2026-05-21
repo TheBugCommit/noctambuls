@@ -51,6 +51,7 @@ class _CensusDetailPageState extends State<CensusDetailPage> {
       },
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: false,
           title: Text(l10n.censusDetailTitle),
         ),
         body: SafeArea(

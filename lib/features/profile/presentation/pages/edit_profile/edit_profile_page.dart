@@ -58,6 +58,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         title: Text(l10n.profileEditTitle),
       ),
       body: BlocConsumer<ProfileBloc, ProfileState>(

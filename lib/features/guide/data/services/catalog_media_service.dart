@@ -22,18 +22,26 @@ class CatalogMediaService {
   Future<String?> ensureAudio(String serverPath) =>
       _ensureFile(serverPath, _audioFolder);
 
+  Future<String> getAbsolutePath(String relativePath) async {
+    final appDir = await getApplicationDocumentsDirectory();
+    return p.join(appDir.path, relativePath);
+  }
+
   Future<String?> _ensureFile(String serverPath, String subDir) async {
     try {
       final fileName = serverPath.split('/').last;
       final appDir = await getApplicationDocumentsDirectory();
-      final dir = Directory('${appDir.path}/$_parentFolder/$subDir');
-      if (!dir.existsSync()) await dir.create(recursive: true);
 
-      final localPath = '${dir.path}/$fileName';
-      if (File(localPath).existsSync()) return localPath;
+      final relativePath = p.join(_parentFolder, subDir, fileName);
+      final dir = Directory(p.join(appDir.path, _parentFolder, subDir));
+
+      if (!dir.existsSync()) await dir.create(recursive: true);
+      final localPath = p.join(appDir.path, relativePath);
+
+      if (File(localPath).existsSync()) return relativePath;
 
       await dio.download('${EnvConfig.serverUrl}$serverPath', localPath);
-      return localPath;
+      return relativePath;
     } catch (e) {
       logger.warning('Failed to download media $serverPath: $e');
       return null;
@@ -47,25 +55,24 @@ class CatalogMediaService {
     try {
       final appDir = await getApplicationDocumentsDirectory();
 
-      final imageDir = Directory(
-        p.join(appDir.path, _parentFolder, _imageFolder),
-      );
-      final audioDir = Directory(
-        p.join(appDir.path, _parentFolder, _audioFolder),
-      );
+      final validImagesSet = validImagePaths
+          .map((path) => p.normalize(p.join(appDir.path, path)))
+          .toSet();
 
-      final validImagesSet = validImagePaths.map(p.normalize).toSet();
-      final validAudioSet = validAudioPaths.map(p.normalize).toSet();
+      final validAudioSet = validAudioPaths
+          .map((path) => p.normalize(p.join(appDir.path, path)))
+          .toSet();
+
+      final imageDir = Directory(
+          p.join(appDir.path, _parentFolder, _imageFolder
+          ));
+      final audioDir = Directory(
+          p.join(appDir.path, _parentFolder, _audioFolder)
+      );
 
       await Future.wait([
-        _deleteFiles(
-          filesDir: imageDir,
-          validPaths: validImagesSet,
-        ),
-        _deleteFiles(
-          filesDir: audioDir,
-          validPaths: validAudioSet,
-        ),
+        _deleteFiles(filesDir: imageDir, validPaths: validImagesSet),
+        _deleteFiles(filesDir: audioDir, validPaths: validAudioSet),
       ]);
     } catch (e) {
       logger.warning('Failed to clean orphaned media files: $e');

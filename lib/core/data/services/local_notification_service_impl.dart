@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:noctambuls/core/domain/entities/in_app_notification.dart';
@@ -19,7 +21,9 @@ class LocalNotificationServiceImpl implements NotificationService {
   @override
   Future<void> init() async {
     const androidInit = AndroidInitializationSettings('@mipmap/launcher_icon');
-    const iosInit = DarwinInitializationSettings();
+    const iosInit = DarwinInitializationSettings(requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false);
     const initSettings = InitializationSettings(
       android: androidInit,
       iOS: iosInit,
@@ -64,5 +68,18 @@ class LocalNotificationServiceImpl implements NotificationService {
         settings.authorizationStatus == AuthorizationStatus.authorized ||
         settings.authorizationStatus == AuthorizationStatus.provisional;
     await _saveNotificationsEnabledUseCase(isEnabled: isGranted);
+    if (isGranted) {
+      // TODO: get apns with apple developer account
+      if (Platform.isIOS) {
+        final apnsToken = await FirebaseMessaging.instance.getAPNSToken();
+        if (apnsToken == null) {
+          return;
+        }
+      }
+      try {
+        final fcmToken = await FirebaseMessaging.instance.getToken();
+      } catch (e) {
+      }
+    }
   }
 }

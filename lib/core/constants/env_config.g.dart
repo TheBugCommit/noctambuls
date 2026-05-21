@@ -12,7 +12,7 @@ part of 'env_config.dart';
 final class _EnvConfig {
   static const String env = 'dev';
 
-  static const String serverUrl = 'https://app.associaciotaxus.cat';
+  static const String serverUrl = 'https://unconcludable-imprescriptibly-ciera.ngrok-free.dev';
 
   static const List<int> _enviedkeygoogleWebClientId = <int>[
     1442156219,

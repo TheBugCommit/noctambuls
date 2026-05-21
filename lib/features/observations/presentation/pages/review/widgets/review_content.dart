@@ -56,6 +56,7 @@ class ReviewContent extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        centerTitle: false,
         leading: canPop
             ? BackButton(onPressed: () => context.pop())
             : IconButton(
