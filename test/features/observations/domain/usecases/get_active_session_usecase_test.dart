@@ -3,10 +3,10 @@ import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/core/domain/error/result.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
-import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
+import 'package:noctambuls/features/observations/domain/repositories/session_repository.dart';
 import 'package:noctambuls/features/observations/domain/usecases/get_active_session_usecase.dart';
 
-class MockObservationRepository extends Mock implements ObservationRepository {}
+class MockObservationRepository extends Mock implements SessionRepository {}
 
 void main() {
   late GetActiveSessionUseCase usecase;

@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:noctambuls/features/observations/domain/entities/observation_session.dart';
 import 'package:noctambuls/features/observations/domain/enums/session_type.dart';
-import 'package:noctambuls/features/observations/domain/repositories/observation_repository.dart';
+import 'package:noctambuls/features/observations/domain/repositories/session_repository.dart';
 import 'package:noctambuls/features/observations/domain/usecases/watch_all_sessions_usecase.dart';
 
-class MockObservationRepository extends Mock implements ObservationRepository {}
+class MockObservationRepository extends Mock implements SessionRepository {}
 
 void main() {
   late WatchAllSessionsUseCase usecase;
@@ -34,15 +34,18 @@ void main() {
   ];
 
   group('WatchAllSessionsUseCase', () {
-    test("hauria de retornar l'stream de totes les sessions del repositori", () {
-      when(
-        () => mockRepository.watchAllSessions(),
-      ).thenAnswer((_) => Stream.value(tSessions));
+    test(
+      "hauria de retornar l'stream de totes les sessions del repositori",
+      () {
+        when(
+          () => mockRepository.watchAllSessions(),
+        ).thenAnswer((_) => Stream.value(tSessions));
 
-      final stream = usecase();
+        final stream = usecase();
 
-      expect(stream, emitsInOrder([tSessions]));
-    });
+        expect(stream, emitsInOrder([tSessions]));
+      },
+    );
 
     test('hauria de retornar una llista buida si no hi ha sessions', () {
       when(
