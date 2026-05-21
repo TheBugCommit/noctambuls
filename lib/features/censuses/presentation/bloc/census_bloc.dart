@@ -40,6 +40,7 @@ class CensusBloc extends Bloc<CensusEvent, CensusState> {
     required this.createSessionUseCase,
   }) : super(const CensusInitial()) {
     on<CensusStarted>(_onStarted);
+    on<CensusRefreshRequested>(_onRefreshRequested);
     on<_CensusStreamUpdated>(_onStreamUpdated);
     on<_LobbyStreamUpdated>(_onLobbyStreamUpdated);
     on<StartCensusSession>(_onStartCensusSession);
@@ -57,6 +58,13 @@ class CensusBloc extends Bloc<CensusEvent, CensusState> {
 
   StreamSubscription<List<Census>>? _censusSubscription;
   StreamSubscription<Census?>? _lobbySubscription;
+
+  Future<void> _onRefreshRequested(
+    CensusRefreshRequested event,
+    Emitter<CensusState> emit,
+  ) async {
+    await fetchCensusesUseCase();
+  }
 
   Future<void> _onStarted(
     CensusStarted event,

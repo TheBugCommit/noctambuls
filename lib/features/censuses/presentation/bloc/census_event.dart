@@ -39,3 +39,5 @@ class StartCensusSession extends CensusEvent {
 }
 
 class DismissCensusError extends CensusEvent {}
+
+class CensusRefreshRequested extends CensusEvent {}

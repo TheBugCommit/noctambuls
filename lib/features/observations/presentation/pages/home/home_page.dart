@@ -188,17 +188,23 @@ class _BaseHomeLayout extends StatelessWidget {
         child: Scaffold(
           appBar: const TaxusAppBar(),
           body: SafeArea(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(AppDimensions.lg),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const HomeHeader(),
-                  const SizedBox(height: AppDimensions.xl),
-                  child,
-                  const SizedBox(height: AppDimensions.lg),
-                  const _CensusSection(),
-                ],
+            child: RefreshIndicator(
+              onRefresh: () async {
+                context.read<CensusBloc>().add(CensusRefreshRequested());
+              },
+              child: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(AppDimensions.lg),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const HomeHeader(),
+                    const SizedBox(height: AppDimensions.xl),
+                    child,
+                    const SizedBox(height: AppDimensions.lg),
+                    const _CensusSection(),
+                  ],
+                ),
               ),
             ),
           ),
