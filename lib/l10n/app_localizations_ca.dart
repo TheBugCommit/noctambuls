@@ -151,7 +151,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get stationLabel => 'Estació de seguiment';
 
   @override
-  String get incidentalLabel => 'Observació incidental';
+  String get incidentalLabel => 'Observació puntual';
 
   @override
   String get observingMethodTitle => 'Sobre els mètodes d\'observació';
@@ -174,7 +174,7 @@ class AppLocalizationsCa extends AppLocalizations {
       'És una observació típicament individual des d\'un únic punt fix durant un temps determinat. S\'utilitza per mostrejos repetitius en el mateix lloc.';
 
   @override
-  String get observingMethodIncTitle => 'Observació incidental';
+  String get observingMethodIncTitle => 'Observació puntual';
 
   @override
   String get observingMethodIncDescription =>
@@ -840,7 +840,7 @@ class AppLocalizationsCa extends AppLocalizations {
   String get observationLocationTitle => 'Ubicació de l\'observació';
 
   @override
-  String get observationAtLocationToggle => 'Sóc al lloc exacte de l\'ocell';
+  String get observationAtLocationToggle => 'Sóc al lloc de l\'observació';
 
   @override
   String get locationWaitingGps => 'Esperant senyal GPS...';

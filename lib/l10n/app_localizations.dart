@@ -377,7 +377,7 @@ abstract class AppLocalizations {
   /// No description provided for @incidentalLabel.
   ///
   /// In ca, this message translates to:
-  /// **'Observació incidental'**
+  /// **'Observació puntual'**
   String get incidentalLabel;
 
   /// No description provided for @observingMethodTitle.
@@ -419,7 +419,7 @@ abstract class AppLocalizations {
   /// No description provided for @observingMethodIncTitle.
   ///
   /// In ca, this message translates to:
-  /// **'Observació incidental'**
+  /// **'Observació puntual'**
   String get observingMethodIncTitle;
 
   /// No description provided for @observingMethodIncDescription.
@@ -1655,7 +1655,7 @@ abstract class AppLocalizations {
   /// No description provided for @observationAtLocationToggle.
   ///
   /// In ca, this message translates to:
-  /// **'Sóc al lloc exacte de l\'ocell'**
+  /// **'Sóc al lloc de l\'observació'**
   String get observationAtLocationToggle;
 
   /// No description provided for @locationWaitingGps.

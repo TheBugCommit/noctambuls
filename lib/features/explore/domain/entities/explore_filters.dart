@@ -13,7 +13,7 @@ class ExploreFilters extends Equatable {
   bool get isHistoric => selectedYears.isEmpty;
 
   List<MapBubble> apply(List<MapBubble> bubbles) {
-    var result = bubbles;
+    var result = bubbles.where((b) => b.count > 0).toList();
     if (speciesId != null) {
       result = result.where((b) => b.speciesId == speciesId).toList();
     }

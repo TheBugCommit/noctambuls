@@ -151,7 +151,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get stationLabel => 'Estación de seguimiento';
 
   @override
-  String get incidentalLabel => 'Observación incidental';
+  String get incidentalLabel => 'Observación puntual';
 
   @override
   String get observingMethodTitle => 'Sobre los métodos de observación';
@@ -174,7 +174,7 @@ class AppLocalizationsEs extends AppLocalizations {
       'Es una observación típicamente individual desde un único punto fijo durante un tiempo determinado. Se utiliza para muestreos repetitivos en el mismo lugar.';
 
   @override
-  String get observingMethodIncTitle => 'Observación incidental';
+  String get observingMethodIncTitle => 'Observación puntual';
 
   @override
   String get observingMethodIncDescription =>
@@ -843,7 +843,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get observationLocationTitle => 'Ubicación de la observación';
 
   @override
-  String get observationAtLocationToggle => 'Estoy en el lugar exacto del ave';
+  String get observationAtLocationToggle =>
+      'Estoy en el lugar de la observación';
 
   @override
   String get locationWaitingGps => 'Esperando señal GPS...';

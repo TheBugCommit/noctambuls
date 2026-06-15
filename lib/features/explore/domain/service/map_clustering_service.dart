@@ -39,7 +39,9 @@ class MapClusteringService {
         cells.putIfAbsent((e.gx, e.gy), () => []).add(e.bubble);
       }
 
-      return cells.values.map((group) {
+      return cells.values
+          .where((group) => group.fold(0, (s, b) => s + b.count) > 0)
+          .map((group) {
         final totalCount = group.fold(0, (s, b) => s + b.count);
         final lat = group.fold(0.0, (s, b) => s + b.lat * b.count) / totalCount;
         final lon = group.fold(0.0, (s, b) => s + b.lon * b.count) / totalCount;
