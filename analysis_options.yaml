@@ -9,6 +9,28 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:very_good_analysis/analysis_options.yaml
 
+analyzer:
+  plugins:
+    - dart_code_linter
+  exclude:
+    - "lib/**/*.g.dart"
+    - "lib/**/*.freezed.dart"
+
+dart_code_linter:
+  metrics-exclude:
+    - "test/**"
+    - "lib/l10n/**"
+    - "lib/**/*.g.dart"
+    - "lib/**/*.freezed.dart"
+
+  metrics:
+    cyclomatic-complexity: 15
+    maximum-nesting-level: 6
+    lines-of-executable-code: 50
+    number-of-arguments: 5
+    number-of-parameters: 4
+    weight-of-class: 50
+
 linter:
   # The lint rules applied to this project can be customized in the
   # section below to disable rules from the `package:flutter_lints/flutter.yaml`
