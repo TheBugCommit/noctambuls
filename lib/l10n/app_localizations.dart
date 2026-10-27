@@ -401,7 +401,7 @@ abstract class AppLocalizations {
   /// No description provided for @observingMethodCensDescription.
   ///
   /// In ca, this message translates to:
-  /// **'És un treball coordinat entre diversos grups de persones en punts fixos de forma simultània. S\'utilitza en campanyes oficials o jornades de cens col·lectiu privades.'**
+  /// **'Participa en un cens simultani organitzat. Utilitza aquesta opció quan participis en una jornada o campanya de cens coordinada i vulguis registrar les observacions del teu punt.'**
   String get observingMethodCensDescription;
 
   /// No description provided for @observingMethodESTitle.
@@ -413,7 +413,7 @@ abstract class AppLocalizations {
   /// No description provided for @observingMethodESDescription.
   ///
   /// In ca, this message translates to:
-  /// **'És una observació típicament individual des d\'un únic punt fix durant un temps determinat. S\'utilitza per mostrejos repetitius en el mateix lloc.'**
+  /// **'Registra les observacions de la teva estació de seguiment. Fes servir aquesta opció si tens assignada una estació de seguiment i hi realitzes mostrejos periòdics.'**
   String get observingMethodESDescription;
 
   /// No description provided for @observingMethodIncTitle.
@@ -425,7 +425,7 @@ abstract class AppLocalizations {
   /// No description provided for @observingMethodIncDescription.
   ///
   /// In ca, this message translates to:
-  /// **'És una observació inesperada o aïllada mentre fas una altra activitat. Fes-la servir quan vegis un ocell de forma casual i el vulguis anotar ràpidament sense seguir un protocol fix.'**
+  /// **'Comunica una observació ocasional. Utilitza aquesta opció si escoltes o observes una au nocturna fora d\'un cens o d\'una estació de seguiment i ens ho vols comunicar.'**
   String get observingMethodIncDescription;
 
   /// No description provided for @activeSessionTitle.
@@ -623,13 +623,13 @@ abstract class AppLocalizations {
   /// No description provided for @usageWarningTitle.
   ///
   /// In ca, this message translates to:
-  /// **'Advertència d\'ús'**
+  /// **'Ús responsable dels cants'**
   String get usageWarningTitle;
 
   /// No description provided for @usageWarningMessage.
   ///
   /// In ca, this message translates to:
-  /// **'La reproducció d\'aquest àudio durant un cens pot alterar el comportament dels ocells i distorsionar els resultats de l\'observació.\n\nSi us plau, fes-ne un ús responsable.'**
+  /// **'Els cants són només una eina de consulta puntual per ajudar a confirmar la identificació en cas de dubte.\n\nNo els reprodueixis de manera repetida ni innecessària al camp, ja que poden alterar el comportament de les aus i distorsionar els resultats dels seguiments.'**
   String get usageWarningMessage;
 
   /// No description provided for @usageWarningConfirm.
@@ -901,6 +901,12 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Afegeix notes...'**
   String get notesHint;
+
+  /// No description provided for @notesContactHintIntro.
+  ///
+  /// In ca, this message translates to:
+  /// **'Si tens dubtes o no pots identificar l\'espècie, pots gravar-la i enviar-nos un àudio o vídeo a:'**
+  String get notesContactHintIntro;
 
   /// No description provided for @fetchingLocation.
   ///
@@ -1801,6 +1807,12 @@ abstract class AppLocalizations {
   /// In ca, this message translates to:
   /// **'Pròxims censos'**
   String get censusesUpcomingTitle;
+
+  /// No description provided for @censusesUpcomingEmpty.
+  ///
+  /// In ca, this message translates to:
+  /// **'No hi ha pròxims censos'**
+  String get censusesUpcomingEmpty;
 
   /// No description provided for @censusLobbyWaiting.
   ///

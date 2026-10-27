@@ -216,6 +216,7 @@ GoRouter makeRouter(AuthBloc authBloc) => GoRouter(
               BlocProvider(create: (_) => sl<ObservationFormBloc>()),
               BlocProvider(create: (_) => sl<PhoneSettingsBloc>()),
               BlocProvider(create: (_) => sl<LocationBloc>()),
+              BlocProvider(create: (_) => sl<UrlBloc>()),
             ],
             child: ObservationFormPage(
               session: args.session,

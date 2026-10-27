@@ -164,21 +164,21 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get observingMethodCensDescription =>
-      'Es un trabajo coordinado entre varios grupos de personas en puntos fijos de forma simultánea. Se utiliza en campañas oficiales o jornadas de censo colectivo privadas.';
+      'Participa en un censo simultáneo organizado. Utiliza esta opción cuando participes en una jornada o campaña de censo coordinada y quieras registrar las observaciones de tu punto.';
 
   @override
   String get observingMethodESTitle => 'Estación de seguimiento';
 
   @override
   String get observingMethodESDescription =>
-      'Es una observación típicamente individual desde un único punto fijo durante un tiempo determinado. Se utiliza para muestreos repetitivos en el mismo lugar.';
+      'Registra las observaciones de tu estación de seguimiento. Utiliza esta opción si tienes asignada una estación de seguimiento y realizas muestreos periódicos en ella.';
 
   @override
   String get observingMethodIncTitle => 'Observación puntual';
 
   @override
   String get observingMethodIncDescription =>
-      'Es una observación inesperada o aislada mientras realizas otra actividad. Úsalo cuando veas un ave de forma casual y quieras anotarlo rápidamente sin seguir un protocolo fijo.';
+      'Comunica una observación ocasional. Utiliza esta opción si escuchas u observas un ave nocturna fuera de un censo o de una estación de seguimiento y nos lo quieres comunicar.';
 
   @override
   String get activeSessionTitle => 'Sesión en curso';
@@ -290,11 +290,11 @@ class AppLocalizationsEs extends AppLocalizations {
       'No se ha podido descargar el catálogo de aves. Puedes seguir usando la aplicación o volver a intentar la descarga.';
 
   @override
-  String get usageWarningTitle => 'Advertencia de uso';
+  String get usageWarningTitle => 'Uso responsable de los cantos';
 
   @override
   String get usageWarningMessage =>
-      'La reproducción de este audio durante un censo puede alterar el comportamiento de las aves y distorsionar los resultados de la observación.\n\nPor favor, haz un uso responsable.';
+      'Los cantos son solo una herramienta de consulta puntual para ayudar a confirmar la identificación en caso de duda.\n\nNo los reproduzcas de manera repetida ni innecesaria en el campo, ya que pueden alterar el comportamiento de las aves y distorsionar los resultados de los seguimientos.';
 
   @override
   String get usageWarningConfirm => 'Sí, lo entiendo';
@@ -433,6 +433,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get notesHint => 'Añade notas...';
+
+  @override
+  String get notesContactHintIntro =>
+      'Si tienes dudas o no puedes identificar la especie, puedes grabarla y enviarnos un audio o vídeo a:';
 
   @override
   String get fetchingLocation => 'Obteniendo ubicación...';
@@ -924,6 +928,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get censusesUpcomingTitle => 'Próximos censos';
+
+  @override
+  String get censusesUpcomingEmpty => 'No hay próximos censos';
 
   @override
   String get censusLobbyWaiting => 'Censo en espera';

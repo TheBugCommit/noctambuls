@@ -25,6 +25,11 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
   final CheckAudioWarningUseCase checkAudioWarningUseCase;
   final AcceptAudioWarningUseCase acceptAudioWarningUseCase;
 
+  /// Whether the warning has already been accepted during this app session.
+  /// Reset every time the app is restarted (in-memory only, not persisted),
+  /// so the warning is shown again once per app launch.
+  bool _hasAcceptedWarningThisSession = false;
+
   Future<void> _onLoadBirds(
     LoadBirds event,
     Emitter<GuideState> emit,
@@ -54,27 +59,22 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
     if (state is! GuideLoaded) return;
     final currentState = state as GuideLoaded;
 
-    final warningResult = await checkAudioWarningUseCase();
-    var hasAccepted = false;
+    await checkAudioWarningUseCase();
 
-    warningResult.when(
-      success: (value) => hasAccepted = value,
-      failure: (_) => hasAccepted = false,
-    );
-
-    if (!hasAccepted) {
-      emit(
-        currentState.copyWith(
-          action: GuideAudioWarning(audioPath: event.audioPath),
-        ),
-      );
-    } else {
+    if (_hasAcceptedWarningThisSession) {
       emit(
         currentState.copyWith(
           action: GuideAudioPlayApproved(audioPath: event.audioPath),
         ),
       );
+      return;
     }
+
+    emit(
+      currentState.copyWith(
+        action: GuideAudioWarning(audioPath: event.audioPath),
+      ),
+    );
   }
 
   Future<void> _onAcceptAudioWarning(
@@ -88,6 +88,7 @@ class GuideBloc extends Bloc<GuideEvent, GuideState> {
 
     saveResult.when(
       success: (_) {
+        _hasAcceptedWarningThisSession = true;
         emit(
           currentState.copyWith(
             action: GuideAudioPlayApproved(audioPath: event.audioPath),

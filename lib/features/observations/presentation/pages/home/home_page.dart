@@ -201,7 +201,7 @@ class _BaseHomeLayout extends StatelessWidget {
                     const HomeHeader(),
                     const SizedBox(height: AppDimensions.xl),
                     child,
-                    const SizedBox(height: AppDimensions.lg),
+                    const SizedBox(height: AppDimensions.xxl),
                     const _CensusSection(),
                   ],
                 ),

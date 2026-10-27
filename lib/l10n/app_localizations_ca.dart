@@ -164,21 +164,21 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get observingMethodCensDescription =>
-      'És un treball coordinat entre diversos grups de persones en punts fixos de forma simultània. S\'utilitza en campanyes oficials o jornades de cens col·lectiu privades.';
+      'Participa en un cens simultani organitzat. Utilitza aquesta opció quan participis en una jornada o campanya de cens coordinada i vulguis registrar les observacions del teu punt.';
 
   @override
   String get observingMethodESTitle => 'Estació de seguiment';
 
   @override
   String get observingMethodESDescription =>
-      'És una observació típicament individual des d\'un únic punt fix durant un temps determinat. S\'utilitza per mostrejos repetitius en el mateix lloc.';
+      'Registra les observacions de la teva estació de seguiment. Fes servir aquesta opció si tens assignada una estació de seguiment i hi realitzes mostrejos periòdics.';
 
   @override
   String get observingMethodIncTitle => 'Observació puntual';
 
   @override
   String get observingMethodIncDescription =>
-      'És una observació inesperada o aïllada mentre fas una altra activitat. Fes-la servir quan vegis un ocell de forma casual i el vulguis anotar ràpidament sense seguir un protocol fix.';
+      'Comunica una observació ocasional. Utilitza aquesta opció si escoltes o observes una au nocturna fora d\'un cens o d\'una estació de seguiment i ens ho vols comunicar.';
 
   @override
   String get activeSessionTitle => 'Sessió en curs';
@@ -289,11 +289,11 @@ class AppLocalizationsCa extends AppLocalizations {
       'No s\'ha pogut actualitzar el catàleg d\'ocells. Pots seguir utilitzant l\'aplicació o tornar a intentar la descàrrega.';
 
   @override
-  String get usageWarningTitle => 'Advertència d\'ús';
+  String get usageWarningTitle => 'Ús responsable dels cants';
 
   @override
   String get usageWarningMessage =>
-      'La reproducció d\'aquest àudio durant un cens pot alterar el comportament dels ocells i distorsionar els resultats de l\'observació.\n\nSi us plau, fes-ne un ús responsable.';
+      'Els cants són només una eina de consulta puntual per ajudar a confirmar la identificació en cas de dubte.\n\nNo els reprodueixis de manera repetida ni innecessària al camp, ja que poden alterar el comportament de les aus i distorsionar els resultats dels seguiments.';
 
   @override
   String get usageWarningConfirm => 'Sí, ho entenc';
@@ -432,6 +432,10 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get notesHint => 'Afegeix notes...';
+
+  @override
+  String get notesContactHintIntro =>
+      'Si tens dubtes o no pots identificar l\'espècie, pots gravar-la i enviar-nos un àudio o vídeo a:';
 
   @override
   String get fetchingLocation => 'Obtenint ubicació...';
@@ -919,6 +923,9 @@ class AppLocalizationsCa extends AppLocalizations {
 
   @override
   String get censusesUpcomingTitle => 'Pròxims censos';
+
+  @override
+  String get censusesUpcomingEmpty => 'No hi ha pròxims censos';
 
   @override
   String get censusLobbyWaiting => 'Cens en espera';

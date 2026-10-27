@@ -61,4 +61,10 @@ abstract class EnvConfig {
 
   @EnviedField(varName: 'CENSUS_JWT_PUBLIC_KEY')
   static const String censusJwtPublicKey = _EnvConfig.censusJwtPublicKey;
+
+  @EnviedField(varName: 'SUPPORT_EMAIL')
+  static const String supportEmail = _EnvConfig.supportEmail;
+
+  @EnviedField(varName: 'SUPPORT_PHONE')
+  static const String supportPhone = _EnvConfig.supportPhone;
 }

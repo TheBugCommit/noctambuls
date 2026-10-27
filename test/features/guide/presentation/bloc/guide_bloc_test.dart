@@ -141,7 +141,8 @@ void main() {
     );
 
     blocTest<GuideBloc, GuideState>(
-      'checkAudioWarning retorna Ok(true) → GuideLoaded amb action=GuideAudioPlayApproved',
+      'checkAudioWarning retorna Ok(true) → tot i així es mostra l\'avís '
+      '(GuideAudioWarning)',
       build: buildBloc,
       seed: () => const GuideLoaded(birds: [tBird]),
       setUp: () {
@@ -155,7 +156,7 @@ void main() {
         isA<GuideLoaded>().having(
           (s) => s.action,
           'action',
-          isA<GuideAudioPlayApproved>().having(
+          isA<GuideAudioWarning>().having(
             (a) => a.audioPath,
             'audioPath',
             tAudioPath,
@@ -180,6 +181,38 @@ void main() {
           (s) => s.action,
           'action',
           isA<GuideAudioWarning>(),
+        ),
+      ],
+    );
+
+    blocTest<GuideBloc, GuideState>(
+      'un cop acceptat l\'avís, una nova petició dins la mateixa sessió '
+      'aprova la reproducció sense tornar a mostrar-lo',
+      build: buildBloc,
+      seed: () => const GuideLoaded(birds: [tBird]),
+      setUp: () {
+        when(() => mockAcceptWarning())
+            .thenAnswer((_) async => const Ok(Unit.instance));
+        when(() => mockCheckWarning())
+            .thenAnswer((_) async => const Ok(false));
+      },
+      act: (bloc) async {
+        bloc.add(const AcceptAudioWarning(audioPath: tAudioPath));
+        await Future<void>.delayed(Duration.zero);
+        bloc.add(
+          const CheckBirdAudioWarningRequested(audioPath: tAudioPath),
+        );
+      },
+      expect: () => [
+        isA<GuideLoaded>().having(
+          (s) => s.action,
+          'action',
+          isA<GuideAudioPlayApproved>(),
+        ),
+        isA<GuideLoaded>().having(
+          (s) => s.action,
+          'action',
+          isA<GuideAudioPlayApproved>(),
         ),
       ],
     );

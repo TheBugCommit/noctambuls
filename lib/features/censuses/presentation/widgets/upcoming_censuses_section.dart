@@ -29,10 +29,36 @@ class UpcomingCensusesSection extends StatelessWidget {
             .toList()
           ..sort((a, b) => a.startTime.compareTo(b.startTime));
 
-    if (upcoming.isEmpty) return const SizedBox.shrink();
-
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
+
+    if (upcoming.isEmpty) {
+      return SizedBox(
+        width: double.infinity,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: AppDimensions.xl),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.event_busy_outlined,
+                  size: AppDimensions.xxl * 1.3,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(height: AppDimensions.md),
+                Text(
+                  l10n.censusesUpcomingEmpty,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
